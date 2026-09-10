@@ -5,13 +5,11 @@
  */
 import { LAW_INDEXES, LAW_HELP_DB, LAW_TO_CATEGORY, LAW_HUE_BY_INDEX, LAW_SAT_BY_INDEX } from '../constants.js';
 import { isSet, toggle as toggleLaw } from '../state/lawState.js';
-import { LAW_HELP_PATCHES } from '../state/lawHelpPatches.js';
+import { MECHANICS_HELP } from '../physics/lawgroups/mechanicsHelp.js';
+import { MECHANICS_ICONS } from './mechanicsIcons.js';
 
-// Supplemental records complete or refine canonical help without discarding
-// tiers already present in LAW_HELP_DB.
-for (const [name, patch] of Object.entries(LAW_HELP_PATCHES)) {
-  LAW_HELP_DB[name] = { ...(LAW_HELP_DB[name] || {}), ...patch };
-}
+// LAW_HELP_PATCHES + MECHANICS_HELP are merged into LAW_HELP_DB canonically in
+// constants.js ("Canonical help merge"), so every consumer sees the full table.
 
 let infoEl = null;
 let currentLawIdx = -1;
@@ -44,7 +42,8 @@ const LAW_ICONS = {
   SYMBOL: '☯', METRIC: '📏', PREDICT: '🔮', CODE: '✜', PROTOCOL: '📡',
   FEEDBACK: '↺', LANGUAGE: '💬', CULTURE: '🎭',
   SINGULARITY: '⬤', ENTANGLEMENT: '⚭', HISTORY: '📜',
-  TIDE: '🌊', FRICTION: '🧱', ELASTICITY: '🏀', TURBULENCE: '🌀', CENTRIPETAL: '🎯', ROTATION: '🔄', SYMBIOSIS: '🤝', PARASITE: '🪱', HIBERNATION: '💤', IMMUNITY: '🛡', ELECTROLYSIS: '🔋', PHOTOLYSIS: '💡', PRECIPITATION: '🌨', NEUTRALIZATION: '🧪', STOICHIOMETRY: '📐', AUTOCATALYSIS: '♻️', ADIABATIC: '🔺', COMPRESSION: '⤵', EXPANSION: '⤴', EQUILIBRIUM: '🌡', LATENT_HEAT: '🧊', RUNAWAY: '💥', CONSCIOUSNESS: '💭', PERCEPTION: '👀', SYNCHRONICITY: '🔗', ANTENNA: '📻', SHIELDING: '🧿', POLARIZATION: '🌈', NAVIGATION: '🧭', ENCRYPTION: '🔐', SUPERPOSITION: '☍', TUNNELING: '⤳', DECOHERENCE: '✧', WAVE_PARTICLE: '⇜', UNCERTAINTY: '?', TELEPORT: '➤', OBSERVER: '❂', PLANCK: '▰', COHERENCE: '♒', BOSONIC: '⊛', FERMIONIC: '⊝', SPIN: '⟲', SPECTRAL: '🎵', WAVEFUNCTION: '∫', HYPERPLANE: '◫', ANTIMATTER: '💫',
+  TIDE: '🌊', FRICTION: '🧱', SYMBIOSIS: '🤝', PARASITE: '🪱', HIBERNATION: '💤', IMMUNITY: '🛡', ELECTROLYSIS: '🔋', PHOTOLYSIS: '💡', PRECIPITATION: '🌨', NEUTRALIZATION: '🧪', STOICHIOMETRY: '📐', AUTOCATALYSIS: '♻️', ADIABATIC: '🔺', COMPRESSION: '⤵', EXPANSION: '⤴', EQUILIBRIUM: '🌡', LATENT_HEAT: '🧊', RUNAWAY: '💥', CONSCIOUSNESS: '💭', PERCEPTION: '👀', SYNCHRONICITY: '🔗', ANTENNA: '📻', SHIELDING: '🧿', POLARIZATION: '🌈', NAVIGATION: '🧭', ENCRYPTION: '🔐', SUPERPOSITION: '☍', TUNNELING: '⤳', DECOHERENCE: '✧', WAVE_PARTICLE: '⇜', UNCERTAINTY: '?', TELEPORT: '➤', OBSERVER: '❂', PLANCK: '▰', COHERENCE: '♒', BOSONIC: '⊛', FERMIONIC: '⊝', SPIN: '⟲', SPECTRAL: '🎵', WAVEFUNCTION: '∫', HYPERPLANE: '◫', ANTIMATTER: '💫',
+  ...MECHANICS_ICONS,
   TIDE: '🌊', FRICTION: '🧽', ELASTICITY: '🪀', TURBULENCE: '🌀', CENTRIPETAL: '◎', ROTATION: '🔄',
   SYMBIOSIS: '🤝', PARASITE: '🪱', HIBERNATION: '💤', IMMUNITY: '🛡',
   ELECTROLYSIS: '⚡', PHOTOLYSIS: '☀', PRECIPITATION: '🌧', NEUTRALIZATION: '🧪',
@@ -87,7 +86,11 @@ function showLawInfo(idx) {
   const name = LAW_NAME_BY_IDX[idx];
   if (!name) return;
 
-  const help = LAW_HELP_DB[name];
+  const help = LAW_HELP_DB[name]
+    ? LAW_HELP_DB[name]
+    : MECHANICS_HELP[name]
+      ? { ...MECHANICS_HELP[name], advanced: MECHANICS_HELP[name].advanced || MECHANICS_HELP[name].system || '' }
+      : null;
   if (!help) return;
 
   const catName = LAW_TO_CATEGORY[idx] || 'unknown';
@@ -116,6 +119,7 @@ function showLawInfo(idx) {
         <div class="info-hint">${hint}</div>
         <div class="info-explanation">${explanation}</div>
         <div class="info-system">${system}</div>
+        ${help.advanced ? `<div class="info-system info-advanced">${help.advanced}</div>` : ''}
       </div>
     </div>
   `;

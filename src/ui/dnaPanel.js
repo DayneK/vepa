@@ -128,7 +128,7 @@ export function createDNAPanel(bus, dnaBuffer) {
         max: range.max,
         step: (range.max - range.min) / 1000,
         value: range.default,
-        key: String(idx),
+        key: `DNA_${idx}`,
         title: `${name} (DNA ${idx})`,
         onChange: (val) => {
           setDNAFloat(dnaBuffer, selectedSpecies, idx, val, range.min, range.max);

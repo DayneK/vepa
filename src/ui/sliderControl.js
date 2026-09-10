@@ -14,6 +14,8 @@
  * the DOM factory (createSliderRow) is the only part that touches the page.
  */
 
+import { attachParamHelp } from './paramHelp.js';
+
 export const ZOOM_FACTORS = [1, 4, 16];
 export const LONG_PRESS_MS = 500;
 export const HOLD_ZOOM_MS = 650;    // hold-still → 4× magnification
@@ -188,6 +190,16 @@ export function createSliderRow(opts = {}) {
   const modeBtn = el.querySelector('.sc-mode');
   const zoomBtn = el.querySelector('.sc-zoom');
   const zoomFill = el.querySelector('.sc-zoombar-fill');
+
+  // Long-press (or right-click) the parameter name → comprehensive help popup
+  attachParamHelp(el.querySelector('.sc-label'), {
+    key,
+    name: label,
+    min,
+    max,
+    def: opts.default,
+    step,
+  });
 
   function currentWindow() {
     return { min: state.min, max: state.max };

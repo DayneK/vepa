@@ -68,7 +68,7 @@ describe('Batch 03 — GLOW / AFFINITY / REPRO / TRACK (indices 8-11)', () => {
       v[b + S.ENERGY] = 50;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, rng);
     expect(view[S.ENERGY]).toBe(50);
   });
@@ -117,7 +117,7 @@ describe('Batch 03 — GLOW / AFFINITY / REPRO / TRACK (indices 8-11)', () => {
       v[b + S.DNA_CACHE_START + 41] = 1;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 80; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeCloseTo(100, 5);
   });
@@ -181,7 +181,7 @@ describe('Batch 03 — GLOW / AFFINITY / REPRO / TRACK (indices 8-11)', () => {
       v[b + S.DNA_CACHE_START + 10] = 100;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     resetOffspringRing();
     solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(drainOffspring()).toHaveLength(0);
@@ -240,7 +240,7 @@ describe('Batch 03 — GLOW / AFFINITY / REPRO / TRACK (indices 8-11)', () => {
       }
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 100; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.VEL_X]).toBe(0);
     expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeCloseTo(100, 5);

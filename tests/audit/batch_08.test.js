@@ -176,12 +176,13 @@ describe('Batch 08 audit — PHASE_RADIATION / SUBLIMATION / TIME_DILATION / DIM
 
     it('weak-field GR: clocks run slow beside a massive body (mass 40 at r 0.5 → localDt ≈ 0.9165)', () => {
       const buf = view(2);
-      // Neighbour body: particle 1 sits on top of particle 0 (r ≈ 0.5).
-      buf[PARTICLE_STRIDE + S.POS_X] = 100;
-      buf[PARTICLE_STRIDE + S.POS_Y] = 100;
-      buf[PARTICLE_STRIDE + S.POS_Z] = 100;
+      // Neighbour body: particle 1 coincides with particle 0 (r = 0 + 0.5 soften = 0.5).
+      buf[PARTICLE_STRIDE + S.POS_X] = 0;
+      buf[PARTICLE_STRIDE + S.POS_Y] = 0;
+      buf[PARTICLE_STRIDE + S.POS_Z] = 0;
       buf[PARTICLE_STRIDE + S.MASS] = 40;
-      expect(applyTimeDilation(lawsOn('TIME_DILATION'), buf, 0, 1, [1], 1, WORLD)).toBeCloseTo(0.9165, 4);
+      // Phi = 40/0.5 · 0.001 = 0.08 → localDt = sqrt(1 − 0.16) ≈ 0.9165
+      expect(applyTimeDilation(lawsOn('TIME_DILATION'), buf, 0, 1, [1], 1, WORLD)).toBeCloseTo(Math.sqrt(1 - 0.16), 4);
     });
 
     it('leaves empty space at full time speed', () => {

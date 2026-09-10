@@ -117,7 +117,7 @@ describe('Batch 24 — ELECTROLYSIS / PHOTOLYSIS / PRECIPITATION / NEUTRALIZATIO
       v[b + S.POS_X] = i === 0 ? 1000 : 1005;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.MASS]).toBe(1.5);
     expect(view[S.ENERGY]).toBe(100);

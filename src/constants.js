@@ -1,6 +1,7 @@
 import { MECHANICS_HELP, MECHANICS_PARAMETERS } from './physics/lawgroups/mechanicsHelp.js';
+import { LAW_HELP_PATCHES } from './state/lawHelpPatches.js';
 
-export { MECHANICS_HELP, MECHANICS_PARAMETERS };
+export { MECHANICS_HELP, MECHANICS_PARAMETERS, LAW_HELP_PATCHES };
 
 // ============================================================================
 // VEPA v3 — Core Constants
@@ -687,7 +688,6 @@ export const LAW_CATEGORIES = {
   },
 };
 
-
 // --- Law sub-groups (UI splitting — breaks the 128-law wall into themes) ---
 // Each category lists labelled sub-groups; every law appears in exactly one.
 // The LAWS tab renders these as sub-headers inside each collapsible category.
@@ -787,10 +787,13 @@ export const LAW_PARAMETERS = {
   [LAW_INDEXES.SINGULARITY]:    ['FORCE (DNA 0)', 'SINGULARITY_HORIZON (World)', 'HIDDEN_MASS (DNA 7)', 'MASS (Stride 6)'],
   [LAW_INDEXES.TIDE]:           ['TIDAL (DNA 15)', 'TIDAL_SCALE (World)', 'FORCE (DNA 0)', 'GLOBAL_G (World)'],
   [LAW_INDEXES.FRICTION]:       ['FRICTION (DNA 27)', 'FRICTION_COEFF (World)', 'VISCOSITY (DNA 1)', 'VEL_X/Y/Z (Stride 3-5)'],
-  [LAW_INDEXES.ELASTICITY]:     ['ELASTICITY (DNA 30)', 'ELASTIC_RESTITUTION (World)', 'STIFFNESS (DNA 8)', 'MASS (Stride 6)'],
-  [LAW_INDEXES.TURBULENCE]:     ['JITTER (DNA 3)', 'TURBULENCE_KICK (World)', 'TORQUE (DNA 2)', 'VISCOSITY (DNA 1)'],
-  [LAW_INDEXES.CENTRIPETAL]:    ['TORQUE (DNA 2)', 'CENTRIPETAL_SCALE (World)', 'FORCE (DNA 0)', 'INERTIA (DNA 26)'],
-  [LAW_INDEXES.ROTATION]:       ['TORQUE (DNA 2)', 'ROTATION_SPEED (World)', 'INERTIA (DNA 26)', 'VEL_X/Y/Z (Stride 3-5)'],
+  // NOTE: legacy ELASTICITY / TURBULENCE / CENTRIPETAL / ROTATION entries were
+  // removed — those LAW_INDEXES keys no longer exist (they produced undefined
+  // computed keys here after the Mechanics law refactor).
+  [LAW_INDEXES.HORIZON]:           ['MASS (Stride 6)', 'RADIUS (Stride 56)', 'HIDDEN_MASS (DNA 7)', 'GLOBAL_G (World)'],
+  [LAW_INDEXES.RADIATION_PRESSURE]:['ENERGY (Stride 50)', 'ELECTRIC_ENERGY (Stride 77)', 'STORED_ENERGY (Stride 78)', 'RADIATION_LEVEL (World)'],
+  [LAW_INDEXES.MASS_INERTIA]:      ['MASS (Stride 6)', 'INERTIA (DNA 26)', 'FORCE (DNA 0)', 'MAX_VELOCITY (DNA 28)'],
+  [LAW_INDEXES.FIELD]:             ['WORLD_SIZE (World)', 'FORCE (DNA 0)', 'NEIGHBORHOOD_RADIUS (DNA 18)', 'POS_X/Y/Z (Stride 0-2)'],
 
   // Biology (Indices 7-16, 51-52, 88-91)
   [LAW_INDEXES.LIFE]:           ['ENERGY_EFFICIENCY (DNA 34)', 'DECAY_RATE (World)', 'LIGHT_LEVEL (World)', 'ENERGY (Stride 50)'],
@@ -865,7 +868,8 @@ export const LAW_PARAMETERS = {
   [LAW_INDEXES.SYNCHRONICITY]: ['SYNCHRONICITY_RATE (World)', 'TUNING_CH1-CH4 (DNA 22-25)', 'RESONANCE_Q (World)', 'PHASE_1 (Stride 68)'],
 
   // Electromagnetism (Indices 53-65, 107-109)
-  [LAW_INDEXES.CHARGE_LAW]:    ['POLARITY (DNA 4)', 'COULOMB_CONSTANT (World)', 'CONDUCTIVITY (DNA 32)', 'CHARGE (Stride 67)'],[LAW_INDEXES.ELECTRIC_FIELD]: ['POLARITY (DNA 4)', 'MAGNETIC_FLUX_SCALE (World)', 'MAGNETIC_MOMENT (DNA 33)', 'CHARGE (Stride 67)'],
+  [LAW_INDEXES.CHARGE_LAW]:    ['POLARITY (DNA 4)', 'COULOMB_CONSTANT (World)', 'CONDUCTIVITY (DNA 32)', 'CHARGE (Stride 67)'],
+  [LAW_INDEXES.ELECTRIC_FIELD]: ['POLARITY (DNA 4)', 'MAGNETIC_FLUX_SCALE (World)', 'MAGNETIC_MOMENT (DNA 33)', 'CHARGE (Stride 67)'],
   [LAW_INDEXES.CURRENT]:       ['CONDUCTIVITY (DNA 32)', 'COULOMB_CONSTANT (World)', 'VEL_X/Y/Z (Stride 3-5)', 'CHARGE (Stride 67)'],
   [LAW_INDEXES.RESISTANCE]:    ['CONDUCTIVITY (DNA 32)', 'HEAT_OUTPUT (DNA 39)', 'TEMPERATURE (Stride 66)', 'HEAT_CAPACITY (World)'],
   [LAW_INDEXES.CAPACITANCE]:   ['POLARITY (DNA 4)', 'BASE_RADIUS (DNA 29)', 'STORED_ENERGY (Stride 78)', 'ELECTRIC_ENERGY (Stride 77)'],
@@ -1677,3 +1681,16 @@ export const LAW_HELP_DB = {
     advanced: "Annihilation removes both particles — use carefully.",
   },
 };
+
+// Canonical help merge (B-4RK): every law must present all four documentation
+// tiers from one source. LAW_HELP_PATCHES refines/extends base entries and
+// supplies records for the four laws without a static base entry; MECHANICS_HELP
+// supplies the eight slate Mechanics records. Merging here means every consumer
+// of LAW_HELP_DB (tooltips, help panels, audit tooling) sees the complete table —
+// no consumer-side overlay needed.
+for (const [name, patch] of Object.entries(LAW_HELP_PATCHES)) {
+  LAW_HELP_DB[name] = { ...(LAW_HELP_DB[name] || {}), ...patch };
+}
+for (const [name, help] of Object.entries(MECHANICS_HELP)) {
+  LAW_HELP_DB[name] = { ...(LAW_HELP_DB[name] || {}), ...help };
+}

@@ -15,7 +15,7 @@ describe('Batch 15 — DNA.MUTATION / DNA.ENERGY_EFFICIENCY / DNA.SEX_CHANCE / D
         v[b + S.AGE] = 200;
         v[b + S.ENERGY] = 100;
       });
-      const laws = lawsWith(LAW_INDEXES.REPRO, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.REPRO, LAW_INDEXES.BUOYANCY);
       solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.001);
       const off = drainOffspring();
       if (!off.length) return 0;
@@ -32,7 +32,7 @@ describe('Batch 15 — DNA.MUTATION / DNA.ENERGY_EFFICIENCY / DNA.SEX_CHANCE / D
         v[b + S.DNA_CACHE_START + 34] = eff;    // ENERGY_EFFICIENCY
         v[b + S.DNA_CACHE_START + 12] = 1e-6;   // MUTATION → no bio-pulse
       });
-      const laws = lawsWith(LAW_INDEXES.LIFE, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.LIFE, LAW_INDEXES.BUOYANCY);
       withWorldParam('LIGHT_LEVEL', 0, () => {
         for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       });
@@ -63,7 +63,7 @@ describe('Batch 15 — DNA.MUTATION / DNA.ENERGY_EFFICIENCY / DNA.SEX_CHANCE / D
       setDNAFloat(dna, 0, 44, 0, 0, 0.1); // EPIGENETIC_DRIFT → 0
       setDNAFloat(dna, 0, 46, 0, 0, 1);   // GENE_FLOW → 0
       setDNAFloat(dna, 0, 50, 0, 0, 1);   // HGT_RATE → 0 (new genetics batch: default 0.05 would seed a 0.001 gene-flow gate that the deterministic PRNG hits)
-      const laws = lawsWith(LAW_INDEXES.REPRO, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.REPRO, LAW_INDEXES.BUOYANCY);
       // repro gate (0.001) → crossover gate (0.6) → sexual blend (0.2, 0.2) → noiseless rest
       const seq = [0.001, 0.6, 0.2, 0.2, 0.5, 0.5, 0.5, 0.5];
       let i = 0;
@@ -94,7 +94,7 @@ describe('Batch 15 — DNA.MUTATION / DNA.ENERGY_EFFICIENCY / DNA.SEX_CHANCE / D
           v[b + S.SPECIES_ID] = 1; // prey is a different species (predation is cross-species only)
         }
       });
-      const laws = lawsWith(LAW_INDEXES.PREDATION, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.PREDATION, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 10; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.POS_X];
     };

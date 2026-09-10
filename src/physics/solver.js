@@ -1373,17 +1373,16 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       const frForce = applyFriction(view, iBase, 0.05);
       if (frForce) { ax += frForce.ax; ay += frForce.ay; az += frForce.az; }
     }
-    if (active[LAW_INDEXES.TURBULENCE]) {
-      const tbForce = applyTurbulence(view, iBase, 0.05, prng);
-      if (tbForce) { ax += tbForce.ax; ay += tbForce.ay; az += tbForce.az; }
-    }
-    if (active[LAW_INDEXES.CENTRIPETAL]) {
-      const cpForce = applyCentripetal(view, iBase, center, center, center, 0.0005);
-      if (cpForce) { ax += cpForce.ax; ay += cpForce.ay; az += cpForce.az; }
-    }
-    if (active[LAW_INDEXES.ROTATION]) {
-      const rotForce = applyRotation(view, iBase, center, center, center, 0.002);
-      if (rotForce) { ax += rotForce.ax; ay += rotForce.ay; az += rotForce.az; }
+    // Legacy TURBULENCE / CENTRIPETAL / ROTATION per-particle gates were removed
+    // with the Mechanics law refactor — those LAW_INDEXES keys no longer exist
+    // (previously they evaluated to undefined here and never dispatched). The
+    // slate Mechanics set (CONTACT…ADHESION, 128-135) is dispatched in the
+    // pairwise block above.
+    if (active[LAW_INDEXES.MASS_INERTIA]) {
+      // MASS_INERTIA — bounded inertial damping of the accumulated force before
+      // integration: heavier particles respond less (scale = 1 / (1 + k·mass)).
+      const f = applyMassInertia(view, iBase, ax, ay, az, 0.15 * syn[LAW_INDEXES.MASS_INERTIA]);
+      ax = f.ax; ay = f.ay; az = f.az;
     }
 
     // Biology

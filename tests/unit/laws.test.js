@@ -60,7 +60,7 @@ describe('LawState', () => {
         set(state, 0);
         set(state, 35);
         const vec = getStateVector(state);
-        expect(vec).toHaveLength(128);
+        expect(vec).toHaveLength(136);
         expect(vec[0]).toBe(true);
         expect(vec[35]).toBe(true);
         expect(vec[1]).toBe(false);

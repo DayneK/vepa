@@ -32,7 +32,7 @@ describe('Batch 08 — rotateSensitivity / panSensitivity / DNA.FORCE / DNA.VISC
           v[b + S.DNA_CACHE_START + 0] = force; // DNA FORCE
         }
       });
-      const laws = lawsWith(LAW_INDEXES.GRAV, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.GRAV, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 5; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.POS_X];
     };

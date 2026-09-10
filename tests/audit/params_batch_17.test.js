@@ -18,7 +18,7 @@ describe('Batch 17 — DNA.SIGNAL_STRENGTH / DNA.SIGNAL_DECAY / DNA.PROPAGATION_
           v[b + S.DNA_CACHE_START + 19] = strength; // SIGNAL_STRENGTH
         }
       });
-      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.SIGNAL];
     };
@@ -32,7 +32,7 @@ describe('Batch 17 — DNA.SIGNAL_STRENGTH / DNA.SIGNAL_DECAY / DNA.PROPAGATION_
         v[b + S.DNA_CACHE_START + 14] = 0;    // PULSE_RATE → no re-emission
         v[b + S.DNA_CACHE_START + 20] = decay; // SIGNAL_DECAY
       });
-      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 30; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.SIGNAL];
     };
@@ -54,7 +54,7 @@ describe('Batch 17 — DNA.SIGNAL_STRENGTH / DNA.SIGNAL_DECAY / DNA.PROPAGATION_
           v[b + S.DNA_CACHE_START + 19] = 1;     // SIGNAL_STRENGTH
         }
       });
-      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.SIGNAL];
     };
@@ -83,7 +83,7 @@ describe('Batch 17 — DNA.SIGNAL_STRENGTH / DNA.SIGNAL_DECAY / DNA.PROPAGATION_
           v[b + S.DNA_CACHE_START + 25] = emitterTuning[3];
         }
       });
-      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.SIGNAL];
     };

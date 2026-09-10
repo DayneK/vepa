@@ -8,6 +8,7 @@ import { isSet, set as setLaw, clear as clearLaw, toggle as toggleLaw } from '..
 import { WORLD_PARAM_DEFS } from '../state/worldParams.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
 import { createSliderRow } from './sliderControl.js';
+import { MECHANICS_ICONS } from './mechanicsIcons.js';
 
 // Law icon symbols (matching v2 aesthetic)
 const LAW_ICONS = {
@@ -29,8 +30,7 @@ const LAW_ICONS = {
   SYMBOL: '☯', METRIC: '📏', PREDICT: '🔮', CODE: '✜', PROTOCOL: '📡',
   FEEDBACK: '↺', LANGUAGE: '💬', CULTURE: '🎭',
   SINGULARITY: '⬤', ENTANGLEMENT: '⚭', HISTORY: '📜',
-  TIDE: '🌊', FRICTION: '🧱', ELASTICITY: '🏀', TURBULENCE: '🌀', CENTRIPETAL: '🎯', ROTATION: '🔄', SYMBIOSIS: '🤝', PARASITE: '🪱', HIBERNATION: '💤', IMMUNITY: '🛡', ELECTROLYSIS: '🔋', PHOTOLYSIS: '💡', PRECIPITATION: '🌨', NEUTRALIZATION: '🧪', STOICHIOMETRY: '📐', AUTOCATALYSIS: '♻️', ADIABATIC: '🔺', COMPRESSION: '⤵', EXPANSION: '⤴', EQUILIBRIUM: '🌡', LATENT_HEAT: '🧊', RUNAWAY: '💥', CONSCIOUSNESS: '💭', PERCEPTION: '👀', SYNCHRONICITY: '🔗', ANTENNA: '📻', SHIELDING: '🧿', POLARIZATION: '🌈', NAVIGATION: '🧭', ENCRYPTION: '🔐', SUPERPOSITION: '☍', TUNNELING: '⤳', DECOHERENCE: '✧', WAVE_PARTICLE: '⇜', UNCERTAINTY: '?', TELEPORT: '➤', OBSERVER: '❂', PLANCK: '▰', COHERENCE: '♒', BOSONIC: '⊛', FERMIONIC: '⊝', SPIN: '⟲', SPECTRAL: '🎵', WAVEFUNCTION: '∫', HYPERPLANE: '◫', ANTIMATTER: '💫',
-  TIDE: '🌊', FRICTION: '🧽', ELASTICITY: '🪀', TURBULENCE: '🌀', CENTRIPETAL: '◎', ROTATION: '🔄',
+  TIDE: '🌊', FRICTION: '🧱', SYMBIOSIS: '🤝', PARASITE: '🪱', HIBERNATION: '💤', IMMUNITY: '🛡', ELECTROLYSIS: '🔋', PHOTOLYSIS: '💡', PRECIPITATION: '🌨', NEUTRALIZATION: '🧪', STOICHIOMETRY: '📐', AUTOCATALYSIS: '♻️', ADIABATIC: '🔺', COMPRESSION: '⤵', EXPANSION: '⤴', EQUILIBRIUM: '🌡', LATENT_HEAT: '🧊', RUNAWAY: '💥', CONSCIOUSNESS: '💭', PERCEPTION: '👀', SYNCHRONICITY: '🔗', ANTENNA: '📻', SHIELDING: '🧿', POLARIZATION: '🌈', NAVIGATION: '🧭', ENCRYPTION: '🔐', SUPERPOSITION: '☍', TUNNELING: '⤳', DECOHERENCE: '✧', WAVE_PARTICLE: '⇜', UNCERTAINTY: '?', TELEPORT: '➤', OBSERVER: '❂', PLANCK: '▰', COHERENCE: '♒', BOSONIC: '⊛', FERMIONIC: '⊝', SPIN: '⟲', SPECTRAL: '🎵', WAVEFUNCTION: '∫', HYPERPLANE: '◫', ANTIMATTER: '💫',
   SYMBIOSIS: '🤝', PARASITE: '🪱', HIBERNATION: '💤', IMMUNITY: '🛡',
   ELECTROLYSIS: '⚡', PHOTOLYSIS: '☀', PRECIPITATION: '🌧', NEUTRALIZATION: '🧪',
   STOICHIOMETRY: '⚖', AUTOCATALYSIS: '♾',
@@ -41,6 +41,7 @@ const LAW_ICONS = {
   SUPERPOSITION: '⚛', TUNNELING: '⏩', DECOHERENCE: '🌫', WAVE_PARTICLE: '🌊', UNCERTAINTY: '❓',
   TELEPORT: '👽', OBSERVER: '🔭', PLANCK: '🔩', COHERENCE: '🔗', BOSONIC: '🟣', FERMIONIC: '🚫',
   SPIN: '🕸', SPECTRAL: '🌈', WAVEFUNCTION: '🎇', HYPERPLANE: '🧊', ANTIMATTER: '💥',
+  ...MECHANICS_ICONS,
 };
 
 // Reverse: law index → name
@@ -89,10 +90,10 @@ export const LAW_SET_PRESETS = [
   { name: 'NEURAL WEB', laws: ['MEMORY', 'LEARN', 'SYMBOL', 'LANGUAGE', 'FEEDBACK', 'CULTURE'] },
   { name: 'CRYO CURRENT', laws: ['SUPERCONDUCTIVITY', 'COLD', 'CURRENT', 'RESISTANCE', 'FLUX', 'CONDENSE'] },
   { name: 'QUANTUM SOUP', laws: ['SUPERPOSITION', 'TUNNELING', 'DECOHERENCE', 'COHERENCE', 'SPIN', 'SPECTRAL'] },
-  { name: 'BLACK HOLE CORE', laws: ['GRAV', 'ACCR', 'SINGULARITY', 'TIDE', 'CENTRIPETAL'] },
+  { name: 'BLACK HOLE CORE', laws: ['GRAV', 'ACCR', 'SINGULARITY', 'TIDE', 'CONTACT'] },
   { name: 'ENTANGLED WEB', laws: ['ENTANGLEMENT', 'TELEPATHY', 'COMMS', 'ANTENNA', 'SYNCHRONICITY', 'COHERENCE'] },
   { name: 'CHEMICAL GARDEN', laws: ['ELECTROLYSIS', 'PHOTOLYSIS', 'PRECIPITATION', 'NEUTRALIZATION', 'AUTOCATALYSIS', 'SYMBIOSIS'] },
-  { name: 'TIDAL LOCK', laws: ['TIDE', 'CENTRIPETAL', 'ROTATION', 'GRAV'] },
+  { name: 'TIDAL LOCK', laws: ['TIDE', 'MOMENTUM', 'TORQUE', 'GRAV'] },
   { name: 'THERMAL RUNAWAY', laws: ['HEAT', 'ADIABATIC', 'RUNAWAY', 'EXPANSION', 'EQUILIBRIUM'] },
   { name: 'FARADAY CAGE', laws: ['SHIELDING', 'POLARIZATION', 'ANTENNA', 'CHARGE_LAW'] },
   { name: 'ANNIHILATION', laws: ['ANTIMATTER', 'BOSONIC', 'FERMIONIC', 'PLANCK'] },
@@ -143,44 +144,39 @@ export function createWorldPanel(bus, lawStateObj) {
       });
     });
 
-    // [◈ icon] [ABC list] [▦ size] — view mode + icon size toggles.
+    // Single 3-state cycle toggle: big icons → list words → compact icons.
     let group = filterRow.querySelector('.view-mode-group');
     if (!group) {
       group = document.createElement('div');
       group.className = 'view-mode-group';
-      const btnIcon = document.createElement('button');
-      btnIcon.className = 'view-mode-toggle law-mode-icon';
-      btnIcon.title = 'Icon view';
-      btnIcon.textContent = '◈';
-      const btnWord = document.createElement('button');
-      btnWord.className = 'view-mode-toggle law-mode-abc';
-      btnWord.title = 'List view';
-      btnWord.textContent = 'ABC';
-      const btnSize = document.createElement('button');
-      btnSize.className = 'view-mode-toggle law-mode-size';
-      btnSize.title = 'Toggle icon size: big (double-size tiles) / compact (old dense grid)';
-      btnSize.textContent = '▦';
-      group.append(btnIcon, btnWord, btnSize);
+      const btnCycle = document.createElement('button');
+      btnCycle.className = 'view-mode-toggle law-mode-cycle';
+      btnCycle.title = 'Law display: big icons → list → compact icons';
+      group.appendChild(btnCycle);
       filterRow.appendChild(group);
 
+      const VIEW_STATES = [
+        { viewMode: 'icon', iconSize: 'big', glyph: '◈', label: 'BIG ICONS' },
+        { viewMode: 'word', iconSize: 'big', glyph: 'ABC', label: 'LIST' },
+        { viewMode: 'icon', iconSize: 'compact', glyph: '▦', label: 'COMPACT' },
+      ];
+      const viewStateIndex = () => {
+        if (viewMode === 'word') return 1;
+        return iconSize === 'compact' ? 2 : 0;
+      };
       const sync = () => {
-        btnIcon.classList.toggle('active', viewMode === 'icon');
-        btnWord.classList.toggle('active', viewMode === 'word');
-        btnSize.classList.toggle('active', iconSize === 'compact');
+        const vs = VIEW_STATES[viewStateIndex()];
+        btnCycle.textContent = vs.glyph;
+        btnCycle.title = `Law display: ${vs.label} — click to cycle`;
         renderLawGrid(grid, lawStateObj, bus);
       };
-      btnIcon.addEventListener('click', () => {
-        viewMode = 'icon';
+      btnCycle.addEventListener('click', () => {
+        const next = (viewStateIndex() + 1) % VIEW_STATES.length;
+        viewMode = VIEW_STATES[next].viewMode;
+        iconSize = VIEW_STATES[next].iconSize;
         sync();
       });
-      btnWord.addEventListener('click', () => {
-        viewMode = 'word';
-        sync();
-      });
-      btnSize.addEventListener('click', () => {
-        iconSize = iconSize === 'compact' ? 'big' : 'compact';
-        sync();
-      });
+      sync();
     }
   }
 
@@ -223,8 +219,14 @@ function renderLawGrid(grid, lawStateObj, bus) {
     : 'law-icon-grid' + (iconSize === 'compact' ? ' compact' : '');
 
   let html = '';
-  // One row per law category (physics / biology / chemistry / thermo / meta)
-  for (const [catName, cat] of Object.entries(LAW_CATEGORIES)) {
+  // Mechanics (slate) pins to the top row, then a small divider, then the
+  // eight rainbow categories in their canonical order.
+  const catEntries = Object.entries(LAW_CATEGORIES);
+  const mechanicsIdx = catEntries.findIndex(([n]) => n === 'mechanics');
+  const orderedCats = mechanicsIdx >= 0
+    ? [catEntries[mechanicsIdx], ...catEntries.filter((_, i) => i !== mechanicsIdx)]
+    : catEntries;
+  for (const [catName, cat] of orderedCats) {
     const band = LAW_SPECTRUM[cat.color] || LAW_SPECTRUM.BLUE;
     const centerHue = band.grey ? band.hue : Math.round(band.center * 3.6);
     const catSat = band.grey ? band.sat : null;
@@ -248,6 +250,9 @@ function renderLawGrid(grid, lawStateObj, bus) {
       }
     }
     html += '</div>';
+    if (catName === 'mechanics') {
+      html += '<div class="law-cat-divider" aria-hidden="true"></div>';
+    }
   }
   grid.innerHTML = html;
 
@@ -521,6 +526,7 @@ function renderWorldSliders(container, bus) {
       min: p.min,
       max: p.max,
       step: p.step,
+      default: p.default,
       value: runtimeConfig.worldParams?.[p.key] ?? p.default,
       key: p.key,
       title: `${p.label} (${p.key})`,

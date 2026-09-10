@@ -26,7 +26,7 @@ describe('Batch 18 — DNA.TUNING_CH2 / DNA.TUNING_CH3 / DNA.TUNING_CH4 / DNA.ME
         v[b + S.DNA_CACHE_START + 25] = emitterTuning[3];
       }
     });
-    const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.WRAP);
+    const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.BUOYANCY);
     for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
     return view[S.SIGNAL];
   };
@@ -53,7 +53,7 @@ describe('Batch 18 — DNA.TUNING_CH2 / DNA.TUNING_CH3 / DNA.TUNING_CH4 / DNA.ME
         v[b + S.DNA_CACHE_START + 14] = 0;     // PULSE_RATE → no new memory
         v[b + S.DNA_CACHE_START + 40] = memDecay; // MEMORY_DECAY
       });
-      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.COMMS, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 40; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.MEMORY];
     };

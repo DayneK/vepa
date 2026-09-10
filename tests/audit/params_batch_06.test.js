@@ -16,7 +16,7 @@ describe('Batch 06 — MUTATION_RATE / DECAY_RATE / visualScale / globalAlpha', 
         v[b + S.AGE] = 200;
         v[b + S.ENERGY] = 100;
       });
-      const laws = lawsWith(LAW_INDEXES.REPRO, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.REPRO, LAW_INDEXES.BUOYANCY);
       withWorldParam('MUTATION_RATE', rate, () => {
         solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.001); // always reproduce
       });

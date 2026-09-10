@@ -12,7 +12,7 @@ describe('Batch 11 — DNA.STIFFNESS / DNA.FUSION / DNA.FUSION_MOMENTUM / DNA.FU
           v[b + S.DNA_CACHE_START + 8] = stiffness; // STIFFNESS
         }
       });
-      const laws = lawsWith(LAW_INDEXES.BOND, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.BOND, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 10; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.POS_X];
     };
@@ -31,7 +31,7 @@ describe('Batch 11 — DNA.STIFFNESS / DNA.FUSION / DNA.FUSION_MOMENTUM / DNA.FU
           v[b + S.POS_X] = 1000;
         }
       });
-      const laws = lawsWith(LAW_INDEXES.ACCR, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.ACCR, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.MASS];
     };
@@ -51,7 +51,7 @@ describe('Batch 11 — DNA.STIFFNESS / DNA.FUSION / DNA.FUSION_MOMENTUM / DNA.FU
           v[b + S.VEL_X] = -2; // 2.0 relative approach speed → 2.0 relative momentum
         }
       });
-      const laws = lawsWith(LAW_INDEXES.ACCR, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.ACCR, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.MASS];
     };
@@ -68,7 +68,7 @@ describe('Batch 11 — DNA.STIFFNESS / DNA.FUSION / DNA.FUSION_MOMENTUM / DNA.FU
         if (b === 0) v[b + S.POS_X] = 999;
         else v[b + S.POS_X] = 1000;
       });
-      const laws = lawsWith(LAW_INDEXES.ACCR, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.ACCR, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < ticks; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.MASS];
     };

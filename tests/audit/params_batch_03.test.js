@@ -53,7 +53,7 @@ describe('Batch 03 — SPAWN_CENTRE_BIAS / GLOBAL_G / WIND / DAMPING', () => {
 
   it('WIND: constant +X drift accelerates particles', () => {
     const { view, dna } = makeWorld(1);
-    const laws = lawsWith(LAW_INDEXES.WRAP); // gate law so the solver runs
+    const laws = lawsWith(LAW_INDEXES.BUOYANCY); // gate law so the solver runs
     withWorldParam('WIND', 2, () => {
       for (let t = 0; t < 10; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
     });
@@ -63,7 +63,7 @@ describe('Batch 03 — SPAWN_CENTRE_BIAS / GLOBAL_G / WIND / DAMPING', () => {
 
   it('WIND: wind 0 produces no drift', () => {
     const { view, dna } = makeWorld(1);
-    const laws = lawsWith(LAW_INDEXES.WRAP);
+    const laws = lawsWith(LAW_INDEXES.BUOYANCY);
     withWorldParam('WIND', 0, () => {
       for (let t = 0; t < 10; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
     });
@@ -73,7 +73,7 @@ describe('Batch 03 — SPAWN_CENTRE_BIAS / GLOBAL_G / WIND / DAMPING', () => {
   it('DAMPING: high damping decays velocity; 0 preserves it', () => {
     const run = (damp) => {
       const { view, dna } = makeWorld(1, (v, d, b) => { v[b + S.VEL_X] = 5; });
-      const laws = lawsWith(LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.BUOYANCY);
       withWorldParam('DAMPING', damp, () => {
         for (let t = 0; t < 20; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       });

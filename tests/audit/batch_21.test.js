@@ -101,7 +101,7 @@ describe('Batch 21 — ENTANGLEMENT / HISTORY / TIDE / FRICTION (indices 80-83)'
       v[b + S.POS_X] = i === 0 ? 1000 : 1000.5;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.ENTANGLE_ID]).toBe(-1);
     expect(view[PARTICLE_STRIDE + S.ENTANGLE_ID]).toBe(-1);
@@ -129,7 +129,7 @@ describe('Batch 21 — ENTANGLEMENT / HISTORY / TIDE / FRICTION (indices 80-83)'
       v[b + S.POS_X] = 100; v[b + S.POS_Y] = 100; v[b + S.POS_Z] = 100;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 200; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.POS_X]).toBe(100);
     expect(view[S.VEL_X]).toBe(0);
@@ -156,7 +156,7 @@ describe('Batch 21 — ENTANGLEMENT / HISTORY / TIDE / FRICTION (indices 80-83)'
       else { v[b + S.POS_X] = 1100; v[b + S.MASS] = 20; }
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 100; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.VEL_X]).toBe(0);
     expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeCloseTo(100, 5);
@@ -168,7 +168,7 @@ describe('Batch 21 — ENTANGLEMENT / HISTORY / TIDE / FRICTION (indices 80-83)'
     });
     const laws = createLawState();
     set(laws, LAW_INDEXES.FRICTION);
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     expect(isSet(laws, LAW_INDEXES.FRICTION)).toBe(true);
     for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(Math.abs(view[S.VEL_X])).toBeLessThan(5);
@@ -184,7 +184,7 @@ describe('Batch 21 — ENTANGLEMENT / HISTORY / TIDE / FRICTION (indices 80-83)'
       });
       const laws = createLawState();
       set(laws, LAW_INDEXES.FRICTION);
-      set(laws, LAW_INDEXES.WRAP);
+      set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
       for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
       return Math.abs(view[S.VEL_X]);
     };
@@ -196,7 +196,7 @@ describe('Batch 21 — ENTANGLEMENT / HISTORY / TIDE / FRICTION (indices 80-83)'
       v[b + S.VEL_X] = 5;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.VEL_X]).toBeCloseTo(5, 5);
   });

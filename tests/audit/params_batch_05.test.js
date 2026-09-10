@@ -39,7 +39,7 @@ describe('Batch 05 — RADIATION_LEVEL / SPAWN_RATE / SPECIES_INTERACTION / ENER
         }
         v[b + S.SPECIES_ID] = 0;
       });
-      const laws = lawsWith(LAW_INDEXES.AFFINITY, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.AFFINITY, LAW_INDEXES.BUOYANCY);
       withWorldParam('SPECIES_INTERACTION', interaction, () => {
         for (let t = 0; t < 5; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       });
@@ -56,7 +56,7 @@ describe('Batch 05 — RADIATION_LEVEL / SPAWN_RATE / SPECIES_INTERACTION / ENER
         if (b === 0) v[b + S.ENERGY] = 100;
         else v[b + S.ENERGY] = 0;
       });
-      const laws = lawsWith(LAW_INDEXES.ENERGY, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.ENERGY, LAW_INDEXES.BUOYANCY);
       withWorldParam('ENERGY_TRANSFER', transfer, () => {
         for (let t = 0; t < 30; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       });

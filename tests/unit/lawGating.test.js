@@ -94,7 +94,7 @@ describe('Law gating — movement and interaction require laws', () => {
   it('with DRAG off, velocity is preserved exactly — friction is law-gated', () => {
     const { view, dna } = makeWorld();
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP); // only containment; no force, no damping
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op // only containment; no force, no damping
     const vx0 = [], vy0 = [];
     for (let i = 0; i < COUNT; i++) {
       vx0.push(view[i * PARTICLE_STRIDE + S.VEL_X]);
@@ -113,7 +113,7 @@ describe('Law gating — movement and interaction require laws', () => {
   it('with DRAG on, velocity decays (viscosity + friction damping active)', () => {
     const { view, dna } = makeWorld();
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     set(laws, LAW_INDEXES.DRAG);
     const speed0 = [];
     for (let i = 0; i < COUNT; i++) {

@@ -192,15 +192,16 @@ function handleWorkerTick(message) {
     _workerTickInFlight = false;
     const tickStart = workerTickSentAt || performance.now();
     const offspring = Array.isArray(message.offspring) ? message.offspring : [];
+    // The worker owns the authoritative tick counter while it drives the
+    // solver — adopt its tickCount so the HUD does not show a frozen TICK 0.
+    if (typeof message.tickCount === 'number') tick = message.tickCount;
     finishPhysicsTick(tickStart, offspring);
 }
 
 function solve(...args) {
     if (physicsWorker && workerReady && !workerFailed) {
-        // The legacy render-loop bookkeeping still runs after this queue call;
-        // cancel its local tick increment on every in-flight frame while the
-        // worker owns the actual solver completion.
-        tick = Math.max(0, tick - 1);
+        // The worker owns the solver; queue one serialized tick and return.
+        // The authoritative tick counter arrives via TICK_COMPLETE.
         if (!workerBusy) {
             workerBusy = true;
             _workerTickInFlight = true;
@@ -1424,69 +1425,71 @@ function renderLoop(now) {
     // Main-thread physics
     if (particleView) {
         const tickStart = performance.now();
-        solve(particleView, particleCount, PARTICLE_STRIDE, lawState, dnaBuffer, worldSize, DT * runtimeConfig.simSpeed, rng);
-        spawnOffspring();
-        // Regular population feed — SPAWN_RATE particles per second, placed
-        // randomly within the configured initial spawn distribution.
-        // Capped by MAX_POP (soft cap) and PARTICLE_COUNT (hard cap).
-        const caps = spawnCaps(worldParams);
-        if (spawnRate > 0 && particleCount < caps.softCap) {
-            spawnAccumulator += spawnRate * (DT * runtimeConfig.simSpeed);
-            while (spawnAccumulator >= 1 && particleCount < caps.softCap) {
-                spawnAccumulator -= 1;
-                spawnSingleParticle(
-                    Math.floor(prng.nextFloat(0, speciesCount)),
-                    sampleSpawnPosition(worldParams, worldSize, prng),
-                );
-            }
-        }
-        tick++;
-        updateIntelligence();
-        perfTickMs = emaPerf(perfTickMs, performance.now() - tickStart);
-        updateLiveStats({ fps, tick, particles: particleCount, species: speciesCount, laws: getLawCount(lawState), frameMs: perfFrameMs, tickMs: perfTickMs, renderMs: perfRenderMs });
-        // On-screen canvas debug overlay (first 2 seconds, debug overlay only)
-        if (isDebugVisible() && tick <= 130) {
-            const dbg = renderer.ctx;
-            if (dbg) {
-                dbg.save();
-                dbg.font = '10px monospace';
-                dbg.fillStyle = 'rgba(0,0,0,0.7)';
-                dbg.fillRect(4, 38, 320, tick === 1 ? 120 : 70);
-                dbg.fillStyle = '#0f0';
-                dbg.textAlign = 'left';
-                dbg.textBaseline = 'top';
-                let ly = 40;
-                if (tick === 1) {
-                    // Live particle count
-                    let aliveCount = 0, deadCount = 0, nanPos = 0;
-                    for (let di = 0; di < particleCount; di++) {
-                        const dbb = di * PARTICLE_STRIDE;
-                        const d = particleView[dbb + STRIDE_INDEXES.DEAD];
-                        const px = particleView[dbb], py = particleView[dbb + 1];
-                        if (d >= 0.5) deadCount++;
-                        else if (px !== px || py !== py) nanPos++;
-                        else aliveCount++;
-                    }
-                    dbg.fillStyle = '#ff0';
-                    dbg.fillText('PARTICLES: ' + particleCount + ' | Alive: ' + aliveCount + ' Dead: ' + deadCount + ' NaN: ' + nanPos, 8, ly); ly += 14;
-                    dbg.fillText('CANVAS: ' + renderer.width + 'x' + renderer.height + ' | Laws: ' + getLawCount(lawState), 8, ly); ly += 14;
-                    const p0 = particleView[0], p1 = particleView[1], p2 = particleView[2];
-                    const c0 = particleView[0 + STRIDE_INDEXES.COLOR_R], c1 = particleView[0 + STRIDE_INDEXES.COLOR_G], c2 = particleView[0 + STRIDE_INDEXES.COLOR_B];
-                    const a = particleView[0 + STRIDE_INDEXES.ALPHA];
-                    const d0 = particleView[0 + STRIDE_INDEXES.DEAD];
-                    dbg.fillStyle = '#0ff';
-                    dbg.fillText('POS: (' + p0.toFixed(1) + ',' + p1.toFixed(1) + ',' + p2.toFixed(1) + ') DEAD:' + d0.toFixed(2) + ' ALPHA:' + a.toFixed(2), 8, ly); ly += 14;
-                    dbg.fillText('COLOR: rgb(' + c0 + ',' + c1 + ',' + c2 + ') | MASS:' + particleView[6].toFixed(2) + ' NRG:' + particleView[50].toFixed(1), 8, ly); ly += 14;
-                    dbg.fillText('AGE:' + particleView[51].toFixed(0) + ' HUNGER:' + particleView[62].toFixed(2) + ' TEMP:' + particleView[66].toFixed(2), 8, ly); ly += 14;
+        const solvedLocally = solve(particleView, particleCount, PARTICLE_STRIDE, lawState, dnaBuffer, worldSize, DT * runtimeConfig.simSpeed, rng);
+        if (solvedLocally) spawnOffspring();
+        if (solvedLocally) {
+            // Regular population feed — SPAWN_RATE particles per second, placed
+            // randomly within the configured initial spawn distribution.
+            // Capped by MAX_POP (soft cap) and PARTICLE_COUNT (hard cap).
+            const caps = spawnCaps(worldParams);
+            if (spawnRate > 0 && particleCount < caps.softCap) {
+                spawnAccumulator += spawnRate * (DT * runtimeConfig.simSpeed);
+                while (spawnAccumulator >= 1 && particleCount < caps.softCap) {
+                    spawnAccumulator -= 1;
+                    spawnSingleParticle(
+                        Math.floor(prng.nextFloat(0, speciesCount)),
+                        sampleSpawnPosition(worldParams, worldSize, prng),
+                    );
                 }
-                // Always show FPS in debug
-                dbg.fillStyle = '#0f0';
-                dbg.fillText('FPS: ' + fps + ' TICK: ' + tick, 8, ly);
-                dbg.restore();
             }
+            tick++;
+            updateIntelligence();
+            perfTickMs = emaPerf(perfTickMs, performance.now() - tickStart);
+            updateLiveStats({ fps, tick, particles: particleCount, species: speciesCount, laws: getLawCount(lawState), frameMs: perfFrameMs, tickMs: perfTickMs, renderMs: perfRenderMs });
+            // On-screen canvas debug overlay (first 2 seconds, debug overlay only)
+            if (isDebugVisible() && tick <= 130) {
+                const dbg = renderer.ctx;
+                if (dbg) {
+                    dbg.save();
+                    dbg.font = '10px monospace';
+                    dbg.fillStyle = 'rgba(0,0,0,0.7)';
+                    dbg.fillRect(4, 38, 320, tick === 1 ? 120 : 70);
+                    dbg.fillStyle = '#0f0';
+                    dbg.textAlign = 'left';
+                    dbg.textBaseline = 'top';
+                    let ly = 40;
+                    if (tick === 1) {
+                        // Live particle count
+                        let aliveCount = 0, deadCount = 0, nanPos = 0;
+                        for (let di = 0; di < particleCount; di++) {
+                            const dbb = di * PARTICLE_STRIDE;
+                            const d = particleView[dbb + STRIDE_INDEXES.DEAD];
+                            const px = particleView[dbb], py = particleView[dbb + 1];
+                            if (d >= 0.5) deadCount++;
+                            else if (px !== px || py !== py) nanPos++;
+                            else aliveCount++;
+                        }
+                        dbg.fillStyle = '#ff0';
+                        dbg.fillText('PARTICLES: ' + particleCount + ' | Alive: ' + aliveCount + ' Dead: ' + deadCount + ' NaN: ' + nanPos, 8, ly); ly += 14;
+                        dbg.fillText('CANVAS: ' + renderer.width + 'x' + renderer.height + ' | Laws: ' + getLawCount(lawState), 8, ly); ly += 14;
+                        const p0 = particleView[0], p1 = particleView[1], p2 = particleView[2];
+                        const c0 = particleView[0 + STRIDE_INDEXES.COLOR_R], c1 = particleView[0 + STRIDE_INDEXES.COLOR_G], c2 = particleView[0 + STRIDE_INDEXES.COLOR_B];
+                        const a = particleView[0 + STRIDE_INDEXES.ALPHA];
+                        const d0 = particleView[0 + STRIDE_INDEXES.DEAD];
+                        dbg.fillStyle = '#0ff';
+                        dbg.fillText('POS: (' + p0.toFixed(1) + ',' + p1.toFixed(1) + ',' + p2.toFixed(1) + ') DEAD:' + d0.toFixed(2) + ' ALPHA:' + a.toFixed(2), 8, ly); ly += 14;
+                        dbg.fillText('COLOR: rgb(' + c0 + ',' + c1 + ',' + c2 + ') | MASS:' + particleView[6].toFixed(2) + ' NRG:' + particleView[50].toFixed(1), 8, ly); ly += 14;
+                        dbg.fillText('AGE:' + particleView[51].toFixed(0) + ' HUNGER:' + particleView[62].toFixed(2) + ' TEMP:' + particleView[66].toFixed(2), 8, ly); ly += 14;
+                    }
+                    // Always show FPS in debug
+                    dbg.fillStyle = '#0f0';
+                    dbg.fillText('FPS: ' + fps + ' TICK: ' + tick, 8, ly);
+                    dbg.restore();
+                }
+            }
+            bus.emit('physics:tick', { tick, buffer: particleBuffer, particleCount, speciesCount });
         }
-        bus.emit('physics:tick', { tick, buffer: particleBuffer, particleCount, speciesCount });
-    }
+    } // end solvedLocally (worker mode emits via finishPhysicsTick instead)
 
     } // end if (!paused)
 

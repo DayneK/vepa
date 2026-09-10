@@ -144,7 +144,7 @@ describe('Batch 04 — SENESCENCE / ENERGY / RADIATION / GENOTYPE (indices 12-15
       }
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.ENERGY]).toBe(10);
     expect(view[S.ELECTRIC_ENERGY]).toBe(20);
@@ -218,7 +218,7 @@ describe('Batch 04 — SENESCENCE / ENERGY / RADIATION / GENOTYPE (indices 12-15
       v[b + S.ARMOR] = 0;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, rng);
     expect(view[S.ENERGY]).toBe(100);
     expect(view[S.RADIATION_EXPOSURE]).toBe(0);
@@ -304,7 +304,7 @@ describe('Batch 04 — SENESCENCE / ENERGY / RADIATION / GENOTYPE (indices 12-15
       v[b + S.TEMPERATURE] = 10;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     const before = new Float32Array(42);
     before.set(view.subarray(S.DNA_CACHE_START, S.DNA_CACHE_START + 42));
     for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);

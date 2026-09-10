@@ -234,14 +234,14 @@ describe('walls & portals', () => {
 
 describe('solver integration', () => {
   it('FIELD_WIND drifts particles +X while the sim runs; no params = frozen', () => {
-    const wind = runSolver({ FIELD_WIND: 5 }, ['WRAP'], 30);
+    const wind = runSolver({ FIELD_WIND: 5 }, ['BUOYANCY'], 30);
     const vx = wind.view[S.VEL_X];
     const px = wind.view[S.POS_X];
     expect(vx).toBeGreaterThan(1);
     expect(px).toBeGreaterThan(110);
 
     // Control: same laws, zero fields — nothing moves.
-    const ctrl = runSolver({}, ['WRAP'], 30);
+    const ctrl = runSolver({}, ['BUOYANCY'], 30);
     expect(ctrl.view[S.POS_X]).toBeCloseTo(100, 3);
     expect(ctrl.view[S.VEL_X]).toBe(0);
   });
@@ -251,19 +251,19 @@ describe('solver integration', () => {
     // cells 7..8 → world x ∈ [875, 1125).
     const wallParams = { WALLS_PRESET: 3, WALL_THICKNESS: 2 };
     const at = { x: 870, y: 1000, z: 1000, vx: 10 };
-    const blocked = runSolver(wallParams, ['WRAP', 'COLL'], 6, at);
+    const blocked = runSolver(wallParams, ['BUOYANCY', 'COLL'], 6, at);
     expect(blocked.view[S.POS_X]).toBeLessThan(875); // never entered the slab
     expect(blocked.view[S.VEL_X]).toBeLessThan(0);   // bounced
 
     // Same layout without COLL: the slab is decorative, matter passes through.
-    const pass = runSolver(wallParams, ['WRAP'], 6, at);
+    const pass = runSolver(wallParams, ['BUOYANCY'], 6, at);
     expect(pass.view[S.POS_X]).toBeGreaterThan(875);
   });
 
   it('portals teleport matter across the dish', () => {
     const { view, buf } = makeParticle(187.5, 312.5, 312.5); // cell (1,2,2) — portal A
     runtimeConfig.worldParams = { ...createWorldParams(), PORTAL_COUNT: 1 };
-    const lawState = lawStateWith(['WRAP']);
+    const lawState = lawStateWith(['BUOYANCY']);
     solve(view, 1, PARTICLE_STRIDE, lawState, null, WORLD, DT, rng);
     // Portal B centre: cell (14,13,13) → (1812.5, 1687.5, 1687.5).
     expect(view[S.POS_X]).toBeGreaterThan(1700);

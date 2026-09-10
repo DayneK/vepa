@@ -52,14 +52,14 @@ function makeWorld(count, setup) {
   return { view, dna };
 }
 
-describe('Batch 22 — ELASTICITY / TURBULENCE / CENTRIPETAL / ROTATION (indices 84-87)', () => {
-  it('ELASTICITY: overlapping particles are pushed apart', () => {
+describe('Batch 22 — Slate Mechanics: CONTACT / MOMENTUM / TORQUE / ADHESION (indices 128-135)', () => {
+  it('CONTACT: overlapping particles are pushed apart', () => {
     const { view, dna } = makeWorld(2, (v, dna, b, i) => {
       v[b + S.POS_X] = i === 0 ? 1000 : 1000.5; // overlap: 0.6+0.6-0.5 = 0.7
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.ELASTICITY);
-    expect(isSet(laws, LAW_INDEXES.ELASTICITY)).toBe(true);
+    set(laws, LAW_INDEXES.CONTACT);
+    expect(isSet(laws, LAW_INDEXES.CONTACT)).toBe(true);
     const sep0 = view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X];
     for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     const sep1 = view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X];
@@ -67,107 +67,98 @@ describe('Batch 22 — ELASTICITY / TURBULENCE / CENTRIPETAL / ROTATION (indices
     expect(sep1).toBeGreaterThan(1.0); // clearly separated, not stuck
   });
 
-  it('ELASTICITY: ELASTICITY DNA sets the restitution (high bounces more than low)', () => {
-    const run = (rest) => {
-      const { view, dna } = makeWorld(2, (v, dna, b, i) => {
-        v[b + S.POS_X] = i === 0 ? 1000 : 1000.5;
-        v[b + S.DNA_CACHE_START + D.ELASTICITY] = rest;
-      });
-      const laws = createLawState();
-      set(laws, LAW_INDEXES.ELASTICITY);
-      for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-      return view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X];
-    };
-    expect(run(1.0)).toBeGreaterThan(run(0.0));
-  });
-
-  it('ELASTICITY gate: without ELASTICITY, separation is unchanged', () => {
+  it('CONTACT gate: without CONTACT, separation is unchanged', () => {
     const { view, dna } = makeWorld(2, (v, dna, b, i) => {
       v[b + S.POS_X] = i === 0 ? 1000 : 1000.5;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeCloseTo(0.5, 5);
   });
 
-  it('TURBULENCE: noise kicks leave a resting particle with nonzero velocity', () => {
-    const { view, dna } = makeWorld(1);
-    const laws = createLawState();
-    set(laws, LAW_INDEXES.TURBULENCE);
-    set(laws, LAW_INDEXES.WRAP);
-    expect(isSet(laws, LAW_INDEXES.TURBULENCE)).toBe(true);
-    const prng = lcg(999);
-    for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, prng);
-    const speed = Math.hypot(view[S.VEL_X], view[S.VEL_Y], view[S.VEL_Z]);
-    expect(speed).toBeGreaterThan(0.05);
-  });
-
-  it('TURBULENCE gate: without TURBULENCE, velocity stays zero', () => {
-    const { view, dna } = makeWorld(1);
-    const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
-    const prng = lcg(999);
-    for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, prng);
-    expect(view[S.VEL_X]).toBe(0);
-    expect(view[S.VEL_Y]).toBe(0);
-  });
-
-  it('CENTRIPETAL: particles are pulled toward the world centre (∝ distance)', () => {
-    const { view, dna } = makeWorld(1, (v, dna, b) => {
-      v[b + S.POS_X] = 100; v[b + S.POS_Y] = 100; v[b + S.POS_Z] = 100;
+  it('MOMENTUM: velocity exchange moves a moving particle toward the resting one', () => {
+    const { view, dna } = makeWorld(2, (v, dna, b, i) => {
+      v[b + S.POS_X] = i === 0 ? 1000 : 1002;   // near neighbours
+      v[b + S.VEL_X] = i === 0 ? 2 : 0;          // particle 0 moving +X
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.CENTRIPETAL);
-    expect(isSet(laws, LAW_INDEXES.CENTRIPETAL)).toBe(true);
-    const center = WORLD / 2;
-    const d0 = Math.hypot(view[S.POS_X] - center, view[S.POS_Y] - center, view[S.POS_Z] - center);
-    for (let t = 0; t < 200; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-    const d1 = Math.hypot(view[S.POS_X] - center, view[S.POS_Y] - center, view[S.POS_Z] - center);
-    expect(d1).toBeLessThan(d0);
-    expect(view[S.VEL_X]).toBeGreaterThan(0);
-    expect(view[S.VEL_Y]).toBeGreaterThan(0);
-    expect(view[S.VEL_Z]).toBeGreaterThan(0);
+    set(laws, LAW_INDEXES.MOMENTUM);
+    expect(isSet(laws, LAW_INDEXES.MOMENTUM)).toBe(true);
+    for (let t = 0; t < 10; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
+    // momentum exchange decays the moving particle's velocity
+    expect(view[S.VEL_X]).toBeLessThan(2);
   });
 
-  it('CENTRIPETAL gate: without CENTRIPETAL, no central pull', () => {
-    const { view, dna } = makeWorld(1, (v, dna, b) => {
-      v[b + S.POS_X] = 100; v[b + S.POS_Y] = 100; v[b + S.POS_Z] = 100;
+  it('MOMENTUM gate: without MOMENTUM, velocity is preserved', () => {
+    const { view, dna } = makeWorld(2, (v, dna, b, i) => {
+      v[b + S.POS_X] = i === 0 ? 1000 : 1002;
+      v[b + S.VEL_X] = i === 0 ? 2 : 0;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
-    for (let t = 0; t < 200; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-    expect(view[S.VEL_X]).toBe(0);
-    expect(view[S.POS_X]).toBe(100);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate
+    for (let t = 0; t < 10; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
+    expect(view[S.VEL_X]).toBeCloseTo(2, 5);
   });
 
-  it('ROTATION: tangential force spins the world (perpendicular to the radius)', () => {
-    const { view, dna } = makeWorld(1, (v, dna, b) => {
-      v[b + S.POS_X] = 700;  // offset (−300, 0) from centre (1000,1000)
-      v[b + S.POS_Y] = 1000;
+  it('TORQUE: relative tangential force appears between neighbours', () => {
+    const { view, dna } = makeWorld(2, (v, dna, b, i) => {
+      v[b + S.POS_X] = i === 0 ? 1000 : 1002;
+      v[b + S.VEL_Y] = i === 0 ? 0 : 1; // relative tangential velocity
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.ROTATION);
-    expect(isSet(laws, LAW_INDEXES.ROTATION)).toBe(true);
-    // First impulse is purely tangential: offset (−300, 0) → force (0, −0.6).
-    solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-    expect(view[S.VEL_Y]).toBeLessThan(0);
-    expect(view[S.VEL_X]).toBeCloseTo(0, 5);
-    // Long-run: the swirl carries the particle around the centre (−y drift).
-    for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-    expect(view[S.VEL_Y]).toBeLessThan(0);
-    expect(view[S.POS_Y]).toBeLessThan(1000);
+    set(laws, LAW_INDEXES.TORQUE);
+    expect(isSet(laws, LAW_INDEXES.TORQUE)).toBe(true);
+    for (let t = 0; t < 40; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
+    // cross product of the x-offset with the y relative velocity acts on z
+    expect(view[S.VEL_Z]).toBeGreaterThan(1e-4);
   });
 
-  it('ROTATION gate: without ROTATION, no swirl', () => {
-    const { view, dna } = makeWorld(1, (v, dna, b) => {
-      v[b + S.POS_X] = 700;
-      v[b + S.POS_Y] = 1000;
+  it('ADHESION: nearby particles are pulled together', () => {
+    const { view, dna } = makeWorld(2, (v, dna, b, i) => {
+      v[b + S.POS_X] = i === 0 ? 1000 : 1002.5; // within contact = 0.6+0.6+2 = 3.2
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
-    for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-    expect(view[S.VEL_Y]).toBe(0);
-    expect(view[S.POS_Y]).toBe(1000);
+    set(laws, LAW_INDEXES.ADHESION);
+    expect(isSet(laws, LAW_INDEXES.ADHESION)).toBe(true);
+    const sep0 = view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X];
+    for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
+    const sep1 = view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X];
+    expect(sep1).toBeLessThan(sep0);
+  });
+
+  it('ADHESION gate: without ADHESION, nearby particles stay put', () => {
+    const { view, dna } = makeWorld(2, (v, dna, b, i) => {
+      v[b + S.POS_X] = i === 0 ? 1000 : 1002.5;
+    });
+    const laws = createLawState();
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate
+    for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
+    expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeCloseTo(2.5, 5);
+  });
+
+  it('FRAGMENTATION: hard impacts repel the pair', () => {
+    const { view, dna } = makeWorld(2, (v, dna, b, i) => {
+      v[b + S.POS_X] = i === 0 ? 1000 : 1003;
+      v[b + S.VEL_X] = i === 0 ? 8 : 0; // relative speed 8 > threshold 2
+    });
+    const laws = createLawState();
+    set(laws, LAW_INDEXES.FRAGMENTATION);
+    expect(isSet(laws, LAW_INDEXES.FRAGMENTATION)).toBe(true);
+    const vx0 = view[S.VEL_X];
+    solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
+    // the impact force opposes the closing velocity: it decays after one tick
+    expect(view[S.VEL_X]).toBeLessThan(vx0);
+    expect(view[PARTICLE_STRIDE + S.VEL_X]).toBeGreaterThan(0);
+  });
+
+  it('slate mechanics laws are inert without their law bit (hard gate)', () => {
+    const { view, dna } = makeWorld(2, (v, dna, b, i) => {
+      v[b + S.POS_X] = i === 0 ? 1000 : 1000.5;
+    });
+    const laws = createLawState();
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate only
+    for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
+    expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeCloseTo(0.5, 5);
   });
 });

@@ -30,7 +30,7 @@ describe('Batch 07 — starMass / simSpeed / focalLength / ortho', () => {
     // main.js uses `DT * runtimeConfig.simSpeed` as the solver dt; the same
     // multiplier is visible to the solver through dt.
     const { view, dna } = makeWorld(1, (v, d, b) => { v[b + S.VEL_X] = 2; });
-    const laws = lawsWith(LAW_INDEXES.WRAP);
+    const laws = lawsWith(LAW_INDEXES.BUOYANCY);
     withWorldParam('WIND', 2, () => {
       solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
     });

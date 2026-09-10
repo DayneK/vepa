@@ -216,7 +216,7 @@ describe('Batch 05 audit — PHENOTYPE / CATALYSIS_LAW / SOLVATION / ACIDITY', (
       world.view[PARTICLE_STRIDE + S.POS_X] = 104;
       world.view[S.CHARGE] = 1;
       world.view[PARTICLE_STRIDE + S.CHARGE] = -1;
-      const st = lawsOn('WRAP');
+      const st = lawsOn('BUOYANCY');
       for (let t = 0; t < 200; t++) solve(world.view, 2, PARTICLE_STRIDE, st, world.dna, WORLD, DT, () => 0.5);
       expect(world.view[S.VEL_X]).toBe(0);
     });

@@ -30,7 +30,7 @@ describe('Batch 12 — DNA.BASE_RADIUS / DNA.ELASTICITY / DNA.BOND_ANGLE / DNA.P
           v[b + S.VEL_X] = -2;
         }
       });
-      const laws = lawsWith(LAW_INDEXES.COLL, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.COLL, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.VEL_X];
     };
@@ -47,7 +47,7 @@ describe('Batch 12 — DNA.BASE_RADIUS / DNA.ELASTICITY / DNA.BOND_ANGLE / DNA.P
           v[b + S.POS_X] = 1020; // 30 apart: under the wide-angle equilibrium, over the default one
         }
       });
-      const laws = lawsWith(LAW_INDEXES.BOND, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.BOND, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 5; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.POS_X];
     };
@@ -66,7 +66,7 @@ describe('Batch 12 — DNA.BASE_RADIUS / DNA.ELASTICITY / DNA.BOND_ANGLE / DNA.P
           v[b + S.DNA_CACHE_START + 4] = p1;
         }
       });
-      const laws = lawsWith(LAW_INDEXES.CHARGE_LAW, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.CHARGE_LAW, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.POS_X];
     };

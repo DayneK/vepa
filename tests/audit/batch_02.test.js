@@ -31,7 +31,7 @@ function makeWorld(count, setup) {
     view[b + S.SIGNAL] = 0;
     view[b + S.HUNGER] = 0;
     view[b + S.ARMOR] = 0;
-    view[b + S.TEMPERATURE] = 0;
+    view[b + S.TEMPERATURE] = 0.5; // BUOYANCY gate law is inert at ambient temp
     view[b + S.RADIUS] = 0.6;
     view[b + S.MITOSIS_TIMER] = 0;
     view[b + S.PARTNER_ID] = -1;
@@ -70,7 +70,7 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
       else { v[b + S.POS_X] = 1002; v[b + S.VEL_X] = -1; }
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 20; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeLessThan(0); // crossed
   });
@@ -158,7 +158,7 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
       });
       const laws = createLawState();
       set(laws, LAW_INDEXES.ACCR);
-      set(laws, LAW_INDEXES.WRAP);
+      set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
       return { mass: view[S.MASS], deadNeighbor: view[PARTICLE_STRIDE + S.DEAD] };
     };
@@ -170,7 +170,7 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
     expect(bounced.deadNeighbor).toBe(0);
   });
 
-  it('ACCR: FUSION_TIME — sub-threshold pairs fuse after dwelling in close proximity', () => {
+  it('ACCR: FUSION_TIME — dwelling pairs cement into composites at half dwell (v9.1.0)', () => {
     const run = (ticks) => {
       const { view, dna } = makeWorld(2, (v, dna, b, i) => {
         v[b + S.MASS] = i === 0 ? 10 : 1;
@@ -181,16 +181,24 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
       });
       const laws = createLawState();
       set(laws, LAW_INDEXES.ACCR);
-      set(laws, LAW_INDEXES.WRAP);
+      set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
       for (let t = 0; t < ticks; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-      return { mass: view[S.MASS], deadNeighbor: view[PARTICLE_STRIDE + S.DEAD] };
+      return { mass: view[S.MASS], deadNeighbor: view[PARTICLE_STRIDE + S.DEAD], bond: view[S.BOND_COUNT] };
     };
-    const early = run(11);    // 11 × 0.25 = 2.75 s < 3 s → not yet fused
+    // v9.1.0 composite adjoining: at HALF the fusion dwell the pair cements
+    // into an adjoined structure (bonded seam, both grains keep identity)
+    // instead of fully merging, and the composite remains stable past the
+    // full dwell threshold.
+    const early = run(4);     // 4 × 0.25 = 1 s < 1.5 s → neither adjoined nor fused
     expect(early.mass).toBe(10);
     expect(early.deadNeighbor).toBe(0);
-    const fused = run(13);    // 13 × 0.25 = 3.25 s ≥ 3 s → full merger
-    expect(fused.mass).toBeGreaterThan(10);
-    expect(fused.deadNeighbor).toBe(1);
+    const cemented = run(8);  // 8 × 0.25 = 2 s ≥ 3/2 s → adjoined composite
+    expect(cemented.mass).toBe(10);
+    expect(cemented.deadNeighbor).toBe(0);
+    expect(cemented.bond).toBeGreaterThanOrEqual(1); // seam bond registered
+    const fused = run(13);    // past the full dwell the composite stays stable
+    expect(fused.mass).toBe(10);
+    expect(fused.deadNeighbor).toBe(0);
   });
 
   it('ACCR: sub-threshold ACCR-only contacts bounce instead of passing through', () => {
@@ -239,9 +247,10 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
   it('PLANETARY gate: without PLANETARY, no downward pull', () => {
     const { view, dna } = makeWorld(1, (v, dna, b) => {
       v[b + S.POS_X] = 100; v[b + S.POS_Y] = 100; v[b + S.POS_Z] = 100;
+      v[b + S.TEMPERATURE] = 0.5; // BUOYANCY gate is truly inert only at ambient
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 200; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.VEL_Z]).toBe(0);
     expect(view[S.POS_Z]).toBe(100);
@@ -292,7 +301,7 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
       v[b + S.ENERGY] = 100;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 20; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, rng);
     expect(view[S.ENERGY]).toBe(100);
   });

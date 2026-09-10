@@ -97,6 +97,7 @@ describe('Batch 30 — UNCERTAINTY / TELEPORT / OBSERVER / PLANCK (indices 116-1
     buf[base(0) + S.ENTANGLE_ID] = 1;
     buf[base(0) + S.ENTANGLE_PHASE] = 1;
     buf[base(1) + S.POS_X] = 300; buf[base(1) + S.POS_Y] = 100; buf[base(1) + S.POS_Z] = 100;
+    buf[base(1) + S.MASS] = 1.5;  // partner must be alive for the transfer
     buf[base(1) + S.ENERGY] = 100;
     buf[base(1) + S.ENTANGLE_ID] = 0;
     buf[base(1) + S.ENTANGLE_PHASE] = 1;

@@ -10,7 +10,7 @@ describe('Batch 09 — DNA.TORQUE / DNA.JITTER / DNA.TIDAL / DNA.INERTIA', () =>
         v[b + S.DNA_CACHE_START + 2] = torque; // TORQUE
         v[b + S.VEL_X] = 5;
       });
-      const laws = lawsWith(LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 40; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return { vx: view[S.VEL_X], vy: view[S.VEL_Y], speed: Math.hypot(view[S.VEL_X], view[S.VEL_Y]) };
     };
@@ -26,7 +26,7 @@ describe('Batch 09 — DNA.TORQUE / DNA.JITTER / DNA.TIDAL / DNA.INERTIA', () =>
       const { view, dna } = makeWorld(1, (v, d, b) => {
         v[b + S.DNA_CACHE_START + 3] = jitter; // JITTER
       });
-      const laws = lawsWith(LAW_INDEXES.ENTR, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.ENTR, LAW_INDEXES.BUOYANCY);
       const rng = lcg(42);
       for (let t = 0; t < 80; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, rng);
       return Math.abs(view[S.VEL_X]) + Math.abs(view[S.VEL_Y]) + Math.abs(view[S.VEL_Z]);
@@ -43,7 +43,7 @@ describe('Batch 09 — DNA.TORQUE / DNA.JITTER / DNA.TIDAL / DNA.INERTIA', () =>
           v[b + S.DNA_CACHE_START + 15] = tidal; // TIDAL
         }
       });
-      const laws = lawsWith(LAW_INDEXES.GRAV, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.GRAV, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 6; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.POS_X];
     };
@@ -58,7 +58,7 @@ describe('Batch 09 — DNA.TORQUE / DNA.JITTER / DNA.TIDAL / DNA.INERTIA', () =>
           v[b + S.DNA_CACHE_START + 26] = inertia; // INERTIA
         }
       });
-      const laws = lawsWith(LAW_INDEXES.GRAV, LAW_INDEXES.WRAP);
+      const laws = lawsWith(LAW_INDEXES.GRAV, LAW_INDEXES.BUOYANCY);
       // 3 ticks only — longer runs let the low-inertia particle overshoot past
       // the neighbour and get pulled back, which scrambles the comparison.
       for (let t = 0; t < 3; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);

@@ -11,6 +11,7 @@ let rafId = null;
 let physicsTickCount = 0;
 let lastPhysicsTime = 0;
 let ticksPerSecond = 0;
+let lastTickShown = -1; // module scope: also read by the rAF loop below
 
 // Tick triple formatter: TICK n | x.x TPS | xx FPS
 // Grouped tick digits keep large counters readable at a glance.
@@ -67,7 +68,6 @@ export function createHUD(bus) {
 
   let currentTick = 0;
   let lastParticles = -1;
-  let lastTickShown = -1;
 
   // Throttle DOM writes: particle text only changes when the value changes.
   // Tick telemetry is compact and refreshed once per second.

@@ -68,7 +68,7 @@ describe('Batch 23 — SYMBIOSIS / PARASITE / HIBERNATION / IMMUNITY (indices 88
       v[b + S.ENERGY] = i === 0 ? 100 : 40;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.ENERGY]).toBe(100);
     expect(view[PARTICLE_STRIDE + S.ENERGY]).toBe(40);
@@ -93,7 +93,7 @@ describe('Batch 23 — SYMBIOSIS / PARASITE / HIBERNATION / IMMUNITY (indices 88
       else { v[b + S.POS_X] = 1005; v[b + S.MASS] = 5; v[b + S.ENERGY] = 100; }
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.ENERGY]).toBe(100);
     expect(view[PARTICLE_STRIDE + S.ENERGY]).toBe(100);
@@ -143,7 +143,7 @@ describe('Batch 23 — SYMBIOSIS / PARASITE / HIBERNATION / IMMUNITY (indices 88
       v[b + S.ENERGY] = 100;
     });
     const laws = createLawState();
-    set(laws, LAW_INDEXES.WRAP);
+    set(laws, LAW_INDEXES.BUOYANCY); // inert gate: temperature at ambient 0.5 → no-op
     for (let t = 0; t < 100; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.ARMOR]).toBe(0);
   });
