@@ -1,5 +1,20 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.6] - 2026-09-12 → 9.1.3
+
+### fix(mechanics): separate contact correction from collision impulse
+
+- Make CONTACT a mass-weighted positional penetration correction and keep COLL responsible for approaching-body impact impulses.
+- Prevent CONTACT from being emitted again as an acceleration in the slate mechanics pass, avoiding duplicate normal response when CONTACT and COLL are enabled together.
+- Add swept-impact normal fallback for fast COLL contacts and focused mechanics boundary tests.
+- GitHub Pages deployment: triggered by the push to `main`.
+
+### Files
+
+- `src/physics/lawgroups/mechanicsLaws.js`, `src/physics/lawgroups/mechanicsHelp.js` — explicit contact/impact APIs and aligned help semantics.
+- `src/physics/solver.js` — separated contact geometry correction from collision response.
+- `tests/unit/mechanics.test.js` — contact immutability and mass-weighted impulse coverage.
+
 ## [4.9.5] - 2026-08-26 → 9.1.2
 
 ### docs(spec): add deterministic hierarchical technical-spec generation

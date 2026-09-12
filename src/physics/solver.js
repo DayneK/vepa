@@ -117,7 +117,7 @@ import {
 import { createSynergyCache } from './synergy.js';
 import { applyAlloy, adjoinParticles, isBondedPair, mergeParticles } from './mergePhysics.js';
 import { applyTide, applyFriction, applyHorizon, applyRadiationPressure, applyMassInertia, applyField } from './lawgroups/physicsLaws.js';
-import { applyContact, applyMomentum, applyInertia, applyTorque, applyConstraint, applyFragmentation, applyTopology, applyAdhesion } from './lawgroups/mechanicsLaws.js';
+import { applyContactCorrection, applyCollisionImpulse, applyMomentum, applyInertia, applyTorque, applyConstraint, applyFragmentation, applyTopology, applyAdhesion } from './lawgroups/mechanicsLaws.js';
 import { applyAdiabatic, applyCompression, applyExpansion, applyEquilibrium, applyLatentHeat, applyRunaway } from './lawgroups/thermoLaws.js';
 import { applySymbiosis, applyParasite, applyHibernation, applyImmunity } from './lawgroups/biologyLaws.js';
 import { applyElectrolysis, applyPhotolysis, applyPrecipitation, applyNeutralization, applyStoichiometry, applyAutocatalysis } from './lawgroups/chemistryLaws.js';
@@ -640,8 +640,11 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
         }
       }
 
-      // ── Collision + Accretion (contact laws) ──
-      if (near && (active[LAW_INDEXES.COLL] || active[LAW_INDEXES.ACCR]) && !_useGPU) {
+      // ── Contact, collision + accretion ──
+      // CONTACT owns geometric penetration correction. COLL owns the velocity
+      // impulse. Keeping these operations separate prevents two normal pushes
+      // from being applied when both laws are enabled.
+      if (near && (active[LAW_INDEXES.CONTACT] || active[LAW_INDEXES.COLL] || active[LAW_INDEXES.ACCR]) && !_useGPU) {
         const m1 = view[iBase + S.MASS];
         const m2 = view[jBase + S.MASS];
         if (m1 <= 0 || m2 <= 0) continue;
@@ -649,6 +652,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
         const r2 = view[jBase + S.RADIUS];
         const overlap = (r1 + r2) - dist;
         const collOn = active[LAW_INDEXES.COLL];
+        const contactOn = active[LAW_INDEXES.CONTACT];
         const accrOn = active[LAW_INDEXES.ACCR];
 
         // ACCR proximity-dwell bookkeeping: reset the timer whenever the
@@ -661,13 +665,22 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
             view[iBase + S.PARTNER_ID] = -1;
           }
         }
-
-        if (overlap > 0 && dist > 0.01) {
+        const relativeSpeedNow = Math.hypot(
+          view[iBase + S.VEL_X] - view[jBase + S.VEL_X],
+          view[iBase + S.VEL_Y] - view[jBase + S.VEL_Y],
+          view[iBase + S.VEL_Z] - view[jBase + S.VEL_Z],
+        );
+        const sweptContact = collOn && relativeSpeedNow * localTimeStep >= Math.max(0, dist - (r1 + r2));
+        if ((overlap > 0 || sweptContact) && (dist > 0.01 || (collOn && relativeSpeedNow > 0))) {
           // Collision normal (i → j)
-          const invDist = 1.0 / dist;
-          const nx = dx * invDist;
-          const ny = dy * invDist;
-          const nz = dz * invDist;
+          const invDist = dist > 0.01 ? 1.0 / dist : 0;
+          const rvxForNormal = view[iBase + S.VEL_X] - view[jBase + S.VEL_X];
+          const rvyForNormal = view[iBase + S.VEL_Y] - view[jBase + S.VEL_Y];
+          const rvzForNormal = view[iBase + S.VEL_Z] - view[jBase + S.VEL_Z];
+          const fallbackSpeed = Math.hypot(rvxForNormal, rvyForNormal, rvzForNormal);
+          const nx = invDist ? dx * invDist : rvxForNormal / fallbackSpeed;
+          const ny = invDist ? dy * invDist : rvyForNormal / fallbackSpeed;
+          const nz = invDist ? dz * invDist : rvzForNormal / fallbackSpeed;
 
           // Relative velocity along normal
           const dvx = view[iBase + S.VEL_X] - view[jBase + S.VEL_X];
@@ -715,27 +728,38 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
             adjoined = isBondedPair(view, iBase, jBase, stride);
           }
 
-          // ── COLL: softbody push + elastic bounce ──
-          // Massive bodies squish instead of rigidly bouncing; fusing pairs
-          // coalesce instead of bouncing apart.
-          if (collOn && !fusing && !adjoined) {
-            const isStarI = m1 > runtimeConfig.starMass;
-            const isStarJ = m2 > runtimeConfig.starMass;
-            const push = overlap * (isStarI || isStarJ ? 0.2 : 0.5);
-            px -= nx * push;
-            py -= ny * push;
-            pz -= nz * push;
+          // CONTACT is positional/geometric only. It never changes velocity.
+          if (contactOn && !fusing && !adjoined) {
+            const correction = applyContactCorrection(view, iBase, jBase, dx, dy, dz, dist, overlap * 4);
+            if (correction) {
+              px += correction.x * 1.5;
+              py += correction.y * 1.5;
+              pz += correction.z * 1.5;
+            }
+          }
 
-            // Bounce if approaching (relVelN > 0 along the i→j normal means
-            // the pair is closing; a negative impulse along n separates them)
-            if (relVelN > 0) {
-              const elasticity = dnaI[DNA_INDEXES.ELASTICITY] || 0.5;
-              const impulse = -(1 + elasticity) * relVelN / (m1 + m2);
-              const bounceForce = impulse * m2;
-              ax += bounceForce * nx;
-              ay += bounceForce * ny;
-              az += bounceForce * nz;
-              // A collision is a measurement — collapse the wave (v4.6.29).
+          if (collOn && !contactOn && overlap > 0 && !fusing && !adjoined) {
+            // COLL retains an anti-tunnelling positional guard for the case
+            // where a fast impact was sampled after the bodies crossed. This
+            // is not a second contact response: CONTACT owns normal
+            // penetration correction whenever it is enabled.
+            const correction = applyContactCorrection(view, iBase, jBase, dx, dy, dz, dist, overlap * 4);
+            if (correction) {
+              px += correction.x;
+              py += correction.y;
+              pz += correction.z;
+            }
+          }
+
+          // COLL is impact response only. It contributes one mass-weighted
+          // normal impulse for approaching bodies and does not recalculate
+          // penetration correction.
+          if (collOn && !fusing && !adjoined) {
+            const collision = applyCollisionImpulse(view, iBase, jBase, nx, ny, nz, dnaI[DNA_INDEXES.ELASTICITY] || 0.5);
+            if (collision) {
+              ax += collision.ax;
+              ay += collision.ay;
+              az += collision.az;
               if (active[LAW_INDEXES.WAVE_PARTICLE]) {
                 view[iBase + S.WAVE_MEASURED] = 1;
                 view[jBase + S.WAVE_MEASURED] = 1;
@@ -1144,10 +1168,9 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       }
 
       // Slate Mechanics
-      if (active[LAW_INDEXES.CONTACT]) {
-        const f = applyContact(view, iBase, jBase, dx, dy, dz, dist, 1.0);
-        if (f) { ax += f.ax; ay += f.ay; az += f.az; }
-      }
+      // CONTACT has already applied its positional correction above. It is
+      // intentionally not emitted as an acceleration here; this keeps the
+      // geometric constraint from being double-applied by CONTACT + COLL.
       if (active[LAW_INDEXES.MOMENTUM]) {
         const f = applyMomentum(view, iBase, jBase, 0.04);
         ax += f.ax; ay += f.ay; az += f.az;

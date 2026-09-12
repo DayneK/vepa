@@ -1,6 +1,6 @@
 {
   "name": "vepa-v4",
-  "version": "9.1.2",
+  "version": "9.1.3",
   "description": "VEPA4 — Vector Emergent Physics Automata (Integrated Intelligence release)",
   "type": "module",
   "scripts": {

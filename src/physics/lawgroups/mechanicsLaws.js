@@ -4,12 +4,30 @@ import { STRIDE_INDEXES as S } from '../../constants.js';
 const clamp = (v, lo = -50, hi = 50) => Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : 0;
 const mass = (view, base) => Math.max(0.001, Number.isFinite(view[base + S.MASS]) ? view[base + S.MASS] : 0.001);
 
-export function applyContact(view, i, j, dx, dy, dz, dist, k = 1) {
+export function applyContactCorrection(view, i, j, dx, dy, dz, dist, maxCorrection = Infinity) {
   const overlap = (view[i + S.RADIUS] || 0) + (view[j + S.RADIUS] || 0) - dist;
-  if (overlap <= 0) return null;
-  const inv = 1 / Math.max(dist, 1e-6);
-  const force = overlap * k / (mass(view, i) + mass(view, j));
-  return { ax: clamp(-dx * inv * force), ay: clamp(-dy * inv * force), az: clamp(-dz * inv * force) };
+  if (overlap <= 0 || dist <= 1e-6) return null;
+  const mi = mass(view, i), mj = mass(view, j);
+  const share = Math.min(overlap, maxCorrection) * mj / (mi + mj);
+  const inv = 1 / dist;
+  return { x: -dx * inv * share, y: -dy * inv * share, z: -dz * inv * share };
+}
+
+export function applyCollisionImpulse(view, i, j, nx, ny, nz, elasticity = 0.5) {
+  const mi = mass(view, i), mj = mass(view, j);
+  const rvx = (view[i + S.VEL_X] || 0) - (view[j + S.VEL_X] || 0);
+  const rvy = (view[i + S.VEL_Y] || 0) - (view[j + S.VEL_Y] || 0);
+  const rvz = (view[i + S.VEL_Z] || 0) - (view[j + S.VEL_Z] || 0);
+  const relativeVelocityAlongNormal = rvx * nx + rvy * ny + rvz * nz;
+  if (relativeVelocityAlongNormal <= 0) return null;
+  const impulse = -(1 + Math.max(0, Math.min(1, elasticity))) * relativeVelocityAlongNormal / (mi + mj);
+  return { ax: impulse * mj * nx, ay: impulse * mj * ny, az: impulse * mj * nz };
+}
+
+export function applyContact(view, i, j, dx, dy, dz, dist, k = 1) {
+  const correction = applyContactCorrection(view, i, j, dx, dy, dz, dist);
+  if (!correction) return null;
+  return { ax: clamp(correction.x * k), ay: clamp(correction.y * k), az: clamp(correction.z * k) };
 }
 
 export function applyMomentum(view, i, j, k = 0.04) {

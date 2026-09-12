@@ -10,8 +10,8 @@ export const MECHANICS_PARAMETERS = {
 };
 
 export const MECHANICS_HELP = {
-  CONTACT: { hint: 'Hard contact prevents particle overlap.', explanation: 'Contact resolves interpenetration using radii and mass.', system: 'Overlap produces a bounded separating acceleration.', advanced: 'The local contact primitive complements ELASTICITY.' },
-  MOMENTUM: { hint: 'Momentum transfers motion between neighbors.', explanation: 'Relative velocity is shared according to partner mass.', system: 'Velocity difference produces a mass-weighted impulse.', advanced: 'Bounded relaxation avoids numerical energy injection.' },
+  CONTACT: { hint: 'Hard contact prevents particle overlap.', explanation: 'Contact applies a mass-weighted positional correction when surfaces interpenetrate.', system: 'Overlap produces a bounded position correction; CONTACT never applies restitution or changes velocity.', advanced: 'The geometric contact primitive complements COLL, whose separate responsibility is impact impulse.' },
+  MOMENTUM: { hint: 'Momentum transfers motion between neighbors.', explanation: 'Relative velocity is shared according to partner mass.', system: 'Velocity difference produces a mass-weighted impulse.', advanced: 'Use it for relaxation after contact; it is distinct from COLL restitution.' },
   INERTIA: { hint: 'Inertia resists acceleration.', explanation: 'Mass scales how strongly accumulated acceleration changes motion.', system: 'Force response is divided by mass.', advanced: 'It does not add particle stride state.' },
   TORQUE: { hint: 'Torque turns relative motion around a contact vector.', explanation: 'Tangential relative motion becomes a bounded rotational impulse.', system: 'The cross product of separation and relative velocity supplies the impulse.', advanced: 'It complements the world-centre ROTATION law.' },
   CONSTRAINT: { hint: 'Constraints maintain a separation target.', explanation: 'Neighbor pairs are softly driven toward their combined-radius target distance.', system: 'Distance error becomes a spring-like bounded force.', advanced: 'Use with BOND for persistent composite structures.' },
