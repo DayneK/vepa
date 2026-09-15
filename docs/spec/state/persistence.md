@@ -2,14 +2,4 @@
 
 # State: Persistence
 
-World persistence is implemented in [src/state/worldSave.js](../../../src/state/worldSave.js). It captures particle data, law serialization, world parameters, summary metadata, save adapters, comparison metrics and an undo ring.
-
-| Capability | Observed API |
-| --- | --- |
-| Capture/restore | `captureWorldState`, `restoreWorldState` |
-| File format | `exportWorldSave`, `parseWorldSave` |
-| Store | `createBrowserSaveAdapter`, `createWorldSaveStore` |
-| Comparison | `compareWorldSaves`, `sameWorldFingerprint` |
-| Undo | `createUndoRing` with past and redo stacks |
-
-The law state must round-trip all five words. A persistence format that drops penta flags is incomplete for the current law map.
+World states are captured, restored, compared, and undone via [src/state/worldSave.js](src/state/worldSave.js). Presets are managed by [src/state/presetManager.js](src/state/presetManager.js). Persistence includes particle buffers, DNA, law state, and runtime configuration.

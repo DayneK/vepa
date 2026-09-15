@@ -8,8 +8,8 @@
 | Category | information |
 | Color | VIOLET |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Culture: same-species contacts converge their traits. |
-| EXPLANATION | Contacts between particles of the same species blend their DNA cache — norms spread within the group while leaving other species untouched. |
-| SYSTEM | In-group trait convergence. With GENOTYPE it acts as soft heredity; with SYMBOL it sharpens species identity over time. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_20.test.js](../../../../tests/audit/batch_20.test.js), [tests/unit/lawCategories.test.js](../../../../tests/unit/lawCategories.test.js), [tests/unit/synergyCache.test.js](../../../../tests/unit/synergyCache.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/78_CULTURE.md](../../../audit/laws/a3/stage-1/78_CULTURE.md), [docs/audit/laws/a3/stage-2/78_CULTURE.md](../../../audit/laws/a3/stage-2/78_CULTURE.md), [docs/audit/laws/a3/stage-3/78_CULTURE.md](../../../audit/laws/a3/stage-3/78_CULTURE.md)
+- Tests: [tests/audit/batch_20.test.js](tests/audit/batch_20.test.js), [tests/unit/lawCategories.test.js](tests/unit/lawCategories.test.js), [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/78_CULTURE.md](docs/audit/laws/a3/stage-1/78_CULTURE.md), [docs/audit/laws/a3/stage-2/78_CULTURE.md](docs/audit/laws/a3/stage-2/78_CULTURE.md), [docs/audit/laws/a3/stage-3/78_CULTURE.md](docs/audit/laws/a3/stage-3/78_CULTURE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

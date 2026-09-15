@@ -8,8 +8,8 @@
 | Category | metaphysics |
 | Color | TEAL |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Telepathy: instant information sharing across species. |
-| EXPLANATION | Confirmed batch-12 (slight energy drain): same-species particles share SIGNAL instantly regardless of distance, and the receiver pays a slight energy cost per transfer for the shared channel. |
-| SYSTEM | Same-species pair: receiver SIGNAL += sender SIGNAL x 0.05 x synergy (any distance); receiver ENERGY −= 0.02 x synergy x dt. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_10.test.js](../../../../tests/audit/batch_10.test.js), [tests/audit/batch_12.test.js](../../../../tests/audit/batch_12.test.js), [tests/unit/synergyCache.test.js](../../../../tests/unit/synergyCache.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/47_TELEPATHY.md](../../../audit/laws/a3/stage-1/47_TELEPATHY.md), [docs/audit/laws/a3/stage-2/47_TELEPATHY.md](../../../audit/laws/a3/stage-2/47_TELEPATHY.md), [docs/audit/laws/a3/stage-3/47_TELEPATHY.md](../../../audit/laws/a3/stage-3/47_TELEPATHY.md)
+- Tests: [tests/audit/batch_10.test.js](tests/audit/batch_10.test.js), [tests/audit/batch_12.test.js](tests/audit/batch_12.test.js), [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/stage-1/47_TELEPATHY.md](docs/audit/laws/a3/stage-1/47_TELEPATHY.md), [docs/audit/laws/a3/stage-1/48_CLAIRVOYANCE.md](docs/audit/laws/a3/stage-1/48_CLAIRVOYANCE.md), [docs/audit/laws/a3/stage-2/47_TELEPATHY.md](docs/audit/laws/a3/stage-2/47_TELEPATHY.md), [docs/audit/laws/a3/stage-2/48_CLAIRVOYANCE.md](docs/audit/laws/a3/stage-2/48_CLAIRVOYANCE.md), [docs/audit/laws/a3/stage-3/47_TELEPATHY.md](docs/audit/laws/a3/stage-3/47_TELEPATHY.md), [docs/audit/laws/a3/stage-3/48_CLAIRVOYANCE.md](docs/audit/laws/a3/stage-3/48_CLAIRVOYANCE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

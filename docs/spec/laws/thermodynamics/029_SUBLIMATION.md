@@ -7,9 +7,9 @@
 | Index | 29 |
 | Category | thermodynamics |
 | Color | GREEN |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Sublimation: low-mass hot particles turn to gas. |
-| EXPLANATION | Confirmed batch-08: hot (temp > 0.5) high-energy (ENERGY > 50) particles sublimate, losing mass down to a 0.02 floor and gaining a PRNG velocity burst; sublimation consumes extra energy and cools the particle. |
-| SYSTEM | sublRate = (temp-0.5) x 0.005 x dt x synergy; MASS -= sublRate (floor 0.02), VEL_X/Y += (prng()-0.5) x sublRate x 5, ENERGY -= sublRate x 20, TEMPERATURE -= sublRate x 0.5. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_08.test.js](../../../../tests/audit/batch_08.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/29_SUBLIMATION.md](../../../audit/laws/a3/stage-1/29_SUBLIMATION.md), [docs/audit/laws/a3/stage-2/29_SUBLIMATION.md](../../../audit/laws/a3/stage-2/29_SUBLIMATION.md), [docs/audit/laws/a3/stage-3/29_SUBLIMATION.md](../../../audit/laws/a3/stage-3/29_SUBLIMATION.md)
+- Tests: [tests/audit/batch_08.test.js](tests/audit/batch_08.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/29_SUBLIMATION.md](docs/audit/laws/a3/stage-1/29_SUBLIMATION.md), [docs/audit/laws/a3/stage-2/29_SUBLIMATION.md](docs/audit/laws/a3/stage-2/29_SUBLIMATION.md), [docs/audit/laws/a3/stage-3/29_SUBLIMATION.md](docs/audit/laws/a3/stage-3/29_SUBLIMATION.md), [docs/audit/laws/a3/thermodynamics.md](docs/audit/laws/a3/thermodynamics.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

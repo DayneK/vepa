@@ -8,8 +8,8 @@
 | Category | biology |
 | Color | ORANGE |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Predation tracking: particles chase lower-mass prey of another species. |
-| EXPLANATION | Particles with high PREDATION_BIAS are attracted to lower-mass particles — but only across species: a predator never hunts its own kind. |
-| SYSTEM | Requires PREDATION_BIAS ≥ 0.1 and a different-species neighbour with mass < 0.8× the predator's; pull strength = PREDATION_BIAS×0.05×synergy. Combines with LIFE and REPRO for full ecosystem simulation. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_03.test.js](../../../../tests/audit/batch_03.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/11_TRACK.md](../../../audit/laws/a3/stage-1/11_TRACK.md), [docs/audit/laws/a3/stage-2/11_TRACK.md](../../../audit/laws/a3/stage-2/11_TRACK.md), [docs/audit/laws/a3/stage-3/11_TRACK.md](../../../audit/laws/a3/stage-3/11_TRACK.md)
+- Tests: [tests/audit/batch_03.test.js](tests/audit/batch_03.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](docs/audit/laws/a3/biology.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/11_TRACK.md](docs/audit/laws/a3/stage-1/11_TRACK.md), [docs/audit/laws/a3/stage-2/11_TRACK.md](docs/audit/laws/a3/stage-2/11_TRACK.md), [docs/audit/laws/a3/stage-3/11_TRACK.md](docs/audit/laws/a3/stage-3/11_TRACK.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

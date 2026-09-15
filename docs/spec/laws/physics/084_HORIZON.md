@@ -8,31 +8,31 @@
 | Category | physics |
 | Color | RED |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_PATCHES |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
-None recorded.
+`MASS (Stride 6)`, `RADIUS (Stride 56)`, `HIDDEN_MASS (DNA 7)`, `GLOBAL_G (World)`
 
 ## Four-tier help
 
 | Tier | Content |
 | --- | --- |
-| HINT | Event horizons capture nearby matter. |
-| EXPLANATION | Massive bodies expose a bounded capture region whose inward acceleration increases toward the horizon, providing the local event-horizon effect. |
-| SYSTEM | The horizon radius combines the body RADIUS with the square root of MASS; inside its falloff range, inward force scales with mass and distance. |
-| ADVANCED | HORIZON supplies the capture-force primitive; singularity absorption remains a separate lifecycle operation. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/physicsLaws.js](../../../../src/physics/lawgroups/physicsLaws.js)
+[src/physics/lawgroups/physicsLaws.js](src/physics/lawgroups/physicsLaws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/unit/stellar.test.js](../../../../tests/unit/stellar.test.js)
-- Audits: No filename-matched audit record found.
+- Tests: [tests/unit/stellar.test.js](tests/unit/stellar.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/79_SINGULARITY.md](docs/audit/laws/a3/stage-1/79_SINGULARITY.md), [docs/audit/laws/a3/stage-2/79_SINGULARITY.md](docs/audit/laws/a3/stage-2/79_SINGULARITY.md), [docs/audit/laws/a3/stage-3/79_SINGULARITY.md](docs/audit/laws/a3/stage-3/79_SINGULARITY.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

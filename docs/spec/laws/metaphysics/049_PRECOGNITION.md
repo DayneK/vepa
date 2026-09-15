@@ -8,8 +8,8 @@
 | Category | metaphysics |
 | Color | TEAL |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Precognition: collision anticipation and avoidance. |
-| EXPLANATION | Confirmed batch-13 (slight cost): when a neighbor is closing in (1-50 units) the particle steers perpendicular to slip past, and anticipating the collision drains a little energy. Reduces collisions at the cost of smoothness. |
-| SYSTEM | Collision course (dot < 0): lateral avoidance force 0.05 × synergy; ENERGY −= 0.02 × synergy × dt per dodge (floor 0). |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_13.test.js](../../../../tests/audit/batch_13.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/49_PRECOGNITION.md](../../../audit/laws/a3/stage-1/49_PRECOGNITION.md), [docs/audit/laws/a3/stage-2/49_PRECOGNITION.md](../../../audit/laws/a3/stage-2/49_PRECOGNITION.md), [docs/audit/laws/a3/stage-3/49_PRECOGNITION.md](../../../audit/laws/a3/stage-3/49_PRECOGNITION.md)
+- Tests: [tests/audit/batch_13.test.js](tests/audit/batch_13.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/stage-1/49_PRECOGNITION.md](docs/audit/laws/a3/stage-1/49_PRECOGNITION.md), [docs/audit/laws/a3/stage-2/49_PRECOGNITION.md](docs/audit/laws/a3/stage-2/49_PRECOGNITION.md), [docs/audit/laws/a3/stage-3/49_PRECOGNITION.md](docs/audit/laws/a3/stage-3/49_PRECOGNITION.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

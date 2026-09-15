@@ -7,9 +7,9 @@
 | Index | 34 |
 | Category | metaphysics |
 | Color | TEAL |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Fate: each species drifts toward its own destiny. |
-| EXPLANATION | Confirmed batch-09 (redesign — the old pairwise attraction duplicated AFFINITY): every species has a slowly wandering destiny point it is gently pulled toward, so species migrate and segregate toward their own fate. |
-| SYSTEM | Destiny point = golden-angle phase per species, drifting on a fate clock (span 0.32 x worldSize). Pull = 0.02 x synergy along the shortest toroidal path. Full-world range. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_09.test.js](../../../../tests/audit/batch_09.test.js), [tests/unit/synergyCache.test.js](../../../../tests/unit/synergyCache.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/34_FATE.md](../../../audit/laws/a3/stage-1/34_FATE.md), [docs/audit/laws/a3/stage-2/34_FATE.md](../../../audit/laws/a3/stage-2/34_FATE.md), [docs/audit/laws/a3/stage-3/34_FATE.md](../../../audit/laws/a3/stage-3/34_FATE.md)
+- Tests: [tests/audit/batch_09.test.js](tests/audit/batch_09.test.js), [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/stage-1/34_FATE.md](docs/audit/laws/a3/stage-1/34_FATE.md), [docs/audit/laws/a3/stage-2/34_FATE.md](docs/audit/laws/a3/stage-2/34_FATE.md), [docs/audit/laws/a3/stage-3/34_FATE.md](docs/audit/laws/a3/stage-3/34_FATE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

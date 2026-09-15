@@ -2,11 +2,4 @@
 
 # UI: Appearance
 
-The visual law system uses category and per-index color metadata. The law map exposes eight rainbow categories plus a separately styled slate Mechanics category.
-
-- Law button color is derived from LAW_COLOR_BY_INDEX and category color metadata.
-- Mechanics uses the SLATE color and remains a separate panel section.
-- Controls use stable data attributes such as data-law for synchronization.
-- Renderer and camera own canvas presentation; panels do not duplicate simulation state.
-
-Evidence: [style.css](../../../style.css), [src/ui/lawPanel.js](../../../src/ui/lawPanel.js), and [src/render/renderer.js](../../../src/render/renderer.js).
+Visual styling uses a neon-noir lab aesthetic: deep-space radial gradient backdrop, CRT scanline overlay, and color-coded category law toggles. Toolbar buttons pulse and glow on hover/active states. The drawer slides with a transform+visibility transition.

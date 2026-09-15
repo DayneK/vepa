@@ -2,7 +2,7 @@
 /**
  * VEPA4 — full hierarchical codebase concatenation generator.
  * Walks a snapshot dir, produces a TOC + per-file analysis preface + source.
- * Usage: node .dist/gen-full.mjs <snapshot-dir> <out-file>
+ * Usage: node exports/generate-full-concat.mjs <snapshot-dir> <out-file>
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -12,7 +12,11 @@ const ROOT = path.resolve(snap);
 const OUT = path.resolve(outFile);
 
 const EXCLUDE_DIRS = new Set(['node_modules', '.git', '.dist', '.rsirrp', '.shots', 'docs', 'audit-suite']);
-const EXCLUDE_FILES = new Set();
+const EXCLUDE_FILES = new Set([
+  'exports/vepa-codebase-full-concat.md',
+  'exports/vepa-full-codebase-concat.md',
+  'exports/vepa-docs-concat.md',
+]);
 const MD_SUFFIX = '.md'; // docs live in vepa-docs-concat.md
 
 function isBinary(p) {

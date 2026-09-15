@@ -8,8 +8,8 @@
 | Category | metaphysics |
 | Color | TEAL |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Clairvoyance: particles sense future positions. |
-| EXPLANATION | Confirmed batch-13 (slight cost): particles steer toward where neighbors will be (3-tick velocity extrapolation) instead of where they are, and sensing the future drains a little energy. |
-| SYSTEM | Predictive steering: velocity extrapolation targeting; ENERGY −= 0.02 × synergy × dt per prediction (floor 0). |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_13.test.js](../../../../tests/audit/batch_13.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/48_CLAIRVOYANCE.md](../../../audit/laws/a3/stage-1/48_CLAIRVOYANCE.md), [docs/audit/laws/a3/stage-2/48_CLAIRVOYANCE.md](../../../audit/laws/a3/stage-2/48_CLAIRVOYANCE.md), [docs/audit/laws/a3/stage-3/48_CLAIRVOYANCE.md](../../../audit/laws/a3/stage-3/48_CLAIRVOYANCE.md)
+- Tests: [tests/audit/batch_13.test.js](tests/audit/batch_13.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/stage-1/48_CLAIRVOYANCE.md](docs/audit/laws/a3/stage-1/48_CLAIRVOYANCE.md), [docs/audit/laws/a3/stage-2/48_CLAIRVOYANCE.md](docs/audit/laws/a3/stage-2/48_CLAIRVOYANCE.md), [docs/audit/laws/a3/stage-3/48_CLAIRVOYANCE.md](docs/audit/laws/a3/stage-3/48_CLAIRVOYANCE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

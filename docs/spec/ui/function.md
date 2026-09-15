@@ -2,15 +2,4 @@
 
 # UI: Function
 
-## Interaction flow
-
-- A panel renders a control from a runtime contract.
-- The action updates local state or emits an EventBus event.
-- The orchestrator synchronizes the worker or fallback solver.
-- HUD, tooltip, renderer and analytics observe resulting state.
-
-## Law toggle contract
-
-The law panel builds sections from `LAW_CATEGORIES`, derives names from `LAW_INDEXES`, uses `lawState` helpers, and emits `law:toggled`. The tooltip reads `LAW_HELP_DB` and applies supplemental patches for entries not yet canonical.
-
-Evidence: [src/ui/lawPanel.js](../../../src/ui/lawPanel.js), [src/ui/tooltip.js](../../../src/ui/tooltip.js), and [src/state/lawState.js](../../../src/state/lawState.js).
+Panels are wired through EventBus subscriptions. Law toggles emit `toggle:law` events. World parameter changes emit `world:update`. Persistence operations use `save:*` and `load:*` event families. The HUD updates on cadence-gated tick counts.

@@ -7,9 +7,9 @@
 | Index | 43 |
 | Category | thermodynamics |
 | Color | GREEN |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Boiling: very hot particles eject mass. |
-| EXPLANATION | Confirmed batch-11 (yes): particles above boiling temperature (temp 0.9) eject a mass fraction as energetic vapor — the ejected mass becomes a PRNG velocity burst and costs latent heat (ENERGY), with a 0.02 mass floor so nothing boils away completely. |
-| SYSTEM | ejectMass = mass x (temp−0.9) x 0.02 x dt x synergy (> 0.01 threshold); MASS −= ejectMass (floor 0.02); VEL ±= (prng()−0.5) x ejectMass x 10/5; ENERGY −= ejectMass x 20; TEMPERATURE −= boilRate x 0.3. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_11.test.js](../../../../tests/audit/batch_11.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/43_BOIL.md](../../../audit/laws/a3/stage-1/43_BOIL.md), [docs/audit/laws/a3/stage-2/43_BOIL.md](../../../audit/laws/a3/stage-2/43_BOIL.md), [docs/audit/laws/a3/stage-3/43_BOIL.md](../../../audit/laws/a3/stage-3/43_BOIL.md)
+- Tests: [tests/audit/batch_11.test.js](tests/audit/batch_11.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/29_SUBLIMATION.md](docs/audit/laws/a3/stage-1/29_SUBLIMATION.md), [docs/audit/laws/a3/stage-1/43_BOIL.md](docs/audit/laws/a3/stage-1/43_BOIL.md), [docs/audit/laws/a3/stage-1/44_CONDENSE.md](docs/audit/laws/a3/stage-1/44_CONDENSE.md), [docs/audit/laws/a3/stage-2/29_SUBLIMATION.md](docs/audit/laws/a3/stage-2/29_SUBLIMATION.md), [docs/audit/laws/a3/stage-2/43_BOIL.md](docs/audit/laws/a3/stage-2/43_BOIL.md), [docs/audit/laws/a3/stage-2/44_CONDENSE.md](docs/audit/laws/a3/stage-2/44_CONDENSE.md), [docs/audit/laws/a3/stage-3/29_SUBLIMATION.md](docs/audit/laws/a3/stage-3/29_SUBLIMATION.md), [docs/audit/laws/a3/stage-3/43_BOIL.md](docs/audit/laws/a3/stage-3/43_BOIL.md), [docs/audit/laws/a3/stage-3/44_CONDENSE.md](docs/audit/laws/a3/stage-3/44_CONDENSE.md), [docs/audit/laws/a3/thermodynamics.md](docs/audit/laws/a3/thermodynamics.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

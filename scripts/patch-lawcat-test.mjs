@@ -1,3 +1,4 @@
+// Historical migration utility. Not part of the test pipeline; it mutates tests/unit/lawCategories.test.js and should only be run intentionally during archive recovery.
 // Update lawCategories tests for the 9-category layout (WRAP retired → BUOYANCY + TOROIDAL EDGES param).
 import { readFileSync, writeFileSync } from 'node:fs';
 

@@ -7,9 +7,9 @@
 | Index | 60 |
 | Category | electromagnetism |
 | Color | BLUE |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Resonance: pulsing particles attract when their pulse rates match. |
-| EXPLANATION | Confirmed batch-16 (match irl): sympathetic vibration — particles with similar PULSE_RATE DNA that are actively signaling attract each other, and phase alignment amplifies them. In-phase pairs (constructive interference) scale the attraction up and the stronger pulser drives the weaker one's SIGNAL upward; out-of-phase pairs get no drive. |
-| SYSTEM | F = k·s1·s2·sync·phaseSync/(dist+1), sync = 1−\|ΔPULSE_RATE\|, phaseSync = 0.5+0.5·cos(Δphase·π/2) using the GLOW/COMMS oscillator phase = sin(age·0.01·(0.1+pulseRate)). phaseSync > 0.6 → weaker pulser gains SIGNAL. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_16.test.js](../../../../tests/audit/batch_16.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/60_RESONANCE.md](../../../audit/laws/a3/stage-1/60_RESONANCE.md), [docs/audit/laws/a3/stage-2/60_RESONANCE.md](../../../audit/laws/a3/stage-2/60_RESONANCE.md), [docs/audit/laws/a3/stage-3/60_RESONANCE.md](../../../audit/laws/a3/stage-3/60_RESONANCE.md)
+- Tests: [tests/audit/batch_16.test.js](tests/audit/batch_16.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/106_SYNCHRONICITY.md](docs/audit/laws/a3/stage-1/106_SYNCHRONICITY.md), [docs/audit/laws/a3/stage-1/120_COHERENCE.md](docs/audit/laws/a3/stage-1/120_COHERENCE.md), [docs/audit/laws/a3/stage-1/33_ORDER.md](docs/audit/laws/a3/stage-1/33_ORDER.md), [docs/audit/laws/a3/stage-1/60_RESONANCE.md](docs/audit/laws/a3/stage-1/60_RESONANCE.md), [docs/audit/laws/a3/stage-2/106_SYNCHRONICITY.md](docs/audit/laws/a3/stage-2/106_SYNCHRONICITY.md), [docs/audit/laws/a3/stage-2/120_COHERENCE.md](docs/audit/laws/a3/stage-2/120_COHERENCE.md), [docs/audit/laws/a3/stage-2/33_ORDER.md](docs/audit/laws/a3/stage-2/33_ORDER.md), [docs/audit/laws/a3/stage-2/60_RESONANCE.md](docs/audit/laws/a3/stage-2/60_RESONANCE.md), [docs/audit/laws/a3/stage-3/106_SYNCHRONICITY.md](docs/audit/laws/a3/stage-3/106_SYNCHRONICITY.md), [docs/audit/laws/a3/stage-3/120_COHERENCE.md](docs/audit/laws/a3/stage-3/120_COHERENCE.md), [docs/audit/laws/a3/stage-3/33_ORDER.md](docs/audit/laws/a3/stage-3/33_ORDER.md), [docs/audit/laws/a3/stage-3/60_RESONANCE.md](docs/audit/laws/a3/stage-3/60_RESONANCE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

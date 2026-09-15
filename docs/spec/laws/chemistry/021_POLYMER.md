@@ -8,8 +8,8 @@
 | Category | chemistry |
 | Color | YELLOW |
 | Status | wired |
-| Solver gate references | 3 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Polymerization: particles form chain bonds. |
-| EXPLANATION | Confirmed batch-10: polymers prefer to extend chains — free/tip particles (0-1 bonds) bond eagerly while well-connected particles (3+) are avoided, so POLYMER grows linear chains instead of cross-linked webs. |
-| SYSTEM | Bond slots (BOND_PARTNER_1..6, stride 59/60/81-84), max 6 mutual bonds. Bond range = 10 x synergy x chainBias, where chainBias = 1.0 (0-1 bonds), 0.5 (2), 0.25 (3+). Spring force stiffness 0.02 x synergy, rest length 4. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/mergePhysics.js](src/physics/mergePhysics.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_06.test.js](../../../../tests/audit/batch_06.test.js), [tests/audit/batch_10.test.js](../../../../tests/audit/batch_10.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/21_POLYMER.md](../../../audit/laws/a3/stage-1/21_POLYMER.md), [docs/audit/laws/a3/stage-2/21_POLYMER.md](../../../audit/laws/a3/stage-2/21_POLYMER.md), [docs/audit/laws/a3/stage-3/21_POLYMER.md](../../../audit/laws/a3/stage-3/21_POLYMER.md)
+- Tests: [tests/audit/batch_06.test.js](tests/audit/batch_06.test.js), [tests/audit/batch_10.test.js](tests/audit/batch_10.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/21_POLYMER.md](docs/audit/laws/a3/stage-1/21_POLYMER.md), [docs/audit/laws/a3/stage-2/21_POLYMER.md](docs/audit/laws/a3/stage-2/21_POLYMER.md), [docs/audit/laws/a3/stage-3/21_POLYMER.md](docs/audit/laws/a3/stage-3/21_POLYMER.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

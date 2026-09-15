@@ -7,9 +7,9 @@
 | Index | 20 |
 | Category | chemistry |
 | Color | YELLOW |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Oxidation: charged particles rust, burn and glow. |
-| EXPLANATION | Real oxidation is electron loss (confirmed batch-06): a charged particle's CHARGE drifts toward 0 at the same rate its mass erodes, and with HEAT_OUTPUT DNA it releases heat energy and flashes brighter while it burns. |
-| SYSTEM | Requires \|CHARGE\| ≥ 0.3. MASS −= \|charge\|×0.001×dt×synergy; CHARGE decays by \|charge\|×0.001×dt×synergy toward 0 (electrical rust). With HEAT_OUTPUT (DNA 39): ENERGY += charge×HEAT_OUTPUT×0.05×dt×synergy (cap 200), TEMPERATURE rises, and COLOR_R/G/B + ALPHA flash toward white. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_06.test.js](../../../../tests/audit/batch_06.test.js), [tests/audit/params_batch_14.test.js](../../../../tests/audit/params_batch_14.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/20_OXIDATION.md](../../../audit/laws/a3/stage-1/20_OXIDATION.md), [docs/audit/laws/a3/stage-2/20_OXIDATION.md](../../../audit/laws/a3/stage-2/20_OXIDATION.md), [docs/audit/laws/a3/stage-3/20_OXIDATION.md](../../../audit/laws/a3/stage-3/20_OXIDATION.md)
+- Tests: [tests/audit/batch_06.test.js](tests/audit/batch_06.test.js), [tests/audit/params_batch_14.test.js](tests/audit/params_batch_14.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/20_OXIDATION.md](docs/audit/laws/a3/stage-1/20_OXIDATION.md), [docs/audit/laws/a3/stage-1/40_REDUCTION.md](docs/audit/laws/a3/stage-1/40_REDUCTION.md), [docs/audit/laws/a3/stage-2/20_OXIDATION.md](docs/audit/laws/a3/stage-2/20_OXIDATION.md), [docs/audit/laws/a3/stage-2/40_REDUCTION.md](docs/audit/laws/a3/stage-2/40_REDUCTION.md), [docs/audit/laws/a3/stage-3/20_OXIDATION.md](docs/audit/laws/a3/stage-3/20_OXIDATION.md), [docs/audit/laws/a3/stage-3/40_REDUCTION.md](docs/audit/laws/a3/stage-3/40_REDUCTION.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

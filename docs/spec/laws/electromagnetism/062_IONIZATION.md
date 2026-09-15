@@ -8,8 +8,8 @@
 | Category | electromagnetism |
 | Color | BLUE |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Ionization: hard contacts strip charge onto particles. |
-| EXPLANATION | Confirmed batch-16 (match irl): a hard contact above a threshold impact energy ionizes the pair — charge is transferred, forming a conserved +/− ion pair (q_i + q_j = 0). The pair's combined POLARITY sign decides which partner turns positive. Already-charged particles are not re-stripped. |
-| SYSTEM | dist ≤ 3 and impact = min(1, relSpeed·k) > 0.15 → q_i = impact·s, q_j = −impact·s with s = sign(POLARITY_i + POLARITY_j) \|\| 1. Seeds CHARGE_LAW, FLUX, and CURRENT with genuine ion pairs. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_16.test.js](../../../../tests/audit/batch_16.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/62_IONIZATION.md](../../../audit/laws/a3/stage-1/62_IONIZATION.md), [docs/audit/laws/a3/stage-2/62_IONIZATION.md](../../../audit/laws/a3/stage-2/62_IONIZATION.md), [docs/audit/laws/a3/stage-3/62_IONIZATION.md](../../../audit/laws/a3/stage-3/62_IONIZATION.md)
+- Tests: [tests/audit/batch_16.test.js](tests/audit/batch_16.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/62_IONIZATION.md](docs/audit/laws/a3/stage-1/62_IONIZATION.md), [docs/audit/laws/a3/stage-1/64_PLASMA.md](docs/audit/laws/a3/stage-1/64_PLASMA.md), [docs/audit/laws/a3/stage-2/62_IONIZATION.md](docs/audit/laws/a3/stage-2/62_IONIZATION.md), [docs/audit/laws/a3/stage-2/64_PLASMA.md](docs/audit/laws/a3/stage-2/64_PLASMA.md), [docs/audit/laws/a3/stage-3/62_IONIZATION.md](docs/audit/laws/a3/stage-3/62_IONIZATION.md), [docs/audit/laws/a3/stage-3/64_PLASMA.md](docs/audit/laws/a3/stage-3/64_PLASMA.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

@@ -9,7 +9,7 @@
 | Color | TEAL |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Consciousness: a predictive self-model that attends to prediction error. |
-| EXPLANATION | The particle maintains a self-model — a running estimate of its own speed (SELF_MODEL_SPEED). When actual motion deviates from the model (prediction error) it 'attends': MEMORY rises, the error broadcasts as SIGNAL (global-workspace flavour via COMMS/MIND), and attention costs ENERGY. Low error → efficient self-maintenance regen. A computational proxy for predictive processing; consciousness itself is unresolved, so this is an honest approximation. |
-| SYSTEM | err = \|speed − model\|; model ← 0.95·model + 0.05·speed. err > 0.3: MEMORY += err·0.02, SIGNAL += err·0.01, ENERGY −= err·0.05. Else ENERGY += 0.01·k. Caps 0..200 / 0..1. |
-| ADVANCED | +MIND broadcasts the workspace; +COMMS carries the signal; +LEARN improves the model by imitation. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/metaLaws.js](../../../../src/physics/lawgroups/metaLaws.js)
+[src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_27.test.js](../../../../tests/audit/batch_27.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/104_CONSCIOUSNESS.md](../../../audit/laws/a3/stage-1/104_CONSCIOUSNESS.md), [docs/audit/laws/a3/stage-2/104_CONSCIOUSNESS.md](../../../audit/laws/a3/stage-2/104_CONSCIOUSNESS.md), [docs/audit/laws/a3/stage-3/104_CONSCIOUSNESS.md](../../../audit/laws/a3/stage-3/104_CONSCIOUSNESS.md)
+- Tests: [tests/audit/batch_27.test.js](tests/audit/batch_27.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/stage-1/104_CONSCIOUSNESS.md](docs/audit/laws/a3/stage-1/104_CONSCIOUSNESS.md), [docs/audit/laws/a3/stage-1/105_PERCEPTION.md](docs/audit/laws/a3/stage-1/105_PERCEPTION.md), [docs/audit/laws/a3/stage-1/37_MIND.md](docs/audit/laws/a3/stage-1/37_MIND.md), [docs/audit/laws/a3/stage-2/104_CONSCIOUSNESS.md](docs/audit/laws/a3/stage-2/104_CONSCIOUSNESS.md), [docs/audit/laws/a3/stage-2/105_PERCEPTION.md](docs/audit/laws/a3/stage-2/105_PERCEPTION.md), [docs/audit/laws/a3/stage-2/37_MIND.md](docs/audit/laws/a3/stage-2/37_MIND.md), [docs/audit/laws/a3/stage-3/104_CONSCIOUSNESS.md](docs/audit/laws/a3/stage-3/104_CONSCIOUSNESS.md), [docs/audit/laws/a3/stage-3/105_PERCEPTION.md](docs/audit/laws/a3/stage-3/105_PERCEPTION.md), [docs/audit/laws/a3/stage-3/37_MIND.md](docs/audit/laws/a3/stage-3/37_MIND.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

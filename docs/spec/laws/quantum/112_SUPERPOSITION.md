@@ -9,7 +9,7 @@
 | Color | PURPLE |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Superposition: a spread of velocity states with Born-rule collapse. |
-| EXPLANATION | Each particle stores 4 basis amplitudes (SUPER_AMP_1-4) over 4 candidate velocities. Phases rotate each tick; a collapse event picks one basis state with probability \|a\|² (Born rule), then renormalises — the actual quantum measurement mechanism in a discrete toy. |
-| SYSTEM | Amplitudes initialised as a dominant state plus a small spread; each tick SUPER_PHASE rotates the basis; collapse with probability 0.02·k to basis j with p = \|aⱼ\|²/Σ\|a\|²; basis offsets: stay, ±perpendicular, boost-along-velocity. |
-| ADVANCED | OBSERVER accelerates collapse; DECOHERENCE damps amplitude spread; ENTANGLEMENT couples two particles' bases. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/quantumLaws.js](../../../../src/physics/lawgroups/quantumLaws.js)
+[src/physics/lawgroups/quantumLaws.js](src/physics/lawgroups/quantumLaws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_29.test.js](../../../../tests/audit/batch_29.test.js), [tests/unit/quantumMacro.test.js](../../../../tests/unit/quantumMacro.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/112_SUPERPOSITION.md](../../../audit/laws/a3/stage-1/112_SUPERPOSITION.md), [docs/audit/laws/a3/stage-2/112_SUPERPOSITION.md](../../../audit/laws/a3/stage-2/112_SUPERPOSITION.md), [docs/audit/laws/a3/stage-3/112_SUPERPOSITION.md](../../../audit/laws/a3/stage-3/112_SUPERPOSITION.md)
+- Tests: [tests/audit/batch_29.test.js](tests/audit/batch_29.test.js), [tests/unit/quantumMacro.test.js](tests/unit/quantumMacro.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/112_SUPERPOSITION.md](docs/audit/laws/a3/stage-1/112_SUPERPOSITION.md), [docs/audit/laws/a3/stage-1/115_WAVE_PARTICLE.md](docs/audit/laws/a3/stage-1/115_WAVE_PARTICLE.md), [docs/audit/laws/a3/stage-1/120_COHERENCE.md](docs/audit/laws/a3/stage-1/120_COHERENCE.md), [docs/audit/laws/a3/stage-1/125_WAVEFUNCTION.md](docs/audit/laws/a3/stage-1/125_WAVEFUNCTION.md), [docs/audit/laws/a3/stage-2/112_SUPERPOSITION.md](docs/audit/laws/a3/stage-2/112_SUPERPOSITION.md), [docs/audit/laws/a3/stage-2/115_WAVE_PARTICLE.md](docs/audit/laws/a3/stage-2/115_WAVE_PARTICLE.md), [docs/audit/laws/a3/stage-2/120_COHERENCE.md](docs/audit/laws/a3/stage-2/120_COHERENCE.md), [docs/audit/laws/a3/stage-2/125_WAVEFUNCTION.md](docs/audit/laws/a3/stage-2/125_WAVEFUNCTION.md), [docs/audit/laws/a3/stage-3/112_SUPERPOSITION.md](docs/audit/laws/a3/stage-3/112_SUPERPOSITION.md), [docs/audit/laws/a3/stage-3/115_WAVE_PARTICLE.md](docs/audit/laws/a3/stage-3/115_WAVE_PARTICLE.md), [docs/audit/laws/a3/stage-3/120_COHERENCE.md](docs/audit/laws/a3/stage-3/120_COHERENCE.md), [docs/audit/laws/a3/stage-3/125_WAVEFUNCTION.md](docs/audit/laws/a3/stage-3/125_WAVEFUNCTION.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

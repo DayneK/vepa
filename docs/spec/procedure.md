@@ -4,39 +4,26 @@
 
 ## Purpose
 
-Produce a navigable, evidence-backed technical specification from the active VEPA4 worktree. The taxonomy separates conceptual aspects so reviewers can inspect UI, simulation, state, laws, source structure, verification, and operations independently while retaining traceability.
+Produce a navigable, evidence-backed technical specification from the active VEPA4 worktree. The taxonomy separates UI, simulation, state, laws, source structure, verification, and operations while retaining traceability.
 
 ## Inputs
 
-- `src/` when present
-- `tests/` when present
-- `bench/` when present
-- `public/` when present
-- `docs/` when present
+- `src/`, `tests/`, `bench/`, and `public/`
+- Repository configuration files listed in `scripts/generate-spec.mjs`
+- Runtime law metadata from `src/constants.js` and supplemental help modules
 
-The procedure imports the live law contract from [src/constants.js](../../src/constants.js), law persistence from [src/state/lawState.js](../../src/state/lawState.js), canonical help, supplemental help patches, and Mechanics metadata. Supplemental data is labeled; source files are never modified by generation.
+Generated output is a derived artifact. Do not edit files under `docs/spec/` directly; update the generator or its inputs instead.
 
 ## Extraction stages
 
-- Enumerate stable source files, excluding dependency directories, Vite output, git metadata, and generated docs/spec.
-- Extract line counts, imports, exports, LAW_INDEXES references, ownership area, tests, and audit filename evidence.
-- Import law indexes, categories, colors, parameters, declared count, canonical help, and supplemental help.
-- Build one normalized law record per mapped index with category, color, parameters, help provenance, solver-gate count, implementation candidates, tests, and audits.
-- Render cross-cutting docs, category overviews, individual law records, module records, manifests, and traceability tables.
-- In --check mode compare expected paths and bytes with docs/spec and fail on missing, changed, or unexpected generated artifacts.
+- Enumerate stable active inputs while excluding dependencies, build output, git metadata, and generated docs/spec.
+- Extract constants, module boundaries, exports/imports, law references, tests, and audit evidence.
+- Render architecture, UI, simulation, state, laws, source, testing, operations, traceability, and review branches.
+- In `--check` mode compare expected paths and bytes without writing to the worktree.
 
 ## Evidence rules
 
 - Runtime exports are authoritative for observed values.
 - Source text is implementation evidence, not proof of semantic correctness.
-- A solver gate without an exported implementation candidate is reported as an evidence gap.
-- Supplemental help is reported separately from canonical LAW_HELP_DB coverage.
-- Existing audit files are linked as evidence and are not rewritten.
-- Generated records do not claim conservation, physical fidelity, or non-redundancy without targeted tests and review.
-
-## Extension rules
-
-- Add extractors when a new claim needs a new evidence source.
-- Add a renderer branch when a concept deserves a stable document family.
-- Keep output deterministic and avoid embedding machine-specific paths or timestamps.
-- Add a focused contract assertion before expanding the taxonomy.
+- Supplemental help is reported separately from canonical `LAW_HELP_DB` coverage.
+- Generated records do not claim conservation, physical fidelity, or non-redundancy without targeted tests.

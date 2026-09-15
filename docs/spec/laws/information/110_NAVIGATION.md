@@ -9,7 +9,7 @@
 | Color | VIOLET |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Navigation: particles steer toward remembered hotspots. |
-| EXPLANATION | Memory-rich regions attract particles — the past becomes a map that guides movement. |
-| SYSTEM | Memory-gradient following. With HISTORY it reads the global field; with STIGMERGY it follows local trails. |
-| ADVANCED | Attraction uses MEMORY and the HISTORY field when both are on. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/infoLaws.js](../../../../src/physics/lawgroups/infoLaws.js)
+[src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_28.test.js](../../../../tests/audit/batch_28.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/110_NAVIGATION.md](../../../audit/laws/a3/stage-1/110_NAVIGATION.md), [docs/audit/laws/a3/stage-2/110_NAVIGATION.md](../../../audit/laws/a3/stage-2/110_NAVIGATION.md), [docs/audit/laws/a3/stage-3/110_NAVIGATION.md](../../../audit/laws/a3/stage-3/110_NAVIGATION.md)
+- Tests: [tests/audit/batch_28.test.js](tests/audit/batch_28.test.js), [tests/unit/lawGraph.test.js](tests/unit/lawGraph.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/110_NAVIGATION.md](docs/audit/laws/a3/stage-1/110_NAVIGATION.md), [docs/audit/laws/a3/stage-2/110_NAVIGATION.md](docs/audit/laws/a3/stage-2/110_NAVIGATION.md), [docs/audit/laws/a3/stage-3/110_NAVIGATION.md](docs/audit/laws/a3/stage-3/110_NAVIGATION.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

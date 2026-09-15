@@ -2,17 +2,6 @@
 
 # State: Law State
 
-The law-state implementation is [src/state/lawState.js](../../../src/state/lawState.js). It currently supports low, high, ext, quad and penta Uint32 words. The penta word is required for indexes 128-135.
+The law state uses a bitmask of multiple words to track which of the 136 laws are active. Each word covers a contiguous range of law indexes. Toggle operations are atomic per word.
 
-## Operations
-
-- `createLawState`
-- `toggle, set, clear and isSet`
-- `getActiveCount and getStateVector`
-- `fromVector`
-- `serialize and deserialize`
-- `dependency checks`
-
-## Compatibility finding
-
-Older prose describes a four-word 128-bit state. The active implementation has a fifth word for the appended Mechanics laws. The generated review keeps this discrepancy visible until the documentation SSOT is synchronized.
+Evidence: [src/state/lawState.js](src/state/lawState.js).

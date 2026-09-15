@@ -7,9 +7,9 @@
 | Index | 22 |
 | Category | chemistry |
 | Color | YELLOW |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Isomerization: bond topology rearrangement. |
-| EXPLANATION | Real isomerization keeps the same atoms but rearranges the bonds (confirmed batch-06: match real life). A particle with 3+ chain bonds occasionally breaks one connection — the freed partner becomes a fragment (its reciprocal bond is cleared too) — and the rearrangement consumes a little energy. |
-| SYSTEM | Chance = 0.02×dt×synergy per tick when BOND_COUNT ≥ 3 and ENERGY ≥ 1: break the first filled bond slot, clear the partner's reciprocal slot and decrement both counts, then ENERGY −= 0.5×dt×synergy. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_06.test.js](../../../../tests/audit/batch_06.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/22_ISOMERIZATION.md](../../../audit/laws/a3/stage-1/22_ISOMERIZATION.md), [docs/audit/laws/a3/stage-2/22_ISOMERIZATION.md](../../../audit/laws/a3/stage-2/22_ISOMERIZATION.md), [docs/audit/laws/a3/stage-3/22_ISOMERIZATION.md](../../../audit/laws/a3/stage-3/22_ISOMERIZATION.md)
+- Tests: [tests/audit/batch_06.test.js](tests/audit/batch_06.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/22_ISOMERIZATION.md](docs/audit/laws/a3/stage-1/22_ISOMERIZATION.md), [docs/audit/laws/a3/stage-2/22_ISOMERIZATION.md](docs/audit/laws/a3/stage-2/22_ISOMERIZATION.md), [docs/audit/laws/a3/stage-3/22_ISOMERIZATION.md](docs/audit/laws/a3/stage-3/22_ISOMERIZATION.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

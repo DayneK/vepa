@@ -9,7 +9,7 @@
 | Color | YELLOW |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Autocatalysis: a species catalyses its own reactions. |
-| EXPLANATION | Same-species contacts boost each other's energy conversion — the chemistry feeds itself. |
-| SYSTEM | Self-catalysis. With CATALYSIS_LAW it amplifies reactions; with SYMBIOSIS it rewards same-species cliques. |
-| ADVANCED | Reaction gain is squared for same-species pairs, making species purity advantageous. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/chemistryLaws.js](../../../../src/physics/lawgroups/chemistryLaws.js)
+[src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_25.test.js](../../../../tests/audit/batch_25.test.js), [tests/audit/params_batch_13.test.js](../../../../tests/audit/params_batch_13.test.js), [tests/audit/params_batch_14.test.js](../../../../tests/audit/params_batch_14.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/97_AUTOCATALYSIS.md](../../../audit/laws/a3/stage-1/97_AUTOCATALYSIS.md), [docs/audit/laws/a3/stage-2/97_AUTOCATALYSIS.md](../../../audit/laws/a3/stage-2/97_AUTOCATALYSIS.md), [docs/audit/laws/a3/stage-3/97_AUTOCATALYSIS.md](../../../audit/laws/a3/stage-3/97_AUTOCATALYSIS.md)
+- Tests: [tests/audit/batch_25.test.js](tests/audit/batch_25.test.js), [tests/audit/params_batch_13.test.js](tests/audit/params_batch_13.test.js), [tests/audit/params_batch_14.test.js](tests/audit/params_batch_14.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/97_AUTOCATALYSIS.md](docs/audit/laws/a3/stage-1/97_AUTOCATALYSIS.md), [docs/audit/laws/a3/stage-2/97_AUTOCATALYSIS.md](docs/audit/laws/a3/stage-2/97_AUTOCATALYSIS.md), [docs/audit/laws/a3/stage-3/97_AUTOCATALYSIS.md](docs/audit/laws/a3/stage-3/97_AUTOCATALYSIS.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

@@ -8,13 +8,13 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 128 | [CONTACT](../../mechanics/128_CONTACT.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsLaws.js |
-| 129 | [MOMENTUM](../../mechanics/129_MOMENTUM.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsLaws.js |
-| 130 | [INERTIA](../../mechanics/130_INERTIA.md) | metadata-only | MECHANICS_HELP | not found |
-| 131 | [TORQUE](../../mechanics/131_TORQUE.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsLaws.js |
-| 132 | [CONSTRAINT](../../mechanics/132_CONSTRAINT.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsLaws.js |
-| 133 | [FRAGMENTATION](../../mechanics/133_FRAGMENTATION.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsLaws.js |
-| 134 | [TOPOLOGY](../../mechanics/134_TOPOLOGY.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsLaws.js |
-| 135 | [ADHESION](../../mechanics/135_ADHESION.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsLaws.js |
+| 128 | [CONTACT](../../mechanics/128_CONTACT.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
+| 129 | [MOMENTUM](../../mechanics/129_MOMENTUM.md) | wired | MECHANICS_HELP | src/physics/lawGraph.js |
+| 130 | [INERTIA](../../mechanics/130_INERTIA.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
+| 131 | [TORQUE](../../mechanics/131_TORQUE.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
+| 132 | [CONSTRAINT](../../mechanics/132_CONSTRAINT.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
+| 133 | [FRAGMENTATION](../../mechanics/133_FRAGMENTATION.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
+| 134 | [TOPOLOGY](../../mechanics/134_TOPOLOGY.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
+| 135 | [ADHESION](../../mechanics/135_ADHESION.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

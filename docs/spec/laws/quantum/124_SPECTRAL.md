@@ -9,7 +9,7 @@
 | Color | PURPLE |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Spectral: particles emit characteristic signal lines. |
-| EXPLANATION | Each particle emits a weak, species-specific signal tone that marks its identity in the field. |
-| SYSTEM | Identity radiation. With COMMS it tags conversations; with GENOTYPE it fingerprints lineages. |
-| ADVANCED | Tone depends on SPECIES_ID; amplitude depends on ENERGY. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/quantumLaws.js](../../../../src/physics/lawgroups/quantumLaws.js)
+[src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_32.test.js](../../../../tests/audit/batch_32.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/124_SPECTRAL.md](../../../audit/laws/a3/stage-1/124_SPECTRAL.md), [docs/audit/laws/a3/stage-2/124_SPECTRAL.md](../../../audit/laws/a3/stage-2/124_SPECTRAL.md), [docs/audit/laws/a3/stage-3/124_SPECTRAL.md](../../../audit/laws/a3/stage-3/124_SPECTRAL.md)
+- Tests: [tests/audit/batch_32.test.js](tests/audit/batch_32.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/124_SPECTRAL.md](docs/audit/laws/a3/stage-1/124_SPECTRAL.md), [docs/audit/laws/a3/stage-2/124_SPECTRAL.md](docs/audit/laws/a3/stage-2/124_SPECTRAL.md), [docs/audit/laws/a3/stage-3/124_SPECTRAL.md](docs/audit/laws/a3/stage-3/124_SPECTRAL.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

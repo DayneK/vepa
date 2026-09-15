@@ -7,9 +7,9 @@
 | Index | 45 |
 | Category | thermodynamics |
 | Color | GREEN |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Deposition: vapor directly solidifies on cold particles. |
-| EXPLANATION | Confirmed batch-12 (match irl): deposition (frost) skips the liquid phase and is exothermic — cold particles (temp < 0.2) accrete solid mass 3x faster than condensation, grow visibly (radius), and release latent heat as the frost forms. |
-| SYSTEM | temp < 0.2: MASS += (0.2−temp) x 0.03 x dt x synergy, RADIUS += (0.2−temp) x 0.005 x dt x synergy, TEMPERATURE += (0.2−temp) x 0.02 x dt x synergy (cap 0.9). |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_12.test.js](../../../../tests/audit/batch_12.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/45_DEPOSIT.md](../../../audit/laws/a3/stage-1/45_DEPOSIT.md), [docs/audit/laws/a3/stage-2/45_DEPOSIT.md](../../../audit/laws/a3/stage-2/45_DEPOSIT.md), [docs/audit/laws/a3/stage-3/45_DEPOSIT.md](../../../audit/laws/a3/stage-3/45_DEPOSIT.md)
+- Tests: [tests/audit/batch_12.test.js](tests/audit/batch_12.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/45_DEPOSIT.md](docs/audit/laws/a3/stage-1/45_DEPOSIT.md), [docs/audit/laws/a3/stage-2/45_DEPOSIT.md](docs/audit/laws/a3/stage-2/45_DEPOSIT.md), [docs/audit/laws/a3/stage-3/45_DEPOSIT.md](docs/audit/laws/a3/stage-3/45_DEPOSIT.md), [docs/audit/laws/a3/thermodynamics.md](docs/audit/laws/a3/thermodynamics.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

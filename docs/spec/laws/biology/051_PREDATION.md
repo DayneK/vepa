@@ -9,7 +9,7 @@
 | Color | ORANGE |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Predation: mass-difference pursuit and gene absorption. |
-| EXPLANATION | Confirmed batch-13 (match docs): larger particles pursue smaller ones based on PREDATION_BIAS DNA, absorbing DNA traits and mass on contact. A predator never hunts its own kind — predation is strictly cross-species (matches TRACK). Prey flee with jitter-based repulsion. |
-| SYSTEM | Cross-species pairs with mass difference > 0.5: predator pull = PREDATION_BIAS×0.1×preyMass/dist; prey flee = JITTER×0.2/dist. On contact, 5 PRNG-sampled DNA traits blend 5% toward the prey plus mass transfer. |
-| ADVANCED | Pairs with TRACK and REPRO for full ecosystem cycles. High PREDATION_BIAS species act as apex predators; prey species benefit from JITTER for escape. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_03.test.js](../../../../tests/audit/batch_03.test.js), [tests/audit/batch_13.test.js](../../../../tests/audit/batch_13.test.js), [tests/audit/params_batch_15.test.js](../../../../tests/audit/params_batch_15.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/51_PREDATION.md](../../../audit/laws/a3/stage-1/51_PREDATION.md), [docs/audit/laws/a3/stage-2/51_PREDATION.md](../../../audit/laws/a3/stage-2/51_PREDATION.md), [docs/audit/laws/a3/stage-3/51_PREDATION.md](../../../audit/laws/a3/stage-3/51_PREDATION.md)
+- Tests: [tests/audit/batch_03.test.js](tests/audit/batch_03.test.js), [tests/audit/batch_13.test.js](tests/audit/batch_13.test.js), [tests/audit/params_batch_15.test.js](tests/audit/params_batch_15.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](docs/audit/laws/a3/biology.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/11_TRACK.md](docs/audit/laws/a3/stage-1/11_TRACK.md), [docs/audit/laws/a3/stage-1/51_PREDATION.md](docs/audit/laws/a3/stage-1/51_PREDATION.md), [docs/audit/laws/a3/stage-1/89_PARASITE.md](docs/audit/laws/a3/stage-1/89_PARASITE.md), [docs/audit/laws/a3/stage-2/11_TRACK.md](docs/audit/laws/a3/stage-2/11_TRACK.md), [docs/audit/laws/a3/stage-2/51_PREDATION.md](docs/audit/laws/a3/stage-2/51_PREDATION.md), [docs/audit/laws/a3/stage-2/89_PARASITE.md](docs/audit/laws/a3/stage-2/89_PARASITE.md), [docs/audit/laws/a3/stage-3/11_TRACK.md](docs/audit/laws/a3/stage-3/11_TRACK.md), [docs/audit/laws/a3/stage-3/51_PREDATION.md](docs/audit/laws/a3/stage-3/51_PREDATION.md), [docs/audit/laws/a3/stage-3/89_PARASITE.md](docs/audit/laws/a3/stage-3/89_PARASITE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

@@ -2,6 +2,4 @@
 
 # Operations: Build
 
-The production build is Vite-based and should be a finite command that writes static output. COOP/COEP headers are required for SharedArrayBuffer in hosted environments.
-
-Evidence: [package.json](../../../package.json), [vite.config.js](../../../vite.config.js), and [vercel.json](../../../vercel.json).
+Vite produces the production bundle in `.dist/`. The vercel.json configuration enables COOP/COEP headers for SharedArrayBuffer support in production. Build output is static and can be served from any CDN.

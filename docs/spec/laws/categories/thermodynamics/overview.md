@@ -8,21 +8,21 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 25 | [HEAT](../../thermodynamics/025_HEAT.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 26 | [COLD](../../thermodynamics/026_COLD.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 27 | [CONVECTION](../../thermodynamics/027_CONVECTION.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 28 | [PHASE_RADIATION](../../thermodynamics/028_PHASE_RADIATION.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 29 | [SUBLIMATION](../../thermodynamics/029_SUBLIMATION.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 42 | [MELT](../../thermodynamics/042_MELT.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 43 | [BOIL](../../thermodynamics/043_BOIL.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 44 | [CONDENSE](../../thermodynamics/044_CONDENSE.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 45 | [DEPOSIT](../../thermodynamics/045_DEPOSIT.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 46 | [EXOTHERMIC](../../thermodynamics/046_EXOTHERMIC.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 98 | [ADIABATIC](../../thermodynamics/098_ADIABATIC.md) | wired | LAW_HELP_DB | src/physics/lawgroups/thermoLaws.js |
-| 99 | [COMPRESSION](../../thermodynamics/099_COMPRESSION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/thermoLaws.js |
-| 100 | [EXPANSION](../../thermodynamics/100_EXPANSION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/thermoLaws.js |
-| 101 | [EQUILIBRIUM](../../thermodynamics/101_EQUILIBRIUM.md) | wired | LAW_HELP_DB | src/physics/lawgroups/thermoLaws.js |
-| 102 | [LATENT_HEAT](../../thermodynamics/102_LATENT_HEAT.md) | wired | LAW_HELP_DB | src/physics/lawgroups/thermoLaws.js |
-| 103 | [RUNAWAY](../../thermodynamics/103_RUNAWAY.md) | wired | LAW_HELP_DB | src/physics/lawgroups/thermoLaws.js |
+| 25 | [HEAT](../../thermodynamics/025_HEAT.md) | wired | NONE | src/physics/lawGraph.js |
+| 26 | [COLD](../../thermodynamics/026_COLD.md) | wired | NONE | src/physics/laws.js |
+| 27 | [CONVECTION](../../thermodynamics/027_CONVECTION.md) | wired | NONE | src/physics/laws.js |
+| 28 | [PHASE_RADIATION](../../thermodynamics/028_PHASE_RADIATION.md) | wired | NONE | src/physics/laws.js |
+| 29 | [SUBLIMATION](../../thermodynamics/029_SUBLIMATION.md) | wired | NONE | src/physics/laws.js |
+| 42 | [MELT](../../thermodynamics/042_MELT.md) | wired | NONE | src/physics/laws.js |
+| 43 | [BOIL](../../thermodynamics/043_BOIL.md) | wired | NONE | src/physics/laws.js |
+| 44 | [CONDENSE](../../thermodynamics/044_CONDENSE.md) | wired | NONE | src/physics/laws.js |
+| 45 | [DEPOSIT](../../thermodynamics/045_DEPOSIT.md) | wired | NONE | src/physics/laws.js |
+| 46 | [EXOTHERMIC](../../thermodynamics/046_EXOTHERMIC.md) | wired | NONE | src/physics/laws.js |
+| 98 | [ADIABATIC](../../thermodynamics/098_ADIABATIC.md) | wired | NONE | src/physics/lawgroups/thermoLaws.js |
+| 99 | [COMPRESSION](../../thermodynamics/099_COMPRESSION.md) | wired | NONE | src/physics/lawgroups/thermoLaws.js |
+| 100 | [EXPANSION](../../thermodynamics/100_EXPANSION.md) | wired | NONE | src/physics/lawgroups/thermoLaws.js |
+| 101 | [EQUILIBRIUM](../../thermodynamics/101_EQUILIBRIUM.md) | wired | NONE | src/physics/lawgroups/thermoLaws.js |
+| 102 | [LATENT_HEAT](../../thermodynamics/102_LATENT_HEAT.md) | wired | NONE | src/physics/lawgroups/thermoLaws.js |
+| 103 | [RUNAWAY](../../thermodynamics/103_RUNAWAY.md) | wired | NONE | src/physics/lawgroups/thermoLaws.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

@@ -7,9 +7,9 @@
 | Index | 31 |
 | Category | metaphysics |
 | Color | TEAL |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Dimensional drift: random Z-axis motion. |
-| EXPLANATION | Confirmed batch-08 (make it stronger): particles receive random Z-axis forces at 3x the old amplitude, visibly exploring 3D space. |
-| SYSTEM | VEL_Z += (prng()-0.5) x 0.3 x synergy x dt. Prevents particles from settling into pure 2D planes. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_08.test.js](../../../../tests/audit/batch_08.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/31_DIMENSIONALITY.md](../../../audit/laws/a3/stage-1/31_DIMENSIONALITY.md), [docs/audit/laws/a3/stage-2/31_DIMENSIONALITY.md](../../../audit/laws/a3/stage-2/31_DIMENSIONALITY.md), [docs/audit/laws/a3/stage-3/31_DIMENSIONALITY.md](../../../audit/laws/a3/stage-3/31_DIMENSIONALITY.md)
+- Tests: [tests/audit/batch_08.test.js](tests/audit/batch_08.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/126_HYPERPLANE.md](docs/audit/laws/a3/stage-1/126_HYPERPLANE.md), [docs/audit/laws/a3/stage-1/31_DIMENSIONALITY.md](docs/audit/laws/a3/stage-1/31_DIMENSIONALITY.md), [docs/audit/laws/a3/stage-2/126_HYPERPLANE.md](docs/audit/laws/a3/stage-2/126_HYPERPLANE.md), [docs/audit/laws/a3/stage-2/31_DIMENSIONALITY.md](docs/audit/laws/a3/stage-2/31_DIMENSIONALITY.md), [docs/audit/laws/a3/stage-3/126_HYPERPLANE.md](docs/audit/laws/a3/stage-3/126_HYPERPLANE.md), [docs/audit/laws/a3/stage-3/31_DIMENSIONALITY.md](docs/audit/laws/a3/stage-3/31_DIMENSIONALITY.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

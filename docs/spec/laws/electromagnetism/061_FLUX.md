@@ -7,9 +7,9 @@
 | Index | 61 |
 | Category | electromagnetism |
 | Color | BLUE |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Charge flux: particles are pushed along the charge gradient. |
-| EXPLANATION | Confirmed batch-16 (match irl): F = qE — the drift direction depends on the particle's effective charge q = POLARITY + CHARGE. Positive carriers move DOWN the stored-charge gradient (with the field), negative carriers move UP it (electrons run the other way), and neutral particles follow the field lines toward higher stored charge. |
-| SYSTEM | F = dir·k·(c_j − c_i)/(dist+1), dir = −1 for q > 1e-3, +1 for q < −1e-3, +1 for neutral. Turns stored charge into directed motion; works with CURRENT and CAPACITANCE. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_16.test.js](../../../../tests/audit/batch_16.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/61_FLUX.md](../../../audit/laws/a3/stage-1/61_FLUX.md), [docs/audit/laws/a3/stage-2/61_FLUX.md](../../../audit/laws/a3/stage-2/61_FLUX.md), [docs/audit/laws/a3/stage-3/61_FLUX.md](../../../audit/laws/a3/stage-3/61_FLUX.md)
+- Tests: [tests/audit/batch_16.test.js](tests/audit/batch_16.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/54_FIELD.md](docs/audit/laws/a3/stage-1/54_FIELD.md), [docs/audit/laws/a3/stage-1/58_INDUCTANCE.md](docs/audit/laws/a3/stage-1/58_INDUCTANCE.md), [docs/audit/laws/a3/stage-1/59_MAGNETISM.md](docs/audit/laws/a3/stage-1/59_MAGNETISM.md), [docs/audit/laws/a3/stage-1/61_FLUX.md](docs/audit/laws/a3/stage-1/61_FLUX.md), [docs/audit/laws/a3/stage-2/54_FIELD.md](docs/audit/laws/a3/stage-2/54_FIELD.md), [docs/audit/laws/a3/stage-2/58_INDUCTANCE.md](docs/audit/laws/a3/stage-2/58_INDUCTANCE.md), [docs/audit/laws/a3/stage-2/59_MAGNETISM.md](docs/audit/laws/a3/stage-2/59_MAGNETISM.md), [docs/audit/laws/a3/stage-2/61_FLUX.md](docs/audit/laws/a3/stage-2/61_FLUX.md), [docs/audit/laws/a3/stage-3/54_FIELD.md](docs/audit/laws/a3/stage-3/54_FIELD.md), [docs/audit/laws/a3/stage-3/58_INDUCTANCE.md](docs/audit/laws/a3/stage-3/58_INDUCTANCE.md), [docs/audit/laws/a3/stage-3/59_MAGNETISM.md](docs/audit/laws/a3/stage-3/59_MAGNETISM.md), [docs/audit/laws/a3/stage-3/61_FLUX.md](docs/audit/laws/a3/stage-3/61_FLUX.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

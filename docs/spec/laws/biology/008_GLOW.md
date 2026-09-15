@@ -7,9 +7,9 @@
 | Index | 8 |
 | Category | biology |
 | Color | ORANGE |
-| Status | gated-no-export-evidence |
-| Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Status | wired |
+| Solver gate references | 2 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Signaling pulses: particles emit periodic signals for visual brightness. |
-| EXPLANATION | GLOW is an emitter only (batch-04 correction): an oscillator (PULSE_RATE × SIGNAL_STRENGTH DNA) raises the particle's SIGNAL — its transmission strength — when the phase is positive. Signal (SIGNAL) and metabolism (ENERGY) are separate channels and GLOW never converts one into the other. |
-| SYSTEM | Emission: SIGNAL += phase×PULSE_RATE×SIGNAL_STRENGTH×dt×0.05×synergy when the oscillator phase is positive; with COMMS the pulse propagates to neighbours. No energy regen — ENERGY stays exactly as the LIFE law left it. Distinct from COMMS, which handles propagation. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_01.test.js](../../../../tests/audit/batch_01.test.js), [tests/audit/batch_03.test.js](../../../../tests/audit/batch_03.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/08_GLOW.md](../../../audit/laws/a3/stage-1/08_GLOW.md), [docs/audit/laws/a3/stage-2/08_GLOW.md](../../../audit/laws/a3/stage-2/08_GLOW.md), [docs/audit/laws/a3/stage-3/08_GLOW.md](../../../audit/laws/a3/stage-3/08_GLOW.md)
+- Tests: [tests/audit/batch_01.test.js](tests/audit/batch_01.test.js), [tests/audit/batch_03.test.js](tests/audit/batch_03.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](docs/audit/laws/a3/biology.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/08_GLOW.md](docs/audit/laws/a3/stage-1/08_GLOW.md), [docs/audit/laws/a3/stage-2/08_GLOW.md](docs/audit/laws/a3/stage-2/08_GLOW.md), [docs/audit/laws/a3/stage-3/08_GLOW.md](docs/audit/laws/a3/stage-3/08_GLOW.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

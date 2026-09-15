@@ -7,9 +7,9 @@
 | Index | 38 |
 | Category | physics |
 | Color | RED |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Vacuum pressure: empty space pushes particles apart. |
-| EXPLANATION | Confirmed batch-10 (yes): strengthened and dark-energy scaled — the outward push grows with distance from the world centre, opposing gravitational clustering harder at the edges. |
-| SYSTEM | Strength = 0.004 x synergy x (0.3 + dist/(worldSize/2)) along the radial direction from the world centre. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_10.test.js](../../../../tests/audit/batch_10.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/38_VOID.md](../../../audit/laws/a3/stage-1/38_VOID.md), [docs/audit/laws/a3/stage-2/38_VOID.md](../../../audit/laws/a3/stage-2/38_VOID.md), [docs/audit/laws/a3/stage-3/38_VOID.md](../../../audit/laws/a3/stage-3/38_VOID.md)
+- Tests: [tests/audit/batch_10.test.js](tests/audit/batch_10.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/38_VOID.md](docs/audit/laws/a3/stage-1/38_VOID.md), [docs/audit/laws/a3/stage-2/38_VOID.md](docs/audit/laws/a3/stage-2/38_VOID.md), [docs/audit/laws/a3/stage-3/38_VOID.md](docs/audit/laws/a3/stage-3/38_VOID.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

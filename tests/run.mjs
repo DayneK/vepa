@@ -1,5 +1,6 @@
-// VEPA v3 — Core Tests Runner
-// Run with: node tests/run.js
+// ARCHIVED LEGACY RUNNER: VEPA v3-era node:test harness, not part of the active Vitest pipeline.
+// Prefer `npm test` (Vitest) for the current repository.
+// Run with: node tests/run.mjs
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert';

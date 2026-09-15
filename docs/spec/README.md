@@ -12,8 +12,6 @@ The generator extracts runtime constants, law/category metadata, source exports/
 
 ## Tree
 
-`tree - docs/spec` is represented by the generated files below.
-
 | Branch | Purpose |
 | --- | --- |
 | [architecture](architecture/general.md) | System shape, ownership, runtime and build boundaries |
@@ -32,11 +30,10 @@ The generator extracts runtime constants, law/category metadata, source exports/
 | Contract | Observed value |
 | --- | --- |
 | Package | vepa-v4 |
-| Version | 9.1.2 |
 | Particle stride | 100 |
 | DNA count | 64 |
 | Declared law count | 136 |
 | Mapped law records | 136 |
-| Source files scanned | 601 |
+| Source files scanned | 197 |
 
 Generated records preserve discrepancies between runtime exports, supplemental metadata, tests, and older prose. They do not silently convert evidence into approval.

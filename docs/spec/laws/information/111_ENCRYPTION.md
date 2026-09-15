@@ -9,7 +9,7 @@
 | Color | VIOLET |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Encryption: keyed cipher — only matching keys decode the COMMS channel. |
-| EXPLANATION | Derives a per-particle cipher key from TUNING_CH1-4 and scrambles the signal carrier phase; the COMMS exchange only relays intelligible signal between keyholders — mismatched keys absorb the transmission as noise. Replaces the old 'signals last longer' behaviour (persistence was not encryption). |
-| SYSTEM | key = floor(((TUNING_CH1+TUNING_CH2+TUNING_CH3+TUNING_CH4)/4)·7). applyEncryption rotates PHASE_2 by key/8 and encodes SIGNAL; the pairwise exchange decodes only on matching keys, else damp to noise. Requires COMMS. |
-| ADVANCED | Key drift via MEMORY can rotate keys over time (forward secrecy, future). |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/infoLaws.js](../../../../src/physics/lawgroups/infoLaws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_28.test.js](../../../../tests/audit/batch_28.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/111_ENCRYPTION.md](../../../audit/laws/a3/stage-1/111_ENCRYPTION.md), [docs/audit/laws/a3/stage-2/111_ENCRYPTION.md](../../../audit/laws/a3/stage-2/111_ENCRYPTION.md), [docs/audit/laws/a3/stage-3/111_ENCRYPTION.md](../../../audit/laws/a3/stage-3/111_ENCRYPTION.md)
+- Tests: [tests/audit/batch_28.test.js](tests/audit/batch_28.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/111_ENCRYPTION.md](docs/audit/laws/a3/stage-1/111_ENCRYPTION.md), [docs/audit/laws/a3/stage-1/74_CODE.md](docs/audit/laws/a3/stage-1/74_CODE.md), [docs/audit/laws/a3/stage-2/111_ENCRYPTION.md](docs/audit/laws/a3/stage-2/111_ENCRYPTION.md), [docs/audit/laws/a3/stage-2/74_CODE.md](docs/audit/laws/a3/stage-2/74_CODE.md), [docs/audit/laws/a3/stage-3/111_ENCRYPTION.md](docs/audit/laws/a3/stage-3/111_ENCRYPTION.md), [docs/audit/laws/a3/stage-3/74_CODE.md](docs/audit/laws/a3/stage-3/74_CODE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

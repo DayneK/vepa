@@ -7,9 +7,9 @@
 | Index | 12 |
 | Category | biology |
 | Color | ORANGE |
-| Status | metadata-only |
+| Status | wired |
 | Solver gate references | 0 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Age-based death: old particles die off. |
-| EXPLANATION | Particles past age 500 have increasing death probability based on DEATH_RATE DNA. Senescence is nested inside the LIFE cycle (confirmed): it only fires while LIFE is on, so aging is a property of living organisms. |
-| SYSTEM | Past AGE 500, per-tick death chance = DEATH_RATE×0.001×(1 + ageNorm×0.5)×dt. Requires LIFE. Prevents immortal particles and enables generational turnover. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_04.test.js](../../../../tests/audit/batch_04.test.js), [tests/audit/params_batch_14.test.js](../../../../tests/audit/params_batch_14.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/12_SENESCENCE.md](../../../audit/laws/a3/stage-1/12_SENESCENCE.md), [docs/audit/laws/a3/stage-2/12_SENESCENCE.md](../../../audit/laws/a3/stage-2/12_SENESCENCE.md), [docs/audit/laws/a3/stage-3/12_SENESCENCE.md](../../../audit/laws/a3/stage-3/12_SENESCENCE.md)
+- Tests: [tests/audit/batch_04.test.js](tests/audit/batch_04.test.js), [tests/audit/params_batch_14.test.js](tests/audit/params_batch_14.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](docs/audit/laws/a3/biology.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/12_SENESCENCE.md](docs/audit/laws/a3/stage-1/12_SENESCENCE.md), [docs/audit/laws/a3/stage-2/12_SENESCENCE.md](docs/audit/laws/a3/stage-2/12_SENESCENCE.md), [docs/audit/laws/a3/stage-3/12_SENESCENCE.md](docs/audit/laws/a3/stage-3/12_SENESCENCE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

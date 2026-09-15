@@ -7,9 +7,9 @@
 | Index | 5 |
 | Category | physics |
 | Color | RED |
-| Status | gated-no-export-evidence |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB+LAW_HELP_PATCHES |
+| Status | wired |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Accretion: overlapping bodies merge into one. |
-| EXPLANATION | When the fusion gate passes — FUSION_MOMENTUM DNA (minimum relative momentum to fuse on impact) or FUSION_TIME DNA (seconds of continuous close contact for slower pairs) — the pair collapses into a single body: combined mass (× FUSION DNA efficiency), centre-of-mass position, momentum-conserving velocity, and mass-weighted colour. Bonded pairs (BOND / POLYMER) are molecules and never accrete — they stay as separate attached orbs. |
-| SYSTEM | True merger (v8.0.0): the survivor keeps its slot with MASS = (m1+m2)·(0.5+FUSION), colour and energy mass-weighted; the neighbour is marked DEAD. Proximity dwell is tracked per pair (PARTNER_ID / MITOSIS_TIMER) and resets when contact breaks. STOICHIOMETRY forces an exact merger (efficiency 1.0). Stars absorb whole bodies. |
-| ADVANCED | Replaces the pre-8.0 gradual dissolution (≈4% mass per frame until the smaller body died). Momentum, centre-of-mass position and weighted colour are exact; total mass may shift by FUSION efficiency unless STOICHIOMETRY is active. Shares the mergeParticles core with ALLOY — see src/physics/mergePhysics.js. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/lawgroups/mechanicsHelp.js](src/physics/lawgroups/mechanicsHelp.js), [src/physics/laws.js](src/physics/laws.js), [src/physics/mergePhysics.js](src/physics/mergePhysics.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_02.test.js](../../../../tests/audit/batch_02.test.js), [tests/audit/params_batch_11.test.js](../../../../tests/audit/params_batch_11.test.js), [tests/unit/synergyCache.test.js](../../../../tests/unit/synergyCache.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/05_ACCR.md](../../../audit/laws/a3/stage-1/05_ACCR.md), [docs/audit/laws/a3/stage-2/05_ACCR.md](../../../audit/laws/a3/stage-2/05_ACCR.md), [docs/audit/laws/a3/stage-3/05_ACCR.md](../../../audit/laws/a3/stage-3/05_ACCR.md)
+- Tests: [tests/audit/batch_02.test.js](tests/audit/batch_02.test.js), [tests/audit/params_batch_11.test.js](tests/audit/params_batch_11.test.js), [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/05_ACCR.md](docs/audit/laws/a3/stage-1/05_ACCR.md), [docs/audit/laws/a3/stage-2/05_ACCR.md](docs/audit/laws/a3/stage-2/05_ACCR.md), [docs/audit/laws/a3/stage-3/05_ACCR.md](docs/audit/laws/a3/stage-3/05_ACCR.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

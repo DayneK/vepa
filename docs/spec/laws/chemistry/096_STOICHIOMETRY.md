@@ -8,8 +8,8 @@
 | Category | chemistry |
 | Color | YELLOW |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Stoichiometry: mass is conserved in every exchange. |
-| EXPLANATION | When mass or energy changes hands, an equal and opposite amount is passed to the partner — no free mass. |
-| SYSTEM | Balance enforcement. With ACCR it makes mergers exact; with PARASITE it caps extraction at the host's loss. |
-| ADVANCED | Corrects drift so total mass in each pair interaction stays constant. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/chemistryLaws.js](../../../../src/physics/lawgroups/chemistryLaws.js)
+[src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_25.test.js](../../../../tests/audit/batch_25.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/96_STOICHIOMETRY.md](../../../audit/laws/a3/stage-1/96_STOICHIOMETRY.md), [docs/audit/laws/a3/stage-2/96_STOICHIOMETRY.md](../../../audit/laws/a3/stage-2/96_STOICHIOMETRY.md), [docs/audit/laws/a3/stage-3/96_STOICHIOMETRY.md](../../../audit/laws/a3/stage-3/96_STOICHIOMETRY.md)
+- Tests: [tests/audit/batch_25.test.js](tests/audit/batch_25.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/96_STOICHIOMETRY.md](docs/audit/laws/a3/stage-1/96_STOICHIOMETRY.md), [docs/audit/laws/a3/stage-2/96_STOICHIOMETRY.md](docs/audit/laws/a3/stage-2/96_STOICHIOMETRY.md), [docs/audit/laws/a3/stage-3/96_STOICHIOMETRY.md](docs/audit/laws/a3/stage-3/96_STOICHIOMETRY.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

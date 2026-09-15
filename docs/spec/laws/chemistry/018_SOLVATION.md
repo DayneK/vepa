@@ -8,8 +8,8 @@
 | Category | chemistry |
 | Color | YELLOW |
 | Status | wired |
-| Solver gate references | 3 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Solvation: the solvent medium — opposite charges attract, like charges repel. |
-| EXPLANATION | Real-world solvation (confirmed batch-05): like dissolving salt in water, the medium pulls opposite-charge ions together and pushes like charges apart, and charge-different particles react faster in the solvent. |
-| SYSTEM | Charge force = 0.05×\|q1×q2\|×synergy along the pair axis, sign = attract for opposite signs, repel for like signs (wired into the solver pair loop). Reaction multiplier = 1 + \|Δcharge\|×0.2×synergy when the gap > 0.5. Uses stride CHARGE (POLARITY DNA seeds it). |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_05.test.js](../../../../tests/audit/batch_05.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/18_SOLVATION.md](../../../audit/laws/a3/stage-1/18_SOLVATION.md), [docs/audit/laws/a3/stage-2/18_SOLVATION.md](../../../audit/laws/a3/stage-2/18_SOLVATION.md), [docs/audit/laws/a3/stage-3/18_SOLVATION.md](../../../audit/laws/a3/stage-3/18_SOLVATION.md)
+- Tests: [tests/audit/batch_05.test.js](tests/audit/batch_05.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/18_SOLVATION.md](docs/audit/laws/a3/stage-1/18_SOLVATION.md), [docs/audit/laws/a3/stage-1/94_PRECIPITATION.md](docs/audit/laws/a3/stage-1/94_PRECIPITATION.md), [docs/audit/laws/a3/stage-2/18_SOLVATION.md](docs/audit/laws/a3/stage-2/18_SOLVATION.md), [docs/audit/laws/a3/stage-2/94_PRECIPITATION.md](docs/audit/laws/a3/stage-2/94_PRECIPITATION.md), [docs/audit/laws/a3/stage-3/18_SOLVATION.md](docs/audit/laws/a3/stage-3/18_SOLVATION.md), [docs/audit/laws/a3/stage-3/94_PRECIPITATION.md](docs/audit/laws/a3/stage-3/94_PRECIPITATION.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

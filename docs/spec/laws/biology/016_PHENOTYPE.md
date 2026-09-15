@@ -7,9 +7,9 @@
 | Index | 16 |
 | Category | biology |
 | Color | ORANGE |
-| Status | gated-no-export-evidence |
-| Solver gate references | 3 |
-| Help source | LAW_HELP_DB |
+| Status | wired |
+| Solver gate references | 2 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Gene expression: the inherited genome becomes the visible body. |
-| EXPLANATION | Phenotype = genotype (DNA cache) expressed through the environment. POLARITY → hue, ALPHA → saturation, SYMMETRY → lightness are translated into the particle's colour every tick, and ENERGY is the environment — well-fed particles (energy > 100) grow larger, starving ones shrink. Offspring inherit the DNA, so they inherit the look. |
-| SYSTEM | RADIUS ×= (1 + (energy/200 − 0.5) × 0.5 × synergy); colour = HSL(POLARITY→hue 0-240, ALPHA→saturation, SYMMETRY→lightness) written to COLOR_R/G/B (0-255). The solver's mass-derived radius recompute applies the same energy factor. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_05.test.js](../../../../tests/audit/batch_05.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/16_PHENOTYPE.md](../../../audit/laws/a3/stage-1/16_PHENOTYPE.md), [docs/audit/laws/a3/stage-2/16_PHENOTYPE.md](../../../audit/laws/a3/stage-2/16_PHENOTYPE.md), [docs/audit/laws/a3/stage-3/16_PHENOTYPE.md](../../../audit/laws/a3/stage-3/16_PHENOTYPE.md)
+- Tests: [tests/audit/batch_05.test.js](tests/audit/batch_05.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](docs/audit/laws/a3/biology.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/16_PHENOTYPE.md](docs/audit/laws/a3/stage-1/16_PHENOTYPE.md), [docs/audit/laws/a3/stage-2/16_PHENOTYPE.md](docs/audit/laws/a3/stage-2/16_PHENOTYPE.md), [docs/audit/laws/a3/stage-3/16_PHENOTYPE.md](docs/audit/laws/a3/stage-3/16_PHENOTYPE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

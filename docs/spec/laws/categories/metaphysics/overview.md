@@ -8,21 +8,21 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 30 | [TIME_DILATION](../../metaphysics/030_TIME_DILATION.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 31 | [DIMENSIONALITY](../../metaphysics/031_DIMENSIONALITY.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 32 | [CHAOS](../../metaphysics/032_CHAOS.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 33 | [ORDER](../../metaphysics/033_ORDER.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 34 | [FATE](../../metaphysics/034_FATE.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 35 | [WILL](../../metaphysics/035_WILL.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 36 | [SOUL_LAW](../../metaphysics/036_SOUL_LAW.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 37 | [MIND](../../metaphysics/037_MIND.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 47 | [TELEPATHY](../../metaphysics/047_TELEPATHY.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 48 | [CLAIRVOYANCE](../../metaphysics/048_CLAIRVOYANCE.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 49 | [PRECOGNITION](../../metaphysics/049_PRECOGNITION.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 50 | [ASTRAL](../../metaphysics/050_ASTRAL.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 80 | [ENTANGLEMENT](../../metaphysics/080_ENTANGLEMENT.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 104 | [CONSCIOUSNESS](../../metaphysics/104_CONSCIOUSNESS.md) | wired | LAW_HELP_DB | src/physics/lawgroups/metaLaws.js |
-| 105 | [PERCEPTION](../../metaphysics/105_PERCEPTION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/metaLaws.js |
-| 106 | [SYNCHRONICITY](../../metaphysics/106_SYNCHRONICITY.md) | wired | LAW_HELP_DB | src/physics/lawgroups/metaLaws.js |
+| 30 | [TIME_DILATION](../../metaphysics/030_TIME_DILATION.md) | wired | NONE | src/physics/laws.js |
+| 31 | [DIMENSIONALITY](../../metaphysics/031_DIMENSIONALITY.md) | wired | NONE | src/physics/laws.js |
+| 32 | [CHAOS](../../metaphysics/032_CHAOS.md) | wired | NONE | src/physics/gpuCompute.js |
+| 33 | [ORDER](../../metaphysics/033_ORDER.md) | wired | NONE | src/physics/laws.js |
+| 34 | [FATE](../../metaphysics/034_FATE.md) | wired | NONE | src/physics/laws.js |
+| 35 | [WILL](../../metaphysics/035_WILL.md) | wired | NONE | src/physics/laws.js |
+| 36 | [SOUL_LAW](../../metaphysics/036_SOUL_LAW.md) | wired | NONE | src/physics/laws.js |
+| 37 | [MIND](../../metaphysics/037_MIND.md) | wired | NONE | src/physics/lawgroups/metaLaws.js |
+| 47 | [TELEPATHY](../../metaphysics/047_TELEPATHY.md) | wired | NONE | src/physics/laws.js |
+| 48 | [CLAIRVOYANCE](../../metaphysics/048_CLAIRVOYANCE.md) | wired | NONE | src/physics/laws.js |
+| 49 | [PRECOGNITION](../../metaphysics/049_PRECOGNITION.md) | wired | NONE | src/physics/laws.js |
+| 50 | [ASTRAL](../../metaphysics/050_ASTRAL.md) | wired | NONE | src/physics/laws.js |
+| 80 | [ENTANGLEMENT](../../metaphysics/080_ENTANGLEMENT.md) | wired | NONE | src/physics/laws.js |
+| 104 | [CONSCIOUSNESS](../../metaphysics/104_CONSCIOUSNESS.md) | wired | NONE | src/physics/solver.js |
+| 105 | [PERCEPTION](../../metaphysics/105_PERCEPTION.md) | wired | NONE | src/physics/solver.js |
+| 106 | [SYNCHRONICITY](../../metaphysics/106_SYNCHRONICITY.md) | wired | NONE | src/physics/solver.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

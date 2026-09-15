@@ -6,8 +6,8 @@ Simulation state is split between flat particle memory, species DNA, law masks, 
 
 | State family | Evidence | Contract |
 | --- | --- | --- |
-| Particle buffer | [src/state/particleBuffer.js](../../../src/state/particleBuffer.js) | Float32Array over SharedArrayBuffer or ArrayBuffer |
-| Species DNA | [src/dna/dnaBuffer.js](../../../src/dna/dnaBuffer.js) | Genome buffer separate from per-particle cache |
-| Law mask | [src/state/lawState.js](../../../src/state/lawState.js) | Five words for law indexes 0-135 |
-| Runtime configuration | [src/state/runtimeConfig.js](../../../src/state/runtimeConfig.js) | Mutable live configuration passed into execution |
-| World persistence | [src/state/worldSave.js](../../../src/state/worldSave.js) | Capture, restore, export, compare and undo |
+| Particle buffer | [src/state/particleBuffer.js](src/state/particleBuffer.js) | Float32Array over SharedArrayBuffer or ArrayBuffer |
+| Species DNA | [src/dna/dnaBuffer.js](src/dna/dnaBuffer.js) | Genome buffer separate from per-particle cache |
+| Law mask | [src/state/lawState.js](src/state/lawState.js) | Multiple words for law indexes 0-135 |
+| Runtime configuration | [src/state/runtimeConfig.js](src/state/runtimeConfig.js) | Mutable live configuration passed into execution |
+| World persistence | [src/state/worldSave.js](src/state/worldSave.js) | Capture, restore, export, compare and undo |

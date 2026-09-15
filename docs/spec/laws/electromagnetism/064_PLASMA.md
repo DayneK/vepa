@@ -8,8 +8,8 @@
 | Category | electromagnetism |
 | Color | BLUE |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Plasma: hot particles ionize — heat becomes charge. |
-| EXPLANATION | Confirmed batch-17 (match irl): the thermal-EM bridge with hysteresis — above 0.6 surplus heat ionizes into stored CHARGE (cooling the gas), and below 0.5 a cooled plasma recombines: stored charge converts back to heat and the ion resets. Plasma never keeps its charge after it cools. |
-| SYSTEM | temp > 0.6 → CHARGE += (temp−0.6)·k, temp −= conv·0.5; temp < 0.5 with stored charge → CHARGE = 0, temp += \|c\|·k·2 (cap 1). The 0.5–0.6 band prevents rapid oscillation. Feeds CHARGE_LAW/FLUX. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_17.test.js](../../../../tests/audit/batch_17.test.js), [tests/unit/lawCategories.test.js](../../../../tests/unit/lawCategories.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/64_PLASMA.md](../../../audit/laws/a3/stage-1/64_PLASMA.md), [docs/audit/laws/a3/stage-2/64_PLASMA.md](../../../audit/laws/a3/stage-2/64_PLASMA.md), [docs/audit/laws/a3/stage-3/64_PLASMA.md](../../../audit/laws/a3/stage-3/64_PLASMA.md)
+- Tests: [tests/audit/batch_17.test.js](tests/audit/batch_17.test.js), [tests/unit/lawCategories.test.js](tests/unit/lawCategories.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/62_IONIZATION.md](docs/audit/laws/a3/stage-1/62_IONIZATION.md), [docs/audit/laws/a3/stage-1/64_PLASMA.md](docs/audit/laws/a3/stage-1/64_PLASMA.md), [docs/audit/laws/a3/stage-2/62_IONIZATION.md](docs/audit/laws/a3/stage-2/62_IONIZATION.md), [docs/audit/laws/a3/stage-2/64_PLASMA.md](docs/audit/laws/a3/stage-2/64_PLASMA.md), [docs/audit/laws/a3/stage-3/62_IONIZATION.md](docs/audit/laws/a3/stage-3/62_IONIZATION.md), [docs/audit/laws/a3/stage-3/64_PLASMA.md](docs/audit/laws/a3/stage-3/64_PLASMA.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

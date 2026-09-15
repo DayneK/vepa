@@ -8,8 +8,8 @@
 | Category | quantum |
 | Color | PURPLE |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Teleport: quantum state transfer through an entangled link. |
-| EXPLANATION | Real quantum teleportation: the particle's state (velocity/energy) is transferred to its entangled partner through a one-tick-delayed classical SIGNAL channel, consuming the link (ENTANGLE_PHASE). The sender collapses to a jittered ground state — no clone remains. Nothing moves through space; the entangled partner adopts the state. |
-| SYSTEM | Requires ENTANGLE_ID ≥ 0 (ENTANGLEMENT law). Probability 0.002·k per tick: partner adopts velocity/energy, sender velocity randomises ±0.2, sender pays ENERGY (classical channel cost), ENTANGLE_PHASE = 0 (link snaps). No position change. |
-| ADVANCED | Synergies: ENTANGLEMENT creates the links; DECOHERENCE stabilises transfer; OBSERVER measures the outcome. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/quantumLaws.js](../../../../src/physics/lawgroups/quantumLaws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_30.test.js](../../../../tests/audit/batch_30.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/117_TELEPORT.md](../../../audit/laws/a3/stage-1/117_TELEPORT.md), [docs/audit/laws/a3/stage-2/117_TELEPORT.md](../../../audit/laws/a3/stage-2/117_TELEPORT.md), [docs/audit/laws/a3/stage-3/117_TELEPORT.md](../../../audit/laws/a3/stage-3/117_TELEPORT.md)
+- Tests: [tests/audit/batch_30.test.js](tests/audit/batch_30.test.js), [tests/unit/lawGraph.test.js](tests/unit/lawGraph.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/117_TELEPORT.md](docs/audit/laws/a3/stage-1/117_TELEPORT.md), [docs/audit/laws/a3/stage-2/117_TELEPORT.md](docs/audit/laws/a3/stage-2/117_TELEPORT.md), [docs/audit/laws/a3/stage-3/117_TELEPORT.md](docs/audit/laws/a3/stage-3/117_TELEPORT.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

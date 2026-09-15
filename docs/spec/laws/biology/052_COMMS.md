@@ -8,8 +8,8 @@
 | Category | biology |
 | Color | ORANGE |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Communication: particles emit and exchange channel-filtered signals. |
-| EXPLANATION | Confirmed batch-14: oscillator pulses (PULSE_RATE × SIGNAL_STRENGTH DNA) build a SIGNAL field each tick; neighbors within NEIGHBORHOOD_RADIUS exchange signal filtered by TUNING_CH1-4, converting delivery into homing force + memory. The sender pays the emission cost — signalling is no longer a free energy source. |
-| SYSTEM | The only law that drives signal emission, decay, and pairwise signal exchange. Delivery: receiver SIGNAL/MEMORY += delivered, homing force = SIGNAL_RESP × delivered × 0.05; sender ENERGY −= delivered × 0.5 (floor 0). With COMMS off, SIGNAL and MEMORY fields freeze. |
-| ADVANCED | Receiver sensitivity is SIGNAL_RESP, range is NEIGHBORHOOD_RADIUS, persistence is SIGNAL_DECAY, and channel tuning is TUNING_CH1-4. Because COMMS is the sole gate for the communication DNA group, toggling it off guarantees zero signal-driven movement even when other laws are active. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/lawgroups/infoLaws.js](src/physics/lawgroups/infoLaws.js), [src/physics/lawgroups/metaLaws.js](src/physics/lawgroups/metaLaws.js), [src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_10.test.js](../../../../tests/audit/batch_10.test.js), [tests/audit/batch_14.test.js](../../../../tests/audit/batch_14.test.js), [tests/audit/params_batch_16.test.js](../../../../tests/audit/params_batch_16.test.js), [tests/audit/params_batch_17.test.js](../../../../tests/audit/params_batch_17.test.js), [tests/audit/params_batch_18.test.js](../../../../tests/audit/params_batch_18.test.js), [tests/unit/lawGating.test.js](../../../../tests/unit/lawGating.test.js), [tests/unit/signal.test.js](../../../../tests/unit/signal.test.js), [tests/unit/synergyCache.test.js](../../../../tests/unit/synergyCache.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/52_COMMS.md](../../../audit/laws/a3/stage-1/52_COMMS.md), [docs/audit/laws/a3/stage-2/52_COMMS.md](../../../audit/laws/a3/stage-2/52_COMMS.md), [docs/audit/laws/a3/stage-3/52_COMMS.md](../../../audit/laws/a3/stage-3/52_COMMS.md)
+- Tests: [tests/audit/batch_10.test.js](tests/audit/batch_10.test.js), [tests/audit/batch_14.test.js](tests/audit/batch_14.test.js), [tests/audit/params_batch_16.test.js](tests/audit/params_batch_16.test.js), [tests/audit/params_batch_17.test.js](tests/audit/params_batch_17.test.js), [tests/audit/params_batch_18.test.js](tests/audit/params_batch_18.test.js), [tests/unit/lawGating.test.js](tests/unit/lawGating.test.js), [tests/unit/signal.test.js](tests/unit/signal.test.js), [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](docs/audit/laws/a3/biology.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/111_ENCRYPTION.md](docs/audit/laws/a3/stage-1/111_ENCRYPTION.md), [docs/audit/laws/a3/stage-1/52_COMMS.md](docs/audit/laws/a3/stage-1/52_COMMS.md), [docs/audit/laws/a3/stage-2/52_COMMS.md](docs/audit/laws/a3/stage-2/52_COMMS.md), [docs/audit/laws/a3/stage-3/52_COMMS.md](docs/audit/laws/a3/stage-3/52_COMMS.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

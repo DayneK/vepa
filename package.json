@@ -15,6 +15,7 @@
     "test:e2e:worker": "playwright test tests/e2e/physics-worker.spec.js",
     "spec:generate": "node scripts/generate-spec.mjs",
     "spec:check": "node scripts/generate-spec.mjs --check",
+    "repository:check": "npm run spec:check && node scripts/check-repository.mjs",
     "syntax-check": "find src -name '*.js' -exec node --check {} +"
   },
   "dependencies": {

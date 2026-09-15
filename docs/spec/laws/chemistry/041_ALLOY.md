@@ -8,8 +8,8 @@
 | Category | chemistry |
 | Color | YELLOW |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB+LAW_HELP_PATCHES |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Alloying: different-species particles fuse into composites. |
-| EXPLANATION | Confirmed batch-11 (real-life behavior) + v8.0.0: two different-species particles that overlap dissolve into one homogeneous composite — full mass merge, per-particle DNA averaged (mass-weighted), colour blended (mass-weighted — the heavier partner dominates). The survivor keeps its species slot but behaves as the mix. Bonded pairs stay as separate attached orbs and never alloy. |
-| SYSTEM | Overlap dist < (r1+r2)·0.5: MASS = m1+m2, DNA_CACHE = mass-weighted average of both, colours mass-weighted, j is marked DEAD. Bonded pairs are excluded. Gated by ALLOY. |
-| ADVANCED | The colour blend was upgraded from a flat 50/50 average to a mass-weighted average in v8.0.0. Shares the mergeParticles core with ACCR — see src/physics/mergePhysics.js. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/mergePhysics.js](../../../../src/physics/mergePhysics.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/mergePhysics.js](src/physics/mergePhysics.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_11.test.js](../../../../tests/audit/batch_11.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/41_ALLOY.md](../../../audit/laws/a3/stage-1/41_ALLOY.md), [docs/audit/laws/a3/stage-2/41_ALLOY.md](../../../audit/laws/a3/stage-2/41_ALLOY.md), [docs/audit/laws/a3/stage-3/41_ALLOY.md](../../../audit/laws/a3/stage-3/41_ALLOY.md)
+- Tests: [tests/audit/batch_11.test.js](tests/audit/batch_11.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/41_ALLOY.md](docs/audit/laws/a3/stage-1/41_ALLOY.md), [docs/audit/laws/a3/stage-2/41_ALLOY.md](docs/audit/laws/a3/stage-2/41_ALLOY.md), [docs/audit/laws/a3/stage-3/41_ALLOY.md](docs/audit/laws/a3/stage-3/41_ALLOY.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

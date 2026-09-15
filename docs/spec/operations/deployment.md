@@ -2,14 +2,4 @@
 
 # Operations: Deployment
 
-Deployment is environment-specific. The repository contains Vercel configuration and a Vite build; hosting should run install, finite build and static serving according to the platform contract.
-
-## Pre-deploy checks
-
-- `npm run spec:check` passes against committed docs.
-- `npm run syntax-check` passes.
-- `npm test` results are reviewed, including baseline failures.
-- `npm run build` exits successfully.
-- COOP/COEP headers and base path match the target.
-
-The generator documents assumptions; it does not deploy or mutate hosting configuration.
+The project deploys to both Vercel (production, with SharedArrayBuffer support via COOP/COEP headers) and GitHub Pages. Deploys are triggered by pushes to the master branch.

@@ -4,19 +4,17 @@
 
 | Area | Files | Exports | Imports | Law references |
 | --- | --- | --- | --- | --- |
-| Application | 24 | 153 | 82 | 144 |
-| Benchmark | 2 | 0 | 17 | 0 |
-| Documentation | 416 | 0 | 0 | 896 |
-| Repository | 11 | 0 | 2 | 0 |
-| Runtime | 1 | 0 | 5 | 0 |
-| Simulation | 19 | 205 | 40 | 229 |
-| State | 20 | 133 | 24 | 0 |
-| Testing | 91 | 13 | 504 | 230 |
-| Ui | 17 | 42 | 46 | 0 |
+| Application | 24 | 135 | 74 | 302 |
+| Benchmark | 2 | 0 | 13 | 9 |
+| Repository | 7 | 2 | 2 | 1 |
+| Simulation | 24 | 179 | 53 | 323 |
+| State | 23 | 152 | 29 | 186 |
+| Testing | 98 | 9 | 539 | 402 |
+| Ui | 19 | 48 | 45 | 364 |
 
 ## Boundary observations
 
 - The solver imports shared law primitives and category lawgroups, so law records must be reviewed with dispatch evidence.
-- The active law mask has a fifth penta word for indexes 128-135, while older prose describes four words and 128 laws.
+- The active law mask has a penta word for the full law range, while older prose may describe fewer words.
 - The UI reads the canonical help object and overlays supplemental patches at runtime.
 - Package lock metadata is checked independently because it can drift from package.json during uncommitted work.

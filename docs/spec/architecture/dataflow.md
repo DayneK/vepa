@@ -10,4 +10,4 @@
 - Stateful field and emergent subsystem passes update their own buffers or registries on cadence.
 - Renderer and HUD read the resulting buffer and metrics for the next frame.
 
-Evidence: [src/main.js](../../../src/main.js), [src/worker/physics.worker.js](../../../src/worker/physics.worker.js), and [src/physics/solver.js](../../../src/physics/solver.js).
+Evidence: [src/main.js](src/main.js), [src/worker/physics.worker.js](src/worker/physics.worker.js), and [src/physics/solver.js](src/physics/solver.js).

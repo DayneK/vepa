@@ -7,9 +7,9 @@
 | Index | 68 |
 | Category | information |
 | Color | VIOLET |
-| Status | gated-no-export-evidence |
-| Solver gate references | 3 |
-| Help source | LAW_HELP_DB |
+| Status | wired |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Stigmergy: particles leave trails and follow the trails of others. |
-| EXPLANATION | Confirmed batch-17 (match irl): only moving particles lay a predicted-path trail marker (pos + vel·8); a stopped particle's marker evaporates back toward it. Followers are pulled along the pheromone gradient — the pull falls off with distance to the marker and scales with freshness (markers far from their owner are stale). |
-| SYSTEM | Speed ≥ 0.5 → TRAIL = pos + v·8; stopped → marker lerps 8%/tick back to the owner. Follow: F = k·freshness/(1+dist·0.1), freshness = 1/(1+ownerDist·0.02). +LEARN ×1.3. Ant-like foraging streams without global coordination. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_18.test.js](../../../../tests/audit/batch_18.test.js), [tests/unit/lawCategories.test.js](../../../../tests/unit/lawCategories.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/68_STIGMERGY.md](../../../audit/laws/a3/stage-1/68_STIGMERGY.md), [docs/audit/laws/a3/stage-2/68_STIGMERGY.md](../../../audit/laws/a3/stage-2/68_STIGMERGY.md), [docs/audit/laws/a3/stage-3/68_STIGMERGY.md](../../../audit/laws/a3/stage-3/68_STIGMERGY.md)
+- Tests: [tests/audit/batch_18.test.js](tests/audit/batch_18.test.js), [tests/unit/lawCategories.test.js](tests/unit/lawCategories.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/68_STIGMERGY.md](docs/audit/laws/a3/stage-1/68_STIGMERGY.md), [docs/audit/laws/a3/stage-2/68_STIGMERGY.md](docs/audit/laws/a3/stage-2/68_STIGMERGY.md), [docs/audit/laws/a3/stage-3/68_STIGMERGY.md](docs/audit/laws/a3/stage-3/68_STIGMERGY.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

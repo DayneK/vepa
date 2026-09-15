@@ -2,26 +2,26 @@
 
 # Laws: Index
 
-The law catalog is generated from LAW_INDEXES, LAW_CATEGORIES and associated metadata in [src/constants.js](../../../src/constants.js). There are `136` mapped records across `9` categories.
+The law catalog is generated from LAW_INDEXES, LAW_CATEGORIES and associated metadata in [src/constants.js](src/constants.js). There are `136` mapped records across `9` categories.
 
 ## Category coverage
 
 | Category | Color | Count | Solver-wired records | Merged help records |
 | --- | --- | --- | --- | --- |
-| Physics | RED | 16 | 8 | 16 |
-| Mechanics | SLATE | 8 | 7 | 8 |
-| Biology | ORANGE | 16 | 8 | 16 |
-| Chemistry | YELLOW | 16 | 14 | 16 |
-| Thermodynamics | GREEN | 16 | 6 | 16 |
-| Metaphysics | TEAL | 16 | 12 | 16 |
-| Electromagnetism | BLUE | 16 | 11 | 16 |
-| Information | VIOLET | 16 | 8 | 16 |
-| Quantum | PURPLE | 16 | 16 | 16 |
+| Physics | RED | 16 | 15 | 0 |
+| Mechanics | SLATE | 8 | 8 | 8 |
+| Biology | ORANGE | 16 | 15 | 0 |
+| Chemistry | YELLOW | 16 | 16 | 0 |
+| Thermodynamics | GREEN | 16 | 16 | 0 |
+| Metaphysics | TEAL | 16 | 16 | 0 |
+| Electromagnetism | BLUE | 16 | 15 | 0 |
+| Information | VIOLET | 16 | 16 | 0 |
+| Quantum | PURPLE | 16 | 16 | 0 |
 
 ## Contract findings
 
-- Physics mapped laws: 16; slate Mechanics mapped laws: 8.
-- Canonical LAW_HELP_DB entries: 128; supplemental entries: 15.
+- Canonical LAW_HELP_DB entries: 0/136.
+- Merged help entries after supplemental sources: 8/136.
 - Every mapped law has merged help evidence.
 - Every category overview links to one generated record per law index.
 

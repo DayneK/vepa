@@ -9,7 +9,7 @@
 | Color | RED |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Tides: massive neighbours stretch and pull at each other. |
-| EXPLANATION | Confirmed batch-21: particles feel a tidal force proportional to the mass of nearby massive particles (∝ massJ·k/dist) — a long-range pull that strengthens with mass and weakens slowly with distance. |
-| SYSTEM | Long-range mass coupling (inverse-distance, reaches further than gravity). With GRAV it produces orbital capture; with SINGULARITY the tidal field deepens around the hole. |
-| ADVANCED | Tidal force uses MASS of both partners; inverse-distance not inverse-square, so it reaches further than gravity. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/physicsLaws.js](../../../../src/physics/lawgroups/physicsLaws.js)
+[src/physics/lawgroups/physicsLaws.js](src/physics/lawgroups/physicsLaws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_21.test.js](../../../../tests/audit/batch_21.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/82_TIDE.md](../../../audit/laws/a3/stage-1/82_TIDE.md), [docs/audit/laws/a3/stage-2/82_TIDE.md](../../../audit/laws/a3/stage-2/82_TIDE.md), [docs/audit/laws/a3/stage-3/82_TIDE.md](../../../audit/laws/a3/stage-3/82_TIDE.md)
+- Tests: [tests/audit/batch_21.test.js](tests/audit/batch_21.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/82_TIDE.md](docs/audit/laws/a3/stage-1/82_TIDE.md), [docs/audit/laws/a3/stage-2/82_TIDE.md](docs/audit/laws/a3/stage-2/82_TIDE.md), [docs/audit/laws/a3/stage-3/82_TIDE.md](docs/audit/laws/a3/stage-3/82_TIDE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

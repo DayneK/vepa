@@ -8,8 +8,8 @@
 | Category | electromagnetism |
 | Color | BLUE |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Capacitance: particles store energy as charge. |
-| EXPLANATION | Confirmed batch-15: particles accumulate stored CHARGE from surplus ENERGY and feel a pairwise force from stored charge — energy storage that later drives electrostatic motion. Discharging drains toward zero only, so a depleted capacitor never flips polarity from draining. |
-| SYSTEM | Charge accrues when ENERGY exceeds 50 (clamped ±2, the breakdown limit) and bleeds toward zero when below. Stored charge feeds CHARGE_LAW and FLUX; same-sign stored charge repels. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_15.test.js](../../../../tests/audit/batch_15.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/57_CAPACITANCE.md](../../../audit/laws/a3/stage-1/57_CAPACITANCE.md), [docs/audit/laws/a3/stage-2/57_CAPACITANCE.md](../../../audit/laws/a3/stage-2/57_CAPACITANCE.md), [docs/audit/laws/a3/stage-3/57_CAPACITANCE.md](../../../audit/laws/a3/stage-3/57_CAPACITANCE.md)
+- Tests: [tests/audit/batch_15.test.js](tests/audit/batch_15.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/57_CAPACITANCE.md](docs/audit/laws/a3/stage-1/57_CAPACITANCE.md), [docs/audit/laws/a3/stage-2/57_CAPACITANCE.md](docs/audit/laws/a3/stage-2/57_CAPACITANCE.md), [docs/audit/laws/a3/stage-3/57_CAPACITANCE.md](docs/audit/laws/a3/stage-3/57_CAPACITANCE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

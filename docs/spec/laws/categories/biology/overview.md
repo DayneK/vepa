@@ -8,21 +8,21 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 7 | [LIFE](../../biology/007_LIFE.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 8 | [GLOW](../../biology/008_GLOW.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 9 | [AFFINITY](../../biology/009_AFFINITY.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 10 | [REPRO](../../biology/010_REPRO.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 11 | [TRACK](../../biology/011_TRACK.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 12 | [SENESCENCE](../../biology/012_SENESCENCE.md) | metadata-only | LAW_HELP_DB | not found |
-| 13 | [ENERGY](../../biology/013_ENERGY.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 14 | [RADIATION](../../biology/014_RADIATION.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 15 | [GENOTYPE](../../biology/015_GENOTYPE.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 16 | [PHENOTYPE](../../biology/016_PHENOTYPE.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 51 | [PREDATION](../../biology/051_PREDATION.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 52 | [COMMS](../../biology/052_COMMS.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 88 | [SYMBIOSIS](../../biology/088_SYMBIOSIS.md) | wired | LAW_HELP_DB | src/physics/lawgroups/biologyLaws.js |
-| 89 | [PARASITE](../../biology/089_PARASITE.md) | wired | LAW_HELP_DB | src/physics/lawgroups/biologyLaws.js |
-| 90 | [HIBERNATION](../../biology/090_HIBERNATION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/biologyLaws.js |
-| 91 | [IMMUNITY](../../biology/091_IMMUNITY.md) | wired | LAW_HELP_DB | src/physics/lawgroups/biologyLaws.js |
+| 7 | [LIFE](../../biology/007_LIFE.md) | wired | NONE | src/physics/laws.js |
+| 8 | [GLOW](../../biology/008_GLOW.md) | wired | NONE | src/physics/laws.js |
+| 9 | [AFFINITY](../../biology/009_AFFINITY.md) | wired | NONE | src/physics/laws.js |
+| 10 | [REPRO](../../biology/010_REPRO.md) | wired | NONE | src/physics/laws.js |
+| 11 | [TRACK](../../biology/011_TRACK.md) | wired | NONE | src/physics/laws.js |
+| 12 | [SENESCENCE](../../biology/012_SENESCENCE.md) | wired | NONE | src/physics/laws.js |
+| 13 | [ENERGY](../../biology/013_ENERGY.md) | wired | NONE | src/physics/lawgroups/biologyLaws.js |
+| 14 | [RADIATION](../../biology/014_RADIATION.md) | wired | NONE | src/physics/laws.js |
+| 15 | [GENOTYPE](../../biology/015_GENOTYPE.md) | wired | NONE | src/physics/laws.js |
+| 16 | [PHENOTYPE](../../biology/016_PHENOTYPE.md) | wired | NONE | src/physics/laws.js |
+| 51 | [PREDATION](../../biology/051_PREDATION.md) | wired | NONE | src/physics/laws.js |
+| 52 | [COMMS](../../biology/052_COMMS.md) | wired | NONE | src/physics/lawgroups/infoLaws.js |
+| 88 | [SYMBIOSIS](../../biology/088_SYMBIOSIS.md) | wired | NONE | src/physics/mergePhysics.js |
+| 89 | [PARASITE](../../biology/089_PARASITE.md) | wired | NONE | src/physics/mergePhysics.js |
+| 90 | [HIBERNATION](../../biology/090_HIBERNATION.md) | wired | NONE | src/physics/solver.js |
+| 91 | [IMMUNITY](../../biology/091_IMMUNITY.md) | wired | NONE | src/physics/lawgroups/biologyLaws.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

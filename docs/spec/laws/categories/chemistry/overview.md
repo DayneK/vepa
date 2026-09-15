@@ -8,21 +8,21 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 17 | [CATALYSIS_LAW](../../chemistry/017_CATALYSIS_LAW.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 18 | [SOLVATION](../../chemistry/018_SOLVATION.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 19 | [ACIDITY](../../chemistry/019_ACIDITY.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 20 | [OXIDATION](../../chemistry/020_OXIDATION.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 21 | [POLYMER](../../chemistry/021_POLYMER.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 22 | [ISOMERIZATION](../../chemistry/022_ISOMERIZATION.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 23 | [CHIRALITY](../../chemistry/023_CHIRALITY.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 24 | [CRYSTALLIZATION](../../chemistry/024_CRYSTALLIZATION.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 40 | [REDUCTION](../../chemistry/040_REDUCTION.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 41 | [ALLOY](../../chemistry/041_ALLOY.md) | wired | LAW_HELP_DB+LAW_HELP_PATCHES | src/physics/laws.js, src/physics/mergePhysics.js |
-| 92 | [ELECTROLYSIS](../../chemistry/092_ELECTROLYSIS.md) | wired | LAW_HELP_DB | src/physics/lawgroups/chemistryLaws.js |
-| 93 | [PHOTOLYSIS](../../chemistry/093_PHOTOLYSIS.md) | wired | LAW_HELP_DB | src/physics/lawgroups/chemistryLaws.js |
-| 94 | [PRECIPITATION](../../chemistry/094_PRECIPITATION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/chemistryLaws.js |
-| 95 | [NEUTRALIZATION](../../chemistry/095_NEUTRALIZATION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/chemistryLaws.js |
-| 96 | [STOICHIOMETRY](../../chemistry/096_STOICHIOMETRY.md) | wired | LAW_HELP_DB | src/physics/lawgroups/chemistryLaws.js |
-| 97 | [AUTOCATALYSIS](../../chemistry/097_AUTOCATALYSIS.md) | wired | LAW_HELP_DB | src/physics/lawgroups/chemistryLaws.js |
+| 17 | [CATALYSIS_LAW](../../chemistry/017_CATALYSIS_LAW.md) | wired | NONE | src/physics/laws.js |
+| 18 | [SOLVATION](../../chemistry/018_SOLVATION.md) | wired | NONE | src/physics/laws.js |
+| 19 | [ACIDITY](../../chemistry/019_ACIDITY.md) | wired | NONE | src/physics/laws.js |
+| 20 | [OXIDATION](../../chemistry/020_OXIDATION.md) | wired | NONE | src/physics/laws.js |
+| 21 | [POLYMER](../../chemistry/021_POLYMER.md) | wired | NONE | src/physics/laws.js |
+| 22 | [ISOMERIZATION](../../chemistry/022_ISOMERIZATION.md) | wired | NONE | src/physics/laws.js |
+| 23 | [CHIRALITY](../../chemistry/023_CHIRALITY.md) | wired | NONE | src/physics/laws.js |
+| 24 | [CRYSTALLIZATION](../../chemistry/024_CRYSTALLIZATION.md) | wired | NONE | src/physics/laws.js |
+| 40 | [REDUCTION](../../chemistry/040_REDUCTION.md) | wired | NONE | src/physics/laws.js |
+| 41 | [ALLOY](../../chemistry/041_ALLOY.md) | wired | NONE | src/physics/laws.js |
+| 92 | [ELECTROLYSIS](../../chemistry/092_ELECTROLYSIS.md) | wired | NONE | src/physics/solver.js |
+| 93 | [PHOTOLYSIS](../../chemistry/093_PHOTOLYSIS.md) | wired | NONE | src/physics/solver.js |
+| 94 | [PRECIPITATION](../../chemistry/094_PRECIPITATION.md) | wired | NONE | src/physics/solver.js |
+| 95 | [NEUTRALIZATION](../../chemistry/095_NEUTRALIZATION.md) | wired | NONE | src/physics/solver.js |
+| 96 | [STOICHIOMETRY](../../chemistry/096_STOICHIOMETRY.md) | wired | NONE | src/physics/solver.js |
+| 97 | [AUTOCATALYSIS](../../chemistry/097_AUTOCATALYSIS.md) | wired | NONE | src/physics/solver.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

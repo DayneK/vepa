@@ -22,17 +22,17 @@
 | HINT | Momentum transfers motion between neighbors. |
 | EXPLANATION | Relative velocity is shared according to partner mass. |
 | SYSTEM | Velocity difference produces a mass-weighted impulse. |
-| ADVANCED | Bounded relaxation avoids numerical energy injection. |
+| ADVANCED | Use it for relaxation after contact; it is distinct from COLL restitution. |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/mechanicsLaws.js](../../../../src/physics/lawgroups/mechanicsLaws.js)
+[src/physics/lawGraph.js](src/physics/lawGraph.js), [src/physics/lawgroups/mechanicsHelp.js](src/physics/lawgroups/mechanicsHelp.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_02.test.js](../../../../tests/audit/batch_02.test.js), [tests/audit/params_batch_11.test.js](../../../../tests/audit/params_batch_11.test.js)
+- Tests: [tests/audit/batch_02.test.js](tests/audit/batch_02.test.js), [tests/audit/batch_22.test.js](tests/audit/batch_22.test.js), [tests/audit/params_batch_11.test.js](tests/audit/params_batch_11.test.js), [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js)
 - Audits: No filename-matched audit record found.
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

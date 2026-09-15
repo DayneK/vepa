@@ -2,25 +2,22 @@
   "schema": "vepa-technical-spec/v1",
   "generator": "scripts/generate-spec.mjs",
   "project": "vepa-v4",
-  "version": "9.1.2",
+  "version": "9.1.3",
   "inputRoots": [
     "src",
     "tests",
     "bench",
-    "public",
-    "docs"
+    "public"
   ],
-  "sourceFileCount": 601,
+  "sourceFileCount": 197,
   "sourceAreas": {
     "benchmark": 2,
-    "documentation": 416,
-    "repository": 11,
+    "repository": 7,
     "application": 24,
-    "simulation": 19,
-    "state": 20,
-    "ui": 17,
-    "runtime": 1,
-    "testing": 91
+    "state": 23,
+    "simulation": 24,
+    "ui": 19,
+    "testing": 98
   },
   "laws": {
     "declared": 136,
@@ -38,65 +35,15 @@
     },
     "duplicateIndexes": [],
     "missingIndexes": [],
-    "canonicalHelpCount": 128,
-    "mergedHelpCount": 136,
-    "missingHelp": [],
-    "metadataOnly": [
-      "BUOYANCY",
-      "SENESCENCE",
-      "ELECTRIC_FIELD",
-      "MASS_INERTIA",
-      "INERTIA"
-    ],
-    "gatedWithoutExportEvidence": [
-      "DRAG",
-      "ENTR",
-      "COLL",
-      "ACCR",
-      "PLANETARY",
-      "LIFE",
-      "GLOW",
-      "REPRO",
-      "ENERGY",
-      "RADIATION",
-      "GENOTYPE",
-      "PHENOTYPE",
-      "OXIDATION",
-      "ISOMERIZATION",
-      "HEAT",
-      "COLD",
-      "CONVECTION",
-      "PHASE_RADIATION",
-      "SUBLIMATION",
-      "DIMENSIONALITY",
-      "CHAOS",
-      "FATE",
-      "WILL",
-      "VOID",
-      "MELT",
-      "BOIL",
-      "CONDENSE",
-      "DEPOSIT",
-      "EXOTHERMIC",
-      "CURRENT",
-      "MAGNETISM",
-      "RESONANCE",
-      "FLUX",
-      "PATTERN",
-      "STIGMERGY",
-      "LEARN",
-      "SYMBOL",
-      "METRIC",
-      "PREDICT",
-      "CODE",
-      "PROTOCOL"
-    ]
+    "canonicalHelpCount": 0,
+    "mergedHelpCount": 8,
+    "missingHelp": []
   },
   "findings": {
-    "packageJsonVersion": "9.1.2",
+    "packageJsonVersion": "9.1.3",
     "packageLockRootVersion": null,
     "packageLockVersionMismatch": false,
-    "supplementalHelpCount": 15
+    "supplementalHelpCount": 0
   },
-  "generatedArtifactCount": 779
+  "generatedArtifactCount": 180
 }

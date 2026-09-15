@@ -7,9 +7,9 @@
 | Index | 67 |
 | Category | information |
 | Color | VIOLET |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Pattern: dense regions attract more particles (cohesion). |
-| EXPLANATION | Confirmed batch-17: nearby particles are pulled together by a distance-scaled cohesion force (k/(dist+1), inert below dist 1), reinforcing whatever structure already exists. |
-| SYSTEM | Positive feedback — clumps thicken. +HISTORY ×1.5 remembered-geometry drift. Pair with ORDER for crystallization or CHAOS for pattern turbulence. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_17.test.js](../../../../tests/audit/batch_17.test.js), [tests/unit/synergyCache.test.js](../../../../tests/unit/synergyCache.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/67_PATTERN.md](../../../audit/laws/a3/stage-1/67_PATTERN.md), [docs/audit/laws/a3/stage-2/67_PATTERN.md](../../../audit/laws/a3/stage-2/67_PATTERN.md), [docs/audit/laws/a3/stage-3/67_PATTERN.md](../../../audit/laws/a3/stage-3/67_PATTERN.md)
+- Tests: [tests/audit/batch_17.test.js](tests/audit/batch_17.test.js), [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/67_PATTERN.md](docs/audit/laws/a3/stage-1/67_PATTERN.md), [docs/audit/laws/a3/stage-2/67_PATTERN.md](docs/audit/laws/a3/stage-2/67_PATTERN.md), [docs/audit/laws/a3/stage-3/67_PATTERN.md](docs/audit/laws/a3/stage-3/67_PATTERN.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

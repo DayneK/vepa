@@ -8,8 +8,8 @@
 | Category | physics |
 | Color | RED |
 | Status | wired |
-| Solver gate references | 4 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Molecular bonding between nearby particles. |
-| EXPLANATION | Confirmed batch-10: molecular bonds prefer dense neighbourhoods — the more neighbours nearby, the stronger and longer-range the bond — instead of chain ends (that is POLYMER's job). Stretched bonds break past 3x the rest length. |
-| SYSTEM | Density boost = min(2, 1 + nCount x 0.05) scales spring force and range (30 x boost). Rest length = (r1+r2) x 1.1, spring k = STIFFNESS DNA x 0.05 x synergy x boost. Bonds register in all 6 shared slots; break when dist > rest x 3. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/lawgroups/mechanicsHelp.js](src/physics/lawgroups/mechanicsHelp.js), [src/physics/laws.js](src/physics/laws.js), [src/physics/mergePhysics.js](src/physics/mergePhysics.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_01.test.js](../../../../tests/audit/batch_01.test.js), [tests/audit/batch_02.test.js](../../../../tests/audit/batch_02.test.js), [tests/audit/batch_03.test.js](../../../../tests/audit/batch_03.test.js), [tests/audit/batch_04.test.js](../../../../tests/audit/batch_04.test.js), [tests/audit/batch_05.test.js](../../../../tests/audit/batch_05.test.js), [tests/audit/batch_06.test.js](../../../../tests/audit/batch_06.test.js), [tests/audit/batch_07.test.js](../../../../tests/audit/batch_07.test.js), [tests/audit/batch_08.test.js](../../../../tests/audit/batch_08.test.js), [tests/audit/batch_10.test.js](../../../../tests/audit/batch_10.test.js), [tests/audit/batch_11.test.js](../../../../tests/audit/batch_11.test.js), [tests/audit/batch_17.test.js](../../../../tests/audit/batch_17.test.js), [tests/audit/batch_18.test.js](../../../../tests/audit/batch_18.test.js), [tests/audit/batch_19.test.js](../../../../tests/audit/batch_19.test.js), [tests/audit/batch_20.test.js](../../../../tests/audit/batch_20.test.js), [tests/audit/params_batch_11.test.js](../../../../tests/audit/params_batch_11.test.js), [tests/audit/params_batch_12.test.js](../../../../tests/audit/params_batch_12.test.js), [tests/audit/params_batch_15.test.js](../../../../tests/audit/params_batch_15.test.js), [tests/unit/groupRegistry.test.js](../../../../tests/unit/groupRegistry.test.js), [tests/unit/worldSave.test.js](../../../../tests/unit/worldSave.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/39_BOND.md](../../../audit/laws/a3/stage-1/39_BOND.md), [docs/audit/laws/a3/stage-2/39_BOND.md](../../../audit/laws/a3/stage-2/39_BOND.md), [docs/audit/laws/a3/stage-3/39_BOND.md](../../../audit/laws/a3/stage-3/39_BOND.md)
+- Tests: [tests/audit/batch_01.test.js](tests/audit/batch_01.test.js), [tests/audit/batch_02.test.js](tests/audit/batch_02.test.js), [tests/audit/batch_03.test.js](tests/audit/batch_03.test.js), [tests/audit/batch_04.test.js](tests/audit/batch_04.test.js), [tests/audit/batch_05.test.js](tests/audit/batch_05.test.js), [tests/audit/batch_06.test.js](tests/audit/batch_06.test.js), [tests/audit/batch_07.test.js](tests/audit/batch_07.test.js), [tests/audit/batch_08.test.js](tests/audit/batch_08.test.js), [tests/audit/batch_10.test.js](tests/audit/batch_10.test.js), [tests/audit/batch_11.test.js](tests/audit/batch_11.test.js), [tests/audit/batch_17.test.js](tests/audit/batch_17.test.js), [tests/audit/batch_18.test.js](tests/audit/batch_18.test.js), [tests/audit/batch_19.test.js](tests/audit/batch_19.test.js), [tests/audit/batch_20.test.js](tests/audit/batch_20.test.js), [tests/audit/params_batch_11.test.js](tests/audit/params_batch_11.test.js), [tests/audit/params_batch_12.test.js](tests/audit/params_batch_12.test.js), [tests/audit/params_batch_15.test.js](tests/audit/params_batch_15.test.js), [tests/unit/groupRegistry.test.js](tests/unit/groupRegistry.test.js), [tests/unit/worldSave.test.js](tests/unit/worldSave.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/21_POLYMER.md](docs/audit/laws/a3/stage-1/21_POLYMER.md), [docs/audit/laws/a3/stage-1/23_CHIRALITY.md](docs/audit/laws/a3/stage-1/23_CHIRALITY.md), [docs/audit/laws/a3/stage-1/39_BOND.md](docs/audit/laws/a3/stage-1/39_BOND.md), [docs/audit/laws/a3/stage-1/96_STOICHIOMETRY.md](docs/audit/laws/a3/stage-1/96_STOICHIOMETRY.md), [docs/audit/laws/a3/stage-2/21_POLYMER.md](docs/audit/laws/a3/stage-2/21_POLYMER.md), [docs/audit/laws/a3/stage-2/23_CHIRALITY.md](docs/audit/laws/a3/stage-2/23_CHIRALITY.md), [docs/audit/laws/a3/stage-2/39_BOND.md](docs/audit/laws/a3/stage-2/39_BOND.md), [docs/audit/laws/a3/stage-2/96_STOICHIOMETRY.md](docs/audit/laws/a3/stage-2/96_STOICHIOMETRY.md), [docs/audit/laws/a3/stage-3/21_POLYMER.md](docs/audit/laws/a3/stage-3/21_POLYMER.md), [docs/audit/laws/a3/stage-3/23_CHIRALITY.md](docs/audit/laws/a3/stage-3/23_CHIRALITY.md), [docs/audit/laws/a3/stage-3/39_BOND.md](docs/audit/laws/a3/stage-3/39_BOND.md), [docs/audit/laws/a3/stage-3/96_STOICHIOMETRY.md](docs/audit/laws/a3/stage-3/96_STOICHIOMETRY.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

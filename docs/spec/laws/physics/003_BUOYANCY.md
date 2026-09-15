@@ -7,9 +7,9 @@
 | Index | 3 |
 | Category | physics |
 | Color | RED |
-| Status | metadata-only |
+| Status | wired |
 | Solver gate references | 0 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Thermal buoyancy: hot particles rise, cool particles sink. |
-| EXPLANATION | Replaces WRAP: Archimedes-style lift along the vertical axis. Particles hotter than ambient get an upward force scaled by the temperature difference; cooler particles sink. Convection cells emerge with heat sources and RESISTANCE friction heating. |
-| SYSTEM | lift = (TEMPERATURE - ambient) x HEAT_OUTPUT DNA x k applied on -z (up). TEMPERATURE is stride 66 (heated by RESISTANCE/fusion); HEAT_OUTPUT DNA scales the coupling. x1.25 with PLANETARY for convection stacks. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_01.test.js](../../../../tests/audit/batch_01.test.js)
+- Tests: [tests/audit/batch_01.test.js](tests/audit/batch_01.test.js), [tests/audit/batch_02.test.js](tests/audit/batch_02.test.js), [tests/audit/batch_03.test.js](tests/audit/batch_03.test.js), [tests/audit/batch_04.test.js](tests/audit/batch_04.test.js), [tests/audit/batch_05.test.js](tests/audit/batch_05.test.js), [tests/audit/batch_21.test.js](tests/audit/batch_21.test.js), [tests/audit/batch_22.test.js](tests/audit/batch_22.test.js), [tests/audit/batch_23.test.js](tests/audit/batch_23.test.js), [tests/audit/batch_24.test.js](tests/audit/batch_24.test.js), [tests/audit/params_batch_03.test.js](tests/audit/params_batch_03.test.js), [tests/audit/params_batch_05.test.js](tests/audit/params_batch_05.test.js), [tests/audit/params_batch_06.test.js](tests/audit/params_batch_06.test.js), [tests/audit/params_batch_07.test.js](tests/audit/params_batch_07.test.js), [tests/audit/params_batch_08.test.js](tests/audit/params_batch_08.test.js), [tests/audit/params_batch_09.test.js](tests/audit/params_batch_09.test.js), [tests/audit/params_batch_10.test.js](tests/audit/params_batch_10.test.js), [tests/audit/params_batch_11.test.js](tests/audit/params_batch_11.test.js), [tests/audit/params_batch_12.test.js](tests/audit/params_batch_12.test.js), [tests/audit/params_batch_13.test.js](tests/audit/params_batch_13.test.js), [tests/audit/params_batch_14.test.js](tests/audit/params_batch_14.test.js), [tests/audit/params_batch_15.test.js](tests/audit/params_batch_15.test.js), [tests/audit/params_batch_16.test.js](tests/audit/params_batch_16.test.js), [tests/audit/params_batch_17.test.js](tests/audit/params_batch_17.test.js), [tests/audit/params_batch_18.test.js](tests/audit/params_batch_18.test.js), [tests/unit/fields.test.js](tests/unit/fields.test.js), [tests/unit/lawGating.test.js](tests/unit/lawGating.test.js)
 - Audits: No filename-matched audit record found.
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

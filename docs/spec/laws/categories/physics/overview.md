@@ -8,21 +8,21 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../../physics/000_GRAV.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 1 | [DRAG](../../physics/001_DRAG.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 2 | [ENTR](../../physics/002_ENTR.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 3 | [BUOYANCY](../../physics/003_BUOYANCY.md) | metadata-only | LAW_HELP_DB | not found |
-| 4 | [COLL](../../physics/004_COLL.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 5 | [ACCR](../../physics/005_ACCR.md) | gated-no-export-evidence | LAW_HELP_DB+LAW_HELP_PATCHES | not found |
-| 6 | [PLANETARY](../../physics/006_PLANETARY.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 38 | [VOID](../../physics/038_VOID.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 39 | [BOND](../../physics/039_BOND.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 79 | [SINGULARITY](../../physics/079_SINGULARITY.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 82 | [TIDE](../../physics/082_TIDE.md) | wired | LAW_HELP_DB | src/physics/lawgroups/physicsLaws.js |
-| 83 | [FRICTION](../../physics/083_FRICTION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/physicsLaws.js |
-| 84 | [HORIZON](../../physics/084_HORIZON.md) | wired | LAW_HELP_PATCHES | src/physics/lawgroups/physicsLaws.js |
-| 85 | [RADIATION_PRESSURE](../../physics/085_RADIATION_PRESSURE.md) | wired | LAW_HELP_PATCHES | src/physics/lawgroups/physicsLaws.js |
-| 86 | [MASS_INERTIA](../../physics/086_MASS_INERTIA.md) | metadata-only | LAW_HELP_PATCHES | not found |
-| 87 | [FIELD](../../physics/087_FIELD.md) | wired | LAW_HELP_DB+LAW_HELP_PATCHES | src/physics/lawgroups/physicsLaws.js |
+| 0 | [GRAV](../../physics/000_GRAV.md) | wired | NONE | src/physics/laws.js |
+| 1 | [DRAG](../../physics/001_DRAG.md) | wired | NONE | src/physics/laws.js |
+| 2 | [ENTR](../../physics/002_ENTR.md) | wired | NONE | src/physics/solver.js |
+| 3 | [BUOYANCY](../../physics/003_BUOYANCY.md) | wired | NONE | src/physics/laws.js |
+| 4 | [COLL](../../physics/004_COLL.md) | wired | NONE | src/physics/fields.js |
+| 5 | [ACCR](../../physics/005_ACCR.md) | wired | NONE | src/physics/lawgroups/mechanicsHelp.js |
+| 6 | [PLANETARY](../../physics/006_PLANETARY.md) | wired | NONE | src/physics/gpuCompute.js |
+| 38 | [VOID](../../physics/038_VOID.md) | wired | NONE | src/physics/laws.js |
+| 39 | [BOND](../../physics/039_BOND.md) | wired | NONE | src/physics/lawgroups/mechanicsHelp.js |
+| 79 | [SINGULARITY](../../physics/079_SINGULARITY.md) | wired | NONE | src/physics/laws.js |
+| 82 | [TIDE](../../physics/082_TIDE.md) | wired | NONE | src/physics/lawgroups/physicsLaws.js |
+| 83 | [FRICTION](../../physics/083_FRICTION.md) | wired | NONE | src/physics/lawgroups/physicsLaws.js |
+| 84 | [HORIZON](../../physics/084_HORIZON.md) | wired | NONE | src/physics/lawgroups/physicsLaws.js |
+| 85 | [RADIATION_PRESSURE](../../physics/085_RADIATION_PRESSURE.md) | wired | NONE | src/physics/solver.js |
+| 86 | [MASS_INERTIA](../../physics/086_MASS_INERTIA.md) | wired | NONE | src/physics/solver.js |
+| 87 | [FIELD](../../physics/087_FIELD.md) | wired | NONE | src/physics/lawgroups/physicsLaws.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

@@ -7,9 +7,9 @@
 | Index | 2 |
 | Category | physics |
 | Color | RED |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Brownian jitter adds random thermal motion. |
-| EXPLANATION | Particles receive random force kicks proportional to JITTER DNA, preventing static equilibrium. |
-| SYSTEM | Acts as thermal noise floor. In low-viscosity regimes it drives chaos; in high-viscosity it enables slow annealing. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_01.test.js](../../../../tests/audit/batch_01.test.js), [tests/audit/batch_22.test.js](../../../../tests/audit/batch_22.test.js), [tests/audit/params_batch_02.test.js](../../../../tests/audit/params_batch_02.test.js), [tests/audit/params_batch_03.test.js](../../../../tests/audit/params_batch_03.test.js), [tests/audit/params_batch_04.test.js](../../../../tests/audit/params_batch_04.test.js), [tests/audit/params_batch_09.test.js](../../../../tests/audit/params_batch_09.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/02_ENTR.md](../../../audit/laws/a3/stage-1/02_ENTR.md), [docs/audit/laws/a3/stage-1/86_CENTRIPETAL.md](../../../audit/laws/a3/stage-1/86_CENTRIPETAL.md), [docs/audit/laws/a3/stage-2/02_ENTR.md](../../../audit/laws/a3/stage-2/02_ENTR.md), [docs/audit/laws/a3/stage-2/86_CENTRIPETAL.md](../../../audit/laws/a3/stage-2/86_CENTRIPETAL.md), [docs/audit/laws/a3/stage-3/02_ENTR.md](../../../audit/laws/a3/stage-3/02_ENTR.md), [docs/audit/laws/a3/stage-3/86_CENTRIPETAL.md](../../../audit/laws/a3/stage-3/86_CENTRIPETAL.md)
+- Tests: [tests/audit/batch_01.test.js](tests/audit/batch_01.test.js), [tests/audit/params_batch_02.test.js](tests/audit/params_batch_02.test.js), [tests/audit/params_batch_03.test.js](tests/audit/params_batch_03.test.js), [tests/audit/params_batch_04.test.js](tests/audit/params_batch_04.test.js), [tests/audit/params_batch_09.test.js](tests/audit/params_batch_09.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/02_ENTR.md](docs/audit/laws/a3/stage-1/02_ENTR.md), [docs/audit/laws/a3/stage-1/101_EQUILIBRIUM.md](docs/audit/laws/a3/stage-1/101_EQUILIBRIUM.md), [docs/audit/laws/a3/stage-1/114_DECOHERENCE.md](docs/audit/laws/a3/stage-1/114_DECOHERENCE.md), [docs/audit/laws/a3/stage-1/25_HEAT.md](docs/audit/laws/a3/stage-1/25_HEAT.md), [docs/audit/laws/a3/stage-1/32_CHAOS.md](docs/audit/laws/a3/stage-1/32_CHAOS.md), [docs/audit/laws/a3/stage-1/72_METRIC.md](docs/audit/laws/a3/stage-1/72_METRIC.md), [docs/audit/laws/a3/stage-1/86_CENTRIPETAL.md](docs/audit/laws/a3/stage-1/86_CENTRIPETAL.md), [docs/audit/laws/a3/stage-1/98_ADIABATIC.md](docs/audit/laws/a3/stage-1/98_ADIABATIC.md), [docs/audit/laws/a3/stage-2/02_ENTR.md](docs/audit/laws/a3/stage-2/02_ENTR.md), [docs/audit/laws/a3/stage-2/101_EQUILIBRIUM.md](docs/audit/laws/a3/stage-2/101_EQUILIBRIUM.md), [docs/audit/laws/a3/stage-2/114_DECOHERENCE.md](docs/audit/laws/a3/stage-2/114_DECOHERENCE.md), [docs/audit/laws/a3/stage-2/25_HEAT.md](docs/audit/laws/a3/stage-2/25_HEAT.md), [docs/audit/laws/a3/stage-2/32_CHAOS.md](docs/audit/laws/a3/stage-2/32_CHAOS.md), [docs/audit/laws/a3/stage-2/72_METRIC.md](docs/audit/laws/a3/stage-2/72_METRIC.md), [docs/audit/laws/a3/stage-2/86_CENTRIPETAL.md](docs/audit/laws/a3/stage-2/86_CENTRIPETAL.md), [docs/audit/laws/a3/stage-2/98_ADIABATIC.md](docs/audit/laws/a3/stage-2/98_ADIABATIC.md), [docs/audit/laws/a3/stage-3/02_ENTR.md](docs/audit/laws/a3/stage-3/02_ENTR.md), [docs/audit/laws/a3/stage-3/101_EQUILIBRIUM.md](docs/audit/laws/a3/stage-3/101_EQUILIBRIUM.md), [docs/audit/laws/a3/stage-3/114_DECOHERENCE.md](docs/audit/laws/a3/stage-3/114_DECOHERENCE.md), [docs/audit/laws/a3/stage-3/25_HEAT.md](docs/audit/laws/a3/stage-3/25_HEAT.md), [docs/audit/laws/a3/stage-3/32_CHAOS.md](docs/audit/laws/a3/stage-3/32_CHAOS.md), [docs/audit/laws/a3/stage-3/72_METRIC.md](docs/audit/laws/a3/stage-3/72_METRIC.md), [docs/audit/laws/a3/stage-3/86_CENTRIPETAL.md](docs/audit/laws/a3/stage-3/86_CENTRIPETAL.md), [docs/audit/laws/a3/stage-3/98_ADIABATIC.md](docs/audit/laws/a3/stage-3/98_ADIABATIC.md), [docs/audit/laws/a3/thermodynamics.md](docs/audit/laws/a3/thermodynamics.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

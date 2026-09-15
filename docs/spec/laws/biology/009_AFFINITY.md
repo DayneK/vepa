@@ -8,8 +8,8 @@
 | Category | biology |
 | Color | ORANGE |
 | Status | wired |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Species-based attraction or repulsion. |
-| EXPLANATION | SPECIES_AFFINITY BOOSTS attraction to the same species: the same-species pull scales with positive affinity and is inert at 0. Different-species pairs repel only when SPECIES_AFFINITY is negative (xenophobic). |
-| SYSTEM | Uses SPECIES_AFFINITY DNA (index 41). Same-species: strength 0.1×max(0, affinity)×synergy×SPECIES_INTERACTION. Cross-species: repel at 0.05×\|affinity\| when negative. Positive = gregarious, negative = xenophobic. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_03.test.js](../../../../tests/audit/batch_03.test.js), [tests/audit/batch_05.test.js](../../../../tests/audit/batch_05.test.js), [tests/audit/batch_18.test.js](../../../../tests/audit/batch_18.test.js), [tests/audit/params_batch_05.test.js](../../../../tests/audit/params_batch_05.test.js), [tests/audit/params_batch_16.test.js](../../../../tests/audit/params_batch_16.test.js), [tests/unit/groupRegistry.test.js](../../../../tests/unit/groupRegistry.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/09_AFFINITY.md](../../../audit/laws/a3/stage-1/09_AFFINITY.md), [docs/audit/laws/a3/stage-2/09_AFFINITY.md](../../../audit/laws/a3/stage-2/09_AFFINITY.md), [docs/audit/laws/a3/stage-3/09_AFFINITY.md](../../../audit/laws/a3/stage-3/09_AFFINITY.md)
+- Tests: [tests/audit/batch_03.test.js](tests/audit/batch_03.test.js), [tests/audit/batch_05.test.js](tests/audit/batch_05.test.js), [tests/audit/batch_18.test.js](tests/audit/batch_18.test.js), [tests/audit/params_batch_05.test.js](tests/audit/params_batch_05.test.js), [tests/audit/params_batch_16.test.js](tests/audit/params_batch_16.test.js), [tests/unit/groupRegistry.test.js](tests/unit/groupRegistry.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](docs/audit/laws/a3/biology.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/09_AFFINITY.md](docs/audit/laws/a3/stage-1/09_AFFINITY.md), [docs/audit/laws/a3/stage-1/121_BOSONIC.md](docs/audit/laws/a3/stage-1/121_BOSONIC.md), [docs/audit/laws/a3/stage-1/36_SOUL_LAW.md](docs/audit/laws/a3/stage-1/36_SOUL_LAW.md), [docs/audit/laws/a3/stage-1/41_ALLOY.md](docs/audit/laws/a3/stage-1/41_ALLOY.md), [docs/audit/laws/a3/stage-1/67_PATTERN.md](docs/audit/laws/a3/stage-1/67_PATTERN.md), [docs/audit/laws/a3/stage-1/75_PROTOCOL.md](docs/audit/laws/a3/stage-1/75_PROTOCOL.md), [docs/audit/laws/a3/stage-1/78_CULTURE.md](docs/audit/laws/a3/stage-1/78_CULTURE.md), [docs/audit/laws/a3/stage-1/80_ENTANGLEMENT.md](docs/audit/laws/a3/stage-1/80_ENTANGLEMENT.md), [docs/audit/laws/a3/stage-1/88_SYMBIOSIS.md](docs/audit/laws/a3/stage-1/88_SYMBIOSIS.md), [docs/audit/laws/a3/stage-2/09_AFFINITY.md](docs/audit/laws/a3/stage-2/09_AFFINITY.md), [docs/audit/laws/a3/stage-2/121_BOSONIC.md](docs/audit/laws/a3/stage-2/121_BOSONIC.md), [docs/audit/laws/a3/stage-2/36_SOUL_LAW.md](docs/audit/laws/a3/stage-2/36_SOUL_LAW.md), [docs/audit/laws/a3/stage-2/41_ALLOY.md](docs/audit/laws/a3/stage-2/41_ALLOY.md), [docs/audit/laws/a3/stage-2/67_PATTERN.md](docs/audit/laws/a3/stage-2/67_PATTERN.md), [docs/audit/laws/a3/stage-2/75_PROTOCOL.md](docs/audit/laws/a3/stage-2/75_PROTOCOL.md), [docs/audit/laws/a3/stage-2/78_CULTURE.md](docs/audit/laws/a3/stage-2/78_CULTURE.md), [docs/audit/laws/a3/stage-2/80_ENTANGLEMENT.md](docs/audit/laws/a3/stage-2/80_ENTANGLEMENT.md), [docs/audit/laws/a3/stage-2/88_SYMBIOSIS.md](docs/audit/laws/a3/stage-2/88_SYMBIOSIS.md), [docs/audit/laws/a3/stage-3/09_AFFINITY.md](docs/audit/laws/a3/stage-3/09_AFFINITY.md), [docs/audit/laws/a3/stage-3/121_BOSONIC.md](docs/audit/laws/a3/stage-3/121_BOSONIC.md), [docs/audit/laws/a3/stage-3/36_SOUL_LAW.md](docs/audit/laws/a3/stage-3/36_SOUL_LAW.md), [docs/audit/laws/a3/stage-3/41_ALLOY.md](docs/audit/laws/a3/stage-3/41_ALLOY.md), [docs/audit/laws/a3/stage-3/67_PATTERN.md](docs/audit/laws/a3/stage-3/67_PATTERN.md), [docs/audit/laws/a3/stage-3/75_PROTOCOL.md](docs/audit/laws/a3/stage-3/75_PROTOCOL.md), [docs/audit/laws/a3/stage-3/78_CULTURE.md](docs/audit/laws/a3/stage-3/78_CULTURE.md), [docs/audit/laws/a3/stage-3/80_ENTANGLEMENT.md](docs/audit/laws/a3/stage-3/80_ENTANGLEMENT.md), [docs/audit/laws/a3/stage-3/88_SYMBIOSIS.md](docs/audit/laws/a3/stage-3/88_SYMBIOSIS.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

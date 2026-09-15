@@ -8,21 +8,21 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 53 | [CHARGE_LAW](../../electromagnetism/053_CHARGE_LAW.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 54 | [ELECTRIC_FIELD](../../electromagnetism/054_ELECTRIC_FIELD.md) | metadata-only | LAW_HELP_PATCHES | not found |
-| 55 | [CURRENT](../../electromagnetism/055_CURRENT.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 56 | [RESISTANCE](../../electromagnetism/056_RESISTANCE.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 57 | [CAPACITANCE](../../electromagnetism/057_CAPACITANCE.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 58 | [INDUCTANCE](../../electromagnetism/058_INDUCTANCE.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 59 | [MAGNETISM](../../electromagnetism/059_MAGNETISM.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 60 | [RESONANCE](../../electromagnetism/060_RESONANCE.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 61 | [FLUX](../../electromagnetism/061_FLUX.md) | gated-no-export-evidence | LAW_HELP_DB | not found |
-| 62 | [IONIZATION](../../electromagnetism/062_IONIZATION.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 63 | [DISCHARGE](../../electromagnetism/063_DISCHARGE.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 64 | [PLASMA](../../electromagnetism/064_PLASMA.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 65 | [SUPERCONDUCTIVITY](../../electromagnetism/065_SUPERCONDUCTIVITY.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 107 | [ANTENNA](../../electromagnetism/107_ANTENNA.md) | wired | LAW_HELP_DB | src/physics/lawgroups/emLaws.js |
-| 108 | [SHIELDING](../../electromagnetism/108_SHIELDING.md) | wired | LAW_HELP_DB | src/physics/lawgroups/emLaws.js |
-| 109 | [POLARIZATION](../../electromagnetism/109_POLARIZATION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/emLaws.js |
+| 53 | [CHARGE_LAW](../../electromagnetism/053_CHARGE_LAW.md) | wired | NONE | src/physics/laws.js |
+| 54 | [ELECTRIC_FIELD](../../electromagnetism/054_ELECTRIC_FIELD.md) | metadata-only | NONE | not found |
+| 55 | [CURRENT](../../electromagnetism/055_CURRENT.md) | wired | NONE | src/physics/laws.js |
+| 56 | [RESISTANCE](../../electromagnetism/056_RESISTANCE.md) | wired | NONE | src/physics/laws.js |
+| 57 | [CAPACITANCE](../../electromagnetism/057_CAPACITANCE.md) | wired | NONE | src/physics/laws.js |
+| 58 | [INDUCTANCE](../../electromagnetism/058_INDUCTANCE.md) | wired | NONE | src/physics/laws.js |
+| 59 | [MAGNETISM](../../electromagnetism/059_MAGNETISM.md) | wired | NONE | src/physics/laws.js |
+| 60 | [RESONANCE](../../electromagnetism/060_RESONANCE.md) | wired | NONE | src/physics/laws.js |
+| 61 | [FLUX](../../electromagnetism/061_FLUX.md) | wired | NONE | src/physics/laws.js |
+| 62 | [IONIZATION](../../electromagnetism/062_IONIZATION.md) | wired | NONE | src/physics/laws.js |
+| 63 | [DISCHARGE](../../electromagnetism/063_DISCHARGE.md) | wired | NONE | src/physics/laws.js |
+| 64 | [PLASMA](../../electromagnetism/064_PLASMA.md) | wired | NONE | src/physics/laws.js |
+| 65 | [SUPERCONDUCTIVITY](../../electromagnetism/065_SUPERCONDUCTIVITY.md) | wired | NONE | src/physics/laws.js |
+| 107 | [ANTENNA](../../electromagnetism/107_ANTENNA.md) | wired | NONE | src/physics/solver.js |
+| 108 | [SHIELDING](../../electromagnetism/108_SHIELDING.md) | wired | NONE | src/physics/solver.js |
+| 109 | [POLARIZATION](../../electromagnetism/109_POLARIZATION.md) | wired | NONE | src/physics/solver.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

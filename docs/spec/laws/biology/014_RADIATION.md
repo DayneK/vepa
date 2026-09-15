@@ -7,9 +7,9 @@
 | Index | 14 |
 | Category | biology |
 | Color | ORANGE |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Background radiation damages unprotected particles and slowly irradiates them. |
-| EXPLANATION | Particles accumulate RADIATION_EXPOSURE over time, scaled by the RADIATION_LEVEL slider. Low-ARMOR particles take life-energy damage that slowly compounds with the accumulated dose, and the dose steadily ramps DNA mutation chance — more and more over time. |
-| SYSTEM | Exposure += RADIATION_LEVEL×dt×0.01 (cap 100). Damage = (1−ARMOR)×0.02×RADIATION_LEVEL×(1 + exposure×0.02)×dt×synergy; energy ≤ 0 kills. Mutation chance = exposure×0.001×dt×synergy per tick, perturbing the DNA cache. Radiation death is consistent with the batch-02 LIFE depletion death. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_04.test.js](../../../../tests/audit/batch_04.test.js), [tests/audit/batch_08.test.js](../../../../tests/audit/batch_08.test.js), [tests/audit/params_batch_05.test.js](../../../../tests/audit/params_batch_05.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/14_RADIATION.md](../../../audit/laws/a3/stage-1/14_RADIATION.md), [docs/audit/laws/a3/stage-1/28_PHASE_RADIATION.md](../../../audit/laws/a3/stage-1/28_PHASE_RADIATION.md), [docs/audit/laws/a3/stage-2/14_RADIATION.md](../../../audit/laws/a3/stage-2/14_RADIATION.md), [docs/audit/laws/a3/stage-2/28_PHASE_RADIATION.md](../../../audit/laws/a3/stage-2/28_PHASE_RADIATION.md), [docs/audit/laws/a3/stage-3/14_RADIATION.md](../../../audit/laws/a3/stage-3/14_RADIATION.md), [docs/audit/laws/a3/stage-3/28_PHASE_RADIATION.md](../../../audit/laws/a3/stage-3/28_PHASE_RADIATION.md)
+- Tests: [tests/audit/batch_04.test.js](tests/audit/batch_04.test.js), [tests/audit/batch_08.test.js](tests/audit/batch_08.test.js), [tests/audit/params_batch_05.test.js](tests/audit/params_batch_05.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](docs/audit/laws/a3/biology.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/127_ANTIMATTER.md](docs/audit/laws/a3/stage-1/127_ANTIMATTER.md), [docs/audit/laws/a3/stage-1/14_RADIATION.md](docs/audit/laws/a3/stage-1/14_RADIATION.md), [docs/audit/laws/a3/stage-1/28_PHASE_RADIATION.md](docs/audit/laws/a3/stage-1/28_PHASE_RADIATION.md), [docs/audit/laws/a3/stage-1/62_IONIZATION.md](docs/audit/laws/a3/stage-1/62_IONIZATION.md), [docs/audit/laws/a3/stage-1/91_IMMUNITY.md](docs/audit/laws/a3/stage-1/91_IMMUNITY.md), [docs/audit/laws/a3/stage-2/127_ANTIMATTER.md](docs/audit/laws/a3/stage-2/127_ANTIMATTER.md), [docs/audit/laws/a3/stage-2/14_RADIATION.md](docs/audit/laws/a3/stage-2/14_RADIATION.md), [docs/audit/laws/a3/stage-2/28_PHASE_RADIATION.md](docs/audit/laws/a3/stage-2/28_PHASE_RADIATION.md), [docs/audit/laws/a3/stage-2/62_IONIZATION.md](docs/audit/laws/a3/stage-2/62_IONIZATION.md), [docs/audit/laws/a3/stage-2/91_IMMUNITY.md](docs/audit/laws/a3/stage-2/91_IMMUNITY.md), [docs/audit/laws/a3/stage-3/127_ANTIMATTER.md](docs/audit/laws/a3/stage-3/127_ANTIMATTER.md), [docs/audit/laws/a3/stage-3/14_RADIATION.md](docs/audit/laws/a3/stage-3/14_RADIATION.md), [docs/audit/laws/a3/stage-3/28_PHASE_RADIATION.md](docs/audit/laws/a3/stage-3/28_PHASE_RADIATION.md), [docs/audit/laws/a3/stage-3/62_IONIZATION.md](docs/audit/laws/a3/stage-3/62_IONIZATION.md), [docs/audit/laws/a3/stage-3/91_IMMUNITY.md](docs/audit/laws/a3/stage-3/91_IMMUNITY.md), [docs/audit/laws/a3/thermodynamics.md](docs/audit/laws/a3/thermodynamics.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

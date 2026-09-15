@@ -12,4 +12,4 @@
 | `npm run syntax-check` | Run Node syntax checks |
 | `npm run build` | Produce the Vite production bundle |
 
-The project launcher [vepa4](../../../vepa4) provides equivalent commands where supported.
+The project launcher [vepa4](vepa4) provides equivalent commands where supported.

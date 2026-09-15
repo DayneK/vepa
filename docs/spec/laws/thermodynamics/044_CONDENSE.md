@@ -7,9 +7,9 @@
 | Index | 44 |
 | Category | thermodynamics |
 | Color | GREEN |
-| Status | gated-no-export-evidence |
+| Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Condensation: cool particles gain mass from vapor. |
-| EXPLANATION | Confirmed batch-12 (match irl): condensation is exothermic — below temp 0.3 a particle absorbs vapor mass and releases latent heat, so it warms as it grows (clamped below boiling). |
-| SYSTEM | temp < 0.3: MASS += (0.3−temp) x 0.005 x dt x synergy; TEMPERATURE += (0.3−temp) x 0.01 x dt x synergy (cap 0.9). |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_12.test.js](../../../../tests/audit/batch_12.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/44_CONDENSE.md](../../../audit/laws/a3/stage-1/44_CONDENSE.md), [docs/audit/laws/a3/stage-2/44_CONDENSE.md](../../../audit/laws/a3/stage-2/44_CONDENSE.md), [docs/audit/laws/a3/stage-3/44_CONDENSE.md](../../../audit/laws/a3/stage-3/44_CONDENSE.md)
+- Tests: [tests/audit/batch_12.test.js](tests/audit/batch_12.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/44_CONDENSE.md](docs/audit/laws/a3/stage-1/44_CONDENSE.md), [docs/audit/laws/a3/stage-2/44_CONDENSE.md](docs/audit/laws/a3/stage-2/44_CONDENSE.md), [docs/audit/laws/a3/stage-3/44_CONDENSE.md](docs/audit/laws/a3/stage-3/44_CONDENSE.md), [docs/audit/laws/a3/thermodynamics.md](docs/audit/laws/a3/thermodynamics.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

@@ -7,9 +7,9 @@
 | Index | 59 |
 | Category | electromagnetism |
 | Color | BLUE |
-| Status | gated-no-export-evidence |
-| Solver gate references | 2 |
-| Help source | LAW_HELP_DB |
+| Status | wired |
+| Solver gate references | 1 |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Magnetic moment alignment: aligned moments attract. |
-| EXPLANATION | Confirmed batch-15: MAGNETIC_MOMENT is signed (−1..1) — matching signs attract, opposing signs repel, scaled by the product of their moments. Both behaviors are now reachable through normal DNA. |
-| SYSTEM | F = k·m1·m2/dist² — aligned moments form magnetic chains and filaments along the moment direction; opposing moments push apart. Complements CHARGE_LAW for full electromagnetic structure. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-No exported implementation candidate was found.
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_15.test.js](../../../../tests/audit/batch_15.test.js), [tests/audit/params_batch_13.test.js](../../../../tests/audit/params_batch_13.test.js), [tests/unit/synergyCache.test.js](../../../../tests/unit/synergyCache.test.js)
-- Audits: [docs/audit/laws/a3/electromagnetism.md](../../../audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/stage-1/59_MAGNETISM.md](../../../audit/laws/a3/stage-1/59_MAGNETISM.md), [docs/audit/laws/a3/stage-2/59_MAGNETISM.md](../../../audit/laws/a3/stage-2/59_MAGNETISM.md), [docs/audit/laws/a3/stage-3/59_MAGNETISM.md](../../../audit/laws/a3/stage-3/59_MAGNETISM.md)
+- Tests: [tests/audit/batch_15.test.js](tests/audit/batch_15.test.js), [tests/audit/params_batch_13.test.js](tests/audit/params_batch_13.test.js), [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/107_ANTENNA.md](docs/audit/laws/a3/stage-1/107_ANTENNA.md), [docs/audit/laws/a3/stage-1/108_SHIELDING.md](docs/audit/laws/a3/stage-1/108_SHIELDING.md), [docs/audit/laws/a3/stage-1/109_POLARIZATION.md](docs/audit/laws/a3/stage-1/109_POLARIZATION.md), [docs/audit/laws/a3/stage-1/53_CHARGE_LAW.md](docs/audit/laws/a3/stage-1/53_CHARGE_LAW.md), [docs/audit/laws/a3/stage-1/54_FIELD.md](docs/audit/laws/a3/stage-1/54_FIELD.md), [docs/audit/laws/a3/stage-1/55_CURRENT.md](docs/audit/laws/a3/stage-1/55_CURRENT.md), [docs/audit/laws/a3/stage-1/56_RESISTANCE.md](docs/audit/laws/a3/stage-1/56_RESISTANCE.md), [docs/audit/laws/a3/stage-1/57_CAPACITANCE.md](docs/audit/laws/a3/stage-1/57_CAPACITANCE.md), [docs/audit/laws/a3/stage-1/58_INDUCTANCE.md](docs/audit/laws/a3/stage-1/58_INDUCTANCE.md), [docs/audit/laws/a3/stage-1/59_MAGNETISM.md](docs/audit/laws/a3/stage-1/59_MAGNETISM.md), [docs/audit/laws/a3/stage-1/60_RESONANCE.md](docs/audit/laws/a3/stage-1/60_RESONANCE.md), [docs/audit/laws/a3/stage-1/61_FLUX.md](docs/audit/laws/a3/stage-1/61_FLUX.md), [docs/audit/laws/a3/stage-1/62_IONIZATION.md](docs/audit/laws/a3/stage-1/62_IONIZATION.md), [docs/audit/laws/a3/stage-1/63_DISCHARGE.md](docs/audit/laws/a3/stage-1/63_DISCHARGE.md), [docs/audit/laws/a3/stage-1/64_PLASMA.md](docs/audit/laws/a3/stage-1/64_PLASMA.md), [docs/audit/laws/a3/stage-1/65_SUPERCONDUCTIVITY.md](docs/audit/laws/a3/stage-1/65_SUPERCONDUCTIVITY.md), [docs/audit/laws/a3/stage-2/107_ANTENNA.md](docs/audit/laws/a3/stage-2/107_ANTENNA.md), [docs/audit/laws/a3/stage-2/108_SHIELDING.md](docs/audit/laws/a3/stage-2/108_SHIELDING.md), [docs/audit/laws/a3/stage-2/109_POLARIZATION.md](docs/audit/laws/a3/stage-2/109_POLARIZATION.md), [docs/audit/laws/a3/stage-2/53_CHARGE_LAW.md](docs/audit/laws/a3/stage-2/53_CHARGE_LAW.md), [docs/audit/laws/a3/stage-2/54_FIELD.md](docs/audit/laws/a3/stage-2/54_FIELD.md), [docs/audit/laws/a3/stage-2/55_CURRENT.md](docs/audit/laws/a3/stage-2/55_CURRENT.md), [docs/audit/laws/a3/stage-2/56_RESISTANCE.md](docs/audit/laws/a3/stage-2/56_RESISTANCE.md), [docs/audit/laws/a3/stage-2/57_CAPACITANCE.md](docs/audit/laws/a3/stage-2/57_CAPACITANCE.md), [docs/audit/laws/a3/stage-2/58_INDUCTANCE.md](docs/audit/laws/a3/stage-2/58_INDUCTANCE.md), [docs/audit/laws/a3/stage-2/59_MAGNETISM.md](docs/audit/laws/a3/stage-2/59_MAGNETISM.md), [docs/audit/laws/a3/stage-2/60_RESONANCE.md](docs/audit/laws/a3/stage-2/60_RESONANCE.md), [docs/audit/laws/a3/stage-2/61_FLUX.md](docs/audit/laws/a3/stage-2/61_FLUX.md), [docs/audit/laws/a3/stage-2/62_IONIZATION.md](docs/audit/laws/a3/stage-2/62_IONIZATION.md), [docs/audit/laws/a3/stage-2/63_DISCHARGE.md](docs/audit/laws/a3/stage-2/63_DISCHARGE.md), [docs/audit/laws/a3/stage-2/64_PLASMA.md](docs/audit/laws/a3/stage-2/64_PLASMA.md), [docs/audit/laws/a3/stage-2/65_SUPERCONDUCTIVITY.md](docs/audit/laws/a3/stage-2/65_SUPERCONDUCTIVITY.md), [docs/audit/laws/a3/stage-3/59_MAGNETISM.md](docs/audit/laws/a3/stage-3/59_MAGNETISM.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

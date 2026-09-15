@@ -9,7 +9,7 @@
 | Color | PURPLE |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Planck: energy moves only in discrete quanta. |
-| EXPLANATION | Energy and velocity changes are rounded to fixed quantum steps, quantising all motion. |
-| SYSTEM | Discrete spectrum. With HEAT it creates thermal bands; with PRECIPITATION it sizes clumps. |
-| ADVANCED | Quantum step is fixed; species MASS changes the visible granularity. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/quantumLaws.js](../../../../src/physics/lawgroups/quantumLaws.js)
+[src/physics/lawgroups/quantumLaws.js](src/physics/lawgroups/quantumLaws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_30.test.js](../../../../tests/audit/batch_30.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/119_PLANCK.md](../../../audit/laws/a3/stage-1/119_PLANCK.md), [docs/audit/laws/a3/stage-2/119_PLANCK.md](../../../audit/laws/a3/stage-2/119_PLANCK.md), [docs/audit/laws/a3/stage-3/119_PLANCK.md](../../../audit/laws/a3/stage-3/119_PLANCK.md)
+- Tests: [tests/audit/batch_30.test.js](tests/audit/batch_30.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/119_PLANCK.md](docs/audit/laws/a3/stage-1/119_PLANCK.md), [docs/audit/laws/a3/stage-2/119_PLANCK.md](docs/audit/laws/a3/stage-2/119_PLANCK.md), [docs/audit/laws/a3/stage-3/119_PLANCK.md](docs/audit/laws/a3/stage-3/119_PLANCK.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

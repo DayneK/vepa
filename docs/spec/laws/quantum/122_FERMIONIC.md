@@ -9,7 +9,7 @@
 | Color | PURPLE |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Fermionic: no two particles share a state. |
-| EXPLANATION | Particles resist stacking: overlapping particles push apart so no two occupy the same state. |
-| SYSTEM | Exclusion principle. With BOSONIC it balances clustering; with COLL it sharpens scattering. |
-| ADVANCED | Push force grows sharply below a species-scaled exclusion radius. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/quantumLaws.js](../../../../src/physics/lawgroups/quantumLaws.js)
+[src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_31.test.js](../../../../tests/audit/batch_31.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/122_FERMIONIC.md](../../../audit/laws/a3/stage-1/122_FERMIONIC.md), [docs/audit/laws/a3/stage-2/122_FERMIONIC.md](../../../audit/laws/a3/stage-2/122_FERMIONIC.md), [docs/audit/laws/a3/stage-3/122_FERMIONIC.md](../../../audit/laws/a3/stage-3/122_FERMIONIC.md)
+- Tests: [tests/audit/batch_31.test.js](tests/audit/batch_31.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/122_FERMIONIC.md](docs/audit/laws/a3/stage-1/122_FERMIONIC.md), [docs/audit/laws/a3/stage-2/122_FERMIONIC.md](docs/audit/laws/a3/stage-2/122_FERMIONIC.md), [docs/audit/laws/a3/stage-3/122_FERMIONIC.md](docs/audit/laws/a3/stage-3/122_FERMIONIC.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

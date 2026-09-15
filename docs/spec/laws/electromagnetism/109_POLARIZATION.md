@@ -9,7 +9,7 @@
 | Color | BLUE |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | LAW_HELP_DB |
+| Help source | NONE |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Polarization: signals are filtered by channel alignment. |
-| EXPLANATION | Only signals matching a particle's TUNING channel pass through; mismatched signals are absorbed and decay. |
-| SYSTEM | Channel filtering. With COMMS it sharpens directed communication; with STIGMERGY it selects trails. |
-| ADVANCED | Uses TUNING_CH1-4 DNA; absorbed signals contribute small ENERGY. |
+| HINT | MISSING |
+| EXPLANATION | MISSING |
+| SYSTEM | MISSING |
+| ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/emLaws.js](../../../../src/physics/lawgroups/emLaws.js)
+[src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_28.test.js](../../../../tests/audit/batch_28.test.js)
-- Audits: [docs/audit/laws/a3/stage-1/109_POLARIZATION.md](../../../audit/laws/a3/stage-1/109_POLARIZATION.md), [docs/audit/laws/a3/stage-2/109_POLARIZATION.md](../../../audit/laws/a3/stage-2/109_POLARIZATION.md), [docs/audit/laws/a3/stage-3/109_POLARIZATION.md](../../../audit/laws/a3/stage-3/109_POLARIZATION.md)
+- Tests: [tests/audit/batch_28.test.js](tests/audit/batch_28.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/109_POLARIZATION.md](docs/audit/laws/a3/stage-1/109_POLARIZATION.md), [docs/audit/laws/a3/stage-2/109_POLARIZATION.md](docs/audit/laws/a3/stage-2/109_POLARIZATION.md), [docs/audit/laws/a3/stage-3/109_POLARIZATION.md](docs/audit/laws/a3/stage-3/109_POLARIZATION.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).

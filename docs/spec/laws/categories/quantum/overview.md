@@ -8,21 +8,21 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 112 | [SUPERPOSITION](../../quantum/112_SUPERPOSITION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 113 | [TUNNELING](../../quantum/113_TUNNELING.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 114 | [DECOHERENCE](../../quantum/114_DECOHERENCE.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 115 | [WAVE_PARTICLE](../../quantum/115_WAVE_PARTICLE.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 116 | [UNCERTAINTY](../../quantum/116_UNCERTAINTY.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 117 | [TELEPORT](../../quantum/117_TELEPORT.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 118 | [OBSERVER](../../quantum/118_OBSERVER.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 119 | [PLANCK](../../quantum/119_PLANCK.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 120 | [COHERENCE](../../quantum/120_COHERENCE.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 121 | [BOSONIC](../../quantum/121_BOSONIC.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 122 | [FERMIONIC](../../quantum/122_FERMIONIC.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 123 | [SPIN](../../quantum/123_SPIN.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 124 | [SPECTRAL](../../quantum/124_SPECTRAL.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 125 | [WAVEFUNCTION](../../quantum/125_WAVEFUNCTION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 126 | [HYPERPLANE](../../quantum/126_HYPERPLANE.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
-| 127 | [ANTIMATTER](../../quantum/127_ANTIMATTER.md) | wired | LAW_HELP_DB | src/physics/lawgroups/quantumLaws.js |
+| 112 | [SUPERPOSITION](../../quantum/112_SUPERPOSITION.md) | wired | NONE | src/physics/lawgroups/quantumLaws.js |
+| 113 | [TUNNELING](../../quantum/113_TUNNELING.md) | wired | NONE | src/physics/solver.js |
+| 114 | [DECOHERENCE](../../quantum/114_DECOHERENCE.md) | wired | NONE | src/physics/solver.js |
+| 115 | [WAVE_PARTICLE](../../quantum/115_WAVE_PARTICLE.md) | wired | NONE | src/physics/lawgroups/quantumLaws.js |
+| 116 | [UNCERTAINTY](../../quantum/116_UNCERTAINTY.md) | wired | NONE | src/physics/solver.js |
+| 117 | [TELEPORT](../../quantum/117_TELEPORT.md) | wired | NONE | src/physics/laws.js |
+| 118 | [OBSERVER](../../quantum/118_OBSERVER.md) | wired | NONE | src/physics/lawgroups/quantumLaws.js |
+| 119 | [PLANCK](../../quantum/119_PLANCK.md) | wired | NONE | src/physics/lawgroups/quantumLaws.js |
+| 120 | [COHERENCE](../../quantum/120_COHERENCE.md) | wired | NONE | src/physics/solver.js |
+| 121 | [BOSONIC](../../quantum/121_BOSONIC.md) | wired | NONE | src/physics/solver.js |
+| 122 | [FERMIONIC](../../quantum/122_FERMIONIC.md) | wired | NONE | src/physics/solver.js |
+| 123 | [SPIN](../../quantum/123_SPIN.md) | wired | NONE | src/physics/solver.js |
+| 124 | [SPECTRAL](../../quantum/124_SPECTRAL.md) | wired | NONE | src/physics/solver.js |
+| 125 | [WAVEFUNCTION](../../quantum/125_WAVEFUNCTION.md) | wired | NONE | src/physics/solver.js |
+| 126 | [HYPERPLANE](../../quantum/126_HYPERPLANE.md) | wired | NONE | src/physics/solver.js |
+| 127 | [ANTIMATTER](../../quantum/127_ANTIMATTER.md) | wired | NONE | src/physics/lawgroups/quantumLaws.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

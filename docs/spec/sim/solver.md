@@ -2,16 +2,12 @@
 
 # Simulation: Solver
 
-The active solver is [src/physics/solver.js](../../../src/physics/solver.js). It exposes solve, bench instrumentation, offspring draining, and species-DNA helpers.
+The solver ([src/physics/solver.js](src/physics/solver.js)) runs the per-tick physics loop:
 
-## Phase outline
+1. Build or reuse the neighbor list via the spatial grid.
+2. Apply active pairwise law families (gravity, drag, collision, bonds, EM, etc.).
+3. Apply active per-particle law families (lifecycle, thermodynamics, metaphysics, quantum).
+4. Integrate position and velocity with bounds clamping.
+5. Run lifecycle and cadence-based subsystem passes.
 
-- Select persistent active-law and synergy caches.
-- Build or reuse a spatial grid and neighbor buffer.
-- Apply long-range gravity and pairwise interactions.
-- Apply per-particle laws, field forces and subsystem passes.
-- Clamp force and velocity, integrate position and handle boundaries.
-- Run lifecycle, reproduction, history and emergent cadence work.
-- Expose offspring and timing information to the caller or worker.
-
-The solver defines force and velocity ceilings, NaN guards, and reused scratch buffers. Exact values remain source-owned and are linked from the module inventory.
+The solver is law-gated: with zero laws active, no movement, interaction, or state change occurs.
