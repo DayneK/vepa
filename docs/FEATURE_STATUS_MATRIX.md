@@ -45,7 +45,7 @@
 | Quadrupole octree mode | `src/physics/octree.js` | No | Quadrupole code path exists; tests cover finite behavior indirectly | **Implemented, opt-in** | Add dedicated parity/error tests for `useQuadrupole`. |
 | FMM cell builder | `src/physics/fmm.js` | No | Cell/list construction code exists | **Partial / experimental** | Complete/remove the unused `cellNeighbours` placeholder and add end-to-end parity tests. |
 | FMM gravity evaluator | `src/physics/fmm.js` | No | Exported force evaluator exists | **Partial / experimental** | Validate near/far interaction accounting, toroidal edge cases, and DNA-modifier limitations. |
-| WebGPU compute | `src/physics/gpuCompute.js` | No | Browser-only context creation and shader implementation | **Implemented, opt-in** | Add browser/device E2E parity tests and resource/error lifecycle checks. |
+| WebGPU compute | `src/physics/gpuCompute.js`, `src/worker/physics.worker.js`, `src/physics/solver.js` | No; `computeEngine = 'gpu'` | Worker device probe, spatial-pair bridge, gravity shader dispatch, exact CPU CONTACT/COLL continuation, deterministic fallback contracts | **Implemented, opt-in** | Add browser/device E2E parity tests and measure full-solver error envelopes on real devices. |
 | Headless GPU-compatible fallback | `gpuComputeForcesSync` | No | Synchronous CPU implementation exists | **Implemented, opt-in** | Treat as benchmark/reference helper, not evidence of actual GPU execution. |
 
 ## 4. Law implementation evidence matrix
@@ -77,7 +77,7 @@ The generated specification and law compendium should therefore use qualified la
 The following claims should not be presented as fully complete without additional evidence:
 
 1. FMM is not production-complete because the interaction architecture still includes an explicit placeholder helper and lacks full parity coverage.
-2. WebGPU acceleration is not the default operational backend and has no equivalent committed browser/device test matrix.
+2. WebGPU acceleration is opt-in and operational only when a browser device is granted; the committed Node tests cover contracts/fallbacks, while real browser/device parity remains an external-environment gate.
 3. Barnes–Hut is approximate by design and must retain the exact solver as its parity reference.
 4. The 136-law registry is complete as a catalogue, but behavioral and relationship metadata coverage varies by law.
 5. Mechanics consolidation is architecturally established but not yet a universal hot-path abstraction.
@@ -91,3 +91,7 @@ The following claims should not be presented as fully complete without additiona
 - Mechanics consolidation is described as partial where shared hot-path adoption is incomplete.
 - The exact CPU solver remains the parity/reference implementation.
 - Future cleanup can distinguish code removal from documentation/status correction.
+
+## 8. Eight-conclusion resolution record
+
+The final eight unresolved architectural conclusions are consolidated in [ARCHITECTURAL_RESOLUTION_MATRIX.md](ARCHITECTURAL_RESOLUTION_MATRIX.md). That matrix distinguishes evidence-resolved claims, policy-resolved ownership decisions, and technically open implementation gates.

@@ -11,7 +11,8 @@
       "implementationFiles": [
         "src/physics/laws.js",
         "src/physics/solver.js",
-        "src/physics/synergy.js"
+        "src/physics/synergy.js",
+        "src/worker/physics.worker.js"
       ],
       "solverGateFiles": [
         "src/physics/solver.js"
@@ -129,9 +130,11 @@
       "status": "wired",
       "implementationFiles": [
         "src/physics/fields.js",
+        "src/physics/gpuCompute.js",
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/solver.js",
-        "src/physics/synergy.js"
+        "src/physics/synergy.js",
+        "src/worker/physics.worker.js"
       ],
       "solverGateFiles": [
         "src/physics/solver.js"
@@ -2815,8 +2818,10 @@
       "category": "mechanics",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/gpuCompute.js",
         "src/physics/lawgroups/mechanicsHelp.js",
-        "src/physics/solver.js"
+        "src/physics/solver.js",
+        "src/worker/physics.worker.js"
       ],
       "solverGateFiles": [
         "src/physics/solver.js"

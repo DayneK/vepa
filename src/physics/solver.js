@@ -228,7 +228,32 @@ function readDNAFromCache(view, base, dnaOut) {
  * @param {number} dt - Time step (default 1.0)
  * @param {Function} prng - PRNG function returning [0,1)
  */
-export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer, worldSize, dt, prng) {
+export function buildNeighborPairs(view, particleCount, stride, worldSize, maxInteractions = DEFAULT_MAX_INTERACTIONS) {
+  const grid = createGrid();
+  const pairs = [];
+  const insertView = view;
+  for (let i = 0; i < particleCount; i++) {
+    const base = i * stride;
+    if (insertView[base + STRIDE_INDEXES.DEAD] >= 0.5 || insertView[base + STRIDE_INDEXES.MASS] <= 0) continue;
+    insert(grid, i, insertView[base + STRIDE_INDEXES.POS_X], insertView[base + STRIDE_INDEXES.POS_Y], insertView[base + STRIDE_INDEXES.POS_Z], worldSize);
+  }
+  const neighbors = new Array(Math.max(2000, maxInteractions));
+  for (let i = 0; i < particleCount; i++) {
+    const base = i * stride;
+    if (insertView[base + STRIDE_INDEXES.DEAD] >= 0.5 || insertView[base + STRIDE_INDEXES.MASS] <= 0) continue;
+    const count = Math.min(getNeighbors(grid, insertView[base + STRIDE_INDEXES.POS_X], insertView[base + STRIDE_INDEXES.POS_Y], insertView[base + STRIDE_INDEXES.POS_Z], worldSize, neighbors, maxInteractions), maxInteractions);
+    for (let n = 0; n < count; n++) {
+      const j = neighbors[n];
+      if (j === i) continue;
+      const jBase = j * stride;
+      if (insertView[jBase + STRIDE_INDEXES.DEAD] >= 0.5 || insertView[jBase + STRIDE_INDEXES.MASS] <= 0) continue;
+      pairs.push({ i, j });
+    }
+  }
+  return pairs;
+}
+
+export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer, worldSize, dt, prng, gpuForces = null) {
   setBuffer(particleBuffer);
   const view = particleBuffer; // Float32Array or SharedArrayBuffer view
   const S = STRIDE_INDEXES;
@@ -490,27 +515,11 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   // must retain the complete law semantics (DNA modifiers and non-GRAV laws),
   // so do not silently replace its exact pairwise dispatch based on the UI
   // compute preference.
-  const _useGPU = false;
+  const _useGPU = !!gpuForces;
   if (_useGPU && !bhSoloGravity) {
-    // Build all neighbour pairs
-    const _gpuPairs = [];
-    for (let i = 0; i < particleCount; i++) {
-      const ib = i * stride;
-      if (view[ib + S.DEAD] >= 0.5 || view[ib + S.MASS] <= 0) continue;
-      const nCount = getNeighbors(grid, view[ib + S.POS_X], view[ib + S.POS_Y], view[ib + S.POS_Z], worldSize, nb, neighborCap);
-      const lim = Math.min(nCount, maxInteractions);
-      for (let n = 0; n < lim; n++) {
-        const j = nb[n];
-        if (j === i) continue;
-        const jb = j * stride;
-        if (view[jb + S.DEAD] >= 0.5 || view[jb + S.MASS] <= 0) continue;
-        _gpuPairs.push({ i, j });
-      }
-    }
-    const _gpuRes = gpuComputeForcesSync(view, particleCount, _gpuPairs, {
-      worldSize, G: effG, softening: 0.5, maxForce: MAX_FORCE,
-    });
-    _gpuFx = _gpuRes.fx; _gpuFy = _gpuRes.fy; _gpuFz = _gpuRes.fz;
+    _gpuFx = gpuForces.fx;
+    _gpuFy = gpuForces.fy;
+    _gpuFz = gpuForces.fz;
   }
 
   for (let i = 0; i < particleCount; i++) {
@@ -644,7 +653,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       // CONTACT owns geometric penetration correction. COLL owns the velocity
       // impulse. Keeping these operations separate prevents two normal pushes
       // from being applied when both laws are enabled.
-      if (near && (active[LAW_INDEXES.CONTACT] || active[LAW_INDEXES.COLL] || active[LAW_INDEXES.ACCR]) && !_useGPU) {
+      if (near && (active[LAW_INDEXES.CONTACT] || active[LAW_INDEXES.COLL] || active[LAW_INDEXES.ACCR])) {
         const m1 = view[iBase + S.MASS];
         const m2 = view[jBase + S.MASS];
         if (m1 <= 0 || m2 <= 0) continue;

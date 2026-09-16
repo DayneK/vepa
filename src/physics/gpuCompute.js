@@ -10,7 +10,7 @@
 //      forces and atomically accumulating into per-particle force buffers.
 //   4. CPU downloads force accumulators, adds them to the solver's force arrays.
 //
-// The CPU still handles: per-particle laws (PLANETARY, CHAOS, etc.), lifecycle,
+// The CPU still handles: collision/contact semantics, per-particle laws (PLANETARY, CHAOS, etc.), lifecycle,
 // integration, DNA-dependent laws — everything that is not embarrassingly parallel.
 //
 // Fallback: if WebGPU is unavailable, the exact grid solver is used unchanged.
@@ -21,8 +21,9 @@ const PARTICLE_STRIDE = 100;
 
 // ── WGSL compute shader ──
 // One workgroup per grid cell, one invocation per neighbour pair.
-// Each invocation: load particle_i and particle_j from storage buffers,
-// compute gravity + collision forces, atomically add to force_i.
+// Each invocation loads particle_i and particle_j from storage buffers,
+// computes gravity (collision remains on the exact CPU path), and atomically
+// accumulates into force_i.
 const COMPUTE_SHADER = /* wgsl */ `
 struct Particle {
   pos_x: f32, pos_y: f32, pos_z: f32,
@@ -43,6 +44,8 @@ struct Params {
   G:              f32,
   softening:      f32,
   max_force:      f32,
+  gravity_enabled: u32,
+  collision_enabled: u32,
 };
 
 @group(0) @binding(0) var<storage, read> particles: array<Particle>;
@@ -87,19 +90,20 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
 
   // Gravity (attractive): F = -G * m_i * m_j * r / r^3
   let mj = particles[pj].mass;
-  let gf = params.G * mj * inv_d3;
+  let gf = select(0.0, params.G * mj * inv_d3, params.gravity_enabled == 1u);
   let gfx = -gf * rx;
   let gfy = -gf * ry;
   let gfz = -gf * rz;
 
-  // Collision (repulsive): F = stiffness * (r_i + r_j - dist) / dist
+  // Optional collision force (normally disabled by the worker because the
+  // exact CPU solver owns CONTACT/COLL semantics).
   let dist = d2 * inv_d; // d2 / sqrt(d2) = sqrt(d2) ≈ dist
   let combined_radius = particles[pi].radius + particles[pj].radius;
   let overlap = combined_radius - dist;
   var cfx = 0.0f;
   var cfy = 0.0f;
   var cfz = 0.0f;
-  if (overlap > 0.0 && dist > 0.001) {
+  if (params.collision_enabled == 1u && overlap > 0.0 && dist > 0.001) {
     let stiffness = 0.5;
     let cf = stiffness * overlap * inv_d;
     cfx = cf * rx;
@@ -164,7 +168,7 @@ export async function createGPUContext() {
  * @param {Float32Array} view - particle buffer (SharedArrayBuffer or ArrayBuffer)
  * @param {number} count - number of alive particles
  * @param {Array<{i:number, j:number}>} pairs - neighbour pair list
- * @param {object} params - { worldSize, G, softening, maxForce }
+ * @param {object} params - { worldSize, G, softening, maxForce, gravityEnabled, collisionEnabled }
  * @returns {Float32Array} force buffers {fx, fy, fz} or null on failure
  */
 export async function gpuComputeForces(gpu, view, count, pairs, params) {
@@ -203,7 +207,11 @@ export async function gpuComputeForces(gpu, view, count, pairs, params) {
     }
 
     // ── Uniform params ──
-    const uniformData = new Float32Array([count, pairCount, ws, G, eps, mf, 0, 0]);
+    const uniformData = new Uint32Array(new Float32Array([count, pairCount, ws, G, eps, mf]).buffer.byteLength / 4 + 2);
+    const uniformFloats = new Float32Array(uniformData.buffer);
+    uniformFloats.set([count, pairCount, ws, G, eps, mf]);
+    uniformData[6] = params.gravityEnabled === false ? 0 : 1;
+    uniformData[7] = params.collisionEnabled ? 1 : 0;
 
     // ── Create GPU buffers ──
     const particleBuf = device.createBuffer({

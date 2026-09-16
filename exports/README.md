@@ -4,11 +4,11 @@ Machine-readable single-file exports of the current working tree. These files ar
 
 | File | What it is | Regenerate |
 |------|------------|------------|
-| `vepa-codebase-concat.mjs` | Minimal functional core — 20 headless-runnable modules (constants → state → dna → physics → spawn) merged into one self-contained ESM file via a `__define`/`__import` registry. No UI/render/worker glue. | `node exports/generate-concat.mjs` |
-| `vepa-full-codebase-concat.md` | Generated hierarchical source snapshot; excludes generated documentation, audit corpora, and its own large output files. | `node exports/generate-vepa-all.mjs` |
-| `vepa-docs-concat.md` | Comprehensive documentation snapshot — all 112 markdown docs (root, `docs/`, `audit-suite/` incl. law-revamp + historical, `src/physics/lawgroups/SPEC.md`) + `VERSION` + `package.json` + `bench-baseline.json`, with a TOC. The loose source docs were moved out of the codebase tree (2026-08-10); this file is the canonical documentation artifact. | regenerate only covers docs still in the tree |
+| `vepa-full-codebase-concat.md` | Generated hierarchical source snapshot; excludes generated documentation, audit corpora, and its own large output files. | `npm run concat` |
+| `vepa-docs-concat.md` | Derived documentation snapshot generated from the documentation paths currently present in the repository. It is not the documentation SSOT. | `npm run concat` |
+| `vepa-codebase-full-concat.md` | Existing parallel/legacy full snapshot retained for provenance; its producer and consumer mapping require review before removal. | No canonical regeneration command established |
 
-The full snapshot generator is `exports/generate-full-concat.mjs`; it is intentionally invoked from the repository path rather than from `.dist/`. Large generated outputs remain review artifacts and are not runtime inputs.
+The maintained full snapshot generator is `exports/generate-full-concat.mjs`, invoked by `exports/generate-vepa-all.mjs` from the repository path rather than from `.dist/`. Large generated outputs remain review artifacts and are not runtime inputs. See [the retention policy](../docs/EXPORT_SNAPSHOT_POLICY.md) and run `node scripts/repository-artifact-report.mjs` before changing them.
 
 **Verify the codebase snapshot runs:**
 ```bash

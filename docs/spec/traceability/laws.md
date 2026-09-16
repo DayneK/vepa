@@ -4,11 +4,11 @@
 
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 3 | 14 | NONE |
+| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 14 | NONE |
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 5 | NONE |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 5 | NONE |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | NONE |
-| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 4 | 8 | NONE |
+| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 6 | 8 | NONE |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 5 | 3 | NONE |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 4 | 3 | NONE |
 | 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 11 | NONE |
@@ -132,7 +132,7 @@
 | 125 | [WAVEFUNCTION](../laws/quantum/125_WAVEFUNCTION.md) | quantum | 1 | 1 | 1 | NONE |
 | 126 | [HYPERPLANE](../laws/quantum/126_HYPERPLANE.md) | quantum | 1 | 1 | 1 | NONE |
 | 127 | [ANTIMATTER](../laws/quantum/127_ANTIMATTER.md) | quantum | 1 | 2 | 2 | NONE |
-| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 2 | 3 | MECHANICS_HELP |
+| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 4 | 3 | MECHANICS_HELP |
 | 129 | [MOMENTUM](../laws/mechanics/129_MOMENTUM.md) | mechanics | 1 | 3 | 4 | MECHANICS_HELP |
 | 130 | [INERTIA](../laws/mechanics/130_INERTIA.md) | mechanics | 1 | 2 | 2 | MECHANICS_HELP |
 | 131 | [TORQUE](../laws/mechanics/131_TORQUE.md) | mechanics | 1 | 3 | 4 | MECHANICS_HELP |

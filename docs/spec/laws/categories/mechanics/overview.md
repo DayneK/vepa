@@ -8,7 +8,7 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 128 | [CONTACT](../../mechanics/128_CONTACT.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
+| 128 | [CONTACT](../../mechanics/128_CONTACT.md) | wired | MECHANICS_HELP | src/physics/gpuCompute.js |
 | 129 | [MOMENTUM](../../mechanics/129_MOMENTUM.md) | wired | MECHANICS_HELP | src/physics/lawGraph.js |
 | 130 | [INERTIA](../../mechanics/130_INERTIA.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
 | 131 | [TORQUE](../../mechanics/131_TORQUE.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |

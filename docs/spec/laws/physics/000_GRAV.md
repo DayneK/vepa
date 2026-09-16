@@ -26,7 +26,7 @@
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
+[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js), [src/worker/physics.worker.js](src/worker/physics.worker.js)
 
 ## Verification evidence
 

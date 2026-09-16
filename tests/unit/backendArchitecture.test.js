@@ -10,9 +10,12 @@ describe('backend and mechanics architecture contracts', () => {
     expect(solver).toContain("runtimeConfig.gravEngine === 'fmm'");
     expect(solver).toContain('octreeGravity');
     expect(solver).toContain('gpuComputeForcesSync');
-    expect(solver).toContain('const _useGPU = false;');
+    expect(solver).toContain('const _useGPU = !!gpuForces;');
+    expect(solver).toContain('buildNeighborPairs');
     expect(worker).toContain("runtimeConfig.computeEngine === 'gpu'");
     expect(worker).toContain('gpuAvailable');
+    expect(worker).toContain('gpuComputeForces');
+    expect(worker).toContain('GPU_FALLBACK');
   });
 
   it('documents every declared Mechanics law and its known consumer boundary', () => {

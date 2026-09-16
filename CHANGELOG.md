@@ -1,5 +1,19 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.7] - 2026-09-16 → 9.1.4
+
+### feat(webgpu): activate worker compute bridge with safe CPU fallback
+
+- Clarify that `PARTICLE_STRIDE = 100` is a per-particle float layout, while `MAX_PARTICLES = 100000` is the population capacity and `LAW_COUNT = 136` is the registry size.
+- Connect the worker’s WebGPU probe to the spatial neighbor-pair bridge and CPU solver gravity injection; preserve exact CPU CONTACT/COLL and all other law semantics, and disable the backend after device/shader/readback failure.
+- Record the active `docs/audit/` ownership model and the audit clarification report without moving historical evidence.
+
+### Files
+
+- `src/physics/gpuCompute.js`, `src/physics/solver.js`, `src/worker/physics.worker.js` — operational GPU gravity pre-pass and fallback boundary.
+- `tests/unit/webgpuContract.test.js`, `tests/unit/backendArchitecture.test.js` — backend contracts.
+- `docs/DEEP_AUDIT_CLARIFICATIONS.md`, `README.md`, `SPEC.md`, `docs/FEATURE_STATUS_MATRIX.md` — terminology, ownership, and implementation documentation.
+
 ## [4.9.6] - 2026-09-12 → 9.1.3
 
 ### fix(mechanics): separate contact correction from collision impulse

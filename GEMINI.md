@@ -14,17 +14,18 @@ Every significant code modification, law implementation, or UI refactor MUST be 
 *   **SPEC.md / PLAN.md:** Architecture spec + roadmap updates for major milestones.
 *   **GUIDE.md:** User-facing instructional updates.
 *   **`src/constants.js` `LAW_HELP_DB`:** 4-tier documentation for every law (B-4RK).
-*   **`audit-suite/`:** Law fidelity audit (`fidelity-audit-*.md`) whenever law behavior changes.
+*   **`docs/audit/`:** Law fidelity audit and retained historical evidence whenever law behavior changes.
 
 > Legacy SSOT files (`ENGINE_SSOT.md`, `docs/fullaudit.md`, `COMPENDIUM.md`) were archived on
-> 2026-08-10 — their role is covered by `SPEC.md`, `src/constants.js` and `audit-suite/`.
-> The archived copies live in the `gemquota/vepa-archive` repo.
+> 2026-08-10 — their role is covered by `SPEC.md`, `src/constants.js` and `docs/audit/`.
+> The active audit corpus is under `docs/audit/laws/a3/`; archived copies live in the
+> `gemquota/vepa-archive` repo.
 
 ### 1.2 The "B-4RK" Principle
 Documentation is not an afterthought; it is a feature. All new laws must be accompanied by `HELP_DB` entries in `src/constants.js` covering all four tiers (HINT, EXPLANATION, SYSTEM, ADVANCED).
 
 ### 1.3 Versioning & Commit Standards (adopted 2026-08-10)
-- The product is **VEPA4**; every version uses the **`major.minor.build`** schema (current `9.1.2`), with legacy labels retained in `CHANGELOG.md` headers (old `4.M.N` → `M.N.0`).
+- The product is **VEPA4**; every version uses the **`major.minor.build`** schema (current `9.1.4`), with legacy labels retained in `CHANGELOG.md` headers (old `4.M.N` → `M.N.0`).
 - Every commit MUST follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) (`<type>(<scope>): <description>`); release commits use `chore(release): vX.Y.Z — <summary>` and tags are `vX.Y.Z`.
 - The full release protocol (backup branches, changelog-first, manifest sync, tagging) is `AGENTS.md` §10.4 — no release without it.
 

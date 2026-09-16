@@ -26,7 +26,7 @@
 
 ## Implementation evidence
 
-[src/physics/fields.js](src/physics/fields.js), [src/physics/lawgroups/mechanicsHelp.js](src/physics/lawgroups/mechanicsHelp.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
+[src/physics/fields.js](src/physics/fields.js), [src/physics/gpuCompute.js](src/physics/gpuCompute.js), [src/physics/lawgroups/mechanicsHelp.js](src/physics/lawgroups/mechanicsHelp.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js), [src/worker/physics.worker.js](src/worker/physics.worker.js)
 
 ## Verification evidence
 

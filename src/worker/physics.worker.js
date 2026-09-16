@@ -5,7 +5,7 @@
 // Falls back to main-thread tick loop if SharedArrayBuffer is unavailable.
 // ============================================================================
 
-import { solve, drainOffspring, resetOffspringRing } from '../physics/solver.js';
+import { solve, buildNeighborPairs, drainOffspring, resetOffspringRing } from '../physics/solver.js';
 import {
   createLawState,
   toggle as toggleLaw,
@@ -20,9 +20,10 @@ import {
   MAX_PARTICLES,
   WORLD_SIZE,
   LAW_COUNT,
+  LAW_INDEXES,
 } from '../constants.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
-import { createGPUContext } from '../physics/gpuCompute.js';
+import { createGPUContext, gpuComputeForces } from '../physics/gpuCompute.js';
 
 const hasSAB = typeof SharedArrayBuffer !== 'undefined';
 const isShared = (value) => hasSAB && value instanceof SharedArrayBuffer;
@@ -289,7 +290,39 @@ async function handleTick(msg) {
 
   const tickStart = performance.now();
 
-  // Run the solver
+  // WebGPU owns only the embarrassingly-parallel pairwise gravity
+  // pre-pass. The CPU solver remains authoritative for every other law and
+  // receives the GPU result explicitly, so GPU selection cannot silently
+  // bypass DNA, lifecycle, field, chemistry, information, quantum, or
+  // mechanics semantics.
+  let gpuForces = null;
+  if (gpuReady && runtimeConfig.computeEngine === 'gpu') {
+    try {
+      const pairs = buildNeighborPairs(particleView, particleCount, stride, worldSize);
+      gpuForces = await gpuComputeForces(gpuContext, particleView, particleCount, pairs, {
+        worldSize,
+        G: 0.2 * (worldSize / 240) ** 2 * (Number(runtimeConfig.worldParams?.GLOBAL_G) || 1),
+        softening: 0.5,
+        maxForce: runtimeConfig.maxForce || 50,
+        gravityEnabled: isSet(lawState, LAW_INDEXES.GRAV),
+        // Keep CONTACT/COLL on the CPU: the exact solver owns positional
+        // correction and velocity impulse semantics; the GPU contributes
+        // gravity only to avoid double-applying collision response.
+        collisionEnabled: false,
+      });
+      if (!gpuForces) {
+        gpuReady = false;
+        gpuContext = null;
+      }
+    } catch (error) {
+      gpuReady = false;
+      gpuContext = null;
+      self.postMessage({ type: 'GPU_FALLBACK', error: error.message || String(error) });
+    }
+  }
+
+  // Run the exact CPU solver, optionally consuming the completed GPU force
+  // pre-pass. A null result is the normal CPU fallback.
   solve(
     particleView,
     particleCount,
@@ -298,7 +331,8 @@ async function handleTick(msg) {
     dnaView,
     worldSize,
     dt,
-    prng
+    prng,
+    gpuForces
   );
 
   // Collect offspring
@@ -314,6 +348,7 @@ async function handleTick(msg) {
     tickDuration,
     particleCount,
     gpuAvailable: gpuReady,
+    gpuActive: !!gpuForces,
   };
 
   if (offspring.length > 0) {

@@ -5,7 +5,7 @@
 ## Versioning & Commits
 
 - **Product:** **VEPA4**; versions use **`major.minor.build`** (npm-semver-native) —
-  current: **9.1.2** (legacy label `4.9.5`). Retroactive mapping of the v4 line:
+  current: **9.1.4** (legacy label `4.9.7`). Retroactive mapping of the v4 line:
   old `4.M.N` → `M.N.0`; see `CHANGELOG.md` and `AGENTS.md` §10.4.
 - **Commits:** [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
   — `<type>(<scope>): <description>`, release commits `chore(release): v7.0.0`,
@@ -80,7 +80,16 @@ The original v4 features remain part of the product, while the later v8/v9 addit
 - **PREDATION law** restored as a proper toggle (index 51).
 - **Sparse large world** — the default configuration supports 250 particles per
   species over a 2000³ torus with world-size-scaled gravity; the actual boot
-  population depends on the configured species count.
+  population depends on the configured species count. `PARTICLE_STRIDE = 100`
+  means 100 floats per particle, not 100 particles; the current capacity is
+  `MAX_PARTICLES = 100000` and the law registry contains 136 entries.
+- **WebGPU compute (opt-in)** — when `computeEngine = 'gpu'` and the browser
+  grants a WebGPU device, the worker sends the spatial-grid neighbor pairs to a
+  WGSL gravity pre-pass, while the CPU retains exact CONTACT/COLL response and continues all DNA-dependent,
+  lifecycle, field, chemistry, information, quantum, and mechanics laws. Device
+  failure or shader/readback failure disables the backend and returns to the
+  exact CPU solver. See [`docs/DEEP_AUDIT_CLARIFICATIONS.md`](docs/DEEP_AUDIT_CLARIFICATIONS.md)
+  for the implementation boundary and audit-corpus ownership decision.
 - **Camera fixed** — the default view fits the whole world without the
   stretched/far-away distortion, particles keep a minimum 1.5px size so they
   never vanish, and zooming preserves depth.

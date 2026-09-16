@@ -1,7 +1,7 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.1.2 | **Date**: 2026-08-26 | **Base**: VEPA4 integrated intelligence
-**Audit input**: `audit/FULL_AUDIT_2026-08-01.md`
+**Version**: 9.1.4 | **Date**: 2026-09-16 | **Base**: VEPA4 integrated intelligence
+**Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
 
 ## Problem Statement
 

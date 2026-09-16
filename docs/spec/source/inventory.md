@@ -2,27 +2,28 @@
 
 # Source: Inventory
 
-The generator scanned `197` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `201` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 24 | 135 | 302 |
-| Benchmark | 2 | 0 | 9 |
+| Benchmark | 3 | 2 | 9 |
 | Repository | 7 | 2 | 1 |
-| Simulation | 24 | 179 | 323 |
+| Simulation | 24 | 180 | 328 |
 | State | 23 | 152 | 186 |
-| Testing | 98 | 9 | 402 |
+| Testing | 101 | 9 | 402 |
 | Ui | 19 | 48 | 364 |
 
 ## Module list
 
 | Path | Area | Lines | Exports | Imports | Law refs |
 | --- | --- | --- | --- | --- | --- |
+| [bench/backend-compare.mjs](bench/backend-compare.mjs) | benchmark | 136 | 2 | 4 | 0 |
 | [bench/solver.bench.mjs](bench/solver.bench.mjs) | benchmark | 587 | 0 | 6 | 9 |
 | [bench/worker-bench-worker.mjs](bench/worker-bench-worker.mjs) | benchmark | 79 | 0 | 7 | 0 |
 | [index.html](index.html) | repository | 202 | 0 | 0 | 1 |
 | [package-lock.json](package-lock.json) | repository | 2658 | 0 | 0 | 0 |
-| [package.json](package.json) | repository | 30 | 0 | 0 | 0 |
+| [package.json](package.json) | repository | 33 | 0 | 0 | 0 |
 | [playwright.config.js](playwright.config.js) | application | 20 | 1 | 1 | 0 |
 | [public/bench-report/data.js](public/bench-report/data.js) | application | 20740 | 0 | 0 | 123 |
 | [public/bench-report/index.html](public/bench-report/index.html) | application | 928 | 0 | 0 | 10 |
@@ -49,7 +50,7 @@ The generator scanned `197` files from active repository inputs. Individual modu
 | [src/multiplex/multiplexUI.js](src/multiplex/multiplexUI.js) | application | 837 | 1 | 2 | 2 |
 | [src/physics/fields.js](src/physics/fields.js) | simulation | 564 | 14 | 0 | 2 |
 | [src/physics/fmm.js](src/physics/fmm.js) | simulation | 424 | 2 | 1 | 0 |
-| [src/physics/gpuCompute.js](src/physics/gpuCompute.js) | simulation | 380 | 3 | 0 | 2 |
+| [src/physics/gpuCompute.js](src/physics/gpuCompute.js) | simulation | 388 | 3 | 0 | 4 |
 | [src/physics/lawGraph.js](src/physics/lawGraph.js) | simulation | 170 | 8 | 3 | 4 |
 | [src/physics/lawgroups/biologyLaws.js](src/physics/lawgroups/biologyLaws.js) | simulation | 58 | 1 | 1 | 2 |
 | [src/physics/lawgroups/chemistryLaws.js](src/physics/lawgroups/chemistryLaws.js) | simulation | 93 | 1 | 1 | 1 |
@@ -66,7 +67,7 @@ The generator scanned `197` files from active repository inputs. Individual modu
 | [src/physics/mergePhysics.js](src/physics/mergePhysics.js) | simulation | 244 | 4 | 2 | 8 |
 | [src/physics/octree.js](src/physics/octree.js) | simulation | 383 | 4 | 0 | 0 |
 | [src/physics/pairGeometry.js](src/physics/pairGeometry.js) | simulation | 41 | 1 | 1 | 0 |
-| [src/physics/solver.js](src/physics/solver.js) | simulation | 1949 | 7 | 21 | 133 |
+| [src/physics/solver.js](src/physics/solver.js) | simulation | 1958 | 8 | 21 | 133 |
 | [src/physics/spatialGrid.js](src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
 | [src/physics/synergy.js](src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
 | [src/render/renderer.js](src/render/renderer.js) | application | 428 | 8 | 5 | 2 |
@@ -112,7 +113,7 @@ The generator scanned `197` files from active repository inputs. Individual modu
 | [src/ui/tooltip.js](src/ui/tooltip.js) | ui | 171 | 2 | 4 | 122 |
 | [src/ui/ui.js](src/ui/ui.js) | ui | 362 | 5 | 13 | 1 |
 | [src/ui/worldPanel.js](src/ui/worldPanel.js) | ui | 554 | 3 | 6 | 127 |
-| [src/worker/physics.worker.js](src/worker/physics.worker.js) | simulation | 389 | 0 | 5 | 0 |
+| [src/worker/physics.worker.js](src/worker/physics.worker.js) | simulation | 424 | 0 | 5 | 3 |
 | [style.css](style.css) | repository | 3097 | 0 | 0 | 0 |
 | [tests/audit/batch_01.test.js](tests/audit/batch_01.test.js) | testing | 224 | 0 | 7 | 8 |
 | [tests/audit/batch_02.test.js](tests/audit/batch_02.test.js) | testing | 309 | 0 | 7 | 8 |
@@ -169,7 +170,9 @@ The generator scanned `197` files from active repository inputs. Individual modu
 | [tests/run.mjs](tests/run.mjs) | testing | 236 | 0 | 4 | 2 |
 | [tests/unit/agencyNarrative.test.js](tests/unit/agencyNarrative.test.js) | testing | 111 | 0 | 5 | 0 |
 | [tests/unit/artifacts.test.js](tests/unit/artifacts.test.js) | testing | 160 | 0 | 5 | 0 |
-| [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js) | testing | 27 | 0 | 2 | 9 |
+| [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js) | testing | 30 | 0 | 2 | 9 |
+| [tests/unit/batch4Reports.test.js](tests/unit/batch4Reports.test.js) | testing | 34 | 0 | 3 | 0 |
+| [tests/unit/batch5Reports.test.js](tests/unit/batch5Reports.test.js) | testing | 21 | 0 | 2 | 0 |
 | [tests/unit/buffer.test.js](tests/unit/buffer.test.js) | testing | 55 | 0 | 3 | 0 |
 | [tests/unit/computeEngines.test.js](tests/unit/computeEngines.test.js) | testing | 70 | 0 | 8 | 1 |
 | [tests/unit/constructionEconomy.test.js](tests/unit/constructionEconomy.test.js) | testing | 128 | 0 | 6 | 0 |
@@ -211,6 +214,7 @@ The generator scanned `197` files from active repository inputs. Individual modu
 | [tests/unit/stellar.test.js](tests/unit/stellar.test.js) | testing | 281 | 0 | 5 | 2 |
 | [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js) | testing | 62 | 0 | 4 | 28 |
 | [tests/unit/synthetic.test.js](tests/unit/synthetic.test.js) | testing | 420 | 0 | 6 | 1 |
+| [tests/unit/webgpuContract.test.js](tests/unit/webgpuContract.test.js) | testing | 43 | 0 | 4 | 0 |
 | [tests/unit/worldSave.test.js](tests/unit/worldSave.test.js) | testing | 322 | 0 | 7 | 4 |
 | [vercel.json](vercel.json) | repository | 35 | 0 | 0 | 0 |
 | [vite.config.js](vite.config.js) | repository | 27 | 1 | 1 | 0 |

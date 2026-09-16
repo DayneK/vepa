@@ -1,11 +1,11 @@
 # AGENTS.md — VEPA Workspace Initialization & Codebase Audit
 
 > **Project:** VEPA — Vector Emergent Physics Automata
-> **Active Target:** **VEPA4 v9.1.3** (legacy label `4.9.6`; mechanics consolidation separates geometric CONTACT correction from COLL impact impulse; v9.1.2 delivered deterministic hierarchical technical-spec generation; v9.0.2 delivered selectable GPU backend and parity harness; Set P "Synthetic Life" (O·P·Q build 2): non-DNA synthetic organisms born from advanced HUBs (8 archetype programs), species intelligence-threshold uploaded consciousness, machine groups in the F.1 registry; stride offsets 98–99 claimed; plus per-law solver profiling (persistent content-addressed law caches, saved neighbour list, bench-mode timing) and main-thread cadence throttles that fix UI lag at high population; v8.15.1 = perf overhaul (density-scaled AUTO_TUNE grid + allocation-free pairwise hot path, ~9× at 100k); v8.15.0 = Set O "Stellar Physics" (O·P·Q build 1): stars fuse accreted mass into radiant output, collapse to black holes past the horizon (Hawking re-emission), detonate as supernovae past the mass cap (shockwave + exotic element seeding); plus the rich PRIME_DEFAULT substrate (COMMS/LEARN/CULTURE/AFFINITY/STIGMERGY + thermal/info fields + gravity wells + clustered spawn) and `MAX_PARTICLES` 2500→100000 with a renderer off-screen cull; **RRP trilogies** (E·F·A: E.1 v8.2.0 @ `eae1f58` · F v8.3.0 @ `d70ad1b` · A v8.4.0 @ `1e5eead`; D·G·H: D v8.6.0 · G v8.7.0 · H v8.8.0; I·J·K: I v8.9.0 · J v8.10.0 · K v8.11.0 — **complete**; L·M·N: L v8.12.0 · M v8.13.0 · N v8.14.0 — **complete** — O·P·Q: O v8.15.0 · P v8.16.0 **complete** — Q v8.17.0 next); designs in `docs/dev/rrp-trilogy/` + `docs/dev/rrp-trilogy-2/` + `docs/dev/rrp-trilogy-3/` + `docs/dev/rrp-trilogy-4/5/6/` (O·P·Q + R·S·T designs locked — the full 18-set lifecycle))
+> **Active Target:** **VEPA4 v9.1.4** (legacy label `4.9.7`; mechanics consolidation separates geometric CONTACT correction from COLL impact impulse; v9.1.2 delivered deterministic hierarchical technical-spec generation; v9.0.2 delivered selectable GPU backend and parity harness; Set P "Synthetic Life" (O·P·Q build 2): non-DNA synthetic organisms born from advanced HUBs (8 archetype programs), species intelligence-threshold uploaded consciousness, machine groups in the F.1 registry; stride offsets 98–99 claimed; plus per-law solver profiling (persistent content-addressed law caches, saved neighbour list, bench-mode timing) and main-thread cadence throttles that fix UI lag at high population; v8.15.1 = perf overhaul (density-scaled AUTO_TUNE grid + allocation-free pairwise hot path, ~9× at 100k); v8.15.0 = Set O "Stellar Physics" (O·P·Q build 1): stars fuse accreted mass into radiant output, collapse to black holes past the horizon (Hawking re-emission), detonate as supernovae past the mass cap (shockwave + exotic element seeding); plus the rich PRIME_DEFAULT substrate (COMMS/LEARN/CULTURE/AFFINITY/STIGMERGY + thermal/info fields + gravity wells + clustered spawn) and `MAX_PARTICLES` 2500→100000 with a renderer off-screen cull; **RRP trilogies** (E·F·A: E.1 v8.2.0 @ `eae1f58` · F v8.3.0 @ `d70ad1b` · A v8.4.0 @ `1e5eead`; D·G·H: D v8.6.0 · G v8.7.0 · H v8.8.0; I·J·K: I v8.9.0 · J v8.10.0 · K v8.11.0 — **complete**; L·M·N: L v8.12.0 · M v8.13.0 · N v8.14.0 — **complete** — O·P·Q: O v8.15.0 · P v8.16.0 **complete** — Q v8.17.0 next); designs in `docs/dev/rrp-trilogy/` + `docs/dev/rrp-trilogy-2/` + `docs/dev/rrp-trilogy-3/` + `docs/dev/rrp-trilogy-4/5/6/` (O·P·Q + R·S·T designs locked — the full 18-set lifecycle))
 > **Layout:** the `` tree was promoted to the repo root on 2026-08-10 (legacy trees
 > archived into `gemquota/vepa-archive`); ALL paths below are root-relative.
 > **Working Branch:** `main`
-> **Audit Hash:** `AGENTS_SYNC_v9.1.3_2026-09-12`
+> **Audit Hash:** `AGENTS_SYNC_v9.1.4_2026-09-16`
 >
 > This file is the canonical initialization prompt for any agent entering this workspace. It contains the codebase audit, architectural SSOT, conventions, and operational workflows. All agents **must** read this file first before any code modification. Version control is **strict** — read §10.4 (Version History Control Protocol) before any changelog edit or deploy.
 >
@@ -22,7 +22,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 | Attribute | Value |
 |-----------|-------|
 | **Repository** | `github.com/gemquota/vepa.git` |
-| **Active version** | **VEPA4 v9.1.2** (legacy label `4.9.5`) — deterministic hierarchical technical-spec generator and drift manifest prepared on top of the v9.1.1 law release |
+| **Active version** | **VEPA4 v9.1.4** (legacy label `4.9.7`) — operational WebGPU worker pairwise bridge with exact CPU continuation and audit clarification |
 | **Active tree** | repo root (VEPA v4 — "Integrated Intelligence"; `v4/` promoted to root 2026-08-10) |
 | **Legacy trees** | archived 2026-08-10 → `gemquota/vepa-archive` (root `src/` v2.5.0-era · `v3/`, `v3-backup/`, `v3-persistence-design/` · `vaa/`) |
 | **Branches** | `master` (stable) · `freebuff/changes-a58d34pq` (**current**) · `new` · `feature/slider-controls` · `feature/multiplayer-investigation` · `feature/nuclear-rewrite` (remote) |
@@ -34,7 +34,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 | **Module System** | ESM (`"type": "module"`) |
 | **Deploys** | Vercel prod `https://vepa-seven.vercel.app/` · GitHub Pages `https://gemquota.github.io/vepa/` (both auto-deploy from pushes to `master`) |
 
-**Version alignment (new schema since 2026-08-10):** the product is **VEPA4**; versions use `major.minor.build` (npm-semver-native). `VERSION`, the top section of `CHANGELOG.md` (arrow token), `package.json#version`, and this file **must all read 9.1.2** (the v9.1.2 documentation-tooling build). Since the 2026-08-10 restructure the root manifest IS the v4 manifest (the legacy v2 root `package.json` was archived with the legacy trees).
+**Version alignment (new schema since 2026-08-10):** the product is **VEPA4**; versions use `major.minor.build` (npm-semver-native). `VERSION`, the top section of `CHANGELOG.md` (arrow token), `package.json#version`, and this file **must all read 9.1.4** (the v9.1.4 WebGPU bridge build). Since the 2026-08-10 restructure the root manifest IS the v4 manifest (the legacy v2 root `package.json` was archived with the legacy trees).
 
 **GEMINI.md mandates (take precedence over this file):** every significant change must sync `CHANGELOG.md`, `README.md`, `SPEC.md`/`PLAN.md`, `GUIDE.md`, `LAW_HELP_DB`, and `audit-suite/` per GEMINI.md §1.1 (legacy `ENGINE_SSOT.md` / `docs/fullaudit.md` / `codex/` parity were archived 2026-08-10); the B-4RK principle (documentation as a feature — 4-tier `LAW_HELP_DB` for every law); bitmask discipline (`LAW_INDEXES` never hardcoded); and verify doc sync before declaring completion or you incur **Documentation Debt**. Read `GEMINI.md` on entry (§10.1).
 
@@ -53,7 +53,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 ├── GUIDE.md / GEMINI.md    ← user design guide + project mandates
 ├── index.html              ← app shell
 ├── style.css
-├── package.json            ← v4 manifest (9.1.1 — MUST match changelog top)
+├── package.json            ← v4 manifest (9.1.4 — MUST match changelog top)
 ├── package-lock.json
 ├── vercel.json             ← Vercel static build + COOP/COEP headers
 ├── vite.config.js / vitest.config.js
@@ -130,12 +130,12 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 
 | Property | Value |
 |----------|-------|
-| **Current Branch** | `freebuff/changes-a58d34pq` |
-| **HEAD** | `7d825e3` — `chore(release): v9.1.1 — restore gravity category and exact solver semantics` (tagged `v9.1.1`) |
+| **Current Branch** | `main` |
+| **HEAD** | `a9f3103` — `Update 195 files` |
 | **Previous releases** | `7e937ec` — `docs(agents): sync map to v8.15.1` · `7f5b2fa` — `chore(release): v8.15.1 — performance overhaul (auto-tuned grid + allocation-free pairwise hot path)` (v8.15.1) · `1ea3201` — `chore(release): v8.15.0 — Set O "Stellar Physics" (stars/black holes/supernovae) + rich prime substrate + MAX_PARTICLES 2500→100000` (v8.15.0) · `e7d9a50` — `chore(release): v8.14.1 — blank-canvas hotfix (Set J/K arity + guarded updateIntelligence)` (v8.14.1) · `499cbc0` — `chore(release): v8.14.0 — Set N "Quantum Macroscale"` (v8.14.0) · `d64be99` — `chore(release): v8.13.0 — Set M "Relativity"` (v8.13.0) · `69a2b71` — `chore(release): v8.12.0 — Set L "Exotic Matter"` (v8.12.0) · `5cbea88` — `chore(release): v8.11.1 — boot with PRIME_DEFAULT starter laws` (v8.11.1 hotfix) · `8a39ce9` — `chore(release): v8.11.0 — Set K "Infrastructure & Energy"` (v8.11.0) · `ce691cb` — `chore(release): v8.10.0 — Set J "Society & Governance"` (v8.10.0) · `2472bac` — `chore(release): v8.9.0 — Set I` (v8.9.0) · `81d19c7` — `feat(ui): full-screen multiplex controls` (v8.1.0) |
 | **Release tags** | `v8.16.2`, `v8.16.0`, `v8.15.1`, `v8.15.0`, `v8.14.1`, `v8.14.0`, `v8.13.0`, `v8.12.0`, `v8.11.1`, `v8.11.0`, `v8.10.0`, `v8.9.0`, `v8.8.0`, `v8.7.0`, `v8.6.0`, `v8.5.0`, `v8.4.0`, `v8.3.0`, `v8.2.0`, `v8.1.1`, `v8.1.0`, `v8.0.0` (repo tagging adopted at v8.0.0, 2026-08-18) |
 | **Backup branches** | `backup/pre-8160-20260820` (cut before v8.16.0 Set P) · `backup/pre-8151-20260819` (cut before v8.15.1 perf overhaul) · `backup/pre-8150-20260819` (cut before v8.15.0 Set O) · `backup/pre-8141-20260819` (cut before v8.14.1 hotfix) · `backup/pre-8140-20260819` (cut before v8.14.0 Set N) · `backup/pre-8130-20260819` (cut before v8.13.0 Set M) · `backup/pre-8120-20260819` (cut before v8.12.0 Set L) · `backup/pre-8111-20260819` (cut before v8.11.1 hotfix) · `backup/pre-master-switch-20260811` (cut before the master-switch attempt) · `backup/pre-archive-restructure-20260810` (cut before the 2026-08-10 restructure) · `backup/pre-multiplex-20260807` · `backup/pre-metrics-20260807` · `backup/pre-perf-20260807` · `backup/pre-cleanup-20260726` · `backup/pre-lpsbs-20260728` · `backup/pre-vepa4-20260801` · `backup/v47-multiplex-f6900f0` (pre-force-push v4.7 multiplex evolution, preserved for reference) |
-| **Working tree** | clean for tracked files after v9.1.1; untracked `AGENTS.md.backup-20260826`, `bun.lock`, and `vepa-archive/` preserved |
+| **Working tree** | modified and untracked files preserved; current WebGPU/audit work is uncommitted |
 | **Remote** | `origin` → `github.com:gemquota/vepa.git` (`origin/HEAD` → `master`) |
 
 **Release cadence:** 4.6.11 → … → 4.6.18 all landed 2026-08-06; 4.6.24-4.6.26 landed 2026-08-07/08. The 4.6.27/4.6.28 changelog sections, the v4.6.29 law RRP WIP and the 7.0.0 release draft are uncommitted (not yet released). Always re-check HEAD and the changelog top on entry — do not assume this table is current.
@@ -376,7 +376,7 @@ The **B-4RK principle** stands: documentation is not an afterthought; it is a fe
 | **DNA count confusion** | v4 has **64** DNA params (0-63); `DEFAULT_DNA_STRIDE = 64` is the genome buffer width, not a param count; the 42-param claim applies to the per-particle stride cache only |
 | **Law bitmask width** | The v4 law state is **128 bits** (4 × u32: low/high/ext/**quad**Flags) — not 96 bits. Serialized form is `{low, high, ext, quad}` |
 | **v2 law config** | Do not write nested `this.laws.pure/biol/chem/thermo/meta` objects — that is v2-era; v4 uses `lawState` + `LAW_INDEXES` + `isSet()` |
-| **Version drift** | `VERSION`/changelog arrow token/`package.json#version` must all read 9.1.2 (VEPA4 `major.minor.build`); keep them matched per §10.4 |
+| **Version drift** | `VERSION`/changelog arrow token/`package.json#version` must all read 9.1.4 (VEPA4 `major.minor.build`); keep them matched per §10.4 |
 | **Stale root manifest** | The legacy v2 root manifest is archived — `npm test` / `npm run build` now run the v4 suite from the root |
 | SharedArrayBuffer blocked | Serve with COOP/COEP (`vepa4 dev` handles; `vercel.json` ships them) |
 | Worker postMessage limits | Use Transferable objects for buffer transfers |
@@ -399,7 +399,7 @@ headers carry both labels: `## [4.6.28] - date → 6.28.0`. v2/v3-era entries ke
 their historical labels.
 
 **Authority:** `CHANGELOG.md` is the single source of truth for release history.
-`VERSION`, the changelog top section's arrow token, and `package.json#version` MUST all equal the newest version (`9.1.2`). From here on, drift is a release
+`VERSION`, the changelog top section's arrow token, and `package.json#version` MUST all equal the newest version (`9.1.4`). From here on, drift is a release
 blocker.
 
 **Commit standard (Conventional Commits 1.0.0 — mandatory for all commits from
@@ -534,4 +534,4 @@ grep 'DNA_COUNT'       src/constants.js   # → 64
 
 ---
 
-*Reviewed 2026-08-26 | Workspace state: v9.1.2 documentation tooling prepared on top of v9.1.1 commit `7d825e3` on `freebuff/changes-a58d34pq`; changes remain uncommitted and untagged. Deterministic SharedArrayBuffer worker execution, completion-driven main-thread orchestration, and exhaustive full-stress benchmark SPA shipped. O·P·Q at build 2 of 3 — Set Q (cosmology, v8.17.0) next. Changelog snapshots `CHANGELOG.md.bak-20260819*` + `v4-worktree/` untracked/untouched. Verify SSOT parity before any code change.*
+*Reviewed 2026-09-16 | Workspace state: v9.1.4 WebGPU worker bridge and audit clarification prepared on top of `a9f3103` on `main`; changes remain uncommitted and untagged. Deterministic SharedArrayBuffer worker execution, completion-driven main-thread orchestration, and exhaustive full-stress benchmark SPA shipped. O·P·Q at build 2 of 3 — Set Q (cosmology, v8.17.0) next. Changelog snapshots `CHANGELOG.md.bak-20260819*` + `v4-worktree/` untracked/untouched. Verify SSOT parity before any code change.*
