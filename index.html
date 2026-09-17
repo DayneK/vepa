@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VEPA4 — Integrated Intelligence</title>
-  <script type="module" crossorigin src="/vepa/assets/index-C2nvtJOz.js"></script>
-  <link rel="stylesheet" crossorigin href="/vepa/assets/index-B_l8h_kE.css">
+  <script type="module" crossorigin src="/vepa/assets/index-Bpl75V0i.js"></script>
+  <link rel="stylesheet" crossorigin href="/vepa/assets/index-DGUKfp-b.css">
 </head>
 <body class="theme-sanguine">
     <div id="app">
@@ -25,13 +25,10 @@
                     <span id="hud-tick" class="hud-item hud-tick-compact">Tick 0 · 0.0 TPS · 0 FPS</span>
                 </div>
                 <div class="toolbar-right">
-                    <button id="chaos-btn" class="sq-btn" title="Smart Chaos (click: burst, long-press: multiplexer)">☢️</button>
-                    <button id="chaos-multiplex-btn" class="sq-btn" title="Chaos multiplex (open multiplexer)">⚛️</button>
-                    <button id="restart-btn" class="sq-btn" title="Restart">🔄</button>
-                    <button id="hard-reset-btn" class="sq-btn" title="Reset">🗑️</button>
-                    <button id="save-btn" class="sq-btn" title="Quick-save current world">💾</button>
-                    <button id="undo-btn" class="sq-btn" title="Undo (restore previous world state)" disabled>⏪</button>
-                    <button id="help-toggle" class="sq-btn" title="Help">?</button>
+                    <button id="chaos-btn" class="sq-btn toolbar-gesture-btn" title="Chaos: tap to randomize, hold for multiplex" aria-label="Chaos: tap to randomize, hold for multiplex">☢️</button>
+                    <button id="restart-btn" class="sq-btn toolbar-gesture-btn" title="Restart: tap to restart, hold to reset" aria-label="Restart: tap to restart, hold to reset">🔄</button>
+                    <button id="undo-btn" class="sq-btn" title="Undo last world change" aria-label="Undo last world change" disabled>↶</button>
+                    <button id="help-toggle" class="sq-btn" title="Summon help drone" aria-label="Summon help drone">?</button>
                 </div>
             </div>
 
