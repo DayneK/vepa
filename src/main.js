@@ -242,6 +242,20 @@ function startPhysicsWorker() {
             }
             if (message.type === 'TICK_COMPLETE') {
                 handleWorkerTick(message);
+                bus.emit('physics:backend', {
+                    engine: message.gpuActive ? 'webgpu' : 'cpu',
+                    available: !!message.gpuAvailable,
+                    tick: message.tickCount,
+                });
+                return;
+            }
+            if (message.type === 'GPU_FALLBACK') {
+                logDebug('WebGPU fallback to reference CPU: ' + (message.error || message.reason || 'unknown'), 'warn');
+                bus.emit('physics:backend', {
+                    engine: 'cpu',
+                    available: false,
+                    reason: message.reason || 'gpu-fallback',
+                });
                 return;
             }
             if (message.type === 'ERROR') {
@@ -817,9 +831,6 @@ function setDNAFromProfile(species, profile) {
         console.log('[VEPA v3] Hard reset requested');
         logDebug('hard reset requested', 'warn');
         location.reload();
-    });
-    bus.on('help:toggle', () => {
-        window.open('https://github.com/gemquota/vepa/blob/new/README.md', '_blank', 'noopener');
     });
 
     bus.on('sim:chaos', () => {

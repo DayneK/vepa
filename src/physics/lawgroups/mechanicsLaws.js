@@ -81,3 +81,56 @@ export function applyAdhesion(view, i, j, dx, dy, dz, dist, k = 0.015) {
   const force = (contact - dist) * k;
   return { ax: clamp(dx * inv * force), ay: clamp(dy * inv * force), az: clamp(dz * inv * force) };
 }
+
+/**
+ * Return an immutable inspection record for COLL without applying the impulse.
+ * This is deliberately separate from the solver's hot path.
+ */
+export function diagnoseCollisionImpulse(view, i, j, nx, ny, nz, elasticity = 0.5) {
+  const mi = mass(view, i), mj = mass(view, j);
+  const rvx = (view[i + S.VEL_X] || 0) - (view[j + S.VEL_X] || 0);
+  const rvy = (view[i + S.VEL_Y] || 0) - (view[j + S.VEL_Y] || 0);
+  const rvz = (view[i + S.VEL_Z] || 0) - (view[j + S.VEL_Z] || 0);
+  const relativeVelocityAlongNormal = rvx * nx + rvy * ny + rvz * nz;
+  const restitution = Math.max(0, Math.min(1, elasticity));
+  const impulse = relativeVelocityAlongNormal > 0
+    ? -(1 + restitution) * relativeVelocityAlongNormal / (mi + mj)
+    : 0;
+  return Object.freeze({
+    relativeVelocityAlongNormal,
+    restitution,
+    massI: mi,
+    massJ: mj,
+    approaching: relativeVelocityAlongNormal > 0,
+    impulse: Object.freeze({ x: impulse * mj * nx, y: impulse * mj * ny, z: impulse * mj * nz }),
+  });
+}
+
+/** Return INERTIA's mass scaling without mutating the particle buffer. */
+export function diagnoseInertia(view, i, ax, ay, az, k = 0.02) {
+  const particleMass = mass(view, i);
+  const scale = k / particleMass;
+  return Object.freeze({
+    mass: particleMass,
+    coefficient: k,
+    scale,
+    input: Object.freeze({ ax, ay, az }),
+    output: Object.freeze({ ax: clamp(ax * scale), ay: clamp(ay * scale), az: clamp(az * scale) }),
+  });
+}
+
+/** Return TOPOLOGY's graph imbalance and correction without mutating state. */
+export function diagnoseTopology(view, i, j, dx, dy, dz, dist, k = 0.01) {
+  const bondsI = view[i + S.BOND_COUNT] || 0;
+  const bondsJ = view[j + S.BOND_COUNT] || 0;
+  const bondImbalance = bondsI - bondsJ;
+  const inv = 1 / Math.max(dist, 1e-6);
+  const force = bondImbalance * k;
+  return Object.freeze({
+    bondsI,
+    bondsJ,
+    bondImbalance,
+    coefficient: k,
+    correction: Object.freeze({ ax: clamp(dx * inv * force), ay: clamp(dy * inv * force), az: clamp(dz * inv * force) }),
+  });
+}

@@ -35,7 +35,28 @@ npm run spec:check    # Fail when generated specifications drift
 |----------|-----|-------|
 | Vercel (production) | https://vepa-v4.vercel.app/ | COOP/COEP headers served — `SharedArrayBuffer` enabled; true memory model |
 | GitHub Pages | https://gemquota.github.io/vepa/vepar/ | No COOP/COEP on Pages — runs ArrayBuffer fallback |
-| Vercel (historical Seven deployment) | https://vepa-seven.vercel.app/ | Later v8.16-era deployment recorded in `CHANGELOG.md`; not the current repository-root production URL |
+| Vercel (historical Seven deployment) | https://vepa-seven.vercel.app/ | Feature-rich v8.16-era snapshot; not the current repository-root production URL |
+
+### Deployment authority and snapshot relationship
+
+The two Vercel URLs are live deployment snapshots, not separate product
+versions. Both may contain mechanics and advanced multiplex/features, but they
+are not guaranteed to be built from the same commit:
+
+- **Canonical source:** this repository root, currently VEPA4 **9.1.4**.
+- **Intended current production target:** `https://vepa-v4.vercel.app/`.
+- **`vepa-seven.vercel.app`:** a later, feature-rich historical deployment
+  associated with the v8.16-era line. It is useful for comparison and recovery,
+  but it is not runtime or release authority.
+- **Feature divergence:** mechanics, multiplex, and later updates may appear in
+  one deployment before the other. A feature visible at a URL does not prove
+  that URL is the current source or release target; verify against `src/`, the
+  current changelog, and the current commit.
+
+Observed deployment identity on 2026-09-16: `vepa-v4` reported **“VEPA v4 —
+Integrated Intelligence”** and `vepa-seven` reported **“VEPA4 — Integrated
+Intelligence”**. This confirms separate deployed snapshots, not two different
+products. Deployment parity should be verified after each production release.
 
 Vercel deploys from the repo root using `vercel.json` (static build, root base,
 COOP/COEP headers). GitHub Pages previously deployed via `.github/workflows/deploy.yml`

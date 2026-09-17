@@ -149,6 +149,18 @@ async function handleInit(msg) {
   if (runtimeConfig.computeEngine === 'gpu') {
     gpuContext = await createGPUContext();
     gpuReady = !!gpuContext;
+    if (gpuContext?.lost) {
+      gpuContext.lost.then((status) => {
+        if (!gpuReady) return;
+        gpuReady = false;
+        gpuContext = null;
+        self.postMessage({ type: 'GPU_FALLBACK', reason: status.reason, error: status.message });
+      }).catch((error) => {
+        gpuReady = false;
+        gpuContext = null;
+        self.postMessage({ type: 'GPU_FALLBACK', reason: 'device-loss-monitor', error: error.message || String(error) });
+      });
+    }
   }
 
   // DNA buffer
@@ -174,8 +186,8 @@ async function handleInit(msg) {
     tickCount: 0,
     hasSharedArrayBuffer,
     particleCount,
-    lawState: serializeLawState(lawState),
-    gpuAvailable: gpuReady,
+    lawState: serializeLawState(lawState),      gpuAvailable: gpuReady,
+    gpuActive: false,
   });
 }
 
@@ -313,6 +325,7 @@ async function handleTick(msg) {
       if (!gpuForces) {
         gpuReady = false;
         gpuContext = null;
+        self.postMessage({ type: 'GPU_FALLBACK', reason: 'compute-failed', error: 'WebGPU compute returned no force buffer' });
       }
     } catch (error) {
       gpuReady = false;
@@ -368,6 +381,7 @@ function handleGetState() {
     tickCount,
     lawState: serializeLawState(lawState),
     hasSharedArrayBuffer,
+    gpuAvailable: gpuReady,
   });
 }
 

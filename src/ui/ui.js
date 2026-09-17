@@ -16,6 +16,7 @@ import { createSavePanel } from './savePanel.js';
 import { createSettingsPanel } from './settingsPanel.js';
 import { initTooltip } from './tooltip.js';
 import { resetCamera } from './camera.js';
+import './toolbarHelp.css';
 
 /**
  * Initialize the full UI layer.
@@ -232,37 +233,72 @@ export function setupDrawerHideShow() {
 function setupToolbarControls(bus) {
   const playPauseBtn = document.getElementById('play-pause-btn');
   const restartBtn = document.getElementById('restart-btn');
-  const hardResetBtn = document.getElementById('hard-reset-btn');
   const chaosBtn = document.getElementById('chaos-btn');
-  const chaosMultiplexBtn = document.getElementById('chaos-multiplex-btn');
   const helpToggle = document.getElementById('help-toggle');
+  const LONG_PRESS_MS = 600;
 
   if (playPauseBtn) {
     playPauseBtn.addEventListener('click', () => bus.emit('sim:togglePause'));
   }
+
+  // A short restart tap creates a fresh population. Holding the same control
+  // performs the destructive reset that used to be hidden behind a separate
+  // trash button, keeping the toolbar's gesture contract discoverable.
   if (restartBtn) {
-    restartBtn.addEventListener('click', () => bus.emit('sim:restart'));
+    let restartPressTimer = null;
+    let restartLongPressed = false;
+    restartBtn.addEventListener('pointerdown', () => {
+      restartLongPressed = false;
+      restartPressTimer = setTimeout(() => {
+        restartPressTimer = null;
+        restartLongPressed = true;
+        bus.emit('sim:hardReset');
+      }, LONG_PRESS_MS);
+    });
+    restartBtn.addEventListener('pointerup', () => {
+      if (restartPressTimer) {
+        clearTimeout(restartPressTimer);
+        restartPressTimer = null;
+        if (!restartLongPressed) bus.emit('sim:restart');
+      }
+    });
+    restartBtn.addEventListener('pointercancel', () => {
+      if (restartPressTimer) clearTimeout(restartPressTimer);
+      restartPressTimer = null;
+    });
+    restartBtn.addEventListener('pointerleave', () => {
+      if (restartPressTimer) {
+        clearTimeout(restartPressTimer);
+        restartPressTimer = null;
+      }
+    });
   }
-  if (hardResetBtn) {
-    hardResetBtn.addEventListener('click', () => bus.emit('sim:hardReset'));
-  }
+
+  // Tap = randomize and respawn; hold = open the full Chaos Multiplex modal.
   if (chaosBtn) {
     let chaosPressTimer = null;
+    let chaosLongPressed = false;
     chaosBtn.addEventListener('pointerdown', () => {
+      chaosLongPressed = false;
       chaosPressTimer = setTimeout(() => {
         chaosPressTimer = null;
+        chaosLongPressed = true;
         if (typeof window.openChaosMultiplex === 'function') window.openChaosMultiplex();
-      }, 600);
+      }, LONG_PRESS_MS);
     });
     chaosBtn.addEventListener('pointerup', () => {
       if (chaosPressTimer) {
         clearTimeout(chaosPressTimer);
         chaosPressTimer = null;
-        // Short click = randomize first, then restart on a fresh population
-        // (restart preserves the randomized laws + DNA)
-        bus.emit('sim:chaos');
-        bus.emit('sim:restart', { preserveLaws: true, preserveDNA: true });
+        if (!chaosLongPressed) {
+          bus.emit('sim:chaos');
+          bus.emit('sim:restart', { preserveLaws: true, preserveDNA: true });
+        }
       }
+    });
+    chaosBtn.addEventListener('pointercancel', () => {
+      if (chaosPressTimer) clearTimeout(chaosPressTimer);
+      chaosPressTimer = null;
     });
     chaosBtn.addEventListener('pointerleave', () => {
       if (chaosPressTimer) {
@@ -271,19 +307,58 @@ function setupToolbarControls(bus) {
       }
     });
   }
-  if (chaosMultiplexBtn) {
-    chaosMultiplexBtn.addEventListener('click', () => {
-      if (typeof window.openChaosMultiplex === 'function') window.openChaosMultiplex();
-    });
-  }
+
   if (helpToggle) {
-    helpToggle.addEventListener('click', () => bus.emit('help:toggle'));
+    helpToggle.addEventListener('click', () => showHelpDrone());
   }
   bus.on('sim:paused', ({ paused }) => {
     if (playPauseBtn) {
       playPauseBtn.textContent = paused ? '▶' : '⏸';
       playPauseBtn.classList.toggle('active', !paused);
     }
+  });
+}
+
+function showHelpDrone() {
+  const existing = document.getElementById('help-drone-overlay');
+  if (existing) {
+    existing.remove();
+    return;
+  }
+  const overlay = document.createElement('div');
+  overlay.id = 'help-drone-overlay';
+  overlay.className = 'help-drone-overlay';
+  overlay.innerHTML = `
+    <section class="help-drone-panel" role="dialog" aria-modal="true" aria-labelledby="help-drone-title">
+      <header class="help-drone-header">
+        <div><span class="help-drone-signal">◉</span><span id="help-drone-title">HELP DRONE // ONLINE</span></div>
+        <button class="help-drone-close" type="button" aria-label="Dismiss help">×</button>
+      </header>
+      <div class="help-drone-body">
+        <p class="help-drone-lead">Simulation controls restored. Tap any law tile for its quick explanation; hold a world or DNA label for deeper parameter help.</p>
+        <div class="help-drone-grid">
+          <article><b>▶ / ⏸</b><span>Pause or resume the simulation.</span></article>
+          <article><b>🔄 TAP</b><span>Restart with a fresh population and current configuration.</span></article>
+          <article><b>🔄 HOLD</b><span>Reset the application and reload the initial state.</span></article>
+          <article><b>☢️ TAP</b><span>Randomize laws and DNA, then respawn.</span></article>
+          <article><b>☢️ HOLD</b><span>Open Chaos Multiplex for concurrent variant worlds.</span></article>
+          <article><b>↶</b><span>Undo the last saved world-state transition.</span></article>
+          <article><b>▁ / ▔</b><span>Minimize or expand the bottom control drawer.</span></article>
+          <article><b>▼ / ▲</b><span>Hide or restore the drawer completely.</span></article>
+        </div>
+        <div class="help-drone-footer">VEPA4 · use SETUP for laws, WORLD for parameters, DATA for telemetry</div>
+      </div>
+    </section>`;
+  document.body.appendChild(overlay);
+  const close = () => overlay.remove();
+  overlay.querySelector('.help-drone-close').addEventListener('click', close);
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) close();
+  });
+  document.addEventListener('keydown', function onKey(event) {
+    if (event.key !== 'Escape') return;
+    close();
+    document.removeEventListener('keydown', onKey);
   });
 }
 

@@ -153,7 +153,15 @@ export async function createGPUContext() {
       layout: 'auto',
       compute: { module: shaderModule, entryPoint: 'main' },
     });
-    return { device, pipeline, adapter };
+    // Device loss is a normal runtime event (driver reset, tab suspension,
+    // power policy). Surface it to the caller so the worker can return to the
+    // reference CPU path instead of treating a stale device as healthy.
+    const lost = device.lost.then((info) => ({
+      lost: true,
+      reason: info?.reason || 'unknown',
+      message: info?.message || 'WebGPU device lost',
+    }));
+    return { device, pipeline, adapter, lost };
   } catch (e) {
     console.warn('WebGPU unavailable:', e.message);
     return null;
@@ -173,6 +181,7 @@ export async function createGPUContext() {
  */
 export async function gpuComputeForces(gpu, view, count, pairs, params) {
   const { device, pipeline } = gpu;
+  if (!device || !pipeline) return null;
   const ws = params.worldSize || 2000;
   const G = params.G || 1.0;
   const eps = params.softening || 0.5;
@@ -358,16 +367,18 @@ export function gpuComputeForcesSync(view, count, pairs, params) {
     const inv = 1 / Math.sqrt(d2);
     const inv3 = inv * inv * inv;
 
-    // Gravity
+    // Gravity. Match the device shader's explicit law gate so the headless
+    // contract is a faithful fallback rather than an always-on approximation.
     const mj = view[bj + MASS];
-    const gf = G * mj * inv3;
+    const gf = params.gravityEnabled === false ? 0 : G * mj * inv3;
     let gfx = -gf * rx, gfy = -gf * ry, gfz = -gf * rz;
 
-    // Collision
+    // Collision is independently gated; the worker normally disables it so
+    // CONTACT/COLL remain owned by the reference CPU solver.
     const dist = d2 * inv;
     const overlap = view[bi + RADIUS] + view[bj + RADIUS] - dist;
     let cfx = 0, cfy = 0, cfz = 0;
-    if (overlap > 0 && dist > 0.001) {
+    if (params.collisionEnabled !== false && overlap > 0 && dist > 0.001) {
       const cf = 0.5 * overlap * inv;
       cfx = cf * rx; cfy = cf * ry; cfz = cf * rz;
     }

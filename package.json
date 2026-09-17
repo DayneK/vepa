@@ -1,6 +1,6 @@
 {
   "name": "vepa-v4",
-  "version": "9.1.4",
+  "version": "9.1.5",
   "description": "VEPA4 — Vector Emergent Physics Automata (Integrated Intelligence release)",
   "type": "module",
   "scripts": {
@@ -19,7 +19,10 @@
     "syntax-check": "find src -name '*.js' -exec node --check {} +",
     "bench:backends": "node bench/backend-compare.mjs",
     "audit:inventory": "node scripts/audit-corpus-report.mjs",
-    "artifact:inventory": "node scripts/repository-artifact-report.mjs"
+    "artifact:inventory": "node scripts/repository-artifact-report.mjs",
+    "provenance:check": "node scripts/validate-provenance.mjs",
+    "exports:check": "node scripts/check-export-publication.mjs",
+    "bench:backends:json": "node bench/backend-compare.mjs --json"
   },
   "dependencies": {
     "pixi.js": "^8.18.1"

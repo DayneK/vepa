@@ -1,328 +1,280 @@
-# VEPA4 11-26 Audit — Full Clean Answer Set
+# VEPA4 11-26 Audit — Updated Full Answer Set
 
 **Prepared:** 2026-09-16
-**Reference release:** VEPA4 9.1.4
-**Organization:** Section 13-style remediation order
-**Authority rule:** source and executable behavior outrank generated prose; generated reports must expose their provenance and limitations.
+**Current reference:** VEPA4 9.1.4 workspace state
+**Historical source incorporated:** user-pasted VEPA4 9.1.3 audit
+**Organization:** source-of-truth, backend, mechanics, ontology, verification, lifecycle
 
-## Executive answer
+> The historical pasted audit is preserved in `04-pasted-audit-baseline.md`. Its 9.1.3 claims, ratings, and findings are not silently rewritten to match later repository changes.
 
-VEPA4 is operational as a bounded emergent simulation with a broad law catalogue, worker/CPU execution, optional backend acceleration, lifecycle and intelligence subsystems, UI controls, persistence, benchmarks, and generated specifications. It is not evidence-backed to claim that every named phenomenon is physically complete, that every law has equal semantic depth, that approximate backends preserve all CPU behavior, or that telemetry-driven narrative agency constitutes independent cognition.
+## Executive conclusion
 
-The correct remediation approach is to separate six concerns:
+VEPA4 is a substantial deterministic browser simulation with an operational runtime core, broad subsystem coverage, a large law catalogue, worker and synchronous execution, persistence, rendering, intelligence proxies, benchmarks, and extensive documentation infrastructure.
 
-1. Source-of-truth and provenance.
-2. Reference solver and backend parity.
-3. Mechanics geometry and diagnostics.
-4. Law ontology and semantic behavior.
-5. Test limitations and scientific claims.
-6. Repository lifecycle, exports, and historical tooling.
+Its verified maturity is lower than its feature breadth. The appropriate status model is:
 
-## 1. Source-of-truth, provenance, and repository structure
+- **Operational:** active runtime behavior with executable evidence.
+- **Reference:** baseline behavior against which other paths are compared.
+- **Approximate:** a deliberate numerical approximation with an error envelope.
+- **Proxy:** bounded simulation behavior inspired by a named concept.
+- **Opt-in:** available only when explicitly selected.
+- **Partial/experimental:** present but missing acceptance evidence or containing known incomplete paths.
+- **Historical:** retained for provenance or recovery, outside current authority.
 
-### 1.1 Current authority model
+The principal conclusion is not that experimental systems should be removed. It is that each claim must be scoped to its evidence, version, backend, and model boundary.
 
-| Layer | Authority | Not authority |
+## 1. Source-of-truth and provenance
+
+### 1.1 Authority hierarchy
+
+| Concern | Authority | Supporting material only |
 |---|---|---|
-| Runtime behavior | `src/` | Export snapshots |
-| Behavioral verification | Executable tests and reproducible benchmarks | Audit prose alone |
-| Structural specification | Generated `docs/spec/` when regenerated and checked | Stale generated copies |
-| Historical evidence | `docs/audit/laws/a3/` | Current runtime claims unless corroborated |
-| Release/dependency description | Manifests and current changelog | Legacy reports with stale counts |
+| Runtime behavior | `src/` | Exports and prose |
+| Behavior verification | Executable tests and reproducible benchmarks | Audit narrative |
+| Structural specification | Regenerated and checked `docs/spec/` | Stale generated copies |
+| Historical audit evidence | `docs/audit/laws/a3/` | Current runtime claims |
+| Release/version state | Current manifests and changelog | Historical audit snapshots |
 
-The active audit corpus is under `docs/audit/laws/a3/`. A root `audit-suite/` directory is not present in this checkout. Stale references should be corrected in a controlled documentation pass; historical reports should not be moved merely to make the tree appear cleaner.
+The pasted audit is a historical 9.1.3 source record. Current 9.1.4 claims must be validated against current source and tests rather than retroactively inserted into that record.
 
-### 1.2 Audit corpus provenance
+### 1.2 Audit corpus
 
-Create a machine-readable provenance manifest for the `stage-1/`, `stage-2/`, `stage-3/`, and roll-up families. Each record should include:
+The audit corpus contains repeated stage families and roll-ups. Lack of byte-identical duplicates does not prove semantic uniqueness. Retain the corpus until provenance is mapped, but do not treat every entry as independent evidence.
 
-- relative path and SHA-256;
-- stage/family and intended scope;
-- producer or generation method;
-- creation/review date;
-- source revision and release context;
-- status (`historical`, `derived`, `current-supporting`, or `superseded`);
-- links to the source report and executable evidence.
+For each stage or roll-up, capture:
 
-Roll-ups remain derived summaries. No record should be removed or relocated until a mapping points to its canonical successor and a reversible archive boundary exists.
+- Producer or generation method.
+- Date and source revision.
+- Review scope.
+- Status: historical, derived, current-supporting, or superseded.
+- Links to executable tests and source paths.
+- Canonical successor, if one exists.
 
-### 1.3 Export ownership and `vepa-exports`
+No deletion or relocation should occur without a path-level mapping and reversible archive boundary. A machine-readable ownership manifest now exists at `docs/audit/provenance.json` and is checked by `npm run provenance:check`. The validator now requires every Markdown file in `docs/audit/laws/a3/` to be covered by a manifest record and every file in `exports/` to be covered by the export ownership record.
 
-Exports are derived handoff artifacts, not a second source tree. For every snapshot, record its producer, consumer, source revision, regeneration command, and retention state:
+### 1.3 Exports
 
-- **Canonical review snapshot:** one intentionally selected file per use case.
-- **Generated CI artifact:** reproducible output that need not be tracked in the source repository.
-- **Release artifact:** retained only when a release/handoff requires an immutable copy.
-- **Historical archive:** preserved for provenance but excluded from authority.
-- **Removal candidate:** only after consumer and archive proof.
+The large concatenated exports are useful for handoff and archival review, but they are not runtime authority. Each artifact should eventually be classified as:
 
-A separate `vepa-exports` repository is feasible but is not completed by a local file move. It requires a repository, a reviewed publication workflow, Freebuff/GitHub App permission to write there, source revision pinning, and failure handling. The safe implementation sequence is:
+- Reproducibly generated source snapshot.
+- CI artifact.
+- Release artifact.
+- Historical archive.
+- Removal candidate.
 
-1. Provision or confirm the separate repository.
-2. Define whether it receives generated snapshots, release artifacts, or both.
-3. Add a workflow that runs the maintained generator from a pinned source revision.
-4. Publish only after `spec:check`, repository checks, and generation succeed.
-5. Keep source ownership in this repository and link the external artifact back to the revision.
-6. Retain a local manifest so missing remote artifacts do not silently become “latest.”
-
-Until those prerequisites exist, the answer is “planned, not configured.”
+The separate `vepa-exports` repository remains a future governance/CI decision. Local export ownership is now recorded in `exports/provenance.json` and validated without requiring external credentials. It requires a provisioned repository, write permissions, pinned source revisions, a reviewed publication workflow, and failure handling. A local report cannot claim that external publication is configured.
 
 ### 1.4 Historical tooling
 
-Retain `tests/run.mjs`, `scripts/patch-lawcat-test.mjs`, historical roll-ups, and unresolved-provenance exports as historical/recovery material. Exclude them from active CI and release authority. Removal requires consumer search, archive/provenance capture, and a reversible change boundary.
+`tests/run.mjs` and `scripts/patch-lawcat-test.mjs` remain recovery/history tooling. Export generators may remain active maintenance tooling, but generated outputs are derived. Vitest and current repository checks are the active verification authority.
 
-## 2. Reference solver, backends, and parity
+## 2. Repository architecture and hotspots
 
-### 2.1 Clarify the numeric contracts
+The runtime architecture is coherent at the directory level but has high central coupling.
 
-- `PARTICLE_STRIDE = 100`: 100 `Float32` slots per particle.
-- `MAX_PARTICLES = 100000`: application population capacity.
-- Current `LAW_COUNT = 136`: law indexes `0–135`.
-- Earlier 128 references: historical law boundary, not the current registry.
+### 2.1 `src/main.js`
 
-The stride is a memory-layout contract, not a particle count. Offset changes require coordinated updates across worker, solver, renderer, persistence, tests, and generated specifications.
+`src/main.js` is the composition root for the event bus, PRNG, particle buffer, law state, DNA, renderer, UI, worker bridge, intelligence engines, groups, ecology, epochs, memory, exotic matter, quantum state, stellar state, synthetic organisms, agency, and multiplexing.
 
-### 2.2 Exact CPU terminology
+It is operational, but initialization order, restart behavior, worker fallback, and cross-subsystem mutation order are semantically important. It should be treated as a high-risk integration hotspot.
 
-The CPU pairwise solver should remain the reference backend because it is the most direct implementation of the declared VEPA numerical model and preserves the broadest law semantics. “Exact” must not mean physically exact reality. It may mean exact relative to:
+### 2.2 `src/constants.js`
 
-- the current law equations and bounded rules;
-- the current neighbor truncation and interaction cap;
-- the current timestep and integration scheme;
-- the current toroidal geometry;
-- the current DNA/world parameter configuration.
+This is the major runtime SSOT for stride layout, DNA indexes, law indexes, categories, dependencies, relationships, help metadata, and global values.
 
-Recommended terminology is **reference CPU solver** unless the project explicitly defines “exact” in the technical specification. If “exact CPU solver” is retained, define it with the boundary above and never use it as a claim of scientific truth.
+Strengths include centralized indexes, named offsets, unique registry entries, and coherent 136-law mapping. Risks include excessive responsibility, heuristic parser fragility, supplemental help ownership ambiguity, and large merge/review surface.
 
-### 2.3 Quality and performance modes
+### 2.3 `src/physics/solver.js`
 
-Quality mode intentionally reduces interactions or expensive cadence. Adaptive grids, pair budgets, expensive-law throttles, and renderer culling can improve responsiveness while changing emergent outcomes. Every benchmark and claim must state:
+The solver provides caching, quality/budget calculation, grid reuse, field preparation, time dilation, optional backend selection, pairwise interactions, mechanics, chemistry, thermodynamics, information, electromagnetism, quantum behavior, lifecycle, integration, and offspring production.
 
-- particle count and distribution;
-- active laws and world parameters;
-- interaction budget and quality mode;
-- solver time;
-- worker round-trip time;
-- main-thread analytics time;
-- renderer time;
-- browser/device and backend.
+It is functionally rich but remains an orchestration hotspot. Law ordering is operationally significant without being fully represented as a formal pipeline contract. Approximate backend semantics differ from the reference path, particularly around DNA modifiers and toroidal behavior. Any GPU status must be tied to the specific current worker/solver path, not dependency presence or CPU fallback.
 
-A full-population stress claim that reports only solver time is not a full browser performance claim.
+### 2.4 `src/physics/laws.js` and law groups
 
-### 2.4 Backend parity protocol
+The large legacy/core law file remains a maintainability risk. Category law groups provide a better modular direction, but each law still needs explicit inputs, outputs, gates, bounds, and tests.
 
-For a fixed seed and immutable initial state, compare reference CPU, Barnes–Hut, FMM, and GPU where available. Report:
+The pasted 9.1.3 audit reported that `src/physics/lawgroups/SPEC.md` was absent despite being referenced as an implementation SSOT. The current tree now contains that contract, including stateless-law, evidence-level, geometry, and review rules; the historical absence remains preserved as a snapshot finding.
 
-- RMS absolute force error;
-- RMS relative force error;
-- maximum force error;
-- position/velocity state error after controlled ticks;
-- momentum or other declared conservation drift;
-- finite-value failures and fallback count;
-- wall-clock and memory cost.
+### 2.5 State and intelligence layers
 
-Use small, medium, clustered, uniform, seam-crossing, and stress fixtures. A backend may be promoted only with an explicit tolerance envelope and an explicit default-selection policy. Speed on one fixture is not enough.
+State modules are separated by subsystem, but cadence ordering, field writes, group membership, particle lifecycle, save/restore, and worker/main-thread divergence create coordination risk.
 
-### 2.5 WebGPU
+The intelligence engines are best described as deterministic emergent-state analysis and bounded control. They do not establish independent cognition merely because they produce narratives, goals, milestones, or parameter changes.
 
-The current WebGPU boundary is an opt-in worker gravity pre-pass. CPU remains responsible for CONTACT, COLL, DNA-dependent force differences, lifecycle, fields, chemistry, information, quantum, and other unsupported semantics. On unavailable `navigator.gpu`, adapter failure, device loss, shader failure, map/readback failure, or invalid result, the worker must disable the backend and continue with CPU.
+## 3. Backend and performance conclusions
 
-The remaining acceptance gate is a real browser/device fixture that records browser, adapter, limits, device status, seed, configuration, CPU/GPU vectors, tolerance, and fallback behavior. Node tests prove contracts and deterministic fallback; they do not prove device execution.
+### 3.1 Reference CPU solver
 
-### 2.6 Barnes–Hut
+The CPU pairwise solver remains the reference implementation because it has the broadest semantics and strongest direct comparison role.
 
-Barnes–Hut is an approximation and must retain the reference CPU path. Add:
+“Exact” should mean exact relative to the declared VEPA numerical model, including its timestep, neighbor limits, toroidal geometry, bounded laws, DNA/world parameters, and integration scheme. It must not mean physically exact reality. “Reference CPU solver” is the safer terminology.
 
-1. population-scale error envelopes;
-2. an explicit tolerance policy by fixture class;
-3. a default-selection policy visible in configuration and reports;
-4. dedicated monopole/quadrupole parity tests across theta values;
-5. toroidal boundary and clustered/uniform distributions;
-6. regression thresholds for both error and performance.
+Quality mode and performance tuning may reduce interactions, throttle expensive passes, alter grid density, or trade fidelity for responsiveness. Full-population claims must separate:
 
-Quadrupole correction improves the approximation but does not make it exact. FMM inherits the need for independent evidence.
+- Solver time.
+- Worker round-trip time.
+- Main-thread analytics.
+- Renderer time.
+- Browser/device overhead.
 
-### 2.7 FMM decision gate
+### 3.2 Barnes–Hut
 
-The `cellNeighbours` placeholder cannot remain ambiguous. Choose one of three statuses:
+Barnes–Hut is implemented, opt-in, and approximate. Exact CPU remains the reference. Required acceptance evidence includes:
 
-- **Complete:** implement near/far accounting, toroidal handling, DNA limitations, and acceptance tests.
-- **Experimental:** keep it opt-in, document unsupported cases, and exclude it from production-complete claims.
-- **Retired:** remove active selection and preserve the historical design/provenance record.
+- Population-scale error envelopes.
+- RMS and maximum force deviation.
+- Toroidal and clustered/uniform fixtures.
+- Explicit error-tolerance policy.
+- Explicit default-selection policy.
+- Dedicated monopole/quadrupole parity tests.
+- Performance and finite-value regression thresholds.
 
-Required tests cover direct near interactions, far expansions, no double counting, empty cells, coincident particles, seam/corner wrapping, clustered/uniform populations, and large-population error envelopes.
+Quadrupole correction improves the approximation but does not make it semantically identical or physically exact.
 
-## 3. Mechanics and universal geometry
+### 3.3 FMM
 
-### 3.1 Shared geometry contract
+FMM remains partial/experimental even after the `cellNeighbours` placeholder was replaced; the path still requires parity/error acceptance before promotion. Required evidence includes:
 
-Inventory every calculation of `dx`, `dy`, `dz`, distance, inverse distance, overlap, normal, and relative velocity in `src/physics/solver.js` and law groups. For equivalent semantics, route calculations through a zero-allocation pair-geometry contract. A specialized scalar path may remain only if:
+- Near/far interaction accounting.
+- No double counting or omitted direct interactions.
+- Toroidal seams and corners.
+- Empty, coincident, clustered, uniform, and stress fixtures.
+- DNA-modifier limitation analysis.
+- Large-population parity/error envelopes.
 
-- it is mathematically equivalent for the declared inputs;
-- it has a measured performance reason;
-- it has parity tests;
-- it is documented as specialized.
+The placeholder neighbor helper has now been replaced by a real toroidal same-level stencil, and the evaluator reports near/far cell accounting. The remaining acceptance work is parity/error validation, DNA-modifier scope, and large-population evidence; the surrounding multipole terminology still cannot substitute for those measurements.
 
-Do not introduce per-pair object allocation in the hot loop.
+### 3.4 WebGPU
 
-### 3.2 Preserve CONTACT/COLL separation
+WebGPU status must be reported by version and execution path. The historical pasted audit reported `_useGPU = false`, making the inspected path a scaffold/opt-in research path rather than verified device execution. Later worker-bridge changes may improve that status, but they do not retroactively change the 9.1.3 audit.
 
-- **CONTACT:** geometric positional penetration correction.
-- **COLL:** approaching-body impact impulse and velocity response.
+Current acceptance still requires a real browser/device test covering adapter acquisition, shader execution, readback, device loss, fallback, law toggles, deterministic fixtures, and CPU/GPU tolerance.
 
-They must not both emit the same normal response under different names. Tests should prove no duplicate impulse, finite correction, correct mass weighting, and stable behavior for zero-distance and fast-impact cases.
+## 4. Law ontology and semantic fidelity
 
-### 3.3 Mechanics diagnostics
+The 136-law registry can be complete as a catalogue while remaining incomplete as an ontology.
 
-Add opt-in, side-effect-free diagnostics for:
+A normalized law record should declare:
 
-| Law | Diagnostic |
-|---|---|
-| CONTACT | overlap, normal, correction vector, mass shares |
-| COLL | relative normal velocity, restitution, impulse vector, impulse bound |
-| INERTIA | mass, parameter scale, effective acceleration factor |
-| TOPOLOGY | valid graph neighbors, bond-count imbalance, correction vector |
+- Registry identity and category.
+- Implementation file and solver gate.
+- Reads and writes.
+- Dependencies.
+- Synergies and antagonisms.
+- Feedback loops.
+- Bounds and finite-value guards.
+- Exact/reference, approximate, or proxy status.
+- Conservation obligations.
+- Executable behavior evidence.
 
-Add browser fixtures that toggle CONTACT, COLL, INERTIA, and TOPOLOGY independently and in combinations. A fixture must distinguish “gated off” from “no observable effect.”
+The pasted audit reported 23 laws with relationship metadata and 113 without. The remaining gate is to expand coverage by risk priority rather than alphabetically and replace text-reference evidence with focused semantic tests. The generated ontology coverage and implementation manifests are now regenerated and checked as part of the repository contract; their coverage metrics remain descriptive rather than semantic approval.
 
-## 4. Law ontology and semantic depth
+### 4.1 Bounded laws and proxies
 
-### 4.1 What should be normalized
+Bounded forces, state machines, signal transformations, lifecycle transitions, and graph corrections are expected modeling techniques for a real-time emergent simulation. They are shortcomings only when:
 
-The laws do not need identical algorithms. They do need a common semantic record:
+- Presented as literal physical implementations.
+- Ungated or unbounded.
+- Insensitive to their claimed parameters.
+- Untested at boundaries.
+- Duplicated by overlapping laws without a contract.
 
-- category and registry identity;
-- implementation path and solver gate;
-- inputs/read fields;
-- outputs/written fields;
-- dependencies;
-- synergies and antagonisms;
-- feedback loops;
-- bounds and failure guards;
-- exact/approximate/proxy status;
-- conservation obligations;
-- executable evidence.
+The correct remedy is honest classification and behavior evidence, not automatic replacement of every proxy.
 
-Prioritize lifecycle, structural, shared-state, and extreme-force laws before filling the registry alphabetically.
+### 4.2 Semantic conservation and non-redundancy
 
-### 4.2 Are bounded laws a shortcoming?
+Universal conservation is not established until controlled matrices cover supported law combinations. Define and test conservation obligations for momentum, energy, fields, population/lifecycle accounting, and graph/bond consistency.
 
-No, not inherently. A bounded force, state machine, or signal transform is an expected modeling strategy in a real-time emergent simulation. It becomes a shortcoming when:
+A first local scaffolding slice now verifies equal-and-opposite collision response, toroidal geometry antisymmetry, and CONTACT/COLL behavioral separation. These are focused contract tests, not a universal conservation proof.
 
-- the documentation implies literal physical fidelity;
-- the transition has no declared bound or failure behavior;
-- the law is not genuinely gated;
-- parameters do not affect the claimed behavior;
-- overlapping laws duplicate the same effect without a semantic contract;
-- tests only verify source text or registry presence.
+Ablation tests are required to assess overlapping laws. Registry membership, source references, and relationship prose do not prove non-redundancy.
 
-The correct answer is not to replace every proxy. It is to label and test every proxy honestly, and to replace only those proxies whose fidelity is required and whose acceptance criteria are defined.
+## 5. Mechanics and geometry
 
-### 4.3 Semantic tests
+The mechanics abstraction should own equivalent pair geometry without introducing per-pair allocation. Any specialized hot-loop scalar calculation must be either migrated or justified by measured performance and parity evidence.
 
-Replace primarily textual references with focused behavior tests:
+Preserve the distinction:
 
-- force direction, magnitude bounds, finite output, parameter sensitivity;
-- lifecycle energy/age/dead/birth transitions;
-- structural separation, impulse, bond and merge boundaries;
-- information memory/signal reads, writes, and dependency gates;
-- quantum/meta state transitions and bounded proxy behavior.
+- CONTACT performs geometric penetration correction.
+- COLL performs approaching-body impact impulse.
 
-Every high-risk law should have a behavior test and a boundary test. Audit sign-off should name the test path and test case.
+The implementation now provides side-effect-free diagnostics for COLL impulse/relative normal velocity, INERTIA scaling, and TOPOLOGY bond imbalance/correction. Remaining work is migrating or justifying every equivalent hot-loop scalar path and adding browser fixtures for individual and combined Mechanics toggles; CONTACT overlap/correction remains represented by the existing correction API.
 
-### 4.4 Conservation and non-redundancy
+## 6. Verification limits
 
-A universal semantic-conservation claim is not currently justified. Define conservation per subsystem and law combination:
+The pasted audit’s validation table reported specification generation, drift checks, repository checks, syntax, 97 files/897 tests, build, and `git diff --check` as passing for its 9.1.3 snapshot. Those results must remain attributed to that snapshot.
 
-- momentum for pairwise mechanical responses;
-- energy for transfers, accretion, radiation, annihilation, and mass-energy transforms;
-- field mass/quantity for field transport;
-- population/lifecycle accounting where births/deaths are intentional;
-- graph/bond consistency for topology and structural laws.
+The limitations remain important:
 
-Run controlled matrices with one law, compatible law pairs, and representative full profiles. Separately run ablations to identify redundant or overlapping effects. Registry membership and textual relationships do not prove non-redundancy.
+- Node tests are not browser tests.
+- Playwright is not a substitute for unit tests.
+- Node contracts do not establish WebGPU device execution.
+- Bounded-behavior tests do not prove scientific correctness.
+- Conservation is not proven for every law combination.
+- Non-redundancy is not proven.
+- Registry presence does not prove equal meaningful effect for all 136 laws.
+- Serialized tests can conceal global-state coupling.
 
-## 5. Ontological layers and intelligence claims
+## 7. Historical hostile-review assessment
 
-| Layer | Current evidence-backed description | Required upgrade for stronger claim |
-|---|---|---|
-| Layer 2 | Relationships and behavior are partially represented in law metadata, source, and tests. | Broader ontology coverage and semantic tests. |
-| Layer 3 | Many named phenomena are bounded simulation proxies. | Replace selected proxies only where a defined model and acceptance test exist. |
-| Layer 4 | Agency is bounded and rules/metrics-driven, with goal nudges and reversible interventions. | Persistent agent state, perception/action loop, resource constraints, autonomous goal arbitration, reproducible policy tests. |
-| Layer 5 | Narrative/consciousness is telemetry-driven interpretation and bounded intervention. | Self-model, persistent learning, autonomous goal formation, unscripted action selection, and evidence separating cognition from thresholds. |
-| Layer 6 | Temporal/epoch, narrative, lineage, memory, and snapshot representations are extensive but can drift or compete. | Choose a canonical temporal model; version and migrate older representations; classify alternatives as historical or derived. |
+The pasted 9.1.3 audit assigned:
 
-The current code should not be described as independent cognition merely because it generates narrative or changes parameters. Stronger language requires stronger architecture and evidence.
+| Perspective | Score |
+|---|---:|
+| Production SRE / release engineer | 61/100 |
+| Scientific/physics correctness reviewer | 55/100 |
+| Adversarial maintainer / future contributor | 49/100 |
+| Simple average | 55/100 |
+| Weighted normalized result | 59.5/100 |
 
-## 6. Test limitations and interpretation
+These are historical snapshot scores, not a claim that the current 9.1.4 state has been rescored.
 
-The existing test system is valuable but bounded:
+## 8. Final implementation status
 
-- Most tests run in Node, not a real browser.
-- Playwright integration/device coverage complements rather than replaces unit tests.
-- WebGPU device execution is not established by Node tests.
-- Many audit tests prove references, gates, finite outputs, and bounded behavior—not scientific correctness.
-- Conservation is not established for every law combination.
-- Non-redundancy among overlapping laws is not established.
-- Registry presence and dispatch do not prove all 136 laws have equally meaningful effects.
-- Serial test execution stabilizes shared-state order but may conceal global-state coupling.
+### Resolved as evidence or policy
 
-Required additions include browser fixtures, isolation/reset tests, conservation matrices, ablation tests, parity fixtures, and machine-readable audit sign-off manifests.
+- FMM is identified as technically open and not production-complete.
+- WebGPU is opt-in/reference-bounded and still requires device evidence.
+- Barnes–Hut is approximate and remains subordinate to CPU reference behavior.
+- The law catalogue is structurally complete while ontology depth is uneven.
+- Mechanics ownership and CONTACT/COLL separation are documented.
+- Audit prose is supporting evidence, not runtime authority.
+- Historical tooling is outside active authority.
+- Export retention is policy-defined but consumer mapping remains open.
 
-## 7. Prioritized implementation matrix
+### Technically open
 
-| Priority | Work | Definition of done |
-|---:|---|---|
-| 1 | Audit sign-off gates | Every current claim identifies implementation, gate, test/evidence, and proxy boundary. |
-| 2 | Browser/device WebGPU parity | At least one capable browser/device run plus safe fallback/error lifecycle. |
-| 3 | Reference/backend envelopes | Exact/reference CPU, BH, FMM, and GPU have repeatable error/timing reports. |
-| 4 | FMM resolution | No active placeholder ambiguity; complete, experimental, or retired status. |
-| 5 | Mechanics geometry | Equivalent calculations consolidated or justified; no semantic drift. |
-| 6 | Mechanics diagnostics | CONTACT/COLL/INERTIA/TOPOLOGY observable through opt-in diagnostics and browser fixtures. |
-| 7 | Law ontology | High-risk laws have relationship metadata with valid references. |
-| 8 | Semantic tests | Priority laws have behavior and boundary tests. |
-| 9 | Audit provenance | Stage and roll-up records have producer/scope/source mappings. |
-| 10 | Export ownership | Every retained export has consumer, producer, canonical status, and retention state. |
-| 11 | Historical tooling | Active CI cannot treat legacy tools as current authority. |
-| 12 | Structural refactors/removals | Only after consumer mapping, parity coverage, and reversible archive boundary. |
+- FMM parity/error suite, DNA-modifier scope, and large-population validation.
+- Real browser/device WebGPU validation.
+- Backend error envelopes and default-selection policy. A local error-envelope classifier now exists in `bench/backend-compare.mjs`; population-scale calibration remains open.
+- Complete mechanics hot-path migration or justification. Browser acceptance fixtures now exist in `tests/e2e/runtime-acceptance.spec.js`; they require an installed Playwright browser to execute.
+- High-risk law ontology and semantic tests.
+- Conservation and non-redundancy matrices.
+- Per-file producer/date/source-revision metadata for the audit corpus; directory-level coverage is now machine-checked, but historical producer metadata remains unavailable.
+- Export consumer map. A non-publishing contract is now machine-checked by `npm run exports:check`; external `vepa-exports` publication remains intentionally unexecuted and requires explicit CI credentials.
+- Formal state-transition contract.
+- Runtime/API rename from “exact CPU solver” to “reference CPU solver”; current documentation now adopts the safer terminology while compatibility names remain in historical/source material.
 
-## 8. Final decisions and unresolved answers
+## 9. Completion criterion
 
-### Decided now
+The updated audit answers are complete only when each significant feature or law states:
 
-- 100 is the particle stride, not the population count.
-- The current source-derived law count is 136; stale 128 claims require correction.
-- `docs/audit/laws/a3/` is retained audit evidence.
-- Source and executable tests outrank prose and exports.
-- Exact CPU remains the reference semantics, subject to terminology clarification.
-- Approximate backends remain opt-in until error envelopes justify promotion.
-- Historical tools and unresolved-provenance exports remain outside authority.
-- Bounded law implementations are acceptable when explicitly modeled and tested.
+1. Whether it is on the default runtime path.
+2. Whether it is reference, approximate, proxy, opt-in, partial, experimental, or historical.
+3. Which source files implement it.
+4. Which gate and dependencies activate it.
+5. Which executable test proves it.
+6. Which conservation, overlap, and numerical limitations apply.
+7. Which document owns the current description.
+8. Which generated or historical artifacts derive from it.
 
-### Not honestly complete yet
+## 10. Additional implementation infrastructure
 
-- FMM near/far accounting and placeholder resolution.
-- Browser/device WebGPU proof.
-- Full backend parity and population-scale error policy.
-- Universal mechanics geometry adoption.
-- Comprehensive semantic tests and law relationship metadata.
-- Conservation/non-redundancy evidence for all combinations.
-- Complete audit corpus consumer/provenance map.
-- Complete export consumer map and external `vepa-exports` publication.
-- Final independent-cognition claim.
-- Final decision on whether “exact” should be replaced by “reference.”
+- `playwright.config.js` and `tests/e2e/runtime-acceptance.spec.js` provide browser fixtures for cross-origin isolation, Mechanics toggles, and WebGPU capability reporting. A missing adapter is recorded as an environment result, not a test failure.
+- `createGPUContext()` now exposes a `device.lost` promise; the worker listens for loss and compute failure, emits `GPU_FALLBACK`, and the main thread reports the active backend per completed tick.
+- The deterministic headless GPU bridge now honors independent gravity and collision gates, preserving the CPU fallback as a faithful contract fixture.
+- `bench/backend-compare.mjs` now emits explicit `error` and `assessment` envelopes with finite-value and tolerance fields; these are acceptance-policy measurements, not proof of physical equivalence.
+- `exports/publication-plan.json` and `npm run exports:check` define a safe external-publication boundary without contacting or mutating `vepa-exports`.
 
-## 9. Clean completion criterion
-
-The remediation is complete only when the repository can answer, for every significant feature or law:
-
-1. Is it on the default runtime path?
-2. Is it reference, exact-within-model, approximate, proxy, opt-in, partial, metadata-only, experimental, or historical?
-3. Which source files implement it?
-4. Which gate/dependency activates it?
-5. Which behavior test proves it?
-6. What conservation, overlap, and numerical limitations apply?
-7. Which document owns the current description?
-8. Which generated or historical artifacts are derived from it?
-
-Until those answers are machine-checkable or explicitly marked as open, the correct report is “implemented with bounded claims and documented gaps,” not “fully complete.”
+Until then, the accurate final claim remains: **implemented with bounded claims and documented gaps—not universally complete.**

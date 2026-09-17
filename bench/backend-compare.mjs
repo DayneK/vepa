@@ -62,7 +62,7 @@ function exactGravity(view, count, outFx, outFy, outFz) {
   }
 }
 
-function errorStats(reference, candidate) {
+export function errorStats(reference, candidate) {
   let sumSq = 0, refSq = 0, maxAbs = 0;
   for (let i = 0; i < reference.length; i++) {
     const delta = candidate[i] - reference[i];
@@ -75,6 +75,24 @@ function errorStats(reference, candidate) {
     rmsRelative: Math.sqrt(sumSq / Math.max(refSq, Number.EPSILON)),
     maxAbsolute: maxAbs,
   };
+}
+
+/**
+ * Classify an approximate backend against an explicit acceptance envelope.
+ * These defaults are reporting policy, not a claim that the backend is
+ * scientifically equivalent to the reference solver.
+ */
+export function classifyError(error, envelope = { rmsRelative: 0.1, maxAbsolute: 1.0 }) {
+  const finite = Object.values(error).every(Number.isFinite);
+  const withinTolerance = finite &&
+    error.rmsRelative <= envelope.rmsRelative &&
+    error.maxAbsolute <= envelope.maxAbsolute;
+  return { finite, withinTolerance, envelope };
+}
+
+export function errorEnvelope(reference, candidate, envelope) {
+  const error = errorStats(reference, candidate);
+  return { error, assessment: classifyError(error, envelope) };
 }
 
 function timed(fn) {
@@ -117,11 +135,11 @@ export function compareBackends({ count = DEFAULT_COUNT, seed = DEFAULT_SEED, th
     candidates: {
       octree: {
         backend: 'barnes-hut-octree', milliseconds: octreeMs,
-        error: errorStats(exactVector, octreeVector),
+        ...errorEnvelope(exactVector, octreeVector, { rmsRelative: 0.1, maxAbsolute: 1.0 }),
       },
       fmm: {
         backend: 'fmm-cell-evaluator', milliseconds: fmmMs,
-        error: errorStats(exactVector, fmmVector),
+        ...errorEnvelope(exactVector, fmmVector, { rmsRelative: 0.1, maxAbsolute: 1.0 }),
       },
     },
     interpretation: 'Gravity-kernel fixture only; DNA modifiers, collision, lifecycle, GPU device execution, and full solver scheduling are outside this comparison.',

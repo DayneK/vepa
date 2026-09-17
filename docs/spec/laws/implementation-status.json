@@ -132,6 +132,7 @@
         "src/physics/fields.js",
         "src/physics/gpuCompute.js",
         "src/physics/lawgroups/mechanicsHelp.js",
+        "src/physics/lawgroups/mechanicsLaws.js",
         "src/physics/solver.js",
         "src/physics/synergy.js",
         "src/worker/physics.worker.js"
@@ -146,6 +147,7 @@
         "tests/unit/fields.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/mechanics.test.js",
+        "tests/unit/provenance.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/synergyCache.test.js"
       ],
@@ -996,6 +998,7 @@
         "tests/audit/params_batch_12.test.js",
         "tests/audit/params_batch_15.test.js",
         "tests/unit/groupRegistry.test.js",
+        "tests/unit/mechanics.test.js",
         "tests/unit/worldSave.test.js"
       ],
       "relationshipTypes": [
@@ -2828,8 +2831,10 @@
       ],
       "testFiles": [
         "tests/audit/batch_22.test.js",
+        "tests/e2e/runtime-acceptance.spec.js",
         "tests/unit/backendArchitecture.test.js",
-        "tests/unit/mechanicsArchitecture.test.js"
+        "tests/unit/mechanicsArchitecture.test.js",
+        "tests/unit/provenance.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -2875,6 +2880,7 @@
       "status": "wired",
       "implementationFiles": [
         "src/physics/lawgroups/mechanicsHelp.js",
+        "src/physics/lawgroups/mechanicsLaws.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
@@ -2882,7 +2888,8 @@
       ],
       "testFiles": [
         "tests/audit/params_batch_09.test.js",
-        "tests/unit/backendArchitecture.test.js"
+        "tests/unit/backendArchitecture.test.js",
+        "tests/unit/mechanics.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -2969,13 +2976,15 @@
       "status": "wired",
       "implementationFiles": [
         "src/physics/lawgroups/mechanicsHelp.js",
+        "src/physics/lawgroups/mechanicsLaws.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/unit/backendArchitecture.test.js"
+        "tests/unit/backendArchitecture.test.js",
+        "tests/unit/mechanics.test.js"
       ],
       "relationshipTypes": [
         "dependsOn",

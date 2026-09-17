@@ -8,7 +8,7 @@
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 5 | NONE |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 5 | NONE |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | NONE |
-| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 6 | 8 | NONE |
+| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 7 | 9 | NONE |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 5 | 3 | NONE |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 4 | 3 | NONE |
 | 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 11 | NONE |
@@ -43,7 +43,7 @@
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 1 | NONE |
 | 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 2 | NONE |
 | 38 | [VOID](../laws/physics/038_VOID.md) | physics | 1 | 2 | 1 | NONE |
-| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 4 | 19 | NONE |
+| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 4 | 20 | NONE |
 | 40 | [REDUCTION](../laws/chemistry/040_REDUCTION.md) | chemistry | 1 | 2 | 1 | NONE |
 | 41 | [ALLOY](../laws/chemistry/041_ALLOY.md) | chemistry | 1 | 3 | 1 | NONE |
 | 42 | [MELT](../laws/thermodynamics/042_MELT.md) | thermodynamics | 1 | 2 | 1 | NONE |
@@ -132,13 +132,13 @@
 | 125 | [WAVEFUNCTION](../laws/quantum/125_WAVEFUNCTION.md) | quantum | 1 | 1 | 1 | NONE |
 | 126 | [HYPERPLANE](../laws/quantum/126_HYPERPLANE.md) | quantum | 1 | 1 | 1 | NONE |
 | 127 | [ANTIMATTER](../laws/quantum/127_ANTIMATTER.md) | quantum | 1 | 2 | 2 | NONE |
-| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 4 | 3 | MECHANICS_HELP |
+| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 4 | 5 | MECHANICS_HELP |
 | 129 | [MOMENTUM](../laws/mechanics/129_MOMENTUM.md) | mechanics | 1 | 3 | 4 | MECHANICS_HELP |
-| 130 | [INERTIA](../laws/mechanics/130_INERTIA.md) | mechanics | 1 | 2 | 2 | MECHANICS_HELP |
+| 130 | [INERTIA](../laws/mechanics/130_INERTIA.md) | mechanics | 1 | 3 | 3 | MECHANICS_HELP |
 | 131 | [TORQUE](../laws/mechanics/131_TORQUE.md) | mechanics | 1 | 3 | 4 | MECHANICS_HELP |
 | 132 | [CONSTRAINT](../laws/mechanics/132_CONSTRAINT.md) | mechanics | 1 | 2 | 1 | MECHANICS_HELP |
 | 133 | [FRAGMENTATION](../laws/mechanics/133_FRAGMENTATION.md) | mechanics | 1 | 2 | 2 | MECHANICS_HELP |
-| 134 | [TOPOLOGY](../laws/mechanics/134_TOPOLOGY.md) | mechanics | 1 | 2 | 1 | MECHANICS_HELP |
+| 134 | [TOPOLOGY](../laws/mechanics/134_TOPOLOGY.md) | mechanics | 1 | 3 | 2 | MECHANICS_HELP |
 | 135 | [ADHESION](../laws/mechanics/135_ADHESION.md) | mechanics | 1 | 2 | 2 | MECHANICS_HELP |
 
 A complete row means the generator found the corresponding evidence fields. It is not semantic approval.

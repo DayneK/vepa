@@ -51,18 +51,28 @@ function zeroLocals(tree, count) {
 // We store interaction lists as flat arrays per leaf: interStart[leaf] and
 // interList[interStart[leaf] … interStart[leaf+1]-1].
 
-function cellNeighbours(cell, tree) {
-  // Return the 26 neighbour cell indices at the same level.
-  // We use a simple approach: walk Morton codes.
-  // For non-adaptive trees we can derive neighbours from the octant path.
-  // Since our tree is adaptive (leaves can be at different depths), we fall
-  // back to a different strategy: use the grid for near-field, and enumerate
-  // all other leaves at the same depth for the far field.
-  //
-  // Simplification: for the FMM, we only use cells at a uniform depth D.
-  // Cells at other depths are treated as "fused" — we promote their contained
-  // particles to the nearest uniform-depth ancestor.
-  return []; // Placeholder — we use the uniform-depth approach below
+/**
+ * Return occupied same-level neighbour cell indexes using minimum-image
+ * wrapping. The FMM evaluator is intentionally uniform-depth, so this helper
+ * is the geometry contract for its near-field stencil.
+ */
+function cellNeighbours(cellIndex, grid, cellMap) {
+  const cx = cellIndex % grid;
+  const cy = Math.floor(cellIndex / grid) % grid;
+  const cz = Math.floor(cellIndex / (grid * grid));
+  const neighbours = [];
+  for (let dz = -1; dz <= 1; dz++) {
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+        const nx = (cx + dx + grid) % grid;
+        const ny = (cy + dy + grid) % grid;
+        const nz = (cz + dz + grid) % grid;
+        const occupiedIndex = cellMap[nx + ny * grid + nz * grid * grid];
+        if (occupiedIndex >= 0) neighbours.push(occupiedIndex);
+      }
+    }
+  }
+  return neighbours;
 }
 
 /**
@@ -136,20 +146,9 @@ export function buildFMMCells(tree, view, stride, count, worldSize, targetDepth)
     const cy = Math.floor(ci / grid) % grid;
     const cz = Math.floor(ci / (grid * grid));
 
-    // Neighbours: 3×3×3 block centred on (cx,cy,cz)
+    // Near field: the complete 3×3×3 minimum-image stencil.
     neighStart[oi] = neighbourList.length;
-    for (let dz = -1; dz <= 1; dz++) {
-      for (let dy = -1; dy <= 1; dy++) {
-        for (let dx = -1; dx <= 1; dx++) {
-          const nx = (cx + dx + grid) % grid;
-          const ny = (cy + dy + grid) % grid;
-          const nz = (cz + dz + grid) % grid;
-          const ni = nx + ny * grid + nz * grid * grid;
-          const no = cellMap[ni];
-          if (no >= 0) neighbourList.push(no);
-        }
-      }
-    }
+    neighbourList.push(...cellNeighbours(ci, grid, cellMap));
 
     // Interaction list: children of parent's neighbours, minus this cell's neighbours
     // Parent cell is at (cx>>1, cy>>1, cz>>1) at depth D-1
@@ -204,6 +203,8 @@ export function buildFMMCells(tree, view, stride, count, worldSize, targetDepth)
     interList,
     neighStart,
     neighbourList,
+    nearCellCount: neighbourList.length,
+    farCellCount: interList.length,
   };
 }
 
@@ -420,5 +421,11 @@ export function fmmGravity(view, stride, count, worldSize, G, outFx, outFy, outF
     }
   }
 
-  return { nCells, depth, grid };
+  return {
+    nCells,
+    depth,
+    grid,
+    nearCellCount: fmm.nearCellCount,
+    farCellCount: fmm.farCellCount,
+  };
 }

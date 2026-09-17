@@ -1,0 +1,130 @@
+/* VEPA4 toolbar affordances and restored help drone. */
+#top-toolbar .toolbar-gesture-btn {
+  position: relative;
+  touch-action: manipulation;
+}
+#top-toolbar .toolbar-gesture-btn::after {
+  content: 'tap / hold';
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  color: var(--text-dim);
+  font: 7px var(--font-mono);
+  letter-spacing: 1px;
+  transition: opacity 0.15s ease;
+}
+#top-toolbar .toolbar-gesture-btn:hover::after {
+  opacity: 0.9;
+}
+
+.help-drone-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10vh 16px 24px;
+  background: rgba(3, 5, 12, 0.72);
+  backdrop-filter: blur(5px);
+}
+.help-drone-panel {
+  width: min(640px, 100%);
+  max-height: 78vh;
+  overflow: auto;
+  color: var(--text-primary);
+  background: linear-gradient(145deg, rgba(17, 24, 40, 0.98), rgba(8, 10, 20, 0.98));
+  border: 1px solid rgba(74, 232, 255, 0.45);
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(74, 232, 255, 0.16), 0 20px 70px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono);
+}
+.help-drone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  color: var(--accent-cyan);
+  border-bottom: 1px solid rgba(74, 232, 255, 0.2);
+  letter-spacing: 1.5px;
+  font-size: 11px;
+}
+.help-drone-signal {
+  display: inline-block;
+  margin-right: 8px;
+  color: var(--accent-green);
+  animation: help-drone-pulse 1.6s ease-in-out infinite;
+}
+.help-drone-close {
+  width: 26px;
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.help-drone-close:hover {
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+.help-drone-body {
+  padding: 14px;
+}
+.help-drone-lead {
+  margin-bottom: 14px;
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.help-drone-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.help-drone-grid article {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.025);
+}
+.help-drone-grid article:hover {
+  border-color: rgba(74, 232, 255, 0.35);
+  background: rgba(74, 232, 255, 0.06);
+}
+.help-drone-grid b {
+  min-width: 72px;
+  color: var(--accent-gold);
+  font-size: 9px;
+  letter-spacing: 0.5px;
+}
+.help-drone-grid span {
+  color: var(--text-secondary);
+  font-size: 9px;
+  line-height: 1.45;
+}
+.help-drone-footer {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 8px;
+  letter-spacing: 0.8px;
+}
+@keyframes help-drone-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+@media (max-width: 560px) {
+  .help-drone-grid { grid-template-columns: 1fr; }
+  .help-drone-overlay { padding: 7vh 10px 16px; }
+}

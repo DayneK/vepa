@@ -26,11 +26,11 @@
 
 ## Implementation evidence
 
-[src/physics/lawgroups/mechanicsHelp.js](src/physics/lawgroups/mechanicsHelp.js), [src/physics/solver.js](src/physics/solver.js)
+[src/physics/lawgroups/mechanicsHelp.js](src/physics/lawgroups/mechanicsHelp.js), [src/physics/lawgroups/mechanicsLaws.js](src/physics/lawgroups/mechanicsLaws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js)
+- Tests: [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js), [tests/unit/mechanics.test.js](tests/unit/mechanics.test.js)
 - Audits: No filename-matched audit record found.
 
 ## Interpretation boundary

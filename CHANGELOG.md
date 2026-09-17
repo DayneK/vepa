@@ -1,5 +1,19 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.8] - 2026-09-17 → 9.1.5
+
+### fix(webgpu): harden device-loss fallback and bridge status reporting
+
+- Surface WebGPU device loss and failed compute passes as explicit worker fallback events.
+- Report whether each completed tick used WebGPU or the reference CPU continuation.
+- Align the deterministic headless fallback with independent gravity and collision gates.
+- Add adapter-unavailable and feature-gate contract coverage without claiming device execution.
+
+### Files
+
+- `src/physics/gpuCompute.js`, `src/worker/physics.worker.js`, `src/main.js` — lifecycle and backend-status integration.
+- `tests/unit/webgpuContract.test.js` — fallback and capability contracts.
+
 ## [4.9.7] - 2026-09-16 → 9.1.4
 
 ### feat(webgpu): activate worker compute bridge with safe CPU fallback

@@ -4,6 +4,9 @@ import {
   applyContact,
   applyContactCorrection,
   applyCollisionImpulse,
+  diagnoseCollisionImpulse,
+  diagnoseInertia,
+  diagnoseTopology,
 } from '../../src/physics/lawgroups/mechanicsLaws.js';
 
 function pair({ distance = 1, radius = 1, velocity = 1 } = {}) {
@@ -43,5 +46,27 @@ describe('physics/mechanics boundary', () => {
     expect(impulse.ax).toBeCloseTo(-3);
     expect(impulse.ay).toBeCloseTo(0);
     expect(impulse.az).toBeCloseTo(0);
+  });
+
+  it('provides non-mutating diagnostics for COLL, INERTIA, and TOPOLOGY', () => {
+    const view = pair({ distance: 2, radius: 1, velocity: 2 });
+    view[S.BOND_COUNT] = 4;
+    view[PARTICLE_STRIDE + S.BOND_COUNT] = 1;
+    const before = view.slice();
+
+    const collision = diagnoseCollisionImpulse(view, 0, PARTICLE_STRIDE, 1, 0, 0, 0.5);
+    const inertia = diagnoseInertia(view, 0, 4, -2, 1);
+    const topology = diagnoseTopology(view, 0, PARTICLE_STRIDE, 1, 0, 0, 2);
+
+    expect(collision.approaching).toBe(true);
+    expect(collision.impulse.x).toBeLessThan(0);
+    expect(inertia.scale).toBeCloseTo(0.02);
+    expect(inertia.output.ax).toBeCloseTo(0.08);
+    expect(topology.bondImbalance).toBe(3);
+    expect(topology.correction.ax).toBeCloseTo(0.015);
+    expect(view).toEqual(before);
+    expect(Object.isFrozen(collision)).toBe(true);
+    expect(Object.isFrozen(inertia)).toBe(true);
+    expect(Object.isFrozen(topology)).toBe(true);
   });
 });

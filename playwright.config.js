@@ -1,19 +1,21 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/e2e',
-  timeout: 30000,
+  fullyParallel: true,
+  timeout: 30_000,
+  expect: { timeout: 5_000 },
+  reporter: process.env.CI ? [['line'], ['html', { open: 'never' }]] : 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4173',
-    serviceWorkers: 'allow',
-    launchOptions: {
-      args: ['--enable-unsafe-webgpu', '--enable-features=Vulkan,UseSkiaRenderer'],
-    },
+    baseURL: 'http://127.0.0.1:4173/vepa/vepar/',
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    ...devices['Desktop Chrome'],
   },
   webServer: {
-    command: 'VERCEL=1 npm run dev -- --host 127.0.0.1 --port 4173',
-    url: 'http://127.0.0.1:4173/',
-    reuseExistingServer: true,
-    timeout: 30000,
+    command: 'npm run dev -- --host 0.0.0.0 --port 4173',
+    url: 'http://127.0.0.1:4173/vepa/vepar/',
+    reuseExistingServer: !process.env.CI,
+    timeout: 30_000,
   },
 });
