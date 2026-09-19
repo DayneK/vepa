@@ -128,3 +128,92 @@
   .help-drone-grid { grid-template-columns: 1fr; }
   .help-drone-overlay { padding: 7vh 10px 16px; }
 }
+
+.help-drone-mapping {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.help-drone-mapping > div {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.025);
+}
+.help-drone-mapping strong { color: var(--accent-gold); font-size: 9px; letter-spacing: 1.5px; }
+.help-drone-mapping span { color: var(--text-secondary); font-size: 9px; line-height: 1.4; }
+.help-drone-enable {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 9px;
+  border: 1px solid var(--accent-cyan);
+  border-radius: 4px;
+  background: rgba(74,232,255,0.1);
+  color: var(--accent-cyan);
+  font: 10px var(--font-mono);
+  letter-spacing: 1.5px;
+  cursor: pointer;
+}
+.help-drone-enable:hover { background: rgba(74,232,255,0.2); }
+.help-drone-active { cursor: crosshair; }
+.help-drone-target { outline: 2px solid var(--accent-cyan) !important; outline-offset: 3px; }
+.help-drone-tip {
+  position: fixed;
+  z-index: 13000;
+  display: grid;
+  gap: 4px;
+  width: min(280px, calc(100vw - 16px));
+  padding: 9px 10px;
+  border: 1px solid var(--accent-cyan);
+  border-radius: 5px;
+  background: rgba(5, 10, 20, 0.96);
+  box-shadow: 0 0 22px rgba(74,232,255,0.25);
+  pointer-events: none;
+  font-family: var(--font-mono);
+}
+.help-drone-tip strong { color: var(--accent-cyan); font-size: 8px; letter-spacing: 1.5px; }
+.help-drone-tip span { color: var(--text-primary); font-size: 10px; line-height: 1.45; }
+
+.dna-overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-bottom: 10px; padding: 6px; background: #0a0a0a; border: 1px solid #222; }
+.dna-overview-stat { display: grid; gap: 2px; padding: 5px 2px; border: 1px solid transparent; background: transparent; color: #666; cursor: pointer; font: inherit; text-align: center; }
+.dna-overview-stat:hover, .dna-overview-stat:focus-visible { border-color: var(--accent-cyan); background: rgba(74,232,255,0.06); }
+.dna-overview-stat span { font-size: 8px; }
+.dna-overview-stat strong { font-size: 13px; }
+.dna-overview-hint { grid-column: 1 / -1; color: #555; font: 7px var(--font-mono); letter-spacing: 1px; text-align: center; padding-top: 3px; }
+.dna-history-module { margin: 8px 0; padding: 9px; border: 1px solid var(--accent-cyan); background: rgba(4, 12, 20, 0.96); font-family: var(--font-mono); }
+.dna-history-module header { display: flex; justify-content: space-between; color: var(--accent-cyan); font-size: 9px; letter-spacing: 1px; }
+.dna-history-module button, .dna-chart-close { border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; }
+.dna-history-module p { color: var(--text-secondary); font-size: 8px; }
+.dna-history-values { display: flex; gap: 3px; align-items: end; min-height: 34px; overflow-x: auto; }
+.dna-history-values span { min-width: 34px; padding: 5px 2px; background: rgba(74,232,255,0.1); color: var(--accent-cyan); font-size: 7px; text-align: center; }
+.dna-chart-expanded { position: fixed !important; z-index: 11000; inset: 8vh 3vw 3vh; display: flex !important; flex-direction: column; margin: 0 !important; padding: 30px 12px 12px; background: rgba(5, 8, 16, 0.98); border: 1px solid var(--accent-cyan); box-shadow: 0 0 40px rgba(0,0,0,0.7); }
+.dna-chart-expanded canvas { flex: 1; width: 100% !important; height: 100% !important; min-height: 0; }
+.dna-chart-close { position: absolute; top: 7px; right: 8px; padding: 4px 7px; color: var(--accent-cyan); font: 8px var(--font-mono); }
+@media (max-width: 560px) {
+  .help-drone-mapping { grid-template-columns: 1fr; }
+  .dna-chart-expanded { inset: 5vh 8px 8px; }
+}
+
+/* Compact population telemetry: color communicates scale without a text label. */
+.hud-particles {
+  --population-h: 205;
+  --population-intensity: 0.5;
+  display: inline-block;
+  position: relative;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, hsl(var(--population-h) 100% 90%), hsl(var(--population-h) 95% 58%) 38%, hsl(var(--population-h) 90% 28%) 100%);
+  box-shadow: 0 0 5px hsla(var(--population-h), 95%, 60%, calc(0.35 + var(--population-intensity) * 0.45)), 0 0 12px hsla(var(--population-h), 95%, 55%, calc(0.15 + var(--population-intensity) * 0.3));
+  animation: hud-population-pulse 1.8s ease-in-out infinite;
+  vertical-align: middle;
+  transition: background 0.45s ease, box-shadow 0.45s ease;
+}
+@keyframes hud-population-pulse {
+  0%, 100% { transform: scale(0.88); opacity: 0.78; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+.hud-tick-compact { white-space: nowrap; }

@@ -13,10 +13,10 @@ let lastPhysicsTime = 0;
 let ticksPerSecond = 0;
 let lastTickShown = -1; // module scope: also read by the rAF loop below
 
-// Tick triple formatter: TICK n | x.x TPS | xx FPS
-// Grouped tick digits keep large counters readable at a glance.
-const fmtTickTriple = (t, tps, fps) =>
-  `TICK ${(t < 0 ? 0 : t).toLocaleString('en-US')} │ ${tps.toFixed(1)} TPS │ ${Math.round(fps)} FPS`;
+// Keep simulation progress visible in the compact HUD. Render FPS is measured
+// internally, but the user-facing readout prioritizes tick cadence.
+const fmtTickStats = (tick, tps) =>
+  `TICK ${(tick < 0 ? 0 : tick).toLocaleString('en-US')} · ${Number(tps || 0).toFixed(1)} TPS`;
 
 const el = {
   particles: null,
@@ -26,8 +26,12 @@ const el = {
 function readEl() {
   el.particles = document.getElementById('hud-particles');
   el.tick = document.getElementById('hud-tick');
-  // Color-coded accents (population blue, tick dim)
-  if (el.particles) el.particles.classList.add('hud-particles');
+  // The population count is intentionally represented by a compact, animated
+  // color orb rather than a text label; its hue tracks the current population.
+  if (el.particles) {
+    el.particles.classList.add('hud-particles');
+    el.particles.setAttribute('aria-label', 'Population indicator: loading');
+  }
   if (el.tick) el.tick.classList.add('hud-tick');
 }
 
@@ -37,7 +41,7 @@ function tick(now) {
     fpsDisplay = frameCount;
     frameCount = 0;
     lastFpsTime = now;
-    if (el.tick) el.tick.textContent = fmtTickTriple(lastTickShown, ticksPerSecond, fpsDisplay);
+    if (el.tick) el.tick.textContent = fmtTickStats(lastTickShown, ticksPerSecond);
   }
   rafId = requestAnimationFrame(tick);
 }
@@ -74,7 +78,12 @@ export function createHUD(bus) {
   const updateStats = (particleCount, _speciesCount, t) => {
     if (particleCount !== undefined && particleCount !== lastParticles && el.particles) {
       lastParticles = particleCount;
-      el.particles.textContent = `${particleCount} particles`;
+      const hue = (particleCount * 11) % 360;
+      const intensity = Math.min(1, Math.max(0.25, particleCount / 2500));
+      el.particles.style.setProperty('--population-h', String(hue));
+      el.particles.style.setProperty('--population-intensity', intensity.toFixed(2));
+      el.particles.dataset.count = String(particleCount);
+      el.particles.setAttribute('aria-label', `Population indicator: ${particleCount} active entities`);
     }
     if (t !== undefined && el.tick) {
       const now = performance.now();
@@ -87,7 +96,7 @@ export function createHUD(bus) {
         lastPhysicsTime = now;
       }
       lastTickShown = t;
-      el.tick.textContent = fmtTickTriple(t, ticksPerSecond, fpsDisplay);
+      el.tick.textContent = fmtTickStats(lastTickShown, ticksPerSecond);
     }
   };
 

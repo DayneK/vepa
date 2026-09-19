@@ -26,6 +26,7 @@ let chartUpdateCounter = 0;
 export function createDNAAnalytics(bus) {
   const container = document.getElementById('dna-analytics');
   if (!container) return;
+  setupDNAInteractions();
 
   bus.on('physics:tick', ({ buffer, particleCount: pc, speciesCount: sc }) => {
     // Skip collection entirely when the DNA tab is hidden — this loop runs
@@ -174,16 +175,17 @@ function collectAndRenderAll() {
   let html = '';
 
   // Overview Stats Banner
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:10px;background:#0a0a0a;border:1px solid #222;padding:6px;">'
-    + '<div style="text-align:center;"><div style="font-size:8px;color:#666;">POP</div><div style="font-size:13px;color:#0f0;">' + totalAlive + '</div></div>'
-    + '<div style="text-align:center;"><div style="font-size:8px;color:#666;">MASS</div><div style="font-size:13px;color:#ff4;">' + avgMass + '</div></div>'
-    + '<div style="text-align:center;"><div style="font-size:8px;color:#666;">NRG</div><div style="font-size:13px;color:#f44;">' + avgEnergy + '</div></div>'
-    + '<div style="text-align:center;"><div style="font-size:8px;color:#666;">VEL</div><div style="font-size:13px;color:#4ff;">' + avgVel + '</div></div>'
-    + '<div style="text-align:center;"><div style="font-size:8px;color:#666;">BOND</div><div style="font-size:13px;color:#f4f;">' + bondedCount + '</div></div>'
-    + '<div style="text-align:center;"><div style="font-size:8px;color:#666;">CHAIN</div><div style="font-size:13px;color:#ff4;">' + chainCount + '</div></div>'
-    + '<div style="text-align:center;"><div style="font-size:8px;color:#666;">CHARGE</div><div style="font-size:13px;color:#4ff;">' + avgCharge + '</div></div>'
-    + '<div style="text-align:center;"><div style="font-size:8px;color:#666;">SIG</div><div style="font-size:13px;color:#0ff;">' + avgSignal + '</div></div>'
-    + '<div style="text-align:center;"><div style="font-size:8px;color:#666;">ARMOR</div><div style="font-size:13px;color:#fa4;">' + avgArmor + '</div></div>'
+  html += '<div class="dna-overview-grid">'
+    + overviewStat('POP', totalAlive, '#0f0', 'population')
+    + overviewStat('MASS', avgMass, '#ff4', 'mass')
+    + overviewStat('NRG', avgEnergy, '#f44', 'energy')
+    + overviewStat('VEL', avgVel, '#4ff', 'velocity')
+    + overviewStat('BOND', bondedCount, '#f4f', 'bonds')
+    + overviewStat('CHAIN', chainCount, '#ff4', 'chains')
+    + overviewStat('CHARGE', avgCharge, '#4ff', 'charge')
+    + overviewStat('SIG', avgSignal, '#0ff', 'signal')
+    + overviewStat('ARMOR', avgArmor, '#fa4', 'armor')
+    + '<div class="dna-overview-hint">TAP A STAT FOR HISTORY</div>'
     + '</div>';
 
   // Species Breakdown
@@ -269,6 +271,68 @@ function collectAndRenderAll() {
     drawLineChartSimple('nrg-trend-graph', nrgHistory, '#f44', 'Avg Energy');
     drawLineChartSimple('mass-trend-graph', massHistory, '#ff4', 'Avg Mass');
   });
+}
+
+function overviewStat(label, value, color, historyKey) {
+  return '<button class="dna-overview-stat" type="button" data-dna-history="' + historyKey + '">'
+    + '<span>' + label + '</span><strong style="color:' + color + '">' + value + '</strong></button>';
+}
+
+function setupDNAInteractions() {
+  const charts = document.getElementById('dna-charts');
+  const analytics = document.getElementById('dna-analytics');
+  if (!charts || charts.dataset.interactionsReady === 'true') return;
+  charts.dataset.interactionsReady = 'true';
+  let holdTimer = null;
+  let holdTarget = null;
+  charts.addEventListener('pointerdown', (event) => {
+    const canvas = event.target.closest('canvas');
+    if (!canvas) return;
+    holdTarget = canvas.closest('.chart-section');
+    holdTimer = setTimeout(() => {
+      if (holdTarget) expandChart(holdTarget);
+      holdTimer = null;
+    }, 600);
+  });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach((type) => charts.addEventListener(type, () => {
+    if (holdTimer) clearTimeout(holdTimer);
+    holdTimer = null;
+  }));
+  if (analytics) analytics.addEventListener('click', (event) => {
+    const stat = event.target.closest('[data-dna-history]');
+    if (stat) openHistoryModule(stat.dataset.dnaHistory, stat.querySelector('span')?.textContent || stat.dataset.dnaHistory);
+  });
+}
+
+function openHistoryModule(key, label) {
+  const existing = document.getElementById('dna-history-module');
+  if (existing) existing.remove();
+  const source = key === 'population' ? popHistory.map((frame) => frame.reduce((sum, value) => sum + value, 0))
+    : key === 'energy' ? nrgHistory : key === 'mass' ? massHistory : [];
+  const values = source.length ? source.slice(-24) : ['No history yet'];
+  const module = document.createElement('section');
+  module.id = 'dna-history-module';
+  module.className = 'dna-history-module';
+  module.innerHTML = '<header><strong>' + label + ' HISTORY</strong><button type="button" aria-label="Close history">×</button></header>'
+    + '<p>Recent samples from the DNA analytics cadence.</p><div class="dna-history-values">'
+    + values.map((value) => '<span>' + (typeof value === 'number' ? Number(value).toFixed(2) : value) + '</span>').join('')
+    + '</div>';
+  document.getElementById('data-dna')?.appendChild(module);
+  module.querySelector('button').addEventListener('click', () => module.remove());
+}
+
+function expandChart(section) {
+  document.querySelectorAll('.dna-chart-expanded').forEach((el) => el.classList.remove('dna-chart-expanded'));
+  section.classList.add('dna-chart-expanded');
+  const close = document.createElement('button');
+  close.className = 'dna-chart-close';
+  close.type = 'button';
+  close.textContent = 'CLOSE GRAPH';
+  close.addEventListener('click', () => {
+    section.classList.remove('dna-chart-expanded');
+    close.remove();
+  });
+  section.appendChild(close);
 }
 
 // ── Line Chart (multi-species population) ──

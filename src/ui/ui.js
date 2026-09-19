@@ -18,6 +18,9 @@ import { initTooltip } from './tooltip.js';
 import { resetCamera } from './camera.js';
 import './toolbarHelp.css';
 
+let helpDroneActive = false;
+let helpDroneCleanup = null;
+
 /**
  * Initialize the full UI layer.
  */
@@ -283,7 +286,7 @@ function setupToolbarControls(bus) {
       chaosPressTimer = setTimeout(() => {
         chaosPressTimer = null;
         chaosLongPressed = true;
-        if (typeof window.openChaosMultiplex === 'function') window.openChaosMultiplex();
+        showChaosMenu(bus);
       }, LONG_PRESS_MS);
     });
     chaosBtn.addEventListener('pointerup', () => {
@@ -331,27 +334,27 @@ function showHelpDrone() {
   overlay.innerHTML = `
     <section class="help-drone-panel" role="dialog" aria-modal="true" aria-labelledby="help-drone-title">
       <header class="help-drone-header">
-        <div><span class="help-drone-signal">◉</span><span id="help-drone-title">HELP DRONE // ONLINE</span></div>
+        <div><span class="help-drone-signal">◉</span><span id="help-drone-title">HELP DRONE // CONTROL MAP</span></div>
         <button class="help-drone-close" type="button" aria-label="Dismiss help">×</button>
       </header>
       <div class="help-drone-body">
-        <p class="help-drone-lead">Simulation controls restored. Tap any law tile for its quick explanation; hold a world or DNA label for deeper parameter help.</p>
-        <div class="help-drone-grid">
-          <article><b>▶ / ⏸</b><span>Pause or resume the simulation.</span></article>
-          <article><b>🔄 TAP</b><span>Restart with a fresh population and current configuration.</span></article>
-          <article><b>🔄 HOLD</b><span>Reset the application and reload the initial state.</span></article>
-          <article><b>☢️ TAP</b><span>Randomize laws and DNA, then respawn.</span></article>
-          <article><b>☢️ HOLD</b><span>Open Chaos Multiplex for concurrent variant worlds.</span></article>
-          <article><b>↶</b><span>Undo the last saved world-state transition.</span></article>
-          <article><b>▁ / ▔</b><span>Minimize or expand the bottom control drawer.</span></article>
-          <article><b>▼ / ▲</b><span>Hide or restore the drawer completely.</span></article>
+        <p class="help-drone-lead">Tap actions are on the left; hold actions are on the right. Enable the drone to make any UI element explain itself.</p>
+        <div class="help-drone-mapping">
+          <div><strong>TAP</strong><span>▶ / ⏸ pause or resume</span><span>🔄 restart population</span><span>☢️ randomize laws and DNA</span><span>↶ undo last world change</span></div>
+          <div><strong>HOLD</strong><span>🔄 full reset and reload</span><span>☢️ open Chaos Settings</span><span>Graph expand / parameter help</span><span>Drawer gestures and controls</span></div>
         </div>
-        <div class="help-drone-footer">VEPA4 · use SETUP for laws, WORLD for parameters, DATA for telemetry</div>
+        <button class="help-drone-enable" type="button">ENABLE DRONE</button>
+        <div class="help-drone-footer">VEPA4 · SETUP = controls · DATA = telemetry · DNA = history</div>
       </div>
     </section>`;
   document.body.appendChild(overlay);
   const close = () => overlay.remove();
+  const enableDrone = () => {
+    close();
+    enableHelpDrone();
+  };
   overlay.querySelector('.help-drone-close').addEventListener('click', close);
+  overlay.querySelector('.help-drone-enable').addEventListener('click', enableDrone);
   overlay.addEventListener('click', (event) => {
     if (event.target === overlay) close();
   });
@@ -360,6 +363,46 @@ function showHelpDrone() {
     close();
     document.removeEventListener('keydown', onKey);
   });
+}
+
+function enableHelpDrone() {
+  if (helpDroneActive) return;
+  helpDroneActive = true;
+  document.body.classList.add('help-drone-active');
+  helpDroneCleanup = (event) => {
+    const target = event.target && event.target.closest
+      ? event.target.closest('button, input, select, textarea, canvas, [title], [aria-label], [data-help-key], .sc-label, .chart-section')
+      : null;
+    if (!target || target.closest('#help-drone-overlay, .help-drone-tip')) return;
+    const label = target.getAttribute('aria-label') || target.getAttribute('title')
+      || target.dataset.helpKey || target.textContent.trim().replace(/\\s+/g, ' ').slice(0, 60) || target.id || 'this control';
+    showDroneTip(target, label);
+  };
+  document.addEventListener('click', helpDroneCleanup, true);
+  showDroneTip(document.getElementById('help-toggle'), 'Help Drone is active — tap any control, parameter, tab, chart, or data panel.');
+}
+
+function showDroneTip(target, text) {
+  document.querySelectorAll('.help-drone-tip').forEach((tip) => tip.remove());
+  document.querySelectorAll('.help-drone-target').forEach((el) => el.classList.remove('help-drone-target'));
+  if (!target) return;
+  target.classList.add('help-drone-target');
+  const tip = document.createElement('div');
+  tip.className = 'help-drone-tip';
+  tip.setAttribute('role', 'status');
+  tip.innerHTML = '<strong>DRONE</strong><span>' + escapeHelpText(text) + '</span>';
+  document.body.appendChild(tip);
+  const rect = target.getBoundingClientRect();
+  tip.style.left = `${Math.max(8, Math.min(window.innerWidth - tip.offsetWidth - 8, rect.left))}px`;
+  tip.style.top = `${Math.max(8, rect.top - tip.offsetHeight - 10)}px`;
+  setTimeout(() => {
+    tip.remove();
+    target.classList.remove('help-drone-target');
+  }, 4200);
+}
+
+function escapeHelpText(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 }
 
 function setupKeyboardShortcuts(bus) {
@@ -409,7 +452,8 @@ function showChaosMenu(bus) {
   }
   html += "</div>";
   html += "<div class=\"chaos-menu-actions\">";
-  html += "<button class=\"chaos-btn-action\" data-action=\"randomize\">RANDOMIZE</button>";
+  html += "<button class=\"chaos-btn-action chaos-multiplex-primary\" data-action=\"multiplex\">OPEN CHAOS MULTIPLEX SETTINGS</button>";
+  html += "<button class=\"chaos-btn-action\" data-action=\"randomize\">RANDOMIZE SELECTED</button>";
   html += "<button class=\"chaos-btn-action\" data-action=\"clear\">CLEAR ALL</button>";
   html += "<button class=\"chaos-btn-action\" data-action=\"close\">CLOSE</button>";
   html += "</div></div>";
@@ -419,6 +463,11 @@ function showChaosMenu(bus) {
     btn.addEventListener("click", function() {
       var action = btn.dataset.action;
       if (action === "close") { menu.remove(); return; }
+      if (action === "multiplex") {
+        menu.remove();
+        if (typeof window.openChaosMultiplex === 'function') window.openChaosMultiplex();
+        return;
+      }
       if (action === "clear") { bus.emit("sim:chaosClear"); menu.remove(); return; }
       if (action === "randomize") {
         var checked = [];
