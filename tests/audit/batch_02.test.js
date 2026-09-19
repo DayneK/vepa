@@ -75,7 +75,7 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
     expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeLessThan(0); // crossed
   });
 
-  it('ACCR (v8.0.0): fusing pair merges into ONE body — combined mass, weighted-average colour, momentum conserved', () => {
+  it('ACCR: fusion-gated contact adjoins separate bodies edge-to-edge', () => {
     const { view, dna } = makeWorld(2, (v, dna, b, i) => {
       if (i === 0) { v[b + S.POS_X] = 1000; v[b + S.MASS] = 10; v[b + S.COLOR_R] = 255; }
       else { v[b + S.POS_X] = 1000.5; v[b + S.MASS] = 1.5; v[b + S.COLOR_B] = 255; v[b + S.VEL_X] = -4; }
@@ -91,19 +91,15 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
     const mSmall0 = view[PARTICLE_STRIDE + S.MASS];
     const total = mBig0 + mSmall0;
     solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-    // True merger: one survivor of combined mass, neighbour absorbed.
-    expect(view[PARTICLE_STRIDE + S.DEAD]).toBe(1);
-    expect(view[S.MASS]).toBeCloseTo(total, 5); // default FUSION (0.5) → efficiency 1.0
-    // Mass-weighted colour: R = 255·mBig/total, B = 255·mSmall/total.
-    expect(view[S.COLOR_R]).toBeCloseTo(255 * (mBig0 / total), 3);
-    expect(view[S.COLOR_B]).toBeCloseTo(255 * (mSmall0 / total), 3);
-    // Momentum conserved: (m1·v1 + m2·v2) / (m1 + m2).
-    expect(view[S.VEL_X]).toBeCloseTo((mSmall0 * -4) / total, 5);
-    // Centre of mass (subject at 1000, neighbour at 1000.5 → ~1000.065)
-    // then the writeback integrates the merged body for one step: +vx·DT.
-    const comX = 1000 + 0.5 * (mSmall0 / total);
-    const mergedVelX = (mSmall0 * -4) / total;
-    expect(view[S.POS_X]).toBeCloseTo(comX + mergedVelX * DT, 3);
+    // Fusion changes topology, not identity or mass: both remain alive.
+    expect(view[PARTICLE_STRIDE + S.DEAD]).toBe(0);
+    expect(view[S.MASS]).toBeCloseTo(mBig0, 5);
+    expect(view[PARTICLE_STRIDE + S.MASS]).toBeCloseTo(mSmall0, 5);
+    expect(view[S.COLOR_R]).toBe(255);
+    expect(view[PARTICLE_STRIDE + S.COLOR_B]).toBe(255);
+    const separation = view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X];
+    expect(Math.abs(separation)).toBeCloseTo(1.2, 2); // r1 + r2
+    expect(view[S.MASS] + view[PARTICLE_STRIDE + S.MASS]).toBeCloseTo(total, 5);
   });
 
   it('ACCR gate: without ACCR, overlapping particles do not exchange mass', () => {
@@ -162,12 +158,12 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
       return { mass: view[S.MASS], deadNeighbor: view[PARTICLE_STRIDE + S.DEAD] };
     };
-    const fused = run(0.5);   // above min momentum → full merger
-    expect(fused.mass).toBeGreaterThan(10);
-    expect(fused.deadNeighbor).toBe(1);
-    const bounced = run(50);  // below min momentum → bounces, no fusion
-    expect(bounced.mass).toBe(10);
-    expect(bounced.deadNeighbor).toBe(0);
+    const fast = run(0.5);    // above min momentum → edge adjoinment
+    expect(fast.mass).toBe(10);
+    expect(fast.deadNeighbor).toBe(0);
+    const slow = run(50);     // below min momentum → no adjoinment yet
+    expect(slow.mass).toBe(10);
+    expect(slow.deadNeighbor).toBe(0);
   });
 
   it('ACCR: FUSION_TIME — dwelling pairs cement into composites at half dwell (v9.1.0)', () => {
