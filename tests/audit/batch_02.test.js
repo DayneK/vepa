@@ -7,6 +7,7 @@ import { createParticleBuffer } from '../../src/state/particleBuffer.js';
 import { createLawState, set, isSet } from '../../src/state/lawState.js';
 import { createDNABuffer, loadDefaults } from '../../src/dna/dnaBuffer.js';
 import { solve } from '../../src/physics/solver.js';
+import { adjoinParticles } from '../../src/physics/mergePhysics.js';
 
 const WORLD = 2000;
 const DT = 0.25;
@@ -100,6 +101,23 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
     const separation = view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X];
     expect(Math.abs(separation)).toBeCloseTo(1.2, 2); // r1 + r2
     expect(view[S.MASS] + view[PARTICLE_STRIDE + S.MASS]).toBeCloseTo(total, 5);
+  });
+
+  it('ACCR seam persists after separation from the contact neighborhood', () => {
+    const { view, dna } = makeWorld(2, (v, dna, b, i) => {
+      v[b + S.POS_X] = i === 0 ? 1000 : 1001.2;
+    });
+    adjoinParticles(view, 0, PARTICLE_STRIDE, PARTICLE_STRIDE);
+    expect(view[S.ACCR_LINK_MASK]).toBeGreaterThan(0);
+    expect(view[PARTICLE_STRIDE + S.ACCR_LINK_MASK]).toBeGreaterThan(0);
+    view[S.POS_X] = 900;
+    view[PARTICLE_STRIDE + S.POS_X] = 1100;
+    const laws = createLawState();
+    set(laws, LAW_INDEXES.ACCR);
+    solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
+    expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeCloseTo(1.2, 2);
+    expect(view[S.MASS]).toBe(1.5);
+    expect(view[PARTICLE_STRIDE + S.MASS]).toBe(1.5);
   });
 
   it('ACCR gate: without ACCR, overlapping particles do not exchange mass', () => {

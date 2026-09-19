@@ -1,5 +1,46 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.11] - 2026-09-19 → 9.1.8
+
+### fix(ui): simplify telemetry and verify chaos settings access
+
+- Remove the `TICK` and `FPS` labels so the compact HUD shows only the stacked numeric values.
+- Keep the Chaos hold gesture wired to the Chaos Control menu and its prominent full Multiplex Settings action.
+- Confirm the particle-connection audit paths and retain regression coverage for structural, flexible, fusion, biological, and constraint relationships.
+
+### Files
+
+- `src/ui/hud.js`, `index.html`, `tests/unit/hud.test.js`, `tests/e2e/physics-worker.spec.js` — unlabeled numeric telemetry.
+- `src/ui/ui.js`, `src/multiplex/multiplexUI.js`, `tests/audit/` — verified Chaos navigation and connection mechanism coverage.
+
+## [4.9.10] - 2026-09-19 → 9.1.7
+
+### fix(ui): expose high-population telemetry in the top bar
+
+- Render the live population count beside the smaller color-changing particle indicator.
+- Stack total ticks above FPS for a clearer compact telemetry readout.
+- Raise the default initial, active, and maximum population settings to 100,000 while retaining the hard safety cap.
+
+### Files
+
+- `src/ui/hud.js`, `index.html`, `style.css` — population count and stacked HUD presentation.
+- `src/constants.js`, `src/state/worldParams.js` — high-population defaults and limits.
+- `tests/unit/hud.test.js`, `tests/audit/params_batch_01.test.js` — telemetry and population-limit coverage.
+
+## [4.9.9] - 2026-09-19 → 9.1.6
+
+### fix(physics): persist ACCR structural seams independently from contact
+
+- Store an explicit per-slot ACCR topology mask so rigid structural attachments survive leaving the contact neighborhood.
+- Keep ACCR separate from flexible BOND/POLYMER links, CONTACT correction, and CONSTRAINT positioning while preserving distinct particle identities and masses.
+- Carry ACCR topology through particle serialization and document the relationship lifecycle and invariants.
+
+### Files
+
+- `src/constants.js`, `src/physics/mergePhysics.js`, `src/physics/solver.js` — persistent seam state and maintenance.
+- `src/state/particleBuffer.js`, `src/state/lawOntology.js`, `LAW_COMPENDIUM.md` — state and semantic documentation.
+- `tests/audit/batch_02.test.js` — separated-composite persistence regression coverage.
+
 ## [4.9.8] - 2026-09-17 → 9.1.5
 
 ### fix(webgpu): harden device-loss fallback and bridge status reporting

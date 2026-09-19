@@ -50,6 +50,7 @@ export function getParticle(buffer, index, stride) {
         bondPartner4: view[base + S.BOND_PARTNER_4],
         bondPartner5: view[base + S.BOND_PARTNER_5],
         bondPartner6: view[base + S.BOND_PARTNER_6],
+        accrLinkMask: view[base + S.ACCR_LINK_MASK],
         memory: view[base + S.MEMORY],
         hunger: view[base + S.HUNGER],
         armor: view[base + S.ARMOR],
@@ -87,6 +88,7 @@ export function setParticle(buffer, index, stride, data) {
     if (data.bondPartner4 !== undefined) view[base + S.BOND_PARTNER_4] = data.bondPartner4;
     if (data.bondPartner5 !== undefined) view[base + S.BOND_PARTNER_5] = data.bondPartner5;
     if (data.bondPartner6 !== undefined) view[base + S.BOND_PARTNER_6] = data.bondPartner6;
+    if (data.accrLinkMask !== undefined) view[base + S.ACCR_LINK_MASK] = data.accrLinkMask;
     if (data.memory !== undefined) view[base + S.MEMORY] = data.memory;
     if (data.hunger !== undefined) view[base + S.HUNGER] = data.hunger;
     if (data.armor !== undefined) view[base + S.ARMOR] = data.armor;

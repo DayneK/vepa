@@ -11,14 +11,14 @@ test('boots the simulation shell without a module error', async ({ page }) => {
 
 test('runs worker ticks asynchronously when SharedArrayBuffer is available', async ({ page }) => {
   await page.goto('/');
-  await expect.poll(() => page.evaluate(() => document.querySelector('#hud-tick')?.textContent || '')).toContain('Tick');
+  await expect.poll(() => page.evaluate(() => document.querySelector('#hud-tick')?.textContent || '')).toMatch(/\d[\d,]*\n\d+\.\d/);
   const result = await page.evaluate(async () => {
     const started = performance.now();
     await new Promise((resolve) => setTimeout(resolve, 1200));
     const text = document.querySelector('#hud-tick')?.textContent || '';
     return { elapsed: performance.now() - started, text, isolated: crossOriginIsolated };
   });
-  expect(result.text).toContain('Tick');
+  expect(result.text).toMatch(/\d[\d,]*\n\d+\.\d/);
   expect(result.elapsed).toBeGreaterThanOrEqual(1000);
 });
 
