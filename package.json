@@ -25,7 +25,9 @@
     "bench:backends:json": "node bench/backend-compare.mjs --json"
   },
   "dependencies": {
-    "pixi.js": "^8.18.1"
+    "pixi.js": "^8.18.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",

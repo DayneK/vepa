@@ -7,7 +7,7 @@ export default defineConfig({
   base: process.env.VERCEL === '1' ? '/' : (process.env.VITE_BASE || '/vepa/vepar/'),
   root: '.',
   build: {
-    outDir: '.dist',
+    outDir: 'dist',
     crossorigin: false,
     rollupOptions: {
       input: './index.html',
