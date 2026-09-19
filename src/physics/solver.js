@@ -115,7 +115,7 @@ import {
   setBuffer,
 } from './laws.js';
 import { createSynergyCache } from './synergy.js';
-import { applyAlloy, adjoinParticles, isBondedPair, mergeParticles } from './mergePhysics.js';
+import { applyAlloy, adjoinParticles, isBondedPair } from './mergePhysics.js';
 import { applyTide, applyFriction, applyHorizon, applyRadiationPressure, applyMassInertia, applyField } from './lawgroups/physicsLaws.js';
 import { applyContactCorrection, applyCollisionImpulse, applyMomentum, applyInertia, applyTorque, applyConstraint, applyFragmentation, applyTopology, applyAdhesion } from './lawgroups/mechanicsLaws.js';
 import { applyAdiabatic, applyCompression, applyExpansion, applyEquilibrium, applyLatentHeat, applyRunaway } from './lawgroups/thermoLaws.js';
@@ -725,16 +725,23 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
             }
             view[iBase + S.MITOSIS_TIMER] = dwell;
 
-            // ── ACCR composite adjoining (v9.1.0) ──
-            // Half the fusion dwell CEMENTS the pair into an adjoined
-            // structure: both grains keep their identity and are linked via
-            // the shared bond slots, so rubble piles / dust aggregates grow
-            // alongside fully merged bodies. High-momentum impacts still
-            // merge; low-energy dwellers build structures instead.
+            // ── ACCR composite adjoining ──
+            // ACCR never consumes a particle. Once the contact/fusion gate is
+            // reached, both identities remain visible and are linked through
+            // an edge-to-edge seam. This keeps accretion structural rather
+            // than silently turning a bonded pair into one enlarged orb.
             if (!fusing && dwell >= fusionTime * 0.5) {
               adjoinParticles(view, iBase, jBase, stride);
             }
             adjoined = isBondedPair(view, iBase, jBase, stride);
+            if (fusing && !adjoined) {
+              adjoinParticles(view, iBase, jBase, stride);
+              adjoined = isBondedPair(view, iBase, jBase, stride);
+              fusing = false;
+              px = view[iBase + S.POS_X];
+              py = view[iBase + S.POS_Y];
+              pz = view[iBase + S.POS_Z];
+            }
           }
 
           // CONTACT is positional/geometric only. It never changes velocity.
@@ -787,43 +794,9 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
           }
 
           // ── Adjoined composite response (v9.1.0) ──
-          // No restitution: a perfectly inelastic normal impulse plus a
-          // cohesion spring toward touching rest length settle the seam, so
-          // structures hold together without jitter.
           if (adjoined) {
-            const dampImpulse = -relVelN / (m1 + m2);
-            ax += dampImpulse * m2 * nx;
-            ay += dampImpulse * m2 * ny;
-            az += dampImpulse * m2 * nz;
-            const spring = (dist - (r1 + r2)) * 0.05;
-            ax += nx * spring;
-            ay += ny * spring;
-            az += nz * spring;
-          }
-
-          // ── ACCR: true accretion — the pair becomes ONE body (v8.0.0) ──
-          // When the fusion gate passes (momentum or dwell), the two particles
-          // collapse into a single body: combined mass (× FUSION efficiency),
-          // centre-of-mass position, momentum-conserving velocity, and
-          // mass-weighted colour. Bonded pairs (BOND / POLYMER molecules) are
-          // excluded — a bond is not accretion; the orbs stay separate and
-          // attached. STOICHIOMETRY makes the merger exact (efficiency 1.0).
-          if (accrOn && fusing) {
-            // FUSION DNA (9): mass-merging efficiency multiplier (0..1 → 0.5..1.5).
-            const fusionMult = 0.5 + (dnaI[DNA_INDEXES.FUSION] || 0.5);
-            const eff = active[LAW_INDEXES.STOICHIOMETRY] ? 1.0 : fusionMult;
-            if (!isBondedPair(view, iBase, jBase, stride)) {
-              mergeParticles(view, iBase, jBase, stride, { fusionMult: eff, worldSize });
-              // Fold the merged body back into the integration locals so the
-              // writeback and radius update reflect the new single particle.
-              px = view[iBase + S.POS_X];
-              py = view[iBase + S.POS_Y];
-              pz = view[iBase + S.POS_Z];
-              vx = view[iBase + S.VEL_X];
-              vy = view[iBase + S.VEL_Y];
-              vz = view[iBase + S.VEL_Z];
-              mass = view[iBase + S.MASS];
-            }
+            // The seam is corrected by adjoinParticles at attachment time;
+            // the existing local position pipeline preserves that correction.
           }
         }
       }      // ── Affinity (mid-range, falls off with distance) ──
@@ -1188,7 +1161,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
         const f = applyTorque(view, iBase, jBase, dx, dy, dz, 0.01);
         ax += f.ax; ay += f.ay; az += f.az;
       }
-      if (active[LAW_INDEXES.CONSTRAINT]) {
+      if (active[LAW_INDEXES.CONSTRAINT] && isBondedPair(view, iBase, jBase, stride)) {
         const f = applyConstraint(view, iBase, jBase, dx, dy, dz, dist, 0.03);
         ax += f.ax; ay += f.ay; az += f.az;
       }

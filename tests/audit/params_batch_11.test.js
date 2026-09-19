@@ -19,7 +19,7 @@ describe('Batch 11 — DNA.STIFFNESS / DNA.FUSION / DNA.FUSION_MOMENTUM / DNA.FU
     expect(run(5)).toBeGreaterThan(run(0.1));
   });
 
-  it('FUSION: higher fusion efficiency transfers more mass on overlap (ACCR)', () => {
+  it('FUSION: efficiency does not merge mass; contact remains two entities (ACCR)', () => {
     const run = (fusion) => {
       const { view, dna } = makeWorld(2, (v, d, b) => {
         v[b + S.MASS] = b === 0 ? 10 : 4;
@@ -33,12 +33,18 @@ describe('Batch 11 — DNA.STIFFNESS / DNA.FUSION / DNA.FUSION_MOMENTUM / DNA.FU
       });
       const laws = lawsWith(LAW_INDEXES.ACCR, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
-      return view[S.MASS];
+      return {
+        mass: view[S.MASS],
+        neighborMass: view[PARTICLE_STRIDE + S.MASS],
+        bondCount: view[S.BOND_COUNT],
+      };
     };
-    expect(run(1)).toBeGreaterThan(run(0));
+    expect(run(1)).toMatchObject({ mass: 10, neighborMass: 4 });
+    expect(run(0)).toMatchObject({ mass: 10, neighborMass: 4 });
+    expect(run(1).bondCount).toBeGreaterThanOrEqual(1);
   });
 
-  it('FUSION_MOMENTUM: minimum momentum to fuse — above merges, below bounces (ACCR)', () => {
+  it('FUSION_MOMENTUM: threshold controls when ACCR adjoins (ACCR)', () => {
     const run = (fusionMom) => {
       const { view, dna } = makeWorld(2, (v, d, b) => {
         v[b + S.MASS] = b === 0 ? 10 : 1;
@@ -53,13 +59,18 @@ describe('Batch 11 — DNA.STIFFNESS / DNA.FUSION / DNA.FUSION_MOMENTUM / DNA.FU
       });
       const laws = lawsWith(LAW_INDEXES.ACCR, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 1; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
-      return view[S.MASS];
+      return {
+        mass: view[S.MASS],
+        neighborMass: view[PARTICLE_STRIDE + S.MASS],
+        bondCount: view[S.BOND_COUNT],
+      };
     };
-    expect(run(0.5)).toBeGreaterThan(10.02);  // above min momentum → fuses
-    expect(run(5)).toBe(10);                  // below min momentum → bounces
+    expect(run(0.5)).toMatchObject({ mass: 10, neighborMass: 1 }); // adjoined
+    expect(run(0.5).bondCount).toBeGreaterThanOrEqual(1);
+    expect(run(5)).toMatchObject({ mass: 10, neighborMass: 1 });    // bounces
   });
 
-  it('FUSION_TIME: sub-threshold pairs fuse after dwelling in close proximity (ACCR)', () => {
+  it('FUSION_TIME: sub-threshold pairs adjoin after dwelling in close proximity (ACCR)', () => {
     const run = (fusionTime, ticks) => {
       const { view, dna } = makeWorld(2, (v, d, b) => {
         v[b + S.MASS] = b === 0 ? 10 : 1;
@@ -70,10 +81,14 @@ describe('Batch 11 — DNA.STIFFNESS / DNA.FUSION / DNA.FUSION_MOMENTUM / DNA.FU
       });
       const laws = lawsWith(LAW_INDEXES.ACCR, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < ticks; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
-      return view[S.MASS];
+      return {
+        mass: view[S.MASS],
+        neighborMass: view[PARTICLE_STRIDE + S.MASS],
+        bondCount: view[S.BOND_COUNT],
+      };
     };
-    expect(run(0, 1)).toBeGreaterThan(10.02);  // 0 → fuse on first contact
-    expect(run(3, 2)).toBe(10);                // 2 s < 3 s → not yet fused
-    expect(run(3, 3)).toBeGreaterThan(10.02);  // 3 s of proximity → fused
+    expect(run(0, 1)).toMatchObject({ mass: 10, neighborMass: 1 });
+    expect(run(3, 2)).toMatchObject({ mass: 10, neighborMass: 1 });
+    expect(run(3, 3).bondCount).toBeGreaterThanOrEqual(1);
   });
 });

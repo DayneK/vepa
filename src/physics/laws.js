@@ -957,23 +957,21 @@ export function applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, syn
   // avoided, so POLYMER grows linear chains instead of cross-linked webs.
   const chainBias = jBondCount <= 1 ? 1.0 : (jBondCount >= 3 ? 0.25 : 0.5);
   if (!alreadyBonded && bondCount < 6 && jBondCount < 6 && dist < 10 * synergy * chainBias) {
-    for (const slot of BOND_SLOTS) {
-      if (view[iBase + slot] < 0) {
-        view[iBase + slot] = jIdx;
-        view[iBase + S.BOND_COUNT] = bondCount + 1;
-        break;
-      }
-    }
-    for (const slot of BOND_SLOTS) {
-      if (view[jBase + slot] < 0) {
-        view[jBase + slot] = iIdx;
-        view[jBase + S.BOND_COUNT] = jBondCount + 1;
-        break;
-      }
+    const iSlot = BOND_SLOTS.find((slot) => view[iBase + slot] < 0);
+    const jSlot = BOND_SLOTS.find((slot) => view[jBase + slot] < 0);
+    // Register both sides only when both sides have capacity. A polymer seam
+    // must never become one-sided graph metadata.
+    if (iSlot != null && jSlot != null) {
+      view[iBase + iSlot] = jIdx;
+      view[jBase + jSlot] = iIdx;
+      view[iBase + S.BOND_COUNT] = bondCount + 1;
+      view[jBase + S.BOND_COUNT] = jBondCount + 1;
+      alreadyBonded = true;
     }
   }
-  // Spring force to maintain polymer chain
-  if (dist < 0.1) return { ax: 0, ay: 0, az: 0 };
+  // Do not apply a polymer spring to every nearby particle: before the bond
+  // forms this law is only a candidate selector, not a global attraction.
+  if (!alreadyBonded || dist < 0.1) return { ax: 0, ay: 0, az: 0 };
   const stiffness = 0.02 * synergy;
   const restLen = 4.0;
   const displacement = dist - restLen;

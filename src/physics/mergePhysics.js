@@ -3,23 +3,22 @@
  *
  * Union taxonomy for overlapping bodies:
  *
- *   MERGE  (one particle)   — ACCR accretion, ALLOY fusion. The pair collapses
- *                             into a single body: combined mass (× fusion
- *                             efficiency), centre-of-mass position,
- *                             momentum-conserving velocity, mass-weighted
- *                             colour (+ energy). ALLOY additionally mass-averages
- *                             the 42-float DNA cache (hybrid chemistry);
- *                             physical accretion keeps the survivor's genes.
+ *   MERGE  (one particle)   — ALLOY fusion only. The pair collapses into a
+ *                             single body: combined mass (× fusion efficiency),
+ *                             centre-of-mass position, momentum-conserving
+ *                             velocity, mass-weighted colour (+ energy), and
+ *                             optional DNA blending. ACCR is structural and
+ *                             always uses ADJOIN below.
  *   ATTACH (two orbs)        — BOND / POLYMER. Molecules stay as separate
  *                             attached orbs held by a spring at an equilibrium
  *                             distance. Bonded pairs NEVER merge — a bond is
  *                             not accretion.
- *   ADJOIN (two grains)      — ACCR composite structures (v9.1.0). Sustained
- *                             gentle contact cements both grains into a
- *                             rigid-ish rubble pile / dust aggregate: separate
- *                             identities, structurally linked across the
- *                             shared bond slots, held by an inelastic contact
- *                             response. Adjoined pairs never mass-merge.
+ *   ADJOIN (two grains)      — ACCR composite structures. Contact cements
+ *                             both grains into a rigid-ish rubble pile / dust
+ *                             aggregate: separate identities, placed edge-to-
+ *                             edge, structurally linked across the shared bond
+ *                             slots, and held by an inelastic response.
+ *                             Adjoined pairs never mass-merge.
  *   LINK   (two orbs)        — ENTANGLEMENT / SYMBIOSIS / PARASITE. Separate
  *                             particles sharing phase or energy flows.
  *
@@ -95,29 +94,105 @@ function breakBondPair(view, iBase, jBase, stride) {
 export function adjoinParticles(view, iBase, jBase, stride) {
   const iIdx = iBase / stride;
   const jIdx = jBase / stride;
-  // A match only means "already linked" when some bond exists —
-  // zero-initialised partner slots equal particle index 0 and must not
-  // look like an existing seam (same guard as isBondedPair).
-  if ((view[iBase + S.BOND_COUNT] || 0) >= 1 || (view[jBase + S.BOND_COUNT] || 0) >= 1) {
-    for (const slot of BOND_SLOTS) {
-      if (view[iBase + slot] === jIdx || view[jBase + slot] === iIdx) return; // already linked
-    }
+  const iCount = view[iBase + S.BOND_COUNT] || 0;
+  const jCount = view[jBase + S.BOND_COUNT] || 0;
+  const linked = isBondedPair(view, iBase, jBase, stride);
+
+  if (!linked) {
+    if (iCount >= 6 || jCount >= 6) return;
+    // Find both free slots before mutating either side. A partial seam is
+    // worse than no seam because later topology and fusion decisions rely on
+    // bilateral bookkeeping.
+    const iSlot = BOND_SLOTS.find((slot) => view[iBase + slot] < 0) ?? (iCount === 0 ? BOND_SLOTS[0] : null);
+    const jSlot = BOND_SLOTS.find((slot) => view[jBase + slot] < 0) ?? (jCount === 0 ? BOND_SLOTS[0] : null);
+    if (iSlot == null || jSlot == null) return;
+    view[iBase + iSlot] = jIdx;
+    view[jBase + jSlot] = iIdx;
+    view[iBase + S.BOND_COUNT] = iCount + 1;
+    view[jBase + S.BOND_COUNT] = jCount + 1;
   }
-  if ((view[iBase + S.BOND_COUNT] || 0) >= 6 || (view[jBase + S.BOND_COUNT] || 0) >= 6) return;
-  for (const slot of BOND_SLOTS) {
-    if (view[iBase + slot] < 0) {
-      view[iBase + slot] = jIdx;
-      view[iBase + S.BOND_COUNT] = (view[iBase + S.BOND_COUNT] || 0) + 1;
-      break;
-    }
+
+  // A seam is geometric as well as topological: put the two independent
+  // particles exactly edge-to-edge while preserving their mass-weighted
+  // centre. This prevents a bonded pair from rendering as one enlarged orb.
+  const mi = Math.max(0.001, Number(view[iBase + S.MASS]) || 0.001);
+  const mj = Math.max(0.001, Number(view[jBase + S.MASS]) || 0.001);
+  const total = mi + mj;
+  const radius = Math.max(0, Number(view[iBase + S.RADIUS]) || 0) +
+    Math.max(0, Number(view[jBase + S.RADIUS]) || 0);
+  let dx = Number(view[jBase + S.POS_X]) - Number(view[iBase + S.POS_X]);
+  let dy = Number(view[jBase + S.POS_Y]) - Number(view[iBase + S.POS_Y]);
+  let dz = Number(view[jBase + S.POS_Z]) - Number(view[iBase + S.POS_Z]);
+  const distance = Math.hypot(dx, dy, dz);
+  if (distance <= 1e-6) {
+    dx = 1;
+    dy = 0;
+    dz = 0;
+  } else {
+    dx /= distance;
+    dy /= distance;
+    dz /= distance;
   }
-  for (const slot of BOND_SLOTS) {
-    if (view[jBase + slot] < 0) {
-      view[jBase + slot] = iIdx;
-      view[jBase + S.BOND_COUNT] = (view[jBase + S.BOND_COUNT] || 0) + 1;
-      break;
-    }
-  }
+  // Remove relative normal motion at the instant of attachment while
+  // conserving pair momentum. Tangential motion remains represented by the
+  // existing torque/mechanics passes.
+  const sharedVx = (mi * (Number(view[iBase + S.VEL_X]) || 0) + mj * (Number(view[jBase + S.VEL_X]) || 0)) / total;
+  const sharedVy = (mi * (Number(view[iBase + S.VEL_Y]) || 0) + mj * (Number(view[jBase + S.VEL_Y]) || 0)) / total;
+  const sharedVz = (mi * (Number(view[iBase + S.VEL_Z]) || 0) + mj * (Number(view[jBase + S.VEL_Z]) || 0)) / total;
+  view[iBase + S.VEL_X] = sharedVx;
+  view[iBase + S.VEL_Y] = sharedVy;
+  view[iBase + S.VEL_Z] = sharedVz;
+  view[jBase + S.VEL_X] = sharedVx;
+  view[jBase + S.VEL_Y] = sharedVy;
+  view[jBase + S.VEL_Z] = sharedVz;
+
+  const cx = (mi * view[iBase + S.POS_X] + mj * view[jBase + S.POS_X]) / total;
+  const cy = (mi * view[iBase + S.POS_Y] + mj * view[jBase + S.POS_Y]) / total;
+  const cz = (mi * view[iBase + S.POS_Z] + mj * view[jBase + S.POS_Z]) / total;
+  view[iBase + S.POS_X] = cx - dx * radius * mj / total;
+  view[iBase + S.POS_Y] = cy - dy * radius * mj / total;
+  view[iBase + S.POS_Z] = cz - dz * radius * mj / total;
+  view[jBase + S.POS_X] = cx + dx * radius * mi / total;
+  view[jBase + S.POS_Y] = cy + dy * radius * mi / total;
+  view[jBase + S.POS_Z] = cz + dz * radius * mi / total;
+}
+
+/**
+ * Maintain an existing ACCR seam without merging the particles. This keeps
+ * the edge-to-edge geometry and removes only relative normal motion; tangent
+ * motion remains available to the torque/mechanics laws.
+ */
+export function maintainAdjoinedPair(view, iBase, jBase) {
+  const mi = Math.max(0.001, Number(view[iBase + S.MASS]) || 0.001);
+  const mj = Math.max(0.001, Number(view[jBase + S.MASS]) || 0.001);
+  const total = mi + mj;
+  let dx = Number(view[jBase + S.POS_X]) - Number(view[iBase + S.POS_X]);
+  let dy = Number(view[jBase + S.POS_Y]) - Number(view[iBase + S.POS_Y]);
+  let dz = Number(view[jBase + S.POS_Z]) - Number(view[iBase + S.POS_Z]);
+  const dist = Math.hypot(dx, dy, dz);
+  if (dist <= 1e-6) { dx = 1; dy = 0; dz = 0; }
+  else { dx /= dist; dy /= dist; dz /= dist; }
+  const target = Math.max(0, Number(view[iBase + S.RADIUS]) || 0) + Math.max(0, Number(view[jBase + S.RADIUS]) || 0);
+  const cx = (mi * view[iBase + S.POS_X] + mj * view[jBase + S.POS_X]) / total;
+  const cy = (mi * view[iBase + S.POS_Y] + mj * view[jBase + S.POS_Y]) / total;
+  const cz = (mi * view[iBase + S.POS_Z] + mj * view[jBase + S.POS_Z]) / total;
+  view[iBase + S.POS_X] = cx - dx * target * mj / total;
+  view[iBase + S.POS_Y] = cy - dy * target * mj / total;
+  view[iBase + S.POS_Z] = cz - dz * target * mj / total;
+  view[jBase + S.POS_X] = cx + dx * target * mi / total;
+  view[jBase + S.POS_Y] = cy + dy * target * mi / total;
+  view[jBase + S.POS_Z] = cz + dz * target * mi / total;
+  const relativeNormal =
+    ((view[iBase + S.VEL_X] || 0) - (view[jBase + S.VEL_X] || 0)) * dx +
+    ((view[iBase + S.VEL_Y] || 0) - (view[jBase + S.VEL_Y] || 0)) * dy +
+    ((view[iBase + S.VEL_Z] || 0) - (view[jBase + S.VEL_Z] || 0)) * dz;
+  const impulse = relativeNormal / total;
+  view[iBase + S.VEL_X] -= impulse * mj * dx;
+  view[iBase + S.VEL_Y] -= impulse * mj * dy;
+  view[iBase + S.VEL_Z] -= impulse * mj * dz;
+  view[jBase + S.VEL_X] += impulse * mi * dx;
+  view[jBase + S.VEL_Y] += impulse * mi * dy;
+  view[jBase + S.VEL_Z] += impulse * mi * dz;
 }
 
 /**
