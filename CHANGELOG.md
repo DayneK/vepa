@@ -1,5 +1,18 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.12] - 2026-09-20 → 9.1.9
+
+### feat(physics): make particle relationships dimension-based
+
+- Add an immutable interaction-space registry that describes triggers, participants, direction, geometry, constraints, material and information flows, identity transformations, persistence, failure, and outcomes.
+- Map CONTACT, ADHESION, BOND, ACCR, POLYMER, CRYSTALLIZATION, ALLOY, CONSTRAINT, PREDATION, SINGULARITY, SYMBIOSIS, PARASITE, ENTANGLEMENT, and REPRODUCTION to their live law implementations.
+- Preserve ACCR as a persistent edge-to-edge composite of separate particles; preserve ALLOY as the explicit one-body fusion path.
+- Add a source-derived interaction matrix and regression tests for live law-index mapping and fusion/composite distinctions.
+
+### Files
+
+- `src/physics/interactionSpace.js`, `docs/dev/interaction-space.md`, `tests/unit/interactionSpace.test.js`
+
 ## [4.9.11] - 2026-09-19 → 9.1.8
 
 ### fix(ui): simplify telemetry and verify chaos settings access
