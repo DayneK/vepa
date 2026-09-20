@@ -20,6 +20,8 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 - [Implementation gaps](implementation-gaps.md) — explicit partial/missing boundaries and suggested next slices.
 - [Module decomposition](module-decomposition.md) — source-grounded extraction plan for future runtime modules.
 - [Deployment publication](deployment-publication.md) — why the atlas is copied into the static build output.
+- [Ranked roadmap](roadmap-overview.md) — synchronized multi-phase delivery order.
+- `src/state/systemFoundation.js` — Phase 1 evidence-contract registry used by the runtime/tooling layer.
 
 ## Evidence notation
 

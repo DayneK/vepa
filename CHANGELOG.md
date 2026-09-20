@@ -1,5 +1,21 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.18] - 2026-09-20 → 9.1.15
+
+### feat(systems): implement synchronized phases two through five
+
+- Add a shared lifecycle substrate for durable records, explicit causal events, bounded emergence evidence, and analysis reports across all ranked systems.
+- Preserve domain ownership and particle-stride compatibility while making Phase 2–5 capabilities available to every system roadmap.
+- Add round-trip, cap, emergence, and all-system report coverage.
+
+## [4.9.17] - 2026-09-20 → 9.1.14
+
+### feat(systems): add synchronized implementation roadmaps
+
+- Rank the documented systems by current implementation breadth from family/kinship through species/lineage.
+- Add five-plus-phase roadmaps for every system with cross-system compatibility gates.
+- Implement Phase 1 evidence contracts through the read-only system foundation registry and regression tests.
+
 ## [4.9.16] - 2026-09-20 → 9.1.13
 
 ### build(docs): publish systems atlas in static output
