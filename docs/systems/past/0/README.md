@@ -1,6 +1,6 @@
 # VEPA systems atlas
 
-**Scope:** source-grounded organization, reproduction, lineage, ecology, and civilization analysis for VEPA4 9.1.15. This atlas was reviewed against the current runtime on 2026-09-20; see [the assessment record](assessment-20260920.md).
+**Scope:** source-grounded organization, reproduction, lineage, ecology, and civilization analysis for VEPA4 9.1.12.
 
 This atlas answers two different questions without conflating them:
 
@@ -22,7 +22,6 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 - [Deployment publication](deployment-publication.md) — why the atlas is copied into the static build output.
 - [Ranked roadmap](roadmap-overview.md) — synchronized multi-phase delivery order.
 - `src/state/systemFoundation.js` — Phase 1 evidence-contract registry used by the runtime/tooling layer.
-- `src/state/systemLifecycle.js` — shared Phase 2–5 records, causal events, emergence evidence, and reports.
 
 ## Evidence notation
 
@@ -33,10 +32,6 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 | **Observed** | Analytics can infer the pattern from metrics/events, but does not own it as state. |
 | **Scaffolded** | This atlas defines a design contract only; no runtime claim. |
 | **Missing** | No reliable live implementation was found in the reviewed source surface. |
-
-## Assessment status
-
-All 34 pre-existing Markdown files in this atlas were assessed against the runtime, version markers, roadmaps, and publication workflow. Five files required revision and their pre-update copies are preserved under `past/0/`; the remaining files were reviewed and retained unchanged because their claims remain accurate. The assessment is a review ledger, not a second source of truth.
 
 ## Deployment note
 

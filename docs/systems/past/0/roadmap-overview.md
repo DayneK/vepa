@@ -1,7 +1,5 @@
 # Ranked systems roadmap
 
-**Status review:** VEPA4 9.1.15, 2026-09-20. All twelve systems have completed the shared Phases 1–5 substrate; domain adapters and Phase 6 stress/evolution work remain system-specific.
-
 ## Breadth ranking
 
 The ranking measures current runtime breadth, not conceptual importance. Rank 1 is the smallest current implementation; rank 12 is the broadest.
@@ -37,5 +35,3 @@ Every system roadmap uses this shared ordering while specializing its deliverabl
 ## Current delivery status
 
 Phases 1–5 are implemented as a shared, additive substrate in `src/state/systemFoundation.js` and `src/state/systemLifecycle.js`. Phase 2 stores deterministic records, Phase 3 stores explicit causal events, Phase 4 derives bounded emergence evidence, and Phase 5 produces per-system analysis reports. These are cross-system capabilities; domain-specific adapters remain the next step and no scaffolded system is being mislabeled as a first-class runtime entity.
-
-The next synchronized gate is Phase 6: stress, replay, save/restore, performance budgets, and evolutionary experiments. A system may not claim Phase 6 completion merely because the shared substrate is present.
