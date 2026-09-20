@@ -82,6 +82,13 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
     writes: ['ACCELERATION'],
     notes: ['Mechanics inertia proxy; possible semantic overlap with MASS_INERTIA is intentionally recorded.'],
   }),
+  ACCR: freezeRecord({
+    synergizesWith: ['CONTACT', 'TOPOLOGY'],
+    transforms: ['CONTACT_AND_DWELL -> PERSISTENT_RIGID_SEAM'],
+    reads: ['RADIUS', 'MASS', 'BOND_COUNT', 'BOND_PARTNER_1-6', 'ACCR_LINK_MASK'],
+    writes: ['BOND_COUNT', 'BOND_PARTNER_1-6', 'ACCR_LINK_MASK', 'POS_X/Y/Z', 'VEL_X/Y/Z'],
+    notes: ['ACCR preserves separate particle identities; it is not a force and never performs mass fusion.'],
+  }),
   BOND: freezeRecord({
     synergizesWith: ['CONSTRAINT', 'POLYMER', 'TOPOLOGY', 'ADHESION'],
     transforms: ['PROXIMITY -> PERSISTENT_CONNECTION'],
@@ -89,9 +96,8 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
     writes: ['BOND_COUNT', 'BOND_PARTNER_1-6'],
   }),
   CONSTRAINT: freezeRecord({
-    dependsOn: ['BOND'],
     synergizesWith: ['TOPOLOGY', 'CONTACT'],
-    transforms: ['DISTANCE_ERROR -> RESTORING_FORCE'],
+    transforms: ['EXPLICIT_LINK_DISTANCE_ERROR -> RESTORING_FORCE'],
     reads: ['RADIUS', 'BOND_COUNT', 'BOND_PARTNER_1-6'],
     writes: ['ACCELERATION'],
   }),

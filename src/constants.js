@@ -17,7 +17,9 @@ export const DNA_PACK_MAX = 65535;
 export const MAX_SPECIES = 64;
 export const MAX_PARTICLES = 100000;
 export const STAR_MASS = 12;   // mass threshold for gravitational collapse (star)
-export const DEFAULT_PARTICLES_PER_SPECIES = 250;
+// Default population density is intentionally high; the renderer culls off-screen
+// entities and the solver adapts pair budgets for large worlds.
+export const DEFAULT_PARTICLES_PER_SPECIES = 20000;
 export const WORLD_SIZE = 2000;
 export const RHO_REF = 0.2;                    // ADIABATIC reference density (neighborhood occupancy 0..1) — no compression heating at this density
 export const ADIABATIC_GAMMA_MINUS_ONE = 2 / 3; // gamma-1 for the monatomic ideal-gas adiabatic law (gamma = 5/3)
@@ -102,6 +104,9 @@ export const STRIDE_INDEXES = {
   // saves carry the whole buffer, so membership survives save/load.
   GROUP_ID:        96, // group registry id (0 = ungrouped)
   GROUP_ROLE:      97, // 0 none, 1 leader, 2 forager, 3 builder
+  // Per-slot topology classification for persistent ACCR seams. Bit n maps
+  // to BOND_PARTNER_(n+1); zero means the slot is a flexible BOND/POLYMER link.
+  ACCR_LINK_MASK:  98,
 };
 
 // --- DNA Indexes (42 parameters) ---

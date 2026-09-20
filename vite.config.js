@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  // Vercel builds serve at the root (VERCEL=1); GitHub Pages serves the
-  // project page at /vepa/ (the Pages workflow passes VITE_BASE=/vepa/);
-  // local dev/preview default to /vepa/vepar/ for the vepa4 launcher.
-  base: process.env.VERCEL === '1' ? '/' : (process.env.VITE_BASE || '/vepa/vepar/'),
+  // Hosted root deployments (Freebuff/Vercel) use `/`; GitHub Pages passes
+  // VITE_BASE=/vepa/ for its project-site subpath. Keeping `/` as the safe
+  // default prevents production assets from being requested below a missing
+  // /vepa/vepar/ prefix when the host does not set VERCEL explicitly.
+  base: process.env.VITE_BASE || '/',
   root: '.',
   build: {
     outDir: 'dist',

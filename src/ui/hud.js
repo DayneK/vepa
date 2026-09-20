@@ -13,10 +13,9 @@ let lastPhysicsTime = 0;
 let ticksPerSecond = 0;
 let lastTickShown = -1; // module scope: also read by the rAF loop below
 
-// Keep simulation progress visible in the compact HUD. Render FPS is measured
-// internally, but the user-facing readout prioritizes tick cadence.
-const fmtTickStats = (tick, tps) =>
-  `TICK ${(tick < 0 ? 0 : tick).toLocaleString('en-US')} · ${Number(tps || 0).toFixed(1)} TPS`;
+// Keep the total simulation progress beside the measured render frame rate.
+export const formatTickStats = (tick, fps) =>
+  `${(tick < 0 ? 0 : tick).toLocaleString('en-US')}\n${Number(fps || 0).toFixed(1)}`;
 
 const el = {
   particles: null,
@@ -41,7 +40,7 @@ function tick(now) {
     fpsDisplay = frameCount;
     frameCount = 0;
     lastFpsTime = now;
-    if (el.tick) el.tick.textContent = fmtTickStats(lastTickShown, ticksPerSecond);
+    if (el.tick) el.tick.textContent = formatTickStats(lastTickShown, fpsDisplay);
   }
   rafId = requestAnimationFrame(tick);
 }
@@ -82,8 +81,8 @@ export function createHUD(bus) {
       const intensity = Math.min(1, Math.max(0.25, particleCount / 2500));
       el.particles.style.setProperty('--population-h', String(hue));
       el.particles.style.setProperty('--population-intensity', intensity.toFixed(2));
-      el.particles.dataset.count = String(particleCount);
-      el.particles.setAttribute('aria-label', `Population indicator: ${particleCount} active entities`);
+      el.particles.dataset.count = Number(particleCount).toLocaleString('en-US');
+      el.particles.setAttribute('aria-label', `Population indicator: ${Number(particleCount).toLocaleString('en-US')} active entities`);
     }
     if (t !== undefined && el.tick) {
       const now = performance.now();
@@ -96,7 +95,7 @@ export function createHUD(bus) {
         lastPhysicsTime = now;
       }
       lastTickShown = t;
-      el.tick.textContent = fmtTickStats(lastTickShown, ticksPerSecond);
+      el.tick.textContent = formatTickStats(lastTickShown, fpsDisplay);
     }
   };
 

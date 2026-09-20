@@ -94,7 +94,7 @@
 
 ### 2.3 State and storage layout
 
-The first seven stride values are position and velocity (`POS_X/Y/Z`, `VEL_X/Y/Z`), followed by `MASS` and `SPECIES_ID`. DNA cache values occupy stride 8–49 and correspond to the first 42 DNA parameters. Core dynamic fields include `ENERGY` 50, `AGE` 51, `DEAD` 52, color 53–55, `RADIUS` 56, `SIGNAL` 57, bond count 58, bond partners 59–60 and 81–84, `MEMORY` 61, `HUNGER` 62, `ARMOR` 63, temperature 66, charge 67, quantum phase/state 68–76, energy reservoirs 77–78, radiation exposure 80, deterministic chaos state 85–87, symbol/superposition state 88–95, and group fields 96–97.
+The first seven stride values are position and velocity (`POS_X/Y/Z`, `VEL_X/Y/Z`), followed by `MASS` and `SPECIES_ID`. DNA cache values occupy stride 8–49 and correspond to the first 42 DNA parameters. Core dynamic fields include `ENERGY` 50, `AGE` 51, `DEAD` 52, color 53–55, `RADIUS` 56, `SIGNAL` 57, bond count 58, bond partners 59–60 and 81–84, `MEMORY` 61, `HUNGER` 62, `ARMOR` 63, temperature 66, charge 67, quantum phase/state 68–76, energy reservoirs 77–78, radiation exposure 80, deterministic chaos state 85–87, symbol/superposition state 88–95, group fields 96–97, and `ACCR_LINK_MASK` 98. The ACCR mask classifies individual partner slots as persistent rigid seams; an unmarked partner slot remains a flexible BOND/POLYMER relationship.
 
 ### 2.4 Dependency model
 
@@ -108,7 +108,7 @@ Hard dependencies currently include: `SENESCENCE → LIFE`, `TELEPORT → ENTANG
 
 **Members:** GRAV, DRAG, ENTR, BUOYANCY, COLL, ACCR, PLANETARY, VOID, BOND, SINGULARITY, FRICTION, TIDE, HORIZON, RADIATION_PRESSURE, MASS_INERTIA, FIELD.
 
-**Interactions:** GRAV/PLANETARY/ACCR shape aggregation; COLL/BOND/FIELD constrain local structure; HORIZON/SINGULARITY provide extreme-mass behavior; TIDE and RADIATION_PRESSURE introduce gradients and outward energy transfer. Physics is the main substrate for all other categories.
+**Interactions:** GRAV/PLANETARY/ACCR shape aggregation; ACCR creates edge-to-edge structural seams without mass merging; COLL/BOND/FIELD constrain local structure; HORIZON/SINGULARITY provide extreme-mass behavior; TIDE and RADIATION_PRESSURE introduce gradients and outward energy transfer. Physics is the main substrate for all other categories.
 
 ### 3.2 Mechanics
 
@@ -187,10 +187,10 @@ The following matrix is the compact complete registry. Each entry includes its i
 | 2 | ENTR | Adds bounded stochastic/thermal disorder and entropy-like motion. | DNA JITTER; World ENTROPY; Stride TEMPERATURE | Implemented proxy |
 | 3 | BUOYANCY | Produces thermal/density-dependent lift and velocity response. | Stride TEMPERATURE/MASS/VEL; DNA HEAT_OUTPUT | Implemented proxy |
 | 4 | COLL | Resolves overlap with stiffness and elasticity/restitution; exchanges impact response. | DNA STIFFNESS/ELASTICITY; Stride RADIUS/MASS | Implemented, gated |
-| 5 | ACCR | Close particles fuse/accrete according to fusion and timing thresholds. | DNA FUSION/FUSION_TIME; World ACCRETION_RADIUS; Stride MASS | Implemented, lifecycle |
+| 5 | ACCR | Persistent structural attachment: close particles adjoin edge-to-edge after momentum/dwell thresholds and remain separate identities and masses; explicit seam topology is maintained after contact. | DNA FUSION/FUSION_TIME; World ACCRETION_RADIUS; Stride MASS/BOND_COUNT/ACCR_LINK_MASK | Implemented, persistent structural lifecycle |
 | 6 | PLANETARY | Adds large-body/global gravitational influence using hidden mass and inertia. | DNA FORCE/HIDDEN_MASS/INERTIA; World GLOBAL_G | Implemented, gated |
 | 38 | VOID | Applies bounded outward/rarefaction pressure toward world boundaries/empty regions. | World VOID_PRESSURE/WORLD_SIZE; Stride RADIUS | Implemented proxy |
-| 39 | BOND | Maintains persistent structural links with stiffness, angle, and bond capacity. | DNA STIFFNESS/BOND_ANGLE; World BOND_STRENGTH; Stride bond fields | Implemented, lifecycle |
+| 39 | BOND | Creates flexible, breakable spring links; it does not classify or break explicit ACCR seams. | DNA STIFFNESS/BOND_ANGLE; World BOND_STRENGTH; Stride bond fields | Implemented, flexible lifecycle |
 | 79 | SINGULARITY | Supermassive bodies pull strongly and absorb particles crossing a horizon. | World SINGULARITY_HORIZON; DNA FORCE/HIDDEN_MASS; Stride MASS/DEAD | Implemented proxy |
 | 82 | TIDE | Applies gravity-gradient-like differential force across a particle pair. | DNA TIDAL/FORCE; World TIDAL_SCALE/GLOBAL_G | Implemented |
 | 83 | FRICTION | Converts relative motion into bounded damping, with viscosity interaction. | DNA FRICTION/VISCOSITY; Stride velocity | Implemented |
@@ -207,7 +207,7 @@ The following matrix is the compact complete registry. Each entry includes its i
 | 129 | MOMENTUM | Relaxes relative velocity toward mass-weighted shared motion. | Stride MASS/VEL_X/Y/Z; World MOMENTUM_GAIN | Implemented, gated |
 | 130 | INERTIA | Makes mass resist accumulated force/acceleration. | Stride MASS; DNA INERTIA/FORCE | Implemented, gated |
 | 131 | TORQUE | Converts tangential relative motion around a separation vector into rotation. | DNA TORQUE; Stride POS/VEL | Implemented, gated |
-| 132 | CONSTRAINT | Drives linked neighbors toward combined-radius target distance. | Stride RADIUS/BOND_COUNT; World CONSTRAINT_STRENGTH | Implemented, gated |
+| 132 | CONSTRAINT | Applies an explicit solver-level distance relationship only to an already linked pair; it does not create attraction or topology. | Stride RADIUS/BOND_COUNT; World CONSTRAINT_STRENGTH | Implemented, gated |
 | 133 | FRAGMENTATION | High relative speed over armor threshold creates separation impulse. | Stride VEL/ARMOR/MASS | Implemented, gated |
 | 134 | TOPOLOGY | Uses bond-count imbalance as a small graph-geometry correction. | Stride BOND_COUNT/BOND_PARTNER_1-6; World TOPOLOGY_GAIN | Implemented, gated |
 | 135 | ADHESION | Attracts near-contact particles without merging their mass. | Stride RADIUS/BOND_COUNT; World ADHESION_RANGE | Implemented, gated |

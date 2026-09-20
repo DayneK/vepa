@@ -555,6 +555,34 @@ body {
     gap: 12px;
     align-items: center;
 }
+.hud-population-orb {
+    --population-h: 190;
+    --population-intensity: 1;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    width: auto;
+    min-width: 24px;
+    height: 14px;
+    color: hsl(var(--population-h) 90% 72% / var(--population-intensity));
+}
+.hud-population-orb::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    border-radius: 50%;
+    background: hsl(var(--population-h) 95% 65% / var(--population-intensity));
+    box-shadow: 0 0 5px hsl(var(--population-h) 95% 65% / var(--population-intensity));
+}
+.hud-population-orb::after {
+    content: attr(data-count);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.25px;
+    white-space: nowrap;
+}
 .hud-item {
     font-family: var(--font-mono);
     font-size: 9px;
@@ -1629,6 +1657,13 @@ body {
     #top-toolbar .sq-btn { width: 24px; height: 20px; font-size: 9px; }
     .toolbar-center { gap: 6px; }
     .hud-item { font-size: 7px; }
+    .hud-population-orb::before { width: 5px; height: 5px; flex-basis: 5px; }
+    .hud-population-orb::after { font-size: 7px; }
+    .hud-tick-compact {
+    display: inline-block;
+    white-space: pre-line;
+    line-height: 1.05;
+    min-width: 52px; }
     .law-icon-grid { grid-template-columns: repeat(auto-fill, minmax(26px, 1fr)); }
     .law-grid-inner { grid-template-columns: repeat(3, 1fr); }
 }

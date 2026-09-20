@@ -32,6 +32,22 @@ const BOND_SLOTS = [
   S.BOND_PARTNER_4, S.BOND_PARTNER_5, S.BOND_PARTNER_6,
 ];
 
+function isAccretionLink(view, iBase, jBase, stride) {
+  const iIdx = iBase / stride;
+  const jIdx = jBase / stride;
+  for (let iSlot = 0; iSlot < BOND_SLOTS.length; iSlot++) {
+    const iBit = 1 << iSlot;
+    if (view[iBase + BOND_SLOTS[iSlot]] !== jIdx
+      || !(view[iBase + S.ACCR_LINK_MASK] & iBit)) continue;
+    for (let jSlot = 0; jSlot < BOND_SLOTS.length; jSlot++) {
+      const jBit = 1 << jSlot;
+      if (view[jBase + BOND_SLOTS[jSlot]] === iIdx
+        && (view[jBase + S.ACCR_LINK_MASK] & jBit)) return true;
+    }
+  }
+  return false;
+}
+
 /**
  * Read a species genome param (DNA buffer, 64×64 Uint16) as a float.
  * Genetics params 42-47 live only in the species genome, not the stride cache.
@@ -946,6 +962,7 @@ export function applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, syn
   const jBondCount = view[jBase + S.BOND_COUNT];
 
   let alreadyBonded = false;
+  const accretionLink = isAccretionLink(view, iBase, jBase, stride);
   for (const slot of BOND_SLOTS) {
     if (view[iBase + slot] === jIdx || view[jBase + slot] === iIdx) {
       alreadyBonded = true;
@@ -971,7 +988,7 @@ export function applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, syn
   }
   // Do not apply a polymer spring to every nearby particle: before the bond
   // forms this law is only a candidate selector, not a global attraction.
-  if (!alreadyBonded || dist < 0.1) return { ax: 0, ay: 0, az: 0 };
+  if (accretionLink || !alreadyBonded || dist < 0.1) return { ax: 0, ay: 0, az: 0 };
   const stiffness = 0.02 * synergy;
   const restLen = 4.0;
   const displacement = dist - restLen;

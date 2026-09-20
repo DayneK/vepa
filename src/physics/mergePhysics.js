@@ -60,20 +60,41 @@ export function isBondedPair(view, iBase, jBase, stride) {
   return false;
 }
 
+/** Return true only for an explicitly classified ACCR seam. */
+export function isAccretionPair(view, iBase, jBase, stride) {
+  const iIdx = iBase / stride;
+  const jIdx = jBase / stride;
+  for (let iSlot = 0; iSlot < BOND_SLOTS.length; iSlot++) {
+    const iBit = 1 << iSlot;
+    if (view[iBase + BOND_SLOTS[iSlot]] !== jIdx
+      || !(view[iBase + S.ACCR_LINK_MASK] & iBit)) continue;
+    for (let jSlot = 0; jSlot < BOND_SLOTS.length; jSlot++) {
+      const jBit = 1 << jSlot;
+      if (view[jBase + BOND_SLOTS[jSlot]] === iIdx
+        && (view[jBase + S.ACCR_LINK_MASK] & jBit)) return true;
+    }
+  }
+  return false;
+}
+
 /** Break a single bilateral bond (mirrors laws.js breakBondPair). */
 function breakBondPair(view, iBase, jBase, stride) {
   const iIdx = iBase / stride;
   const jIdx = jBase / stride;
-  for (const slot of BOND_SLOTS) {
+  for (let n = 0; n < BOND_SLOTS.length; n++) {
+    const slot = BOND_SLOTS[n];
     if (view[iBase + slot] === jIdx) {
       view[iBase + slot] = -1;
+      view[iBase + S.ACCR_LINK_MASK] &= ~(1 << n);
       view[iBase + S.BOND_COUNT] = Math.max(0, view[iBase + S.BOND_COUNT] - 1);
       break;
     }
   }
-  for (const slot of BOND_SLOTS) {
+  for (let n = 0; n < BOND_SLOTS.length; n++) {
+    const slot = BOND_SLOTS[n];
     if (view[jBase + slot] === iIdx) {
       view[jBase + slot] = -1;
+      view[jBase + S.ACCR_LINK_MASK] &= ~(1 << n);
       view[jBase + S.BOND_COUNT] = Math.max(0, view[jBase + S.BOND_COUNT] - 1);
       break;
     }
@@ -108,6 +129,10 @@ export function adjoinParticles(view, iBase, jBase, stride) {
     if (iSlot == null || jSlot == null) return;
     view[iBase + iSlot] = jIdx;
     view[jBase + jSlot] = iIdx;
+    // Persist the relationship type independently from ordinary BOND/POLYMER
+    // slots. This lets ACCR maintenance run after the original contact ends.
+    view[iBase + S.ACCR_LINK_MASK] |= 1 << BOND_SLOTS.indexOf(iSlot);
+    view[jBase + S.ACCR_LINK_MASK] |= 1 << BOND_SLOTS.indexOf(jSlot);
     view[iBase + S.BOND_COUNT] = iCount + 1;
     view[jBase + S.BOND_COUNT] = jCount + 1;
   }

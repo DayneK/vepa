@@ -208,12 +208,18 @@
   border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, hsl(var(--population-h) 100% 90%), hsl(var(--population-h) 95% 58%) 38%, hsl(var(--population-h) 90% 28%) 100%);
   box-shadow: 0 0 5px hsla(var(--population-h), 95%, 60%, calc(0.35 + var(--population-intensity) * 0.45)), 0 0 12px hsla(var(--population-h), 95%, 55%, calc(0.15 + var(--population-intensity) * 0.3));
-  animation: hud-population-pulse 1.8s ease-in-out infinite;
+  animation: hud-population-pulse 1.8s ease-in-out infinite, hud-population-spectrum 9s linear infinite;
   vertical-align: middle;
   transition: background 0.45s ease, box-shadow 0.45s ease;
 }
 @keyframes hud-population-pulse {
   0%, 100% { transform: scale(0.88); opacity: 0.78; }
   50% { transform: scale(1.08); opacity: 1; }
+}
+@keyframes hud-population-spectrum {
+  0% { filter: hue-rotate(0deg); }
+  33% { filter: hue-rotate(120deg); }
+  66% { filter: hue-rotate(240deg); }
+  100% { filter: hue-rotate(360deg); }
 }
 .hud-tick-compact { white-space: nowrap; }

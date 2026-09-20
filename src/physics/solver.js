@@ -115,7 +115,7 @@ import {
   setBuffer,
 } from './laws.js';
 import { createSynergyCache } from './synergy.js';
-import { applyAlloy, adjoinParticles, isBondedPair } from './mergePhysics.js';
+import { applyAlloy, adjoinParticles, maintainAdjoinedPair, isBondedPair, isAccretionPair } from './mergePhysics.js';
 import { applyTide, applyFriction, applyHorizon, applyRadiationPressure, applyMassInertia, applyField } from './lawgroups/physicsLaws.js';
 import { applyContactCorrection, applyCollisionImpulse, applyMomentum, applyInertia, applyTorque, applyConstraint, applyFragmentation, applyTopology, applyAdhesion } from './lawgroups/mechanicsLaws.js';
 import { applyAdiabatic, applyCompression, applyExpansion, applyEquilibrium, applyLatentHeat, applyRunaway } from './lawgroups/thermoLaws.js';
@@ -131,6 +131,14 @@ import { ensureFields, fieldsEnabled, advanceFields, sampleFieldForces, wellForc
 
 const MAX_FORCE = 50.0;
 const DEFAULT_MAX_INTERACTIONS = 500; // live override: WP.MAX_INTERACTIONS
+const ACCR_PARTNER_SLOTS = [
+  STRIDE_INDEXES.BOND_PARTNER_1,
+  STRIDE_INDEXES.BOND_PARTNER_2,
+  STRIDE_INDEXES.BOND_PARTNER_3,
+  STRIDE_INDEXES.BOND_PARTNER_4,
+  STRIDE_INDEXES.BOND_PARTNER_5,
+  STRIDE_INDEXES.BOND_PARTNER_6,
+];
 const MAX_VELOCITY = 10.0;
 // Gravity scaled with world size so gravitational pull stays effective at the
 // larger inter-particle distances of a bigger world (baseline: 240³ world).
@@ -531,6 +539,24 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
     const localTimeStep = dt * localDt[i];
     if (localTimeStep <= 0) continue;
+
+    // ACCR is a persistent structural relationship, not a contact force. Run
+    // seam maintenance from the explicit ACCR topology mask before the spatial
+    // neighbor pass, so a temporarily separated composite remains attached.
+    // Only the lower-index endpoint performs the correction to avoid applying
+    // the same rigid correction twice per tick.
+    if (active[LAW_INDEXES.ACCR]) {
+      for (const slot of ACCR_PARTNER_SLOTS) {
+        const partner = Math.trunc(view[iBase + slot]);
+        if (partner > i && partner < particleCount) {
+          const partnerBase = partner * stride;
+          if (view[partnerBase + S.DEAD] < 0.5 && view[partnerBase + S.MASS] > 0
+            && isAccretionPair(view, iBase, partnerBase, stride)) {
+            maintainAdjoinedPair(view, iBase, partnerBase);
+          }
+        }
+      }
+    }
 
     // Read particle i DNA from stride cache (already decoded floats)
     readDNAFromCache(view, iBase, dnaI);
