@@ -26,11 +26,11 @@
 
 ## Implementation evidence
 
-[src/physics/lawgroups/physicsLaws.js](src/physics/lawgroups/physicsLaws.js), [src/physics/solver.js](src/physics/solver.js)
+[src/physics/interactionSpace.js](src/physics/interactionSpace.js), [src/physics/lawgroups/physicsLaws.js](src/physics/lawgroups/physicsLaws.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/unit/stellar.test.js](tests/unit/stellar.test.js)
+- Tests: [tests/unit/interactionSpace.test.js](tests/unit/interactionSpace.test.js), [tests/unit/stellar.test.js](tests/unit/stellar.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/79_SINGULARITY.md](docs/audit/laws/a3/stage-1/79_SINGULARITY.md), [docs/audit/laws/a3/stage-2/79_SINGULARITY.md](docs/audit/laws/a3/stage-2/79_SINGULARITY.md), [docs/audit/laws/a3/stage-3/79_SINGULARITY.md](docs/audit/laws/a3/stage-3/79_SINGULARITY.md)
 
 ## Interpretation boundary

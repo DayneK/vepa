@@ -4,6 +4,7 @@
   "declaredLawCount": 136,
   "lawsWithMetadata": [
     "COLL",
+    "ACCR",
     "GENOTYPE",
     "PHENOTYPE",
     "HEAT",
@@ -32,7 +33,6 @@
     "DRAG",
     "ENTR",
     "BUOYANCY",
-    "ACCR",
     "PLANETARY",
     "LIFE",
     "GLOW",
@@ -142,18 +142,18 @@
     "TORQUE",
     "FRAGMENTATION"
   ],
-  "coveragePercent": 16.91,
+  "coveragePercent": 17.65,
   "recordsByRelationshipType": {
-    "dependsOn": 8,
-    "synergizesWith": 19,
+    "dependsOn": 7,
+    "synergizesWith": 20,
     "antagonizes": 5,
-    "transforms": 20,
-    "reads": 21,
-    "writes": 22,
+    "transforms": 21,
+    "reads": 22,
+    "writes": 23,
     "consumes": 2,
     "produces": 1,
     "feedback": 2,
-    "notes": 2
+    "notes": 3
   },
   "validation": {
     "relationshipTypes": [

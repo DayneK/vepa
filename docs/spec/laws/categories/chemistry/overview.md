@@ -12,12 +12,12 @@
 | 18 | [SOLVATION](../../chemistry/018_SOLVATION.md) | wired | NONE | src/physics/laws.js |
 | 19 | [ACIDITY](../../chemistry/019_ACIDITY.md) | wired | NONE | src/physics/laws.js |
 | 20 | [OXIDATION](../../chemistry/020_OXIDATION.md) | wired | NONE | src/physics/laws.js |
-| 21 | [POLYMER](../../chemistry/021_POLYMER.md) | wired | NONE | src/physics/laws.js |
+| 21 | [POLYMER](../../chemistry/021_POLYMER.md) | wired | NONE | src/physics/interactionSpace.js |
 | 22 | [ISOMERIZATION](../../chemistry/022_ISOMERIZATION.md) | wired | NONE | src/physics/laws.js |
 | 23 | [CHIRALITY](../../chemistry/023_CHIRALITY.md) | wired | NONE | src/physics/laws.js |
-| 24 | [CRYSTALLIZATION](../../chemistry/024_CRYSTALLIZATION.md) | wired | NONE | src/physics/laws.js |
+| 24 | [CRYSTALLIZATION](../../chemistry/024_CRYSTALLIZATION.md) | wired | NONE | src/physics/interactionSpace.js |
 | 40 | [REDUCTION](../../chemistry/040_REDUCTION.md) | wired | NONE | src/physics/laws.js |
-| 41 | [ALLOY](../../chemistry/041_ALLOY.md) | wired | NONE | src/physics/laws.js |
+| 41 | [ALLOY](../../chemistry/041_ALLOY.md) | wired | NONE | src/physics/interactionSpace.js |
 | 92 | [ELECTROLYSIS](../../chemistry/092_ELECTROLYSIS.md) | wired | NONE | src/physics/solver.js |
 | 93 | [PHOTOLYSIS](../../chemistry/093_PHOTOLYSIS.md) | wired | NONE | src/physics/solver.js |
 | 94 | [PRECIPITATION](../../chemistry/094_PRECIPITATION.md) | wired | NONE | src/physics/solver.js |
