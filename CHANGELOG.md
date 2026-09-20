@@ -1,5 +1,13 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.16] - 2026-09-20 → 9.1.13
+
+### build(docs): publish systems atlas in static output
+
+- Publish the source-grounded `docs/systems/` atlas into `dist/docs/systems/` after Vite builds so the deployed Markdown is not replaced by the application-shell fallback.
+- Document the distinction between source documentation, production artifacts, and proposed runtime module decomposition.
+- Preserve the generated production and hosting artifacts required by the current deployment workflow.
+
 ## [4.9.15] - 2026-09-20 → 9.1.12
 
 ### docs(systems): add organization and civilization systems atlas

@@ -18,8 +18,6 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 - [Meta-model](meta-model.md) — proposed layered architecture and invariants.
 - [Role catalog](roles/README.md) — one durable analyst/designer role for each system.
 - [Implementation gaps](implementation-gaps.md) — explicit partial/missing boundaries and suggested next slices.
-- [Module decomposition](module-decomposition.md) — source-grounded extraction plan for future runtime modules.
-- [Deployment publication](deployment-publication.md) — why the atlas is copied into the static build output.
 
 ## Evidence notation
 
@@ -30,10 +28,6 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 | **Observed** | Analytics can infer the pattern from metrics/events, but does not own it as state. |
 | **Scaffolded** | This atlas defines a design contract only; no runtime claim. |
 | **Missing** | No reliable live implementation was found in the reviewed source surface. |
-
-## Deployment note
-
-The repository source of truth remains `docs/systems/`. Vite emits the application into `dist/` and does not copy arbitrary repository documentation. The production build therefore runs `scripts/publish-system-atlas.mjs` after Vite finishes, publishing this atlas at `/docs/systems/` without coupling the simulation runtime to Markdown files.
 
 ## Review rule
 
