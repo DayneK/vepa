@@ -1,7 +1,5 @@
 # Implementation gaps and next slices
 
-**Review baseline:** VEPA4 9.1.15, reviewed 2026-09-20. `systemFoundation.js` and `systemLifecycle.js` now provide shared evidence infrastructure; they do not close domain-specific ontology gaps.
-
 ## Confirmed partial or missing systems
 
 | Gap | Current proxy | What is missing | Priority |
@@ -25,7 +23,6 @@
 - Groups, economy, governance, construction, artifacts, infrastructure, memory, ecology, epochs, and synthetic state have runtime modules.
 - ACCR preserves separate particle identities; ALLOY is the one-body fusion path.
 - Relationship compatibility and exploration are implemented support layers.
-- All twelve ranked systems now have shared lifecycle records, causal events, bounded emergence evidence, and reports; these are cross-system observations rather than domain-specific entity registries.
 
 ## What must not yet be claimed as complete
 
@@ -37,7 +34,7 @@
 
 ## Recommended next implementation sequence
 
-1. Add a bounded sparse relationship graph with stable pair keys and save/restore support; feed it through the existing lifecycle event contract.
+1. Add a bounded sparse relationship graph with stable pair keys and save/restore support.
 2. Add kin edges and care/resource transfer without changing lineage semantics.
 3. Add group-to-group federation edges and shared cultural memory.
 4. Promote structures to durable records with ownership and maintenance.
