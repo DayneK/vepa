@@ -5,7 +5,7 @@
 ## Versioning & Commits
 
 - **Product:** **VEPA4**; versions use **`major.minor.build`** (npm-semver-native) —
-  current: **9.1.4** (legacy label `4.9.7`). Retroactive mapping of the v4 line:
+  current: **9.1.12** (legacy label `4.9.15`). Retroactive mapping of the v4 line:
   old `4.M.N` → `M.N.0`; see `CHANGELOG.md` and `AGENTS.md` §10.4.
 - **Commits:** [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
   — `<type>(<scope>): <description>`, release commits `chore(release): v7.0.0`,
@@ -78,7 +78,7 @@ The repo-root launcher `./vepa4` works from any directory (no `cd` needed):
 /path/to/vepa-feature-nuclear-rewrite/vepa4 bench    # headless solver benchmark (--laws / --all / --json)
 ```
 
-The exhaustive technical specification tree is generated under [`docs/spec/`](docs/spec/README.md). It separates architecture, UI (`general`, `appearance`, `function`, and surfaces), simulation (`solver`, fields, lifecycle, and similar concepts), state, law records, source inventory, testing, operations, traceability, and review findings. Regenerate it with `npm run spec:generate`; use `npm run spec:check` in verification or CI. The generated tree describes the current source contracts; it is not a substitute for the runtime test result.
+The exhaustive technical specification tree is generated under [`docs/spec/`](docs/spec/README.md). The organization and lifecycle systems atlas is under [`docs/systems/`](docs/systems/README.md), including implementation boundaries for mating, reproduction, family, species, lineage, groups, tribes, clans, nations, civilizations, culture, economy, governance, infrastructure, ecology, and synthetic society. It separates architecture, UI (`general`, `appearance`, `function`, and surfaces), simulation (`solver`, fields, lifecycle, and similar concepts), state, law records, source inventory, testing, operations, traceability, and review findings. Regenerate it with `npm run spec:generate`; use `npm run spec:check` in verification or CI. The generated tree describes the current source contracts; it is not a substitute for the runtime test result.
 
 The launcher can also be installed as a global command in Termux
 (`/data/data/com.termux/files/usr/bin/vepa4` → repo `vepa4`), so plain
