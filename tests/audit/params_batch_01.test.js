@@ -60,9 +60,9 @@ describe('Batch 01 — WORLD_SIZE / GROUND_HEIGHT / PARTICLE_COUNT / INITIAL_POP
     expect(initialPopulationTarget(cfg({ INITIAL_POP: 5000 }), small)).toBe(100);
   });
 
-  it('INITIAL_POP: applyWorldParam clamps to [10, 100000]', () => {
-    let s = applyWorldParam(createWorldParams(), 'INITIAL_POP', 5);
-    expect(s.INITIAL_POP).toBe(10);
+  it('INITIAL_POP: applyWorldParam clamps to [0, 100000]', () => {
+    let s = applyWorldParam(createWorldParams(), 'INITIAL_POP', -5);
+    expect(s.INITIAL_POP).toBe(0);
     s = applyWorldParam(s, 'INITIAL_POP', 999999);
     expect(s.INITIAL_POP).toBe(100000);
   });

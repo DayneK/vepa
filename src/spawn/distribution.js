@@ -95,12 +95,13 @@ function rand01(prng) {
  * Total initial population from INITIAL_POP, capped by the hard cap.
  */
 export function initialPopulationTarget(cfg, caps) {
-  return Math.min(Math.max(1, Math.round(cfg.INITIAL_POP)), caps.hardCap);
+  return Math.min(Math.max(0, Math.round(cfg.INITIAL_POP)), caps.hardCap);
 }
 
 /**
  * Per-species allocation (even split, rounded up) of a population target.
  */
 export function perSpeciesAllocation(target, speciesCount) {
+  if (target <= 0) return 0;
   return Math.max(1, Math.ceil(target / Math.max(1, speciesCount)));
 }
