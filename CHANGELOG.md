@@ -1,5 +1,18 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.15] - 2026-09-20 → 9.1.12
+
+### docs(systems): add organization and civilization systems atlas
+
+- Add a source-grounded matrix covering mating, reproduction, family/kinship, species, lineage, groups, tribes, clans, nations, civilizations, culture, economy, governance, infrastructure, ecology, and synthetic society.
+- Add ontology, comparison, analysis, meta-model, implementation-gap, and role-catalog documents that distinguish implemented runtime systems from proxies, inferred regimes, and missing entity types.
+- Record the evidence-based boundary that VEPA has group-local civilization proxies but no first-class family, tribe, clan, nation, or civilization registries.
+
+### Files
+
+- `docs/systems/README.md`, `overview.md`, `ontology.md`, `comparison-matrix.md`, `analysis-framework.md`, `meta-model.md`, `implementation-gaps.md`
+- `docs/systems/roles/*.md`
+
 ## [4.9.14] - 2026-09-20 → 9.1.11
 
 ### feat(physics): add active relationship-space exploration
