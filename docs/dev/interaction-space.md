@@ -46,3 +46,19 @@ The solver now evaluates a multidimensional compatibility vector lazily for pair
 `src/physics/relationshipCompatibility.js` projects relationship-genome tendencies from the existing DNA loci without widening the 42-value particle cache. `src/physics/relationshipState.js` supplies an allocation-friendly semantic record for relationship age, stress, integrity, flows, affinity, stability, and break/repair transitions; it is intentionally outside the solver’s Float32 hot path until a graph buffer is introduced.
 
 The registry is metadata and an audit surface. It is not a promise that every named effect is a physically complete model; the implementation references identify the bounded simulation proxy currently used by VEPA.
+
+## Active relationship-space exploration
+
+`src/physics/relationshipExplorer.js` provides a deterministic laboratory layer above the runtime solver. It does not add a second physics path. A caller supplies generated configurations to a simulation run, records the resulting trajectory, then uses the explorer to compare and cluster regimes.
+
+### Experiment pipeline
+
+| Stage | Explorer API | Purpose |
+|---|---|---|
+| Seed | `RELATIONSHIP_MECHANISM_TEMPLATES` | Keep BOND, PREDATION, SYMBIOSIS, PARASITE, and REPRODUCTION as recognizable starting recipes. |
+| Perturb | `createExplorationBatch()` | Enumerate or seeded-sample attachment, resource transfer, memory, directionality, persistence, and genetic-transfer dimensions. |
+| Measure | `extractOutcomeFeatures()` | Normalize attachment duration, force, material/energy transfer, health effect, genetic transfer, topology change, reciprocity, and persistence. |
+| Summarize | `summarizeTrajectory()` | Reduce one trajectory to a feature vector and transition count. |
+| Discover | `clusterOutcomeFeatures()` | Group measured trajectories into stable empirical regimes without assigning biological names. |
+
+The explorer deliberately separates **what VEPA permits** from **what an experiment discovers**. A cluster may later be interpreted as cooperative, parasitic, predatory, or reproductive by an observer/Codex layer, but those labels are not required by the physics substrate. Configuration generation is reproducible through `SplitMix32` seeds and bounded by `maxConfigurations`, making thousands of experiments practical without unbounded memory growth.

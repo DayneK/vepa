@@ -14,7 +14,7 @@
 | 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 11 | NONE |
 | 8 | [GLOW](../laws/biology/008_GLOW.md) | biology | 2 | 3 | 2 | NONE |
 | 9 | [AFFINITY](../laws/biology/009_AFFINITY.md) | biology | 1 | 2 | 7 | NONE |
-| 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 7 | NONE |
+| 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 8 | NONE |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | NONE |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | NONE |
 | 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 12 | 58 | NONE |
@@ -43,7 +43,7 @@
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 1 | NONE |
 | 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 2 | NONE |
 | 38 | [VOID](../laws/physics/038_VOID.md) | physics | 1 | 2 | 1 | NONE |
-| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 5 | 22 | NONE |
+| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 23 | NONE |
 | 40 | [REDUCTION](../laws/chemistry/040_REDUCTION.md) | chemistry | 1 | 2 | 1 | NONE |
 | 41 | [ALLOY](../laws/chemistry/041_ALLOY.md) | chemistry | 1 | 4 | 2 | NONE |
 | 42 | [MELT](../laws/thermodynamics/042_MELT.md) | thermodynamics | 1 | 2 | 1 | NONE |
@@ -55,7 +55,7 @@
 | 48 | [CLAIRVOYANCE](../laws/metaphysics/048_CLAIRVOYANCE.md) | metaphysics | 1 | 2 | 1 | NONE |
 | 49 | [PRECOGNITION](../laws/metaphysics/049_PRECOGNITION.md) | metaphysics | 1 | 2 | 1 | NONE |
 | 50 | [ASTRAL](../laws/metaphysics/050_ASTRAL.md) | metaphysics | 1 | 2 | 1 | NONE |
-| 51 | [PREDATION](../laws/biology/051_PREDATION.md) | biology | 1 | 3 | 3 | NONE |
+| 51 | [PREDATION](../laws/biology/051_PREDATION.md) | biology | 1 | 4 | 4 | NONE |
 | 52 | [COMMS](../laws/biology/052_COMMS.md) | biology | 1 | 5 | 8 | NONE |
 | 53 | [CHARGE_LAW](../laws/electromagnetism/053_CHARGE_LAW.md) | electromagnetism | 1 | 3 | 5 | NONE |
 | 54 | [ELECTRIC_FIELD](../laws/electromagnetism/054_ELECTRIC_FIELD.md) | electromagnetism | 0 | 0 | 0 | NONE |
@@ -92,8 +92,8 @@
 | 85 | [RADIATION_PRESSURE](../laws/physics/085_RADIATION_PRESSURE.md) | physics | 1 | 1 | 0 | NONE |
 | 86 | [MASS_INERTIA](../laws/physics/086_MASS_INERTIA.md) | physics | 1 | 1 | 0 | NONE |
 | 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 3 | 3 | NONE |
-| 88 | [SYMBIOSIS](../laws/biology/088_SYMBIOSIS.md) | biology | 1 | 3 | 1 | NONE |
-| 89 | [PARASITE](../laws/biology/089_PARASITE.md) | biology | 1 | 3 | 1 | NONE |
+| 88 | [SYMBIOSIS](../laws/biology/088_SYMBIOSIS.md) | biology | 1 | 4 | 1 | NONE |
+| 89 | [PARASITE](../laws/biology/089_PARASITE.md) | biology | 1 | 4 | 1 | NONE |
 | 90 | [HIBERNATION](../laws/biology/090_HIBERNATION.md) | biology | 1 | 1 | 1 | NONE |
 | 91 | [IMMUNITY](../laws/biology/091_IMMUNITY.md) | biology | 1 | 2 | 1 | NONE |
 | 92 | [ELECTROLYSIS](../laws/chemistry/092_ELECTROLYSIS.md) | chemistry | 1 | 1 | 1 | NONE |
