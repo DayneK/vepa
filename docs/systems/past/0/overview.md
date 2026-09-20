@@ -1,7 +1,5 @@
 # Systems overview and implementation matrix
 
-**Reviewed for VEPA4 9.1.15 on 2026-09-20.** Runtime breadth claims below are source-grounded; shared lifecycle records and reports are observation infrastructure, not proof that every named social system is a first-class entity.
-
 ## Executive matrix
 
 | System | Runtime status | What the engine actually stores/does | Primary evidence | Boundary |
@@ -28,11 +26,6 @@
 | Epoch / civilization time | Implemented | Era boundaries, snapshots, extinction/recovery thresholds, timeline records. | `src/engines/epochEngine.js`, `src/engines/timelineEngine.js` | No automatic cultural era taxonomy or causal civilizational transition model. |
 | Synthetic society | Implemented bounded proxy | HUB-gated synthetic organisms, uploaded consciousness, machine flags, program traits, group participation. | `src/state/synthetic.js` | Digital persons and machine groups are registries, not a general social ontology. |
 | Emergent relationship regime | Implemented laboratory layer | Deterministic templates, configuration batches, feature extraction, trajectory summaries, clustering. | `src/physics/relationshipExplorer.js` | Exploration does not itself run simulations or persist a relationship graph. |
-| Cross-system lifecycle evidence | Implemented shared substrate | Stable system metadata, bounded records, causal events, emergence evidence, and deterministic reports for the 12 ranked systems. | `src/state/systemFoundation.js`, `src/state/systemLifecycle.js` | Shared records make observations comparable; they do not create family, nation, civilization, or other missing domain entities. |
-
-## Interpretation rule
-
-A system may be **implemented as infrastructure** while remaining a **proxy as an ontology**. The lifecycle substrate records evidence and causality consistently across systems, but only source modules listed in each row can establish domain truth.
 
 ## Reproduction and organization status
 

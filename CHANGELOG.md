@@ -1,5 +1,13 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.19] - 2026-09-20 → 9.1.16
+
+### docs(systems): assess and refresh systems atlas
+
+- Review all 34 systems-atlas Markdown files against VEPA4 9.1.15 runtime and documentation state.
+- Archive the five stale files under `docs/systems/past/0/` before refreshing their live copies.
+- Record the shared Phase 2–5 lifecycle substrate without promoting analytical projections into first-class entities.
+
 ## [4.9.18] - 2026-09-20 → 9.1.15
 
 ### feat(systems): implement synchronized phases two through five

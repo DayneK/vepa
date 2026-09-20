@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `219` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `220` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `219` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 1 |
 | Simulation | 28 | 212 | 361 |
 | State | 25 | 167 | 190 |
-| Testing | 110 | 9 | 419 |
+| Testing | 111 | 9 | 419 |
 | Ui | 20 | 49 | 364 |
 
 ## Module list
@@ -78,7 +78,7 @@ The generator scanned `219` files from active repository inputs. Individual modu
 | [src/react-entry.js](src/react-entry.js) | application | 20 | 0 | 2 | 0 |
 | [src/render/renderer.js](src/render/renderer.js) | application | 428 | 8 | 5 | 2 |
 | [src/render/spriteSync.js](src/render/spriteSync.js) | application | 169 | 1 | 2 | 4 |
-| [src/spawn/distribution.js](src/spawn/distribution.js) | simulation | 107 | 4 | 1 | 1 |
+| [src/spawn/distribution.js](src/spawn/distribution.js) | simulation | 108 | 4 | 1 | 1 |
 | [src/state/artifacts.js](src/state/artifacts.js) | state | 154 | 2 | 2 | 1 |
 | [src/state/construction.js](src/state/construction.js) | state | 145 | 2 | 1 | 0 |
 | [src/state/defaultPresets.js](src/state/defaultPresets.js) | state | 71 | 1 | 0 | 19 |
@@ -227,6 +227,7 @@ The generator scanned `219` files from active repository inputs. Individual modu
 | [tests/unit/renderer.test.js](tests/unit/renderer.test.js) | testing | 27 | 0 | 2 | 0 |
 | [tests/unit/signal.test.js](tests/unit/signal.test.js) | testing | 105 | 0 | 4 | 3 |
 | [tests/unit/sliderControl.test.js](tests/unit/sliderControl.test.js) | testing | 149 | 0 | 2 | 0 |
+| [tests/unit/spawnDistribution.test.js](tests/unit/spawnDistribution.test.js) | testing | 13 | 0 | 3 | 0 |
 | [tests/unit/stellar.test.js](tests/unit/stellar.test.js) | testing | 281 | 0 | 5 | 2 |
 | [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js) | testing | 62 | 0 | 4 | 28 |
 | [tests/unit/synthetic.test.js](tests/unit/synthetic.test.js) | testing | 420 | 0 | 6 | 1 |

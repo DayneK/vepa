@@ -3,10 +3,10 @@
 **Date**: 2026-09-20 | **Status**: Complete | **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
-> (current `9.1.12`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
+> (current `9.1.16`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
 > Conventional Commits 1.0.0 — see `AGENTS.md` §10.4.
 
-## Milestone note (v9.1.12 — 2026-09-20)
+## Milestone note (v9.1.16 — 2026-09-20)
 
 - Added `docs/systems/` as a source-grounded atlas for mating, reproduction, kinship, species, lineage, groups, tribes, clans, nations, civilizations, culture, economy, governance, infrastructure, ecology, and synthetic society.
 - Added ontology, cross-system comparison, analysis/theorycrafting, meta-model, implementation-gap, and reusable role documents; explicitly recorded which named systems are runtime entities versus bounded proxies or missing layers.
