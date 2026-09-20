@@ -1,5 +1,18 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.13] - 2026-09-20 → 9.1.10
+
+### feat(physics): apply multidimensional relationship compatibility
+
+- Gate new structural, fusion, biological, and consumption interactions using compatibility dimensions derived from both particles instead of species equality or one-sided traits.
+- Preserve existing ACCR seams as first-class bilateral structures and maintain their edge-to-edge geometry independently of new-link eligibility.
+- Add relationship-genome projection, semantic relationship state utilities, focused regression tests, and runtime interaction-space documentation.
+
+### Files
+
+- `src/physics/solver.js`, `src/physics/relationshipCompatibility.js`, `src/physics/relationshipState.js`
+- `tests/unit/relationshipCompatibility.test.js`, `docs/dev/interaction-space.md`, `LAW_COMPENDIUM.md`
+
 ## [4.9.12] - 2026-09-20 → 9.1.9
 
 ### feat(physics): make particle relationships dimension-based

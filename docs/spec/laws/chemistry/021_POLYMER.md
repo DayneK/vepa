@@ -26,7 +26,7 @@
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/mergePhysics.js](src/physics/mergePhysics.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
+[src/physics/interactionSpace.js](src/physics/interactionSpace.js), [src/physics/laws.js](src/physics/laws.js), [src/physics/mergePhysics.js](src/physics/mergePhysics.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
 
 ## Verification evidence
 

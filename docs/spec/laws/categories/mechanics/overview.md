@@ -12,9 +12,9 @@
 | 129 | [MOMENTUM](../../mechanics/129_MOMENTUM.md) | wired | MECHANICS_HELP | src/physics/lawGraph.js |
 | 130 | [INERTIA](../../mechanics/130_INERTIA.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
 | 131 | [TORQUE](../../mechanics/131_TORQUE.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
-| 132 | [CONSTRAINT](../../mechanics/132_CONSTRAINT.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
+| 132 | [CONSTRAINT](../../mechanics/132_CONSTRAINT.md) | wired | MECHANICS_HELP | src/physics/interactionSpace.js |
 | 133 | [FRAGMENTATION](../../mechanics/133_FRAGMENTATION.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
 | 134 | [TOPOLOGY](../../mechanics/134_TOPOLOGY.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
-| 135 | [ADHESION](../../mechanics/135_ADHESION.md) | wired | MECHANICS_HELP | src/physics/lawgroups/mechanicsHelp.js |
+| 135 | [ADHESION](../../mechanics/135_ADHESION.md) | wired | MECHANICS_HELP | src/physics/interactionSpace.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

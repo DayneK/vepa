@@ -20,7 +20,7 @@
 | 48 | [CLAIRVOYANCE](../../metaphysics/048_CLAIRVOYANCE.md) | wired | NONE | src/physics/laws.js |
 | 49 | [PRECOGNITION](../../metaphysics/049_PRECOGNITION.md) | wired | NONE | src/physics/laws.js |
 | 50 | [ASTRAL](../../metaphysics/050_ASTRAL.md) | wired | NONE | src/physics/laws.js |
-| 80 | [ENTANGLEMENT](../../metaphysics/080_ENTANGLEMENT.md) | wired | NONE | src/physics/laws.js |
+| 80 | [ENTANGLEMENT](../../metaphysics/080_ENTANGLEMENT.md) | wired | NONE | src/physics/interactionSpace.js |
 | 104 | [CONSCIOUSNESS](../../metaphysics/104_CONSCIOUSNESS.md) | wired | NONE | src/physics/solver.js |
 | 105 | [PERCEPTION](../../metaphysics/105_PERCEPTION.md) | wired | NONE | src/physics/solver.js |
 | 106 | [SYNCHRONICITY](../../metaphysics/106_SYNCHRONICITY.md) | wired | NONE | src/physics/solver.js |

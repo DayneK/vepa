@@ -1,6 +1,6 @@
 # VEPA Law Compendium
 
-> **Snapshot:** VEPA 9.1.5 · **Registry:** 136 laws · **Categories:** 9 · **Particle stride:** 100 floats · **DNA parameters:** 64
+> **Snapshot:** VEPA 9.1.10 · **Registry:** 136 laws · **Categories:** 9 · **Particle stride:** 100 floats · **DNA parameters:** 64
 >
 > **Document status:** source-derived technical reference. Names, indexes, category membership, dependencies, parameter links, and implementation claims are based on the live source tree at the time of extraction. Where a law is implemented as a bounded simulation proxy rather than a physical model, that distinction is called out.
 

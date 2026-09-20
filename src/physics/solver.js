@@ -115,6 +115,7 @@ import {
   setBuffer,
 } from './laws.js';
 import { createSynergyCache } from './synergy.js';
+import { compatibilityForViews, meetsCompatibility } from './relationshipCompatibility.js';
 import { applyAlloy, adjoinParticles, maintainAdjoinedPair, isBondedPair, isAccretionPair } from './mergePhysics.js';
 import { applyTide, applyFriction, applyHorizon, applyRadiationPressure, applyMassInertia, applyField } from './lawgroups/physicsLaws.js';
 import { applyContactCorrection, applyCollisionImpulse, applyMomentum, applyInertia, applyTorque, applyConstraint, applyFragmentation, applyTopology, applyAdhesion } from './lawgroups/mechanicsLaws.js';
@@ -647,6 +648,21 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       const distSq = dx * dx + dy * dy + dz * dz;
       const dist = Math.sqrt(distSq);
 
+      // Relationship laws share one multidimensional eligibility vector. It
+      // is computed lazily so worlds without joining/biological laws retain
+      // the allocation-free pairwise path.
+      let pairCompatibility = null;
+      const getPairCompatibility = () => {
+        if (!pairCompatibility) {
+          pairCompatibility = compatibilityForViews(view, iBase, jBase, runtimeConfig.worldParams || {});
+        }
+        return pairCompatibility;
+      };
+      const structuralCompatibility = () => meetsCompatibility(getPairCompatibility(), {
+        physical: 0.2,
+        geometric: 0.2,
+      });
+
       // ── Distance-tier fidelity (v8.17) ──
       const near = dist < 30;
       const mid = dist < 200;
@@ -689,11 +705,13 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
         const collOn = active[LAW_INDEXES.COLL];
         const contactOn = active[LAW_INDEXES.CONTACT];
         const accrOn = active[LAW_INDEXES.ACCR];
+        const existingAdjoined = accrOn && isAccretionPair(view, iBase, jBase, stride);
+        const canAccrete = !accrOn || existingAdjoined || structuralCompatibility();
 
         // ACCR proximity-dwell bookkeeping: reset the timer whenever the
         // tracked partner leaves overlap range so "very close proximity"
         // means continuous contact, not a sum of separate grazes.
-        if (accrOn) {
+        if (accrOn && canAccrete) {
           const dwellPartner = view[iBase + S.PARTNER_ID] || -1;
           if (dwellPartner === j && !(overlap > 0 && dist > 0.01)) {
             view[iBase + S.MITOSIS_TIMER] = 0;
@@ -731,7 +749,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
           // to fuse anyway.
           let fusing = false;
           let adjoined = false;
-          if (accrOn) {
+          if (accrOn && canAccrete) {
             const fusionMom = dnaI[DNA_INDEXES.FUSION_MOMENTUM] ?? 1.0;
             const fusionTime = dnaI[DNA_INDEXES.FUSION_TIME] ?? 2;
             const relMomentum = relSpeed * Math.min(m1, m2);
@@ -853,7 +871,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       // ── Polymer (contact) ──
 
-      if (near && active[LAW_INDEXES.POLYMER]) {
+      if (near && active[LAW_INDEXES.POLYMER] && structuralCompatibility()) {
         const polySynergy = syn[LAW_INDEXES.POLYMER];
         applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, polySynergy, stride);
       }
@@ -862,7 +880,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       // ── Bond (contact) ──
 
-      if (near && active[LAW_INDEXES.BOND]) {
+      if (near && active[LAW_INDEXES.BOND] && structuralCompatibility()) {
         const bondSynergy = syn[LAW_INDEXES.BOND];
         const bondForce = applyBond(lawState, view, iBase, jBase, stride, dx, dy, dz, dist, bondSynergy, nCount);
         if (bondForce) {
@@ -878,7 +896,10 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       // ── Alloy (contact) ──
 
-      if (near && active[LAW_INDEXES.ALLOY]) {
+      if (near && active[LAW_INDEXES.ALLOY] && meetsCompatibility(getPairCompatibility(), {
+        physical: 0.15,
+        energetic: 0.1,
+      })) {
         const alloySynergy = syn[LAW_INDEXES.ALLOY];
         applyAlloy(lawState, view, iBase, jBase, stride, dist, alloySynergy);
       }
@@ -961,7 +982,10 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       }
 
       // ── Crystallization (near) ──
-      if (near && active[LAW_INDEXES.CRYSTALLIZATION]) {
+      if (near && active[LAW_INDEXES.CRYSTALLIZATION] && meetsCompatibility(getPairCompatibility(), {
+        physical: 0.25,
+        geometric: 0.35,
+      })) {
         const crysSynergy = syn[LAW_INDEXES.CRYSTALLIZATION];
         const crysForce = applyCrystallization(lawState, view, iBase, jBase, dx, dy, dz, dist, crysSynergy);
         if (crysForce) {
@@ -994,7 +1018,10 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       }
 
       // ── Predation (mid-range pursuit) ──
-      if (mid && active[LAW_INDEXES.PREDATION]) {
+      if (mid && active[LAW_INDEXES.PREDATION] && meetsCompatibility(getPairCompatibility(), {
+        behavioral: 0.05,
+        resource: 0.05,
+      })) {
         const predForce = applyPredation(iBase, jBase, stride, dx, dy, dz, dist, prng);
         if (predForce) {
           ax += predForce.ax;
@@ -1205,8 +1232,13 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       }
 
       // Biology
-      if (active[LAW_INDEXES.SYMBIOSIS]) applySymbiosis(view, iBase, jBase, 0.5);
-      if (active[LAW_INDEXES.PARASITE]) applyParasite(view, iBase, jBase, 0.5);
+      if (active[LAW_INDEXES.SYMBIOSIS] && meetsCompatibility(getPairCompatibility(), {
+        resource: 0.2,
+        behavioral: 0.2,
+      })) applySymbiosis(view, iBase, jBase, 0.5);
+      if (active[LAW_INDEXES.PARASITE] && meetsCompatibility(getPairCompatibility(), {
+        resource: 0.05,
+      })) applyParasite(view, iBase, jBase, 0.5);
 
       // Chemistry
       if (active[LAW_INDEXES.ELECTROLYSIS]) applyElectrolysis(view, iBase, jBase, 0.5);

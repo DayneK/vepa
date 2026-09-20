@@ -39,4 +39,10 @@ This separation prevents a new named mechanism from silently inventing a second 
 - **ENTANGLEMENT is information/state coupling.** It does not imply physical contact or a bond.
 - **REPRODUCTION is a lifecycle chain, not a single join:** eligibility → drive/threshold → energy cost → genetic construction → offspring creation → lineage recording.
 
+## Runtime compatibility and relationship state
+
+The solver now evaluates a multidimensional compatibility vector lazily for pairwise relationship laws. Physical and geometric compatibility gate new BOND, POLYMER, ACCR, and CRYSTALLIZATION links; physical and energetic compatibility gate ALLOY; resource and behavioural compatibility modulate SYMBIOSIS and PARASITE; behavioural/resource eligibility gates PREDATION. Existing ACCR seams remain exempt from new-formation gates and are maintained from their bilateral `ACCR_LINK_MASK` topology.
+
+`src/physics/relationshipCompatibility.js` projects relationship-genome tendencies from the existing DNA loci without widening the 42-value particle cache. `src/physics/relationshipState.js` supplies an allocation-friendly semantic record for relationship age, stress, integrity, flows, affinity, stability, and break/repair transitions; it is intentionally outside the solver’s Float32 hot path until a graph buffer is introduced.
+
 The registry is metadata and an audit surface. It is not a promise that every named effect is a physically complete model; the implementation references identify the bounded simulation proxy currently used by VEPA.

@@ -131,6 +131,7 @@
       "implementationFiles": [
         "src/physics/fields.js",
         "src/physics/gpuCompute.js",
+        "src/physics/interactionSpace.js",
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/lawgroups/mechanicsLaws.js",
         "src/physics/solver.js",
@@ -167,6 +168,7 @@
       "category": "physics",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/laws.js",
         "src/physics/mergePhysics.js",
@@ -179,10 +181,17 @@
       "testFiles": [
         "tests/audit/batch_02.test.js",
         "tests/audit/params_batch_11.test.js",
+        "tests/unit/interactionSpace.test.js",
         "tests/unit/synergyCache.test.js"
       ],
-      "relationshipTypes": [],
-      "relationshipMetadataComplete": false,
+      "relationshipTypes": [
+        "synergizesWith",
+        "transforms",
+        "reads",
+        "writes",
+        "notes"
+      ],
+      "relationshipMetadataComplete": true,
       "evidenceBoundary": "Text-level source references are evidence candidates, not semantic correctness proof."
     },
     {
@@ -277,7 +286,8 @@
         "tests/audit/batch_18.test.js",
         "tests/audit/params_batch_05.test.js",
         "tests/audit/params_batch_16.test.js",
-        "tests/unit/groupRegistry.test.js"
+        "tests/unit/groupRegistry.test.js",
+        "tests/unit/relationshipCompatibility.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -289,6 +299,7 @@
       "category": "biology",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/laws.js",
         "src/physics/solver.js",
         "src/physics/synergy.js"
@@ -361,6 +372,7 @@
         "src/physics/lawgroups/thermoLaws.js",
         "src/physics/laws.js",
         "src/physics/mergePhysics.js",
+        "src/physics/relationshipCompatibility.js",
         "src/physics/solver.js",
         "src/physics/synergy.js"
       ],
@@ -589,6 +601,7 @@
       "category": "chemistry",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/laws.js",
         "src/physics/mergePhysics.js",
         "src/physics/solver.js",
@@ -649,6 +662,7 @@
       "category": "chemistry",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/laws.js",
         "src/physics/solver.js"
       ],
@@ -971,6 +985,7 @@
       "category": "physics",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/laws.js",
         "src/physics/mergePhysics.js",
@@ -998,7 +1013,9 @@
         "tests/audit/params_batch_12.test.js",
         "tests/audit/params_batch_15.test.js",
         "tests/unit/groupRegistry.test.js",
+        "tests/unit/interactionSpace.test.js",
         "tests/unit/mechanics.test.js",
+        "tests/unit/relationshipCompatibility.test.js",
         "tests/unit/worldSave.test.js"
       ],
       "relationshipTypes": [
@@ -1035,6 +1052,7 @@
       "category": "chemistry",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/laws.js",
         "src/physics/mergePhysics.js",
         "src/physics/solver.js"
@@ -1043,7 +1061,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_11.test.js"
+        "tests/audit/batch_11.test.js",
+        "tests/unit/interactionSpace.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -1230,6 +1249,7 @@
       "category": "biology",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/laws.js",
         "src/physics/solver.js"
       ],
@@ -1861,6 +1881,7 @@
       "category": "physics",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/laws.js",
         "src/physics/solver.js",
         "src/physics/synergy.js"
@@ -1870,6 +1891,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_20.test.js",
+        "tests/unit/interactionSpace.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/synergyCache.test.js"
       ],
@@ -1883,6 +1905,7 @@
       "category": "metaphysics",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/laws.js",
         "src/physics/mergePhysics.js",
         "src/physics/solver.js",
@@ -1974,6 +1997,7 @@
       "category": "physics",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/lawgroups/physicsLaws.js",
         "src/physics/solver.js"
       ],
@@ -1981,6 +2005,7 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
+        "tests/unit/interactionSpace.test.js",
         "tests/unit/stellar.test.js"
       ],
       "relationshipTypes": [],
@@ -2054,6 +2079,7 @@
       "category": "biology",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/mergePhysics.js",
         "src/physics/solver.js"
       ],
@@ -2073,6 +2099,7 @@
       "category": "biology",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/mergePhysics.js",
         "src/physics/solver.js"
       ],
@@ -2822,6 +2849,7 @@
       "status": "wired",
       "implementationFiles": [
         "src/physics/gpuCompute.js",
+        "src/physics/interactionSpace.js",
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/solver.js",
         "src/worker/physics.worker.js"
@@ -2930,6 +2958,7 @@
       "category": "mechanics",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/solver.js"
       ],
@@ -2940,7 +2969,6 @@
         "tests/unit/backendArchitecture.test.js"
       ],
       "relationshipTypes": [
-        "dependsOn",
         "synergizesWith",
         "transforms",
         "reads",
@@ -3002,6 +3030,7 @@
       "category": "mechanics",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/interactionSpace.js",
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/solver.js"
       ],
@@ -3028,6 +3057,6 @@
     "implementedNotGated": 2,
     "metadataOnly": 1,
     "withTests": 133,
-    "withRelationshipMetadata": 23
+    "withRelationshipMetadata": 24
   }
 }
