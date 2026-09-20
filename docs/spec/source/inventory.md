@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `215` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `219` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -10,8 +10,8 @@ The generator scanned `215` files from active repository inputs. Individual modu
 | Benchmark | 3 | 5 | 9 |
 | Repository | 7 | 2 | 1 |
 | Simulation | 28 | 212 | 361 |
-| State | 23 | 152 | 188 |
-| Testing | 108 | 9 | 418 |
+| State | 25 | 167 | 190 |
+| Testing | 110 | 9 | 419 |
 | Ui | 20 | 49 | 364 |
 
 ## Module list
@@ -98,6 +98,8 @@ The generator scanned `215` files from active repository inputs. Individual modu
 | [src/state/runtimeConfig.js](src/state/runtimeConfig.js) | state | 32 | 1 | 1 | 2 |
 | [src/state/stellar.js](src/state/stellar.js) | state | 360 | 6 | 2 | 2 |
 | [src/state/synthetic.js](src/state/synthetic.js) | state | 304 | 11 | 2 | 3 |
+| [src/state/systemFoundation.js](src/state/systemFoundation.js) | state | 64 | 4 | 0 | 1 |
+| [src/state/systemLifecycle.js](src/state/systemLifecycle.js) | state | 207 | 11 | 1 | 1 |
 | [src/state/worldParams.js](src/state/worldParams.js) | state | 257 | 6 | 1 | 65 |
 | [src/state/worldSave.js](src/state/worldSave.js) | state | 546 | 18 | 3 | 2 |
 | [src/ui/camera.js](src/ui/camera.js) | ui | 300 | 6 | 0 | 0 |
@@ -228,6 +230,8 @@ The generator scanned `215` files from active repository inputs. Individual modu
 | [tests/unit/stellar.test.js](tests/unit/stellar.test.js) | testing | 281 | 0 | 5 | 2 |
 | [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js) | testing | 62 | 0 | 4 | 28 |
 | [tests/unit/synthetic.test.js](tests/unit/synthetic.test.js) | testing | 420 | 0 | 6 | 1 |
+| [tests/unit/systemFoundation.test.js](tests/unit/systemFoundation.test.js) | testing | 32 | 0 | 2 | 1 |
+| [tests/unit/systemLifecycle.test.js](tests/unit/systemLifecycle.test.js) | testing | 58 | 0 | 2 | 0 |
 | [tests/unit/webgpuContract.test.js](tests/unit/webgpuContract.test.js) | testing | 70 | 0 | 4 | 0 |
 | [tests/unit/worldSave.test.js](tests/unit/worldSave.test.js) | testing | 322 | 0 | 7 | 4 |
 | [vercel.json](vercel.json) | repository | 35 | 0 | 0 | 0 |
