@@ -26,11 +26,11 @@
 
 ## Implementation evidence
 
-[src/physics/interactionSpace.js](src/physics/interactionSpace.js), [src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
+[src/physics/interactionSpace.js](src/physics/interactionSpace.js), [src/physics/laws.js](src/physics/laws.js), [src/physics/relationshipExplorer.js](src/physics/relationshipExplorer.js), [src/physics/solver.js](src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_03.test.js](tests/audit/batch_03.test.js), [tests/audit/batch_13.test.js](tests/audit/batch_13.test.js), [tests/audit/params_batch_15.test.js](tests/audit/params_batch_15.test.js)
+- Tests: [tests/audit/batch_03.test.js](tests/audit/batch_03.test.js), [tests/audit/batch_13.test.js](tests/audit/batch_13.test.js), [tests/audit/params_batch_15.test.js](tests/audit/params_batch_15.test.js), [tests/unit/relationshipExplorer.test.js](tests/unit/relationshipExplorer.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](docs/audit/laws/a3/biology.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/11_TRACK.md](docs/audit/laws/a3/stage-1/11_TRACK.md), [docs/audit/laws/a3/stage-1/51_PREDATION.md](docs/audit/laws/a3/stage-1/51_PREDATION.md), [docs/audit/laws/a3/stage-1/89_PARASITE.md](docs/audit/laws/a3/stage-1/89_PARASITE.md), [docs/audit/laws/a3/stage-2/11_TRACK.md](docs/audit/laws/a3/stage-2/11_TRACK.md), [docs/audit/laws/a3/stage-2/51_PREDATION.md](docs/audit/laws/a3/stage-2/51_PREDATION.md), [docs/audit/laws/a3/stage-2/89_PARASITE.md](docs/audit/laws/a3/stage-2/89_PARASITE.md), [docs/audit/laws/a3/stage-3/11_TRACK.md](docs/audit/laws/a3/stage-3/11_TRACK.md), [docs/audit/laws/a3/stage-3/51_PREDATION.md](docs/audit/laws/a3/stage-3/51_PREDATION.md), [docs/audit/laws/a3/stage-3/89_PARASITE.md](docs/audit/laws/a3/stage-3/89_PARASITE.md)
 
 ## Interpretation boundary

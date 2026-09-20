@@ -314,6 +314,7 @@
         "tests/audit/params_batch_14.test.js",
         "tests/audit/params_batch_15.test.js",
         "tests/unit/multiplex.test.js",
+        "tests/unit/relationshipExplorer.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [],
@@ -989,6 +990,7 @@
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/laws.js",
         "src/physics/mergePhysics.js",
+        "src/physics/relationshipExplorer.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
@@ -1016,6 +1018,7 @@
         "tests/unit/interactionSpace.test.js",
         "tests/unit/mechanics.test.js",
         "tests/unit/relationshipCompatibility.test.js",
+        "tests/unit/relationshipExplorer.test.js",
         "tests/unit/worldSave.test.js"
       ],
       "relationshipTypes": [
@@ -1251,6 +1254,7 @@
       "implementationFiles": [
         "src/physics/interactionSpace.js",
         "src/physics/laws.js",
+        "src/physics/relationshipExplorer.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
@@ -1259,7 +1263,8 @@
       "testFiles": [
         "tests/audit/batch_03.test.js",
         "tests/audit/batch_13.test.js",
-        "tests/audit/params_batch_15.test.js"
+        "tests/audit/params_batch_15.test.js",
+        "tests/unit/relationshipExplorer.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -2081,6 +2086,7 @@
       "implementationFiles": [
         "src/physics/interactionSpace.js",
         "src/physics/mergePhysics.js",
+        "src/physics/relationshipExplorer.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
@@ -2101,6 +2107,7 @@
       "implementationFiles": [
         "src/physics/interactionSpace.js",
         "src/physics/mergePhysics.js",
+        "src/physics/relationshipExplorer.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [

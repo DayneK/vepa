@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `213` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `215` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 26 | 135 | 303 |
 | Benchmark | 3 | 5 | 9 |
 | Repository | 7 | 2 | 1 |
-| Simulation | 27 | 204 | 356 |
+| Simulation | 28 | 212 | 361 |
 | State | 23 | 152 | 188 |
-| Testing | 107 | 9 | 415 |
+| Testing | 108 | 9 | 418 |
 | Ui | 20 | 49 | 364 |
 
 ## Module list
@@ -70,6 +70,7 @@ The generator scanned `213` files from active repository inputs. Individual modu
 | [src/physics/octree.js](src/physics/octree.js) | simulation | 383 | 4 | 0 | 0 |
 | [src/physics/pairGeometry.js](src/physics/pairGeometry.js) | simulation | 41 | 1 | 1 | 0 |
 | [src/physics/relationshipCompatibility.js](src/physics/relationshipCompatibility.js) | simulation | 206 | 6 | 1 | 9 |
+| [src/physics/relationshipExplorer.js](src/physics/relationshipExplorer.js) | simulation | 213 | 8 | 2 | 5 |
 | [src/physics/relationshipState.js](src/physics/relationshipState.js) | simulation | 168 | 9 | 0 | 0 |
 | [src/physics/solver.js](src/physics/solver.js) | simulation | 1989 | 8 | 22 | 133 |
 | [src/physics/spatialGrid.js](src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
@@ -219,6 +220,7 @@ The generator scanned `213` files from active repository inputs. Individual modu
 | [tests/unit/provenance.test.js](tests/unit/provenance.test.js) | testing | 71 | 0 | 6 | 2 |
 | [tests/unit/quantumMacro.test.js](tests/unit/quantumMacro.test.js) | testing | 385 | 0 | 5 | 5 |
 | [tests/unit/relationshipCompatibility.test.js](tests/unit/relationshipCompatibility.test.js) | testing | 79 | 0 | 4 | 2 |
+| [tests/unit/relationshipExplorer.test.js](tests/unit/relationshipExplorer.test.js) | testing | 56 | 0 | 2 | 3 |
 | [tests/unit/relativity.test.js](tests/unit/relativity.test.js) | testing | 210 | 0 | 5 | 2 |
 | [tests/unit/renderer.test.js](tests/unit/renderer.test.js) | testing | 27 | 0 | 2 | 0 |
 | [tests/unit/signal.test.js](tests/unit/signal.test.js) | testing | 105 | 0 | 4 | 3 |

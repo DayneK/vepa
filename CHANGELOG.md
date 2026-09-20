@@ -1,5 +1,19 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.14] - 2026-09-20 → 9.1.11
+
+### feat(physics): add active relationship-space exploration
+
+- Add immutable BOND, PREDATION, SYMBIOSIS, PARASITE, and REPRODUCTION templates over the shared relationship dimensions.
+- Add deterministic bounded experiment batches for attachment, resource transfer, memory, directionality, persistence, and genetic transfer perturbations.
+- Add trajectory feature extraction and regime clustering so observed behavior can be classified without hard-coding emergent biological names.
+- Document the experiment pipeline as an observer/laboratory layer above the runtime solver.
+
+### Files
+
+- `src/physics/relationshipExplorer.js`, `tests/unit/relationshipExplorer.test.js`
+- `docs/dev/interaction-space.md` and generated `docs/spec/` records
+
 ## [4.9.13] - 2026-09-20 → 9.1.10
 
 ### feat(physics): apply multidimensional relationship compatibility
