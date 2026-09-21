@@ -1,5 +1,19 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.20] - 2026-09-21 → 9.1.17
+
+### docs(systems): finalize the 48-variant roadmap catalog
+
+- Save four completed multiphase variants (A, B, C, and D) for each of the twelve systems.
+- Add a navigable roadmap catalog and shared compatibility gates for evidence, relationships, explicit systems, and open-ended evolutionary discovery.
+- Append finalization reports to the top of every roadmap variant and preserve the source-grounded boundary between documentation and runtime entities.
+
+### Files
+
+- `docs/systems/roadmaps/README.md`
+- `docs/systems/roadmaps/*-{A,B,C,D}.md`
+- `docs/systems/README.md`, `docs/systems/roadmap-overview.md`
+
 ## [4.9.19] - 2026-09-20 → 9.1.16
 
 ### docs(systems): assess and refresh systems atlas
