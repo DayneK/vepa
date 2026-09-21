@@ -1,6 +1,6 @@
 # Ranked systems roadmap
 
-**Status review:** VEPA4 9.1.15, 2026-09-20. All twelve systems have completed the shared Phases 1–5 substrate; domain adapters and Phase 6 stress/evolution work remain system-specific.
+**Status review:** VEPA4 9.1.17, 2026-09-21. All twelve systems have four completed roadmap variants (A–D), each using six shared phases; runtime implementation remains bounded by the source-grounded atlas.
 
 ## Breadth ranking
 
@@ -32,7 +32,7 @@ Each phase is completed for every system before the next phase begins. No phase 
 - **Phase 5 — Analysis and UI:** metrics, Codex interpretation, replay, comparison views, and user controls.
 - **Phase 6 — Stress and evolution:** long-run validation, save/restore, performance budgets, and evolutionary experiments.
 
-Every system roadmap uses this shared ordering while specializing its deliverables and acceptance criteria.
+Every system roadmap uses this shared ordering while specializing its deliverables and acceptance criteria. The complete 48-file A–D catalog is indexed in [`roadmaps/README.md`](roadmaps/README.md).
 
 ## Current delivery status
 
