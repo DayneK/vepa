@@ -873,7 +873,8 @@
         "tests/audit/batch_09.test.js",
         "tests/unit/physics.test.js",
         "tests/unit/synergyCache.test.js",
-        "tests/unit/systemFoundation.test.js"
+        "tests/unit/systemFoundation.test.js",
+        "tests/unit/systemVariants.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,

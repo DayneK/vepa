@@ -7,6 +7,11 @@
  * analysis can then derive bounded regime evidence without inventing entities.
  */
 import { SYSTEM_FOUNDATION, SYSTEM_FOUNDATION_ORDER } from './systemFoundation.js';
+import {
+  createStaggeredImplementationPlan,
+  getStaggeredIntegrationEdges,
+  getSystemVariant,
+} from './systemVariants.js';
 
 const PHASES = Object.freeze({
   1: 'evidence-contract',
@@ -46,6 +51,10 @@ export function createSystemLifecycle(options = {}) {
     clock: finite(options.clock, 0),
     eventCap: Math.max(1, Math.floor(options.eventCap || DEFAULT_EVENT_CAP)),
     recordCap: Math.max(1, Math.floor(options.recordCap || DEFAULT_RECORD_CAP)),
+    variants: new Map(),
+    integrations: [],
+    relationships: new Map(),
+    topology: null,
   };
 }
 
@@ -176,25 +185,216 @@ export function getSystemPhaseStatus(lifecycle, systemId) {
   };
 }
 
-export function serializeSystemLifecycle(lifecycle) {
+/** Register one roadmap variant after its predecessor seam has been applied. */
+export function applyStaggeredVariant(lifecycle, variantId) {
+  const plan = createStaggeredImplementationPlan();
+  const step = plan.find((candidate) => candidate.variantId === variantId);
+  if (!step) throw new Error(`Unknown system variant: ${variantId}`);
+  if (lifecycle.variants.has(variantId)) return clone(lifecycle.variants.get(variantId));
+  const previous = step.integrationBefore?.from;
+  if (previous && !lifecycle.variants.has(previous)) {
+    throw new Error(`Variant ${variantId} requires integration from ${previous}`);
+  }
+  const variant = getSystemVariant(step.systemId, step.variant);
+  const record = createSystemRecord(lifecycle, step.systemId, variantId, {
+    variant: step.variant,
+    mode: variant.mode,
+    emphasis: variant.emphasis,
+    confidence: 0,
+  });
+  record.variantId = variantId;
+  lifecycle.records.get(record.id).variantId = variantId;
+  lifecycle.variants.set(variantId, { ...record, phase: 2 });
+  if (previous) {
+    const integration = { from: previous, to: variantId, step: step.step, at: ++lifecycle.clock };
+    lifecycle.integrations.push(integration);
+    recordSystemEvent(lifecycle, record.id, 'variant-integrated', integration);
+  }
+  return clone(lifecycle.variants.get(variantId));
+}
+
+export function applyNextStaggeredVariant(lifecycle) {
+  const next = createStaggeredImplementationPlan().find((step) => !lifecycle.variants.has(step.variantId));
+  return next ? applyStaggeredVariant(lifecycle, next.variantId) : null;
+}
+
+/** Create a durable relationship for one completed adjacent-variant seam. */
+export function integrateStaggeredSeam(lifecycle, fromVariantId, toVariantId, attributes = {}) {
+  const edge = getStaggeredIntegrationEdges().find(
+    (candidate) => candidate.from === fromVariantId && candidate.to === toVariantId,
+  );
+  if (!edge) throw new Error(`Unknown staggered seam: ${fromVariantId} -> ${toVariantId}`);
+  if (!lifecycle.variants.has(fromVariantId) || !lifecycle.variants.has(toVariantId)) {
+    throw new Error(`Both variants must be applied before integrating ${fromVariantId} -> ${toVariantId}`);
+  }
+  const id = `integration:${fromVariantId}->${toVariantId}`;
+  if (lifecycle.relationships.has(id)) return clone(lifecycle.relationships.get(id));
+  const from = lifecycle.variants.get(fromVariantId);
+  const to = lifecycle.variants.get(toVariantId);
+  const relationship = {
+    id,
+    kind: 'roadmap-integration',
+    fromVariantId,
+    toVariantId,
+    fromSystemId: from.systemId,
+    toSystemId: to.systemId,
+    status: 'active',
+    phase: 3,
+    formedAt: ++lifecycle.clock,
+    attributes: clone(attributes) || {},
+  };
+  lifecycle.relationships.set(id, relationship);
+  const toRecord = [...lifecycle.records.values()].find((record) => record.variantId === toVariantId);
+  if (toRecord) recordSystemEvent(lifecycle, toRecord.id, 'relationship-integrated', { relationshipId: id });
+  return clone(relationship);
+}
+
+/** Apply the next relationship seam after the first stagger has registered variants. */
+export function applyNextStaggeredRelationship(lifecycle) {
+  const edge = getStaggeredIntegrationEdges().find((candidate) => !lifecycle.relationships.has(`integration:${candidate.from}->${candidate.to}`));
+  if (!edge) return null;
+  return integrateStaggeredSeam(lifecycle, edge.from, edge.to);
+}
+
+export function closeStaggeredRelationship(lifecycle, relationshipId, reason = 'closed') {
+  const relationship = lifecycle.relationships.get(relationshipId);
+  if (!relationship) return null;
+  relationship.status = 'closed';
+  relationship.closedAt = ++lifecycle.clock;
+  relationship.attributes = { ...relationship.attributes, closeReason: reason };
+  return clone(relationship);
+}
+
+export function getStaggeredRelationshipReport(lifecycle) {
+  return [...lifecycle.relationships.values()].map(clone);
+}
+
+/** Build the deterministic dependency topology produced by the first two staggers. */
+export function computeStaggeredTopology(lifecycle) {
+  const plan = createStaggeredImplementationPlan();
+  const nodes = plan
+    .filter((step) => lifecycle.variants.has(step.variantId))
+    .map((step) => ({
+      id: step.variantId,
+      systemId: step.systemId,
+      variant: step.variant,
+      mode: step.mode,
+    }));
+  const edges = [...lifecycle.relationships.values()].map((relationship) => ({
+    id: relationship.id,
+    from: relationship.fromVariantId,
+    to: relationship.toVariantId,
+    status: relationship.status,
+  }));
+  const adjacency = new Map(nodes.map((node) => [node.id, []]));
+  for (const edge of edges) {
+    if (!adjacency.has(edge.from) || !adjacency.has(edge.to)) continue;
+    adjacency.get(edge.from).push(edge.to);
+    adjacency.get(edge.to).push(edge.from);
+  }
+  const expectedEdges = getStaggeredIntegrationEdges();
+  const expectedEdgeIds = new Set(expectedEdges.map((edge) => `integration:${edge.from}->${edge.to}`));
+  const unexpectedEdges = edges.filter((edge) => !expectedEdgeIds.has(edge.id));
+  const dependencyOrder = plan.filter((step) => lifecycle.variants.has(step.variantId)).map((step) => step.variantId);
+  const dependencyIndex = new Map(dependencyOrder.map((id, index) => [id, index]));
+  const dependencyViolations = edges
+    .filter((edge) => dependencyIndex.has(edge.from) && dependencyIndex.has(edge.to))
+    .filter((edge) => dependencyIndex.get(edge.from) >= dependencyIndex.get(edge.to))
+    .map((edge) => edge.id);
+  const components = [];
+  const visited = new Set();
+  for (const node of nodes) {
+    if (visited.has(node.id)) continue;
+    const component = [];
+    const queue = [node.id];
+    visited.add(node.id);
+    while (queue.length) {
+      const id = queue.shift();
+      component.push(id);
+      for (const neighbour of adjacency.get(id) || []) {
+        if (!visited.has(neighbour)) {
+          visited.add(neighbour);
+          queue.push(neighbour);
+        }
+      }
+    }
+    components.push(component);
+  }
   return {
     version: 1,
+    nodeCount: nodes.length,
+    edgeCount: edges.length,
+    activeEdgeCount: edges.filter((edge) => edge.status === 'active').length,
+    dependencyOrder,
+    dependencyEdgeCount: edges.filter((edge) => expectedEdgeIds.has(edge.id)).length,
+    unexpectedEdges,
+    dependencyViolations,
+    deterministic: unexpectedEdges.length === 0 && dependencyViolations.length === 0,
+    components,
+    nodes,
+    edges,
+  };
+}
+
+/** Materialize the completed third stagger only after all prior seams exist. */
+export function materializeStaggeredTopology(lifecycle) {
+  const topology = computeStaggeredTopology(lifecycle);
+  if (topology.nodeCount !== 48 || topology.edgeCount !== 47) {
+    throw new Error(`Staggered topology requires 48 nodes and 47 edges; got ${topology.nodeCount} and ${topology.edgeCount}`);
+  }
+  if (topology.components.length !== 1) {
+    throw new Error(`Staggered topology must be connected; got ${topology.components.length} components`);
+  }
+  if (topology.dependencyEdgeCount !== 47 || !topology.deterministic) {
+    throw new Error('Staggered topology contains incomplete or non-deterministic dependencies');
+  }
+  if (!lifecycle.topology) lifecycle.topology = { ...topology, status: 'complete', completedAt: ++lifecycle.clock };
+  return clone(lifecycle.topology);
+}
+
+export function getStaggeredProgress(lifecycle) {
+  const plan = createStaggeredImplementationPlan();
+  return {
+    completed: lifecycle.variants.size,
+    total: plan.length,
+    next: plan.find((step) => !lifecycle.variants.has(step.variantId))?.variantId || null,
+    integrations: lifecycle.integrations.length,
+    relationshipIntegrations: lifecycle.relationships.size,
+    topology: lifecycle.topology?.status || 'ready',
+  };
+}
+
+export function serializeSystemLifecycle(lifecycle) {
+  return {
+    version: 2,
     clock: lifecycle.clock,
     sequence: Object.fromEntries(lifecycle.sequence),
     records: [...lifecycle.records.values()].map(clone),
     events: lifecycle.events.map(clone),
+    variants: [...lifecycle.variants.values()].map(clone),
+    integrations: lifecycle.integrations.map(clone),
+    relationships: [...lifecycle.relationships.values()].map(clone),
+    topology: clone(lifecycle.topology),
   };
 }
 
 export function restoreSystemLifecycle(snapshot, options = {}) {
   const lifecycle = createSystemLifecycle(options);
-  if (!snapshot || snapshot.version !== 1) return lifecycle;
+  if (!snapshot || ![1, 2].includes(snapshot.version)) return lifecycle;
   lifecycle.clock = finite(snapshot.clock, 0);
   lifecycle.sequence = new Map(Object.entries(snapshot.sequence || {}).map(([id, value]) => [id, finite(value)]));
   for (const record of snapshot.records || []) {
     if (SYSTEM_FOUNDATION[record.systemId] && record.id) lifecycle.records.set(record.id, clone(record));
   }
   lifecycle.events = (snapshot.events || []).filter((event) => SYSTEM_FOUNDATION[event.systemId]).map(clone).slice(-lifecycle.eventCap);
+  lifecycle.integrations = (snapshot.integrations || []).map(clone);
+  for (const relationship of snapshot.relationships || []) {
+    if (relationship.id && relationship.kind === 'roadmap-integration') lifecycle.relationships.set(relationship.id, clone(relationship));
+  }
+  lifecycle.topology = snapshot.topology && snapshot.topology.version === 1 ? clone(snapshot.topology) : null;
+  for (const variant of snapshot.variants || []) {
+    if (variant.variantId && SYSTEM_FOUNDATION[variant.systemId]) lifecycle.variants.set(variant.variantId, clone(variant));
+  }
   return lifecycle;
 }
 

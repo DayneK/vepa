@@ -3,8 +3,23 @@
 **Date**: 2026-09-21 | **Status**: Complete | **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
-> (current `9.1.17`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
+> (current `9.1.20`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
 > Conventional Commits 1.0.0 — see `AGENTS.md` §10.4.
+
+## Milestone note (v9.1.20 — 2026-09-21)
+
+- Completed the third integrated stagger: deterministic topology materialization over all 48 variant nodes and 47 durable relationships.
+- Added connectivity validation, component/edge reporting, topology progress state, and save/restore coverage.
+
+## Milestone note (v9.1.19 — 2026-09-21)
+
+- Added the second integrated stagger: durable typed relationship records for all 47 adjacent variant seams.
+- Added predecessor/successor gating, relationship topology progress reporting, and save/restore coverage on top of the first stagger.
+
+## Milestone note (v9.1.18 — 2026-09-21)
+
+- Began implementation of all 48 roadmap variants through one shared registry and lifecycle substrate.
+- Added deterministic A→B→C→D staggering for each system, 47 predecessor-gated integration seams, progress reporting, and serialization.
 
 ## Milestone note (v9.1.16 — 2026-09-20)
 
