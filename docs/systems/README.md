@@ -1,6 +1,6 @@
 # VEPA systems atlas
 
-**Scope:** source-grounded organization, reproduction, lineage, ecology, and civilization analysis for VEPA4 9.1.15. This atlas was reviewed against the current runtime on 2026-09-20; see [the assessment record](assessment-20260920.md).
+**Scope:** source-grounded organization, reproduction, lineage, ecology, and civilization analysis for VEPA4 9.1.17. This atlas was reviewed against the current runtime on 2026-09-20; see [the assessment record](assessment-20260920.md).
 
 This atlas answers two different questions without conflating them:
 
@@ -21,6 +21,7 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 - [Module decomposition](module-decomposition.md) — source-grounded extraction plan for future runtime modules.
 - [Deployment publication](deployment-publication.md) — why the atlas is copied into the static build output.
 - [Ranked roadmap](roadmap-overview.md) — synchronized multi-phase delivery order.
+- [48-variant roadmap catalog](roadmaps/README.md) — four completed variants (A–D) for each of the twelve systems.
 - `src/state/systemFoundation.js` — Phase 1 evidence-contract registry used by the runtime/tooling layer.
 - `src/state/systemLifecycle.js` — shared Phase 2–5 records, causal events, emergence evidence, and reports.
 

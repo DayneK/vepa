@@ -1,11 +1,11 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.1.16 | **Date**: 2026-09-20 | **Base**: VEPA4 integrated intelligence
+**Version**: 9.1.17 | **Date**: 2026-09-21 | **Base**: VEPA4 integrated intelligence
 **Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
 
 ## Problem Statement
 
-The organization systems atlas at `docs/systems/` is the source-grounded companion for relationship, lifecycle, group, culture, and civilization analysis. It distinguishes live runtime registries from inferred analytics and proposed ontology, and defines the promotion path from observed regime to causal system.
+The organization systems atlas at `docs/systems/` is the source-grounded companion for relationship, lifecycle, group, culture, and civilization analysis. Its completed roadmap catalog at `docs/systems/roadmaps/` contains four independent variants for each of the twelve systems. It distinguishes live runtime registries from inferred analytics and proposed ontology, and defines the promotion path from observed regime to causal system.
 
 ## Technical Specification Procedure
 
