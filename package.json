@@ -1,10 +1,11 @@
 {
   "name": "vepa-v4",
-  "version": "9.1.20",
+  "version": "9.1.21",
   "description": "VEPA4 — Vector Emergent Physics Automata (Integrated Intelligence release)",
   "type": "module",
   "scripts": {
     "concat": "node exports/generate-vepa-all.mjs",
+    "systems:bundle": "node scripts/generate-systems-bundle.mjs",
     "generate:vepa-all": "node exports/generate-vepa-all.mjs",
     "dev": "vite --host",
     "build": "vite build && node scripts/publish-system-atlas.mjs",

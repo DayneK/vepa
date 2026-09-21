@@ -5,7 +5,7 @@
 ## Versioning & Commits
 
 - **Product:** **VEPA4**; versions use **`major.minor.build`** (npm-semver-native) —
-  current: **9.1.20** (legacy label `4.9.23`). Retroactive mapping of the v4 line:
+  current: **9.1.21** (legacy label `4.9.24`). Retroactive mapping of the v4 line:
   old `4.M.N` → `M.N.0`; see `CHANGELOG.md` and `AGENTS.md` §10.4.
 - **Commits:** [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
   — `<type>(<scope>): <description>`, release commits `chore(release): v7.0.0`,
@@ -20,7 +20,7 @@ explicit law.
 
 ## Systems implementation substrate
 
-The 48 roadmap variants (A–D across twelve systems) now share `src/state/systemVariants.js` and the bounded lifecycle substrate. Implementation proceeds deterministically as A→B→C→D per system, with a predecessor-gated integration seam between each adjacent variant. The second stagger materializes those 47 seams as typed, durable relationship records with save/restore support. The third stagger validates and materializes a connected 48-node topology over that relationship layer; this keeps evidence, relationship, explicit-system, and discovery work composable without duplicating registries.
+The 48 roadmap variants (A–D across twelve systems) now share `src/state/systemVariants.js` and the bounded lifecycle substrate. Implementation proceeds deterministically as A→B→C→D per system, with a predecessor-gated integration seam between each adjacent variant. The second stagger materializes those 47 seams as typed, durable relationship records with save/restore support. The third stagger validates and materializes a connected 48-node topology over that relationship layer; the fourth adds bounded deterministic replay trajectories and evolutionary regime summaries. This keeps evidence, relationship, explicit-system, and discovery work composable without duplicating registries.
 
 ## Quick Start
 
@@ -31,6 +31,7 @@ npm run build  # Production build
 npm test       # Unit tests (88 files / 870 tests; see current pass/fail output)
 npm run spec:generate # Generate the hierarchical docs/spec tree
 npm run spec:check    # Fail when generated specifications drift
+npm run systems:bundle # Regenerate the hierarchical concatenated systems atlas
 ```
 
 ## Deployments
@@ -82,7 +83,7 @@ The repo-root launcher `./vepa4` works from any directory (no `cd` needed):
 /path/to/vepa-feature-nuclear-rewrite/vepa4 bench    # headless solver benchmark (--laws / --all / --json)
 ```
 
-The exhaustive technical specification tree is generated under [`docs/spec/`](docs/spec/README.md). The organization and lifecycle systems atlas is under [`docs/systems/`](docs/systems/README.md), including implementation boundaries for mating, reproduction, family, species, lineage, groups, tribes, clans, nations, civilizations, culture, economy, governance, infrastructure, ecology, and synthetic society. The completed roadmap catalog contains four variants (A–D) for each of the twelve systems at [`docs/systems/roadmaps/`](docs/systems/roadmaps/README.md). It separates architecture, UI (`general`, `appearance`, `function`, and surfaces), simulation (`solver`, fields, lifecycle, and similar concepts), state, law records, source inventory, testing, operations, traceability, and review findings. Regenerate it with `npm run spec:generate`; use `npm run spec:check` in verification or CI. The generated tree describes the current source contracts; it is not a substitute for the runtime test result.
+The exhaustive technical specification tree is generated under [`docs/spec/`](docs/spec/README.md). The organization and lifecycle systems atlas is under [`docs/systems/`](docs/systems/README.md), including a single hierarchical [complete concatenated reference](docs/systems/complete-atlas.md), implementation boundaries for mating, reproduction, family, species, lineage, groups, tribes, clans, nations, civilizations, culture, economy, governance, infrastructure, ecology, and synthetic society. The completed roadmap catalog contains four variants (A–D) for each of the twelve systems at [`docs/systems/roadmaps/`](docs/systems/roadmaps/README.md). It separates architecture, UI (`general`, `appearance`, `function`, and surfaces), simulation (`solver`, fields, lifecycle, and similar concepts), state, law records, source inventory, testing, operations, traceability, and review findings. Regenerate it with `npm run spec:generate`; use `npm run spec:check` in verification or CI. The generated tree describes the current source contracts; it is not a substitute for the runtime test result.
 
 The launcher can also be installed as a global command in Termux
 (`/data/data/com.termux/files/usr/bin/vepa4` → repo `vepa4`), so plain

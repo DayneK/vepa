@@ -3,8 +3,13 @@
 **Date**: 2026-09-21 | **Status**: Complete | **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
-> (current `9.1.20`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
+> (current `9.1.21`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
 > Conventional Commits 1.0.0 — see `AGENTS.md` §10.4.
+
+## Milestone note (v9.1.21 — 2026-09-21)
+
+- Completed the fourth integrated stagger: bounded deterministic replay trajectories, evolutionary transitions, regime summaries, and lifecycle persistence over the complete 48-node topology.
+- Added the hierarchical concatenated systems reference at `docs/systems/complete-atlas.md` with a generated table of contents.
 
 ## Milestone note (v9.1.20 — 2026-09-21)
 

@@ -1,5 +1,18 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.24] - 2026-09-21 → 9.1.21
+
+### feat(systems): complete the fourth stagger and publish the systems bundle
+
+- Add bounded deterministic replay trajectories, evolutionary transitions, and regime summaries over the completed 48-node topology.
+- Persist fourth-stagger evolution state through lifecycle serialization/restoration and expose completion in stagger progress reports.
+- Generate `docs/systems/complete-atlas.md`, a hierarchical concatenation with a table of contents covering the current atlas, roles, and all 48 roadmap variants.
+
+### Files
+
+- `src/state/systemLifecycle.js`, `tests/unit/systemVariants.test.js`
+- `scripts/generate-systems-bundle.mjs`, `docs/systems/complete-atlas.md`
+
 ## [4.9.23] - 2026-09-21 → 9.1.20
 
 ### feat(systems): complete the third stagger topology layer

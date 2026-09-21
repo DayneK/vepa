@@ -1,11 +1,11 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.1.20 | **Date**: 2026-09-21 | **Base**: VEPA4 integrated intelligence
+**Version**: 9.1.21 | **Date**: 2026-09-21 | **Base**: VEPA4 integrated intelligence
 **Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
 
 ## Problem Statement
 
-The organization systems atlas at `docs/systems/` is the source-grounded companion for relationship, lifecycle, group, culture, and civilization analysis. Its completed roadmap catalog at `docs/systems/roadmaps/` contains four independent variants for each of the twelve systems. The shared `systemVariants` registry schedules those 48 variants A→B→C→D per system and inserts predecessor-gated integration seams between every adjacent step. The lifecycle substrate's second stagger materializes all 47 seams as typed durable relationship records. The third stagger derives and validates a connected 48-node topology over those relationships, with deterministic component and edge reports persisted through save/restore. It distinguishes live runtime registries from inferred analytics and proposed ontology, and defines the promotion path from observed regime to causal system.
+The organization systems atlas at `docs/systems/` is the source-grounded companion for relationship, lifecycle, group, culture, and civilization analysis. Its completed roadmap catalog at `docs/systems/roadmaps/` contains four independent variants for each of the twelve systems. The shared `systemVariants` registry schedules those 48 variants A→B→C→D per system and inserts predecessor-gated integration seams between every adjacent step. The lifecycle substrate's second stagger materializes all 47 seams as typed durable relationship records. The third stagger derives and validates a connected 48-node topology over those relationships, with deterministic component and edge reports persisted through save/restore. The fourth stagger materializes bounded deterministic replay trajectories, evolutionary transitions, and regime summaries over the completed topology, also persisted through save/restore. It distinguishes live runtime registries from inferred analytics and proposed ontology, and defines the promotion path from observed regime to causal system.
 
 ## Technical Specification Procedure
 
@@ -14,7 +14,7 @@ The repository includes a deterministic, dependency-free specification generator
 ## Development Standards (2026-08-10)
 
 - **Product & versioning:** the product is **VEPA4**; versions use
-  **`major.minor.build`** (npm-semver-native, current `9.1.20`). The v4 line is
+  **`major.minor.build`** (npm-semver-native, current `9.1.21`). The v4 line is
   retroactively mapped old `4.M.N` → `M.N.0` (generation `4` moved into the
   product name). Changelog headers carry both labels
   (`## [4.6.28] - date → 6.28.0`); the full rule lives in `AGENTS.md` §10.4.
