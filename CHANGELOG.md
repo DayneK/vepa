@@ -1,5 +1,48 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.23] - 2026-09-21 → 9.1.20
+
+### feat(systems): complete the third stagger topology layer
+
+- Build a deterministic 48-node topology from the completed variant registry.
+- Materialize and validate one connected graph over all 47 durable integration relationships.
+- Add node, edge, component, active-edge, progress, and save/restore reporting.
+- Add focused coverage for topology completeness, connectivity, determinism, and persistence.
+
+### Files
+
+- `src/state/systemLifecycle.js`
+- `tests/unit/systemVariants.test.js`
+
+## [4.9.22] - 2026-09-21 → 9.1.19
+
+### feat(systems): add durable second stagger integrations
+
+- Add persistent typed relationship records for all 47 adjacent A-D variant seams.
+- Gate relationship creation on completion of both predecessor and successor variants.
+- Extend lifecycle save/restore and progress reporting with durable integration topology.
+- Add focused coverage for second-stagger ordering, relationship formation, and persistence.
+
+### Files
+
+- `src/state/systemLifecycle.js`
+- `tests/unit/systemVariants.test.js`
+
+## [4.9.21] - 2026-09-21 → 9.1.18
+
+### feat(systems): begin staggered A-D implementation
+
+- Add one shared registry for all 48 roadmap variants rather than duplicating system state.
+- Define a deterministic A→B→C→D schedule for each system with an explicit integration seam between every adjacent step.
+- Extend the bounded lifecycle substrate with predecessor-gated variant application, progress reporting, and save/restore support.
+- Add focused coverage for the 48 variants, 47 integration edges, ordering, and round-trip state.
+
+### Files
+
+- `src/state/systemVariants.js`
+- `src/state/systemLifecycle.js`
+- `tests/unit/systemVariants.test.js`
+
 ## [4.9.20] - 2026-09-21 → 9.1.17
 
 ### docs(systems): finalize the 48-variant roadmap catalog

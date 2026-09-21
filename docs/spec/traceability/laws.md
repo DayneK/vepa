@@ -37,7 +37,7 @@
 | 30 | [TIME_DILATION](../laws/metaphysics/030_TIME_DILATION.md) | metaphysics | 1 | 2 | 3 | NONE |
 | 31 | [DIMENSIONALITY](../laws/metaphysics/031_DIMENSIONALITY.md) | metaphysics | 1 | 2 | 1 | NONE |
 | 32 | [CHAOS](../laws/metaphysics/032_CHAOS.md) | metaphysics | 1 | 4 | 4 | NONE |
-| 33 | [ORDER](../laws/metaphysics/033_ORDER.md) | metaphysics | 1 | 3 | 4 | NONE |
+| 33 | [ORDER](../laws/metaphysics/033_ORDER.md) | metaphysics | 1 | 3 | 5 | NONE |
 | 34 | [FATE](../laws/metaphysics/034_FATE.md) | metaphysics | 1 | 3 | 2 | NONE |
 | 35 | [WILL](../laws/metaphysics/035_WILL.md) | metaphysics | 1 | 3 | 2 | NONE |
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 1 | NONE |

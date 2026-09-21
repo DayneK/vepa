@@ -1,6 +1,6 @@
 # VEPA systems roadmap catalog
 
-**Finalization status:** 48 roadmap variants complete for VEPA4 9.1.16.
+**Finalization status:** 48 roadmap variants complete for VEPA4 9.1.20; the third integration stagger is implemented.
 
 Each system has four independent sequel variants:
 
@@ -9,7 +9,7 @@ Each system has four independent sequel variants:
 - **C — Explicit-system-first:** promote validated projections into durable records.
 - **D — Open-ended evolutionary:** discover regimes from experiments and trajectories.
 
-Every file contains a finalization report, six phases, system emphasis, and expected outcome.
+Every file contains a finalization report, six phases, system emphasis, and expected outcome. Runtime integration is scheduled through `src/state/systemVariants.js` and `src/state/systemLifecycle.js` as A→B→C→D per system with 47 predecessor seams. The third stagger validates and materializes those seams as a deterministic connected dependency topology of 48 nodes and 47 edges.
 
 ## Catalog
 

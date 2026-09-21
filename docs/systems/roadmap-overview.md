@@ -1,6 +1,6 @@
 # Ranked systems roadmap
 
-**Status review:** VEPA4 9.1.17, 2026-09-21. All twelve systems have four completed roadmap variants (A–D), each using six shared phases; runtime implementation remains bounded by the source-grounded atlas.
+**Status review:** VEPA4 9.1.20, 2026-09-21. All twelve systems have four completed roadmap variants (A–D), each using six shared phases; runtime implementation remains bounded by the source-grounded atlas.
 
 ## Breadth ranking
 
@@ -23,7 +23,7 @@ The ranking measures current runtime breadth, not conceptual importance. Rank 1 
 
 ## Synchronized delivery rule
 
-Each phase is completed for every system before the next phase begins. No phase may add a new stride field or reinterpret an existing field without updating the compatibility tests and all affected roadmaps.
+The implementation substrate applies A, B, C, and D in order for each system, then advances to the next system. Every adjacent variant has an explicit predecessor-gated integration seam in `src/state/systemVariants.js`, the second stagger materializes each of the 47 seams as a durable typed relationship in `systemLifecycle.js`, and the third stagger validates them as a connected deterministic dependency topology; no phase may add a new stride field or reinterpret an existing field without updating the compatibility tests and all affected roadmaps.
 
 - **Phase 1 — Evidence contract:** stable IDs, implementation status, source anchors, observation boundaries, and baseline tests.
 - **Phase 2 — Durable records:** sparse records or projections with lifecycle, serialization, and deterministic IDs.

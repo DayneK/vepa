@@ -5,7 +5,7 @@
 ## Versioning & Commits
 
 - **Product:** **VEPA4**; versions use **`major.minor.build`** (npm-semver-native) —
-  current: **9.1.17** (legacy label `4.9.20`). Retroactive mapping of the v4 line:
+  current: **9.1.20** (legacy label `4.9.23`). Retroactive mapping of the v4 line:
   old `4.M.N` → `M.N.0`; see `CHANGELOG.md` and `AGENTS.md` §10.4.
 - **Commits:** [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
   — `<type>(<scope>): <description>`, release commits `chore(release): v7.0.0`,
@@ -17,6 +17,10 @@ the v3 modular recreation and completes the integration gap identified in the
 Lineage, Goal, Timeline) are now wired into the simulation loop, the
 communication DNA group drives real physics, and predation is restored as an
 explicit law.
+
+## Systems implementation substrate
+
+The 48 roadmap variants (A–D across twelve systems) now share `src/state/systemVariants.js` and the bounded lifecycle substrate. Implementation proceeds deterministically as A→B→C→D per system, with a predecessor-gated integration seam between each adjacent variant. The second stagger materializes those 47 seams as typed, durable relationship records with save/restore support. The third stagger validates and materializes a connected 48-node topology over that relationship layer; this keeps evidence, relationship, explicit-system, and discovery work composable without duplicating registries.
 
 ## Quick Start
 
