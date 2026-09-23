@@ -5,7 +5,7 @@
 ## Versioning & Commits
 
 - **Product:** **VEPA4**; versions use **`major.minor.build`** (npm-semver-native) —
-  current: **9.1.21** (legacy label `4.9.24`). Retroactive mapping of the v4 line:
+  current: **9.1.22** (legacy label `4.9.25`). Retroactive mapping of the v4 line:
   old `4.M.N` → `M.N.0`; see `CHANGELOG.md` and `AGENTS.md` §10.4.
 - **Commits:** [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
   — `<type>(<scope>): <description>`, release commits `chore(release): v7.0.0`,
@@ -48,7 +48,7 @@ The two Vercel URLs are live deployment snapshots, not separate product
 versions. Both may contain mechanics and advanced multiplex/features, but they
 are not guaranteed to be built from the same commit:
 
-- **Canonical source:** this repository root, currently VEPA4 **9.1.4**.
+- **Canonical source:** this repository root, currently VEPA4 **9.1.22**.
 - **Intended current production target:** `https://vepa-v4.vercel.app/`.
 - **`vepa-seven.vercel.app`:** a later, feature-rich historical deployment
   associated with the v8.16-era line. It is useful for comparison and recovery,

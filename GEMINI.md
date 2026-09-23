@@ -25,7 +25,7 @@ Every significant code modification, law implementation, or UI refactor MUST be 
 Documentation is not an afterthought; it is a feature. All new laws must be accompanied by `HELP_DB` entries in `src/constants.js` covering all four tiers (HINT, EXPLANATION, SYSTEM, ADVANCED).
 
 ### 1.3 Versioning & Commit Standards (adopted 2026-08-10)
-- The product is **VEPA4**; every version uses the **`major.minor.build`** schema (current `9.1.4`), with legacy labels retained in `CHANGELOG.md` headers (old `4.M.N` → `M.N.0`).
+- The product is **VEPA4**; every version uses the **`major.minor.build`** schema (current `9.1.22`), with legacy labels retained in `CHANGELOG.md` headers (old `4.M.N` → `M.N.0`).
 - Every commit MUST follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) (`<type>(<scope>): <description>`); release commits use `chore(release): vX.Y.Z — <summary>` and tags are `vX.Y.Z`.
 - The full release protocol (backup branches, changelog-first, manifest sync, tagging) is `AGENTS.md` §10.4 — no release without it.
 

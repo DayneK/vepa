@@ -57,6 +57,31 @@ describe('WebGPU bridge contracts', () => {
     expect(collisionOnly.fx[0]).not.toBe(0);
   });
 
+  it('filters dead and massless particles out of the GPU neighbor pairs', () => {
+    const view = fixture(3);
+    view[PARTICLE_STRIDE + 52] = 1; // particle 1 dead
+    view[2 * PARTICLE_STRIDE + 6] = 0; // particle 2 massless
+    const pairs = buildNeighborPairs(view, 3, PARTICLE_STRIDE, 100);
+    expect(pairs).toEqual([]);
+    for (const index of [0, 1, 2]) {
+      expect(pairs.some(({ i, j }) => i === index || j === index)).toBe(false);
+    }
+  });
+
+  it('returns bounded zero forces for an empty pair list', () => {
+    const view = fixture(3);
+    const result = gpuComputeForcesSync(view, 3, [], {
+      worldSize: 100,
+      G: 1,
+      gravityEnabled: true,
+      collisionEnabled: true,
+    });
+    expect(Array.from(result.fx)).toEqual([0, 0, 0]);
+    expect(Array.from(result.fy)).toEqual([0, 0, 0]);
+    expect(Array.from(result.fz)).toEqual([0, 0, 0]);
+    expect([...result.fx, ...result.fy, ...result.fz].every(Number.isFinite)).toBe(true);
+  });
+
   it('reports unavailable WebGPU cleanly in a headless test environment', async () => {
     expect(await createGPUContext()).toBeNull();
   });

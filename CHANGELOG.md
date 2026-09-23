@@ -1,5 +1,48 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.25] - 2026-09-23 → 9.1.22
+
+### feat(audit): executable audit-signoff gate (remediation §4.1)
+
+- Add `docs/spec/audit/signoff-manifest.json`: every current audit sign-off classified (`operational|proxy|experimental|metadata-only|historical`) with its runtime implementation path, solver gate/dispatch evidence, and linked executable tests — or an explicit `not-tested` justification note.
+- Add `scripts/validate-signoff.mjs` and wire it into `npm run repository:check`; the gate rejects stale implementation/test paths, unknown law names, missing dispatch evidence for runtime claims, and completion claims without executable proof.
+- Add `tests/unit/auditSignoff.test.js` (10 tests covering the real manifest plus every rejection rule).
+
+### feat(physics): backend error envelopes and the FMM decision (remediation §4.3, §5.1)
+
+- Add `docs/BACKEND_ENVELOPES.md`: measured `rmsRelative`/`maxAbsolute`/wall-clock for exact vs Barnes–Hut vs FMM at 32/128/512/2048 fixtures, plus promotion rules (exact CPU stays the parity reference; no backend becomes default on speed alone).
+- Record the FMM decision: **retain experimental** — opt-in via `runtimeConfig.gravEngine === 'fmm'`, never default; measured outside the shared envelope at every scale (rmsRelative 1.15–2.02).
+- Replace the stale `cellNeighbours`-placeholder language in `FEATURE_STATUS_MATRIX.md` and `ARCHITECTURAL_RESOLUTION_MATRIX.md`; the stencil is now a tested toroidal minimum-image contract.
+- Extend `tests/unit/fmmParity.test.js` with unsupported-case tests pinning the envelope band (octree within at ≤512, FMM finite but outside, FMM never the default).
+
+### feat(laws): risk-prioritized ontology expansion (remediation §6.1)
+
+- Add relationship metadata for 11 priority laws — `LIFE`, `REPRO`, `SENESCENCE`, `ENERGY`, `COMMS`, `SUPERPOSITION`, `GRAV`, `PLANETARY`, `SINGULARITY`, `HORIZON`, `RADIATION` — raising declared coverage from 24 to 35 of 136, honestly reported in the regenerated `docs/spec/laws/ontology-coverage.json` (101 laws intentionally empty, not inferred).
+- Each record validates against the ontology/graph validators; `HORIZON` carries an explicit evidence-gap note.
+
+### feat(render): PixiJS vs Canvas2D benchmark harness and report
+
+- Add `npm run bench:render` (`playwright.bench.config.js`, `tests/bench/`) with an identical deterministic fixture for both backends, submit/phase timing, and a full-app Pixi boot check.
+- Add `docs/RENDERER_BENCHMARK_REPORT.md` + `bench/results/renderer-benchmark.json`: PixiJS wins median frame time at every scale (2.9× at 1k, 2.6× at 10k, 1.5–1.7× at 50k/100k) even on SwiftShader; Canvas2D stays the compatibility fallback (Settings → RENDER backend toggle, persisted via `runtimeConfig`).
+
+### test
+
+- WebGPU contract: bounded zero-force fallback for an empty pair list; dead and massless particles excluded from the GPU neighbor-pair bridge.
+- Mechanics diagnostics: finite-value assertion alongside the existing immutability check.
+
+### docs
+
+- Add `docs/DECOMPOSITION_PLAN.md` — phased monolith extraction plan (P1–P8) for `laws.js`, `solver.js`, `constants.js`, `main.js`, multiplex/UI files. **Proposed only; awaiting user confirmation — no decomposition executed.**
+- Correct stale release-context/version claims in `FEATURE_STATUS_MATRIX.md`, `ARCHITECTURAL_RESOLUTION_MATRIX.md`, `MECHANICS_CONSUMER_MATRIX.md` (9.1.3 → 9.1.22); record hot-loop pair scalars as explicitly performance-specialized (Mechanics boundary rule 3).
+- Signoff gate and envelope docs close remediation-plan ranks 1, 3, 4, 7 and the documentation halves of ranks 5, 6, 12; ranks 2, 8–11 verified already satisfied.
+
+### Files
+
+- `scripts/validate-signoff.mjs`, `scripts/check-repository.mjs`, `docs/spec/audit/signoff-manifest.json`, `tests/unit/auditSignoff.test.js`
+- `docs/BACKEND_ENVELOPES.md`, `docs/DECOMPOSITION_PLAN.md`, `docs/FEATURE_STATUS_MATRIX.md`, `docs/ARCHITECTURAL_RESOLUTION_MATRIX.md`, `docs/MECHANICS_CONSUMER_MATRIX.md`, `docs/RENDERER_BENCHMARK_REPORT.md`
+- `src/state/lawOntology.js`, `tests/unit/lawGraph.test.js`, `tests/unit/fmmParity.test.js`, `tests/unit/webgpuContract.test.js`, `tests/unit/mechanicsArchitecture.test.js`
+- `playwright.bench.config.js`, `tests/bench/`, `package.json` (`bench:render`), renderer backend wiring (`src/render/*`, `src/ui/settingsPanel.js`, `src/state/runtimeConfig.js`, `src/main.js`)
+
 ## [4.9.24] - 2026-09-21 → 9.1.21
 
 ### feat(systems): complete the fourth stagger and publish the systems bundle

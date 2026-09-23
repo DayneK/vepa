@@ -3,6 +3,9 @@ import { test, expect } from '@playwright/test';
 async function openRuntime(page) {
   await page.goto('./');
   await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15_000 });
+  // Canvas visibility only proves the shell HTML rendered; the law grid and
+  // HUD are mounted by initUI after the module bundle boots.
+  await page.waitForFunction(() => Boolean(window.__VEPA_DEBUG__?._active), null, { timeout: 30_000 });
 }
 
 test.describe('VEPA browser acceptance boundary', () => {
@@ -17,10 +20,17 @@ test.describe('VEPA browser acceptance boundary', () => {
 
   test('renders all eight Mechanics law toggles and toggles CONTACT in the browser', async ({ page }) => {
     await openRuntime(page);
-    const mechanics = page.locator('.law-btn[data-law="128"], .law-btn[data-law="129"], .law-btn[data-law="130"], .law-btn[data-law="131"], .law-btn[data-law="132"], .law-btn[data-law="133"], .law-btn[data-law="134"], .law-btn[data-law="135"]');
+    const mechanics = page.locator([
+      ...[128, 129, 130, 131, 132, 133, 134, 135].flatMap((idx) => [
+        `#law-grid .law-btn[data-law="${idx}"]`,
+        `#law-grid .sq-toggle[data-law="${idx}"]`,
+      ]),
+    ].join(', '));
     await expect(mechanics).toHaveCount(8);
 
-    const contact = page.locator('.law-btn[data-law="128"]');
+    // Default view mode is icon (`.sq-toggle`); resolve whichever markup the
+    // grid currently renders for CONTACT.
+    const contact = page.locator('#law-grid [data-law="128"]');
     await expect(contact).not.toHaveClass(/active/);
     await contact.click();
     await expect(contact).toHaveClass(/active/);
@@ -39,7 +49,7 @@ test.describe('VEPA browser acceptance boundary', () => {
       return { api: true, adapter: true, device: Boolean(device) };
     });
 
-    expect(capability.api).toBeTypeOf('boolean');
+    expect(typeof capability.api).toBe('boolean');
     test.info().annotations.push({
       type: 'webgpu',
       description: capability.device ? 'WebGPU device available in this browser run.' : 'No WebGPU device; CPU fallback remains the only verified path.',

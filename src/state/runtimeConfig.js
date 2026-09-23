@@ -5,6 +5,11 @@
  */
 import { createWorldParams } from './worldParams.js';
 
+const savedRenderBackend = typeof localStorage !== 'undefined'
+  && localStorage.getItem('vepa-render-backend') === 'pixi'
+  ? 'pixi'
+  : 'canvas2d';
+
 export const runtimeConfig = {
   starMass: 12,        // mass threshold for gravitational collapse (star)
   visualScale: 1.0,    // global particle size multiplier
@@ -27,5 +32,9 @@ export const runtimeConfig = {
   // WebGPU once and falls back to the validated CPU path when unavailable;
   // explicit CPU selection remains available in SETTINGS > COMPUTE.
   computeEngine: 'gpu',
+  // v9.1.22 — browser presentation backend. Canvas2D remains the safe
+  // reference default; PixiJS is opt-in until browser benchmark evidence is
+  // available for the target device and population.
+  renderBackend: savedRenderBackend,
   worldParams: createWorldParams(), // WORLD panel sliders (SPACE/PHYSICS/ENVIRONMENT/BIOLOGY)
 };

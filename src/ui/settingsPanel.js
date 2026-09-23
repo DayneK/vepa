@@ -56,6 +56,14 @@ export function createSettingsPanel(bus, lawStateObj) {
   html += '</select>';
   html += '</div>';
   html += '<div id="compute-engine-status" class="setting-status" role="status">GPU is selected by default. WebGPU currently accelerates the gravity/collision subset; CPU handles the remaining laws and is used when WebGPU is unavailable.</div>';
+  html += '<div class="setting-row">';
+  html += '<label class="setting-label" for="render-backend">RENDERER</label>';
+  html += '<select id="render-backend" class="setting-select" title="Choose the particle renderer">';
+  html += '<option value="canvas2d">Canvas2D (reference)</option>';
+  html += '<option value="pixi">PixiJS (GPU)</option>';
+  html += '</select>';
+  html += '</div>';
+  html += '<div id="render-backend-status" class="setting-status" role="status">Canvas2D is the reference renderer. PixiJS uses a pooled GPU particle path when the browser supports WebGL.</div>';
   html += '</div>';
 
   // ── Meta / render section ──
@@ -90,6 +98,21 @@ export function createSettingsPanel(bus, lawStateObj) {
           : 'CPU selected. Physics stays on the validated synchronous CPU path.';
       }
       bus.emit('compute:changed', { engine: runtimeConfig.computeEngine });
+    });
+  }
+
+  const renderSelect = document.getElementById('render-backend');
+  const renderStatus = document.getElementById('render-backend-status');
+  if (renderSelect) {
+    renderSelect.value = runtimeConfig.renderBackend;
+    renderSelect.addEventListener('change', () => {
+      runtimeConfig.renderBackend = renderSelect.value === 'pixi' ? 'pixi' : 'canvas2d';
+      try { localStorage.setItem('vepa-render-backend', runtimeConfig.renderBackend); } catch { /* storage optional */ }
+      if (renderStatus) {
+        renderStatus.textContent = runtimeConfig.renderBackend === 'pixi'
+          ? 'PixiJS selected. Reload to initialize the GPU renderer; Canvas2D remains the automatic fallback.'
+          : 'Canvas2D selected as the reference renderer.';
+      }
     });
   }
 

@@ -1,6 +1,6 @@
 # VEPA4 Feature Completion and Implementation Status Matrix
 
-**Release context:** VEPA4 9.1.3 / legacy label 4.9.6  
+**Release context:** VEPA4 9.1.22 / legacy label 4.9.25
 **Assessment phase:** Phase 3 architecture and feature-status hardening  
 **Assessment rule:** a feature is not considered complete merely because a file, export, registry entry, or unit test exists.
 
@@ -43,9 +43,9 @@
 | Exact CPU solver | `src/physics/solver.js` | Yes | Full unit/audit suite, build, law-gating tests | **Operational** | Preserve as parity reference for all accelerated paths. |
 | Barnes–Hut octree gravity | `src/physics/octree.js` | No; `gravEngine = 'bh'` | Exact theta-zero comparison, bounded approximation, determinism, solver integration tests | **Implemented, opt-in** | Maintain error/performance envelope tests across population scales. |
 | Quadrupole octree mode | `src/physics/octree.js` | No | Quadrupole code path exists; tests cover finite behavior indirectly | **Implemented, opt-in** | Add dedicated parity/error tests for `useQuadrupole`. |
-| FMM cell builder | `src/physics/fmm.js` | No | Cell/list construction code exists | **Partial / experimental** | Complete/remove the unused `cellNeighbours` placeholder and add end-to-end parity tests. |
-| FMM gravity evaluator | `src/physics/fmm.js` | No | Exported force evaluator exists | **Partial / experimental** | Validate near/far interaction accounting, toroidal edge cases, and DNA-modifier limitations. |
-| WebGPU compute | `src/physics/gpuCompute.js`, `src/worker/physics.worker.js`, `src/physics/solver.js` | No; `computeEngine = 'gpu'` | Worker device probe, spatial-pair bridge, gravity shader dispatch, exact CPU CONTACT/COLL continuation, deterministic fallback contracts | **Implemented, opt-in** | Add browser/device E2E parity tests and measure full-solver error envelopes on real devices. |
+| FMM cell builder | `src/physics/fmm.js` | No | `tests/unit/fmmParity.test.js` (toroidal stencil + accounting metadata), `bench/backend-compare.mjs` envelopes | **Implemented, opt-in (experimental)** | Retained-experimental decision (§6.1): near/far accounting and toroidal edge cases are tested; promotion requires envelope parity (rmsRelative ≤ 0.1 across 32–2048 fixtures — currently 1.15–2.02, see `docs/BACKEND_ENVELOPES.md`). |
+| FMM gravity evaluator | `src/physics/fmm.js` | No | Finite-output fixtures, near/far work reporting, measured error envelopes | **Implemented, opt-in (experimental)** | Same envelope gate; DNA-modifier limitation on far-field contributions remains documented in the module header. |
+| WebGPU compute | `src/physics/gpuCompute.js`, `src/worker/physics.worker.js`, `src/physics/solver.js` | No; `computeEngine = 'gpu'` | Worker device probe, spatial-pair bridge, gravity shader dispatch, exact CPU CONTACT/COLL continuation, deterministic fallback contracts, browser GPU-vs-CPU fixture + unavailable-device test (`tests/e2e/physics-worker.spec.js`) | **Implemented, opt-in** | Hardware parity runs when a WebGPU device is granted in CI/browser; keep measuring full-solver error envelopes on real devices (external-environment gate). |
 | Headless GPU-compatible fallback | `gpuComputeForcesSync` | No | Synchronous CPU implementation exists | **Implemented, opt-in** | Treat as benchmark/reference helper, not evidence of actual GPU execution. |
 
 ## 4. Law implementation evidence matrix
@@ -76,11 +76,11 @@ The generated specification and law compendium should therefore use qualified la
 
 The following claims should not be presented as fully complete without additional evidence:
 
-1. FMM is not production-complete because the interaction architecture still includes an explicit placeholder helper and lacks full parity coverage.
-2. WebGPU acceleration is opt-in and operational only when a browser device is granted; the committed Node tests cover contracts/fallbacks, while real browser/device parity remains an external-environment gate.
-3. Barnes–Hut is approximate by design and must retain the exact solver as its parity reference.
-4. The 136-law registry is complete as a catalogue, but behavioral and relationship metadata coverage varies by law.
-5. Mechanics consolidation is architecturally established but not yet a universal hot-path abstraction.
+1. FMM is retained as an **experimental** opt-in backend by recorded decision: the former `cellNeighbours` placeholder is now an implemented and tested toroidal minimum-image stencil, but measured error exceeds the shared envelope at every fixture scale (`docs/BACKEND_ENVELOPES.md` §2–3).
+2. WebGPU acceleration is opt-in and operational only when a browser device is granted; committed tests cover contracts/fallbacks plus a browser GPU-vs-CPU fixture, while routine hardware execution remains an external-environment gate.
+3. Barnes–Hut is approximate by design and must retain the exact solver as its parity reference; its envelope holds through 512 particles and is marginal at 2048 (measured 0.109 vs 0.1).
+4. The 136-law registry is complete as a catalogue, but behavioral and relationship metadata coverage varies by law (35 laws carry relationship metadata after the risk-prioritized expansion; coverage is reported honestly in `docs/spec/laws/ontology-coverage.json`).
+5. Mechanics consolidation is architecturally established but not yet a universal hot-path abstraction; the equivalent hot-loop scalars are explicitly documented as performance-specialized (`MECHANICS_CONSUMER_MATRIX.md` boundary rule 3).
 6. Audit prose can confirm intended implementation claims but cannot replace executable behavior tests.
 
 ## 7. Phase 3 acceptance criteria

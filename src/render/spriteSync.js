@@ -38,7 +38,6 @@ export function syncSprites(renderer, particleBuffer, particleCount, stride, wor
     if (renderer.mode === 'canvas2d') {
         syncCanvas2D(renderer, particleBuffer, particleCount, stride, worldSize, lawState);
     } else {
-        // Future: PixiJS sprite pool sync
         syncPixiJS(renderer, particleBuffer, particleCount, stride, worldSize, lawState);
     }
 }
@@ -76,27 +75,19 @@ function syncCanvas2D(renderer, particleBuffer, particleCount, stride, worldSize
     }
 }
 
-// ── PixiJS Path (future) ───────────────────────────────────────────────────
+// ── PixiJS Path ─────────────────────────────────────────────────────────────
 
 /**
- * PixiJS sprite pool sync — placeholder for Phase 4.
- *
- * In the PixiJS mode, this would:
- *  1. Maintain a sprite pool of maxParticles sprites
- *  2. For each alive particle, update:
- *     - sprite.position (POS_X, POS_Y scaled to screen)
- *     - sprite.tint (from computeColor → hex)
- *     - sprite.alpha (from computeAlpha)
- *     - sprite.scale.set(radius × scaleFactor)
- *  3. Hide dead particles (sprite.visible = false or alpha = 0)
- *  4. Apply law-dependent effects:
- *     - CHAOS: add per-frame position jitter
- *     - GLOW: set blendMode to additive
- *     - TIME_DILATION: scale animation speed
- */
-function syncPixiJS(_renderer, _particleBuffer, _particleCount, _stride, _worldSize, _lawState) {
-    // Not yet implemented — requires PixiJS 8.x Application and sprite pool.
-    // When implemented, this function will be the hot loop for visual sync.
+ * GPU-backed pooled particle sync. The Pixi renderer deliberately shares the
+ * projection, culling, phenotype cadence, and eco/full distinction with the
+ * Canvas2D path; only the draw submission differs.
+ */function syncPixiJS(renderer, particleBuffer, particleCount, stride, worldSize, _lawState) {
+  // The pixi sync function is attached by createRendererAsync after the
+  // dynamic import of pixiRenderer.js resolves, so the Canvas2D boot path
+  // never pulls the pixi.js bundle into the module graph.
+  renderer.sync(particleBuffer, particleCount, stride, worldSize, {
+    eco: renderer.eco === true,
+  });
 }
 
 // ── Law Utilities ──────────────────────────────────────────────────────────

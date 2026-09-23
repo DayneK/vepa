@@ -1,6 +1,6 @@
 # Mechanics Consumer Matrix
 
-**Snapshot:** VEPA4 9.1.3
+**Snapshot:** VEPA4 9.1.22
 
 This document records where the Mechanics laws are declared, consumed, inspected, and verified. It is an architecture inventory, not a claim that each law is a complete physical model.
 
@@ -25,7 +25,7 @@ This document records where the Mechanics laws are declared, consumed, inspected
 
 1. `CONTACT` performs geometric separation correction.
 2. `COLL` performs impact response and must not be treated as the geometry correction implementation.
-3. `getPairGeometry` is the shared scalar boundary for diagnostic and future parity consumers; the solver may use equivalent local scalars in its allocation-free hot path.
+3. `getPairGeometry` is the shared scalar boundary for diagnostic and future parity consumers; the solver's equivalent local hot-loop scalars are **performance-specialized** (allocation-free by design) and must stay value-equivalent to `getPairGeometry` for the same pair — verified by `tests/unit/mechanicsArchitecture.test.js`.
 4. `mechanicsDiagnostics.js` is opt-in and must not mutate the particle buffer.
 5. `mergePhysics.js` owns structural classification and bond hygiene; Mechanics laws do not silently mass-merge particles.
 6. Mechanics consumers must use stride constants rather than duplicated offsets.

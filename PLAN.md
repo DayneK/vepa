@@ -1,10 +1,16 @@
 # Implementation Plan: VEPA4 — Integrated Intelligence
 
-**Date**: 2026-09-21 | **Status**: Complete | **Spec**: `SPEC.md`
+**Date**: 2026-09-23 | **Status**: Complete | **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
-> (current `9.1.21`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
+> (current `9.1.22`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
 > Conventional Commits 1.0.0 — see `AGENTS.md` §10.4.
+
+## Milestone note (v9.1.22 — 2026-09-23)
+
+- Closed the audit-remediation program (ranks 1–12 of `docs/AUDIT_REMEDIATION_PLAN.md`): executable audit-signoff gate wired into `repository:check`, documented backend error envelopes, FMM retain-experimental decision, risk-prioritized law-ontology expansion (24→35 of 136), WebGPU/mechanics test gap-closes, and stale-claim corrections across the status matrices.
+- Shipped the PixiJS-vs-Canvas2D renderer benchmark harness and `docs/RENDERER_BENCHMARK_REPORT.md` (Pixi wins median frame time 1.5–2.9× at every scale; Canvas2D stays the compatibility fallback).
+- Produced `docs/DECOMPOSITION_PLAN.md` — phased monolith extraction plan, **proposed only; execution awaits user confirmation**.
 
 ## Milestone note (v9.1.21 — 2026-09-21)
 

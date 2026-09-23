@@ -1,6 +1,6 @@
 # VEPA systems atlas
 
-**Scope:** source-grounded organization, reproduction, lineage, ecology, and civilization analysis for VEPA4 9.1.12.
+**Scope:** source-grounded organization, reproduction, lineage, ecology, and civilization analysis for VEPA4 9.1.20. This atlas was reviewed against the current runtime on 2026-09-20; see [the assessment record](assessment-20260920.md).
 
 This atlas answers two different questions without conflating them:
 
@@ -21,7 +21,14 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 - [Module decomposition](module-decomposition.md) — source-grounded extraction plan for future runtime modules.
 - [Deployment publication](deployment-publication.md) — why the atlas is copied into the static build output.
 - [Ranked roadmap](roadmap-overview.md) — synchronized multi-phase delivery order.
+- [Complete concatenated systems atlas](complete-atlas.md) — one hierarchical, table-of-contents reference containing the current atlas, roles, and all 48 roadmap variants.
+- [48-variant roadmap catalog](roadmaps/README.md) — four completed variants (A–D) for each of the twelve systems.
 - `src/state/systemFoundation.js` — Phase 1 evidence-contract registry used by the runtime/tooling layer.
+- `src/state/systemLifecycle.js` — shared Phase 2–5 records, causal events, emergence evidence, reports, and predecessor-gated variant application.
+- `src/state/systemVariants.js` — the 48-variant registry and deterministic A→B→C→D integration schedule.
+- The second stagger in `src/state/systemLifecycle.js` materializes all 47 adjacent seams as durable typed relationships.
+- The third stagger validates and materializes those relationships as one deterministic 48-node dependency topology.
+- The fourth stagger materializes bounded deterministic replay trajectories and evolutionary regime summaries over the completed topology.
 
 ## Evidence notation
 
@@ -32,6 +39,10 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 | **Observed** | Analytics can infer the pattern from metrics/events, but does not own it as state. |
 | **Scaffolded** | This atlas defines a design contract only; no runtime claim. |
 | **Missing** | No reliable live implementation was found in the reviewed source surface. |
+
+## Assessment status
+
+All 34 pre-existing Markdown files in this atlas were assessed against the runtime, version markers, roadmaps, and publication workflow. Five files required revision and their pre-update copies are preserved under `past/0/`; the remaining files were reviewed and retained unchanged because their claims remain accurate. The assessment is a review ledger, not a second source of truth.
 
 ## Deployment note
 

@@ -1,6 +1,6 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.1.21 | **Date**: 2026-09-21 | **Base**: VEPA4 integrated intelligence
+**Version**: 9.1.22 | **Date**: 2026-09-23 | **Base**: VEPA4 integrated intelligence
 **Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
 
 ## Problem Statement
@@ -14,7 +14,7 @@ The repository includes a deterministic, dependency-free specification generator
 ## Development Standards (2026-08-10)
 
 - **Product & versioning:** the product is **VEPA4**; versions use
-  **`major.minor.build`** (npm-semver-native, current `9.1.21`). The v4 line is
+  **`major.minor.build`** (npm-semver-native, current `9.1.22`). The v4 line is
   retroactively mapped old `4.M.N` → `M.N.0` (generation `4` moved into the
   product name). Changelog headers carry both labels
   (`## [4.6.28] - date → 6.28.0`); the full rule lives in `AGENTS.md` §10.4.

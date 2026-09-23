@@ -1,6 +1,6 @@
 # VEPA systems roles
 
-These role files are reusable prompts/specifications for agents or analysts. Each role must distinguish source evidence, inferred behavior, and proposed capability. None of these roles implies that the named system is currently implemented.
+These role files are reusable prompts/specifications for agents or analysts. Each role must distinguish source evidence, inferred behavior, and proposed capability. A role may cover a real runtime system, a bounded proxy, or an analytical projection; the role itself never upgrades a proxy into a first-class entity.
 
 ## Role contract
 
