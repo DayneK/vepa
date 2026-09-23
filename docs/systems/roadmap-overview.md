@@ -1,6 +1,6 @@
 # Ranked systems roadmap
 
-**Status review:** VEPA4 9.1.20, 2026-09-21. All twelve systems have four completed roadmap variants (A–D), each using six shared phases; runtime implementation remains bounded by the source-grounded atlas.
+**Status review:** VEPA4 9.1.21, 2026-09-21. All twelve systems have four completed roadmap variants (A–D), and the fourth stagger adds bounded deterministic replay/evolution summaries over the completed topology.
 
 ## Breadth ranking
 
@@ -38,4 +38,4 @@ Every system roadmap uses this shared ordering while specializing its deliverabl
 
 Phases 1–5 are implemented as a shared, additive substrate in `src/state/systemFoundation.js` and `src/state/systemLifecycle.js`. Phase 2 stores deterministic records, Phase 3 stores explicit causal events, Phase 4 derives bounded emergence evidence, and Phase 5 produces per-system analysis reports. These are cross-system capabilities; domain-specific adapters remain the next step and no scaffolded system is being mislabeled as a first-class runtime entity.
 
-The next synchronized gate is Phase 6: stress, replay, save/restore, performance budgets, and evolutionary experiments. A system may not claim Phase 6 completion merely because the shared substrate is present.
+Phase 6 is now represented by the fourth stagger's bounded replay, deterministic trajectory, regime-summary, and save/restore layer. Domain-specific adapters and live simulation coupling remain separate future work; a shared evolution report does not promote a scaffolded system to a first-class entity.

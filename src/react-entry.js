@@ -12,7 +12,7 @@
     });
     const html = await response.text();
     const css = html.match(/href="(\/assets\/[^\"]+\.css)"/i)?.[1];
-    const js = html.match(/src="(\/assets\/[^\"]+\.js)"/i)?.[1];
+    const js = html.match(/src="([^"]*\/assets\/[^\"]+\.js)"/i)?.[1];
 
     if (css && !document.querySelector(`link[href="${css}"]`)) {
       const link = document.createElement('link');
@@ -20,7 +20,13 @@
       link.href = css;
       document.head.appendChild(link);
     }
-    if (!js) throw new Error('Current VEPA JavaScript asset was not found');
+    if (!js) {
+      // Dev server (or base-prefixed deploy): no hashed /assets/ bundle is
+      // referenced by the served document. Boot the source runtime directly
+      // so local development and e2e acceptance tests exercise real code.
+      await import('/src/main.js');
+      return;
+    }
     await import(`${location.origin}${js}`);
   } catch (error) {
     console.error('VEPA compatibility bridge failed:', error);
