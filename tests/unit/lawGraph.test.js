@@ -20,7 +20,8 @@ describe('law relationship ontology', () => {
   it('represents every registered law without inventing missing relationships', () => {
     expect(Object.keys(LAW_RELATIONSHIPS)).toHaveLength(LAW_COUNT);
     expect(validateLawOntology()).toEqual([]);
-    expect(getLawRelationships('GRAV')).toEqual({});
+    expect(getLawRelationships('DRAG')).toEqual({});
+    expect(getLawRelationships('GRAV').synergizesWith).toContain('PLANETARY');
     expect(getLawRelationships('TELEPORT').dependsOn).toEqual(['ENTANGLEMENT']);
   });
 

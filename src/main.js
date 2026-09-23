@@ -12,7 +12,7 @@ import { runtimeConfig } from './state/runtimeConfig.js';
 import { createWorldParams, applyWorldParam, spawnCaps } from './state/worldParams.js';
 import { sampleSpawnPosition, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from './spawn/distribution.js';
 import { createDNABuffer, loadDefaults, getDNAFloat } from './dna/dnaBuffer.js';
-import { createRenderer, resize as resizeRenderer, paintBackground } from './render/renderer.js';
+import { createRendererAsync, resize as resizeRenderer, paintBackground } from './render/renderer.js';
 import { syncSprites } from './render/spriteSync.js';
 import { initUI } from './ui/ui.js';
 import { initCamera, resetCamera, setWorldSize } from './ui/camera.js';
@@ -314,8 +314,20 @@ async function boot() {
     spawnDefaultPopulation();
 
     const canvas = document.getElementById('sim-canvas');
-    renderer = createRenderer(canvas, MAX_PARTICLES);
+    // Renderer selection is async only for PixiJS; the Canvas2D reference
+    // path remains the immediate fallback if GPU initialization fails.
+    renderer = await createRendererAsync(canvas, MAX_PARTICLES, {
+        backend: runtimeConfig.renderBackend,
+    });
     resizeRenderer(renderer);
+    if (renderer.requestedBackend === 'pixi' && renderer.mode !== 'pixi') {
+        logDebug('PixiJS renderer unavailable; using Canvas2D fallback: ' + renderer.backendError, 'warn');
+    } else {
+        logDebug('render backend: ' + renderer.mode);
+    }
+    // Small debug hook: lets e2e acceptance tests (and the browser console)
+    // inspect which presentation backend actually engaged.
+    window.__VEPA_RENDERER__ = renderer;
     refreshBackground();
     window.addEventListener('resize', () => {
         if (renderer) resizeRenderer(renderer);

@@ -3,7 +3,7 @@
 **Project:** VEPA4  
 **Source audit basis:** `docs/ARCHITECTURAL_RESOLUTION_MATRIX.md`, `docs/FEATURE_STATUS_MATRIX.md`, `docs/MECHANICS_CONSUMER_MATRIX.md`, `docs/AUDIT_CORPUS_OWNERSHIP.md`, `docs/EXPORT_SNAPSHOT_POLICY.md`, `docs/LEGACY_TOOLING_INVENTORY.md`  
 **Plan status:** actionable planning; no runtime changes implied  
-**Reference release:** VEPA4 9.1.4
+**Reference release:** VEPA4 9.1.21
 
 ## 1. Executive plan
 

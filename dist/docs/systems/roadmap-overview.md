@@ -1,5 +1,7 @@
 # Ranked systems roadmap
 
+**Status review:** VEPA4 9.1.21, 2026-09-21. All twelve systems have four completed roadmap variants (A–D), and the fourth stagger adds bounded deterministic replay/evolution summaries over the completed topology.
+
 ## Breadth ranking
 
 The ranking measures current runtime breadth, not conceptual importance. Rank 1 is the smallest current implementation; rank 12 is the broadest.
@@ -21,7 +23,7 @@ The ranking measures current runtime breadth, not conceptual importance. Rank 1 
 
 ## Synchronized delivery rule
 
-Each phase is completed for every system before the next phase begins. No phase may add a new stride field or reinterpret an existing field without updating the compatibility tests and all affected roadmaps.
+The implementation substrate applies A, B, C, and D in order for each system, then advances to the next system. Every adjacent variant has an explicit predecessor-gated integration seam in `src/state/systemVariants.js`, the second stagger materializes each of the 47 seams as a durable typed relationship in `systemLifecycle.js`, and the third stagger validates them as a connected deterministic dependency topology; no phase may add a new stride field or reinterpret an existing field without updating the compatibility tests and all affected roadmaps.
 
 - **Phase 1 — Evidence contract:** stable IDs, implementation status, source anchors, observation boundaries, and baseline tests.
 - **Phase 2 — Durable records:** sparse records or projections with lifecycle, serialization, and deterministic IDs.
@@ -30,8 +32,10 @@ Each phase is completed for every system before the next phase begins. No phase 
 - **Phase 5 — Analysis and UI:** metrics, Codex interpretation, replay, comparison views, and user controls.
 - **Phase 6 — Stress and evolution:** long-run validation, save/restore, performance budgets, and evolutionary experiments.
 
-Every system roadmap uses this shared ordering while specializing its deliverables and acceptance criteria.
+Every system roadmap uses this shared ordering while specializing its deliverables and acceptance criteria. The complete 48-file A–D catalog is indexed in [`roadmaps/README.md`](roadmaps/README.md).
 
 ## Current delivery status
 
 Phases 1–5 are implemented as a shared, additive substrate in `src/state/systemFoundation.js` and `src/state/systemLifecycle.js`. Phase 2 stores deterministic records, Phase 3 stores explicit causal events, Phase 4 derives bounded emergence evidence, and Phase 5 produces per-system analysis reports. These are cross-system capabilities; domain-specific adapters remain the next step and no scaffolded system is being mislabeled as a first-class runtime entity.
+
+Phase 6 is now represented by the fourth stagger's bounded replay, deterministic trajectory, regime-summary, and save/restore layer. Domain-specific adapters and live simulation coupling remain separate future work; a shared evolution report does not promote a scaffolded system to a first-class entity.

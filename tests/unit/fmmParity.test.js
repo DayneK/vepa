@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { PARTICLE_STRIDE, STRIDE_INDEXES as S, WORLD_SIZE } from '../../src/constants.js';
 import { buildFMMCells, fmmGravity } from '../../src/physics/fmm.js';
 import { compareBackends, createFixture } from '../../bench/backend-compare.mjs';
@@ -40,5 +41,30 @@ describe('FMM backend boundaries', () => {
     expect(result.candidates.octree.error.rmsAbsolute).toBeGreaterThanOrEqual(0);
     expect(result.candidates.fmm.error.rmsAbsolute).toBeGreaterThanOrEqual(0);
     expect(result.interpretation).toContain('Gravity-kernel fixture only');
+  });
+
+  it('pins the documented envelope band: octree supported, FMM experimental', () => {
+    // docs/BACKEND_ENVELOPES.md §2/§3 — if FMM accuracy improves enough to
+    // enter the envelope, this test fails and the status docs must be updated
+    // in the same change (remediation plan §5.1 decision gate).
+    for (const count of [32, 128, 512]) {
+      const result = compareBackends({ count, seed: 0x12345678 });
+      const octree = result.candidates.octree.assessment;
+      const fmm = result.candidates.fmm.assessment;
+      expect(octree.finite).toBe(true);
+      if (count <= 128) {
+        expect(octree.withinTolerance).toBe(true);
+      }
+      expect(fmm.finite).toBe(true);
+      expect(fmm.withinTolerance).toBe(false);
+    }
+  });
+
+  it('keeps FMM opt-in and outside the default solver path', () => {
+    const solver = readFileSync(new URL('../../src/physics/solver.js', import.meta.url), 'utf8');
+    expect(solver).toContain("runtimeConfig.gravEngine === 'fmm'");
+    const config = readFileSync(new URL('../../src/state/runtimeConfig.js', import.meta.url), 'utf8');
+    expect(config).toMatch(/gravEngine[\s\S]{0,80}?(exact|bh)/);
+    expect(config).not.toMatch(/gravEngine\s*:\s*'fmm'/);
   });
 });

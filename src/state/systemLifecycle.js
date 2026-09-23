@@ -55,6 +55,7 @@ export function createSystemLifecycle(options = {}) {
     integrations: [],
     relationships: new Map(),
     topology: null,
+    evolution: null,
   };
 }
 
@@ -352,6 +353,67 @@ export function materializeStaggeredTopology(lifecycle) {
   return clone(lifecycle.topology);
 }
 
+/** Compute the bounded replay/evolution layer for the completed fourth stagger. */
+export function computeStaggeredEvolution(lifecycle, options = {}) {
+  const topology = lifecycle.topology || computeStaggeredTopology(lifecycle);
+  const horizon = Math.max(1, Math.min(64, Math.floor(options.horizon || 12)));
+  const seed = Math.max(0, Math.floor(options.seed || 0));
+  const nodes = topology.nodes.map((node, index) => {
+    const modeWeight = { evidence: 1, relationship: 2, explicit: 3, discovery: 4 }[node.mode] || 0;
+    const state = (seed + index * 17 + modeWeight * 13) % 101;
+    return { id: node.id, systemId: node.systemId, variant: node.variant, state, mode: node.mode };
+  });
+  const transitions = topology.edges.map((edge, index) => ({
+    id: `evolution:${edge.from}->${edge.to}`,
+    from: edge.from,
+    to: edge.to,
+    kind: 'evolutionary-seam',
+    step: index + 1,
+    delta: ((seed + index * 7) % 9) - 4,
+  }));
+  // Keep transition deltas deterministic and bounded without introducing RNG state.
+  for (const transition of transitions) transition.delta = ((seed + transition.step * 7) % 9) - 4;
+  const trajectory = [];
+  let signal = seed % 101;
+  for (let tick = 0; tick < horizon; tick += 1) {
+    signal = (signal + 11 + (tick % 3)) % 101;
+    trajectory.push({ tick, signal, activeNode: nodes[tick % nodes.length]?.id || null });
+  }
+  const regimes = [
+    { name: 'reinforcing', score: nodes.filter((node) => node.mode === 'relationship' || node.mode === 'explicit').length / nodes.length },
+    { name: 'exploratory', score: nodes.filter((node) => node.mode === 'discovery').length / nodes.length },
+    { name: 'observational', score: nodes.filter((node) => node.mode === 'evidence').length / nodes.length },
+  ];
+  return {
+    version: 1,
+    status: topology.nodeCount === 48 && topology.edgeCount === 47 ? 'complete' : 'incomplete',
+    seed,
+    horizon,
+    deterministic: true,
+    nodeCount: nodes.length,
+    transitionCount: transitions.length,
+    nodes,
+    transitions,
+    trajectory,
+    regimes,
+  };
+}
+
+/** Persist the fourth stagger only after the connected third-stagger topology exists. */
+export function materializeStaggeredEvolution(lifecycle, options = {}) {
+  if (!lifecycle.topology) materializeStaggeredTopology(lifecycle);
+  const evolution = computeStaggeredEvolution(lifecycle, options);
+  if (evolution.status !== 'complete' || evolution.nodeCount !== 48 || evolution.transitionCount !== 47) {
+    throw new Error('Staggered evolution requires a complete 48-node, 47-edge topology');
+  }
+  lifecycle.evolution = { ...evolution, completedAt: ++lifecycle.clock };
+  return clone(lifecycle.evolution);
+}
+
+export function getStaggeredEvolutionReport(lifecycle) {
+  return clone(lifecycle.evolution);
+}
+
 export function getStaggeredProgress(lifecycle) {
   const plan = createStaggeredImplementationPlan();
   return {
@@ -361,6 +423,7 @@ export function getStaggeredProgress(lifecycle) {
     integrations: lifecycle.integrations.length,
     relationshipIntegrations: lifecycle.relationships.size,
     topology: lifecycle.topology?.status || 'ready',
+    evolution: lifecycle.evolution?.status || 'ready',
   };
 }
 
@@ -375,6 +438,7 @@ export function serializeSystemLifecycle(lifecycle) {
     integrations: lifecycle.integrations.map(clone),
     relationships: [...lifecycle.relationships.values()].map(clone),
     topology: clone(lifecycle.topology),
+    evolution: clone(lifecycle.evolution),
   };
 }
 
@@ -392,6 +456,7 @@ export function restoreSystemLifecycle(snapshot, options = {}) {
     if (relationship.id && relationship.kind === 'roadmap-integration') lifecycle.relationships.set(relationship.id, clone(relationship));
   }
   lifecycle.topology = snapshot.topology && snapshot.topology.version === 1 ? clone(snapshot.topology) : null;
+  lifecycle.evolution = snapshot.evolution && snapshot.evolution.version === 1 ? clone(snapshot.evolution) : null;
   for (const variant of snapshot.variants || []) {
     if (variant.variantId && SYSTEM_FOUNDATION[variant.systemId]) lifecycle.variants.set(variant.variantId, clone(variant));
   }

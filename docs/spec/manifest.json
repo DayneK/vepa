@@ -2,22 +2,22 @@
   "schema": "vepa-technical-spec/v1",
   "generator": "scripts/generate-spec.mjs",
   "project": "vepa-v4",
-  "version": "9.1.20",
+  "version": "9.1.22",
   "inputRoots": [
     "src",
     "tests",
     "bench",
     "public"
   ],
-  "sourceFileCount": 222,
+  "sourceFileCount": 228,
   "sourceAreas": {
-    "benchmark": 3,
+    "benchmark": 4,
     "repository": 7,
-    "application": 26,
+    "application": 27,
     "state": 26,
     "simulation": 28,
     "ui": 20,
-    "testing": 112
+    "testing": 116
   },
   "laws": {
     "declared": 136,
@@ -40,7 +40,7 @@
     "missingHelp": []
   },
   "findings": {
-    "packageJsonVersion": "9.1.20",
+    "packageJsonVersion": "9.1.22",
     "packageLockRootVersion": null,
     "packageLockVersionMismatch": false,
     "supplementalHelpCount": 0

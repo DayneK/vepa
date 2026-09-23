@@ -12,6 +12,9 @@ import {
   computeStaggeredTopology,
   getStaggeredRelationshipReport,
   materializeStaggeredTopology,
+  materializeStaggeredEvolution,
+  computeStaggeredEvolution,
+  getStaggeredEvolutionReport,
   applyStaggeredVariant,
   integrateStaggeredSeam,
   createSystemLifecycle,
@@ -49,6 +52,7 @@ describe('staggered system variants', () => {
       integrations: 47,
       relationshipIntegrations: 0,
       topology: 'ready',
+      evolution: 'ready',
     });
     expect(() => integrateStaggeredSeam(lifecycle, 'family-kinship-A', 'family-kinship-B')).not.toThrow();
     for (let index = 1; index < 47; index += 1) applyNextStaggeredRelationship(lifecycle);
@@ -64,6 +68,24 @@ describe('staggered system variants', () => {
     });
     expect(materializeStaggeredTopology(lifecycle).status).toBe('complete');
     expect(getStaggeredProgress(lifecycle).topology).toBe('complete');
+    expect(getStaggeredProgress(lifecycle).evolution).toBe('ready');
+    const evolution = materializeStaggeredEvolution(lifecycle, { seed: 7, horizon: 8 });
+    expect(evolution).toMatchObject({
+      status: 'complete',
+      deterministic: true,
+      nodeCount: 48,
+      transitionCount: 47,
+      horizon: 8,
+    });
+    expect(evolution.trajectory).toHaveLength(8);
+    expect(evolution.regimes).toHaveLength(3);
+    expect(getStaggeredProgress(lifecycle).evolution).toBe('complete');
+    expect(getStaggeredEvolutionReport(lifecycle)).toEqual(evolution);
+    expect(computeStaggeredEvolution(lifecycle, { seed: 7, horizon: 8 })).toMatchObject({
+      nodes: evolution.nodes,
+      transitions: evolution.transitions,
+      trajectory: evolution.trajectory,
+    });
     expect(getStaggeredProgress(lifecycle).completed).toBe(48);
     const relationship = getStaggeredRelationshipReport(lifecycle)[0];
     expect(closeStaggeredRelationship(lifecycle, relationship.id, 'replaced').status).toBe('closed');
@@ -78,6 +100,8 @@ describe('staggered system variants', () => {
       dependencyEdgeCount: 47,
       deterministic: true,
     });
+    expect(restored.evolution).toMatchObject({ status: 'complete', nodeCount: 48, transitionCount: 47 });
     expect(computeStaggeredTopology(restored)).toEqual(computeStaggeredTopology(lifecycle));
+    expect(getStaggeredEvolutionReport(restored)).toEqual(getStaggeredEvolutionReport(lifecycle));
   });
 });

@@ -81,5 +81,24 @@ describe('Physics/Mechanics boundary primitives', () => {
       constraintCorrection: expect.any(Object),
       fragmentationThreshold: 3,
     });
+    const scalars = [
+      diagnostics.distance,
+      diagnostics.overlap,
+      diagnostics.relativeSpeed,
+      diagnostics.fragmentationThreshold,
+      diagnostics.contactCorrection.ax,
+      diagnostics.contactCorrection.ay,
+      diagnostics.contactCorrection.az,
+      diagnostics.momentumCorrection.ax,
+      diagnostics.momentumCorrection.ay,
+      diagnostics.momentumCorrection.az,
+      diagnostics.torqueContribution.ax,
+      diagnostics.torqueContribution.ay,
+      diagnostics.torqueContribution.az,
+      diagnostics.constraintCorrection.ax,
+      diagnostics.constraintCorrection.ay,
+      diagnostics.constraintCorrection.az,
+    ];
+    expect(scalars.every(Number.isFinite)).toBe(true);
   });
 });

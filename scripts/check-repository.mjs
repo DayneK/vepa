@@ -5,6 +5,7 @@ import { LAW_INDEXES } from '../src/constants.js';
 import { validateLawOntology, LAW_RELATIONSHIPS } from '../src/state/lawOntology.js';
 import { validateLawGraph } from '../src/physics/lawGraph.js';
 import { validateProvenance } from './validate-provenance.mjs';
+import { validateSignoffFile } from './validate-signoff.mjs';
 
 const errors = [];
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
@@ -36,6 +37,7 @@ if (JSON.stringify(actualIndexes) !== JSON.stringify(expectedIndexes)) {
 
 const ontologyErrors = [...validateLawOntology(), ...validateLawGraph()];
 for (const error of validateProvenance()) errors.push(`provenance: ${error}`);
+for (const error of validateSignoffFile()) errors.push(`signoff: ${error}`);
 for (const error of new Set(ontologyErrors)) errors.push(`ontology: ${error}`);
 
 const declaredNames = new Set(Object.keys(LAW_INDEXES));
@@ -58,5 +60,5 @@ if (errors.length > 0) {
   for (const error of errors) console.error(`- ${error}`);
   process.exitCode = 1;
 } else {
-  console.log(`repository:check passed (${declaredNames.size} laws, version ${version}, ${Object.keys(LAW_RELATIONSHIPS).length} ontology records, provenance manifests valid).`);
+  console.log(`repository:check passed (${declaredNames.size} laws, version ${version}, ${Object.keys(LAW_RELATIONSHIPS).length} ontology records, provenance manifests valid, signoff manifest valid).`);
 }

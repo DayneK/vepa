@@ -21,12 +21,14 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 - [Module decomposition](module-decomposition.md) — source-grounded extraction plan for future runtime modules.
 - [Deployment publication](deployment-publication.md) — why the atlas is copied into the static build output.
 - [Ranked roadmap](roadmap-overview.md) — synchronized multi-phase delivery order.
+- [Complete concatenated systems atlas](complete-atlas.md) — one hierarchical, table-of-contents reference containing the current atlas, roles, and all 48 roadmap variants.
 - [48-variant roadmap catalog](roadmaps/README.md) — four completed variants (A–D) for each of the twelve systems.
 - `src/state/systemFoundation.js` — Phase 1 evidence-contract registry used by the runtime/tooling layer.
 - `src/state/systemLifecycle.js` — shared Phase 2–5 records, causal events, emergence evidence, reports, and predecessor-gated variant application.
 - `src/state/systemVariants.js` — the 48-variant registry and deterministic A→B→C→D integration schedule.
 - The second stagger in `src/state/systemLifecycle.js` materializes all 47 adjacent seams as durable typed relationships.
 - The third stagger validates and materializes those relationships as one deterministic 48-node dependency topology.
+- The fourth stagger materializes bounded deterministic replay trajectories and evolutionary regime summaries over the completed topology.
 
 ## Evidence notation
 

@@ -120,6 +120,10 @@ export function createRenderer(canvas, maxParticles, opts = {}) {
  * @param {object} renderer - Renderer state from createRenderer
  */
 export function resize(renderer) {
+    if (renderer && renderer.mode === 'pixi' && typeof renderer.resize === 'function') {
+        renderer.resize();
+        return;
+    }
     const { ctx, canvas } = renderer;
     const dpr = Math.min(
         typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1,
@@ -150,8 +154,41 @@ export function getSprites(renderer) {
  * Tear down the renderer.
  */
 export function destroy(renderer) {
+    if (renderer && renderer.mode === 'pixi' && typeof renderer.destroy === 'function') {
+        renderer.destroy();
+        return;
+    }
     renderer.ctx = null;
     renderer.canvas = null;
+}
+
+/**
+ * Create the selected browser renderer. Canvas2D remains synchronous and is
+ * always available; PixiJS initialization is async because it negotiates a
+ * GPU renderer. Failed Pixi initialization falls back to Canvas2D so a
+ * missing WebGL implementation never prevents the simulation from booting.
+ *
+ * @param {HTMLCanvasElement} canvas
+ * @param {number} maxParticles
+ * @param {{backend?: 'canvas2d'|'pixi', maxDpr?: number, eco?: boolean}} opts
+ */
+export async function createRendererAsync(canvas, maxParticles, opts = {}) {
+    const backend = opts.backend || runtimeConfig.renderBackend || 'canvas2d';
+    if (backend !== 'pixi') return createRenderer(canvas, maxParticles, opts);
+
+    try {
+        const { createPixiRenderer, syncPixiRenderer } = await import('./pixiRenderer.js');
+        const pixiRenderer = await createPixiRenderer(canvas, maxParticles, opts);
+        // Bind the sync entry point so spriteSync never imports pixi statically.
+        pixiRenderer.sync = (buffer, count, syncStride, worldSize, syncOpts) =>
+            syncPixiRenderer(pixiRenderer, buffer, count, syncStride, worldSize, syncOpts);
+        return pixiRenderer;
+    } catch (error) {
+        const fallback = createRenderer(canvas, maxParticles, opts);
+        fallback.requestedBackend = 'pixi';
+        fallback.backendError = error instanceof Error ? error.message : String(error);
+        return fallback;
+    }
 }
 
 // ── Frame Rendering ────────────────────────────────────────────────────────
