@@ -1,5 +1,55 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.28] - 2026-09-30 → 9.1.25
+
+### Fix runtime crash in the civilization dashboard
+
+The CIVILIZATION panel threw `ReferenceError: c is not defined` every 30th
+tick, so the whole intelligence update aborted in a running world. Caught from
+preview logs, not by the suite.
+
+### Fixed
+
+- **`civilizationPanel.js` referenced a block-scoped variable outside its
+  block.** The detail-log formatter declared `const c = report.codex` inside
+  `if (report.codex)` and then read `c.refused` on the following line, outside
+  that block. Every draw therefore threw at the last line of the function.
+
+  This shipped in v9.1.23/v9.1.24 and passed all 1212 tests plus
+  `bun run syntax-check`, because it is a *runtime* scope error rather than a
+  syntax error, and because every test that mentioned this panel inspected its
+  source text instead of calling it. The panel had never actually been
+  executed by a test.
+
+### Changed
+
+- **`civilizationPanel.js` — the log formatting is now a pure, exported
+  function** (`formatCivilizationLines(report)`) and `draw` only writes it to
+  the DOM. Separating formatting from DOM access is what makes this class of
+  bug testable at all; the previous shape could only be checked by reading it.
+- `ecoPanel.drawAll` and `groupAnalytics.drawAll` were audited for the same
+  defect and are clean. They share the blind spot (unexported, unexecuted) and
+  are flagged in the notes below rather than refactored here.
+
+### Added
+
+- `tests/unit/civilizationPanel.test.js` (16 tests): the crashing report shape,
+  every pre-v9.1.23 save shape, a report with no `detail` object, the codex
+  refusal path, HTML escaping of codex statements and refusal reasons, and a
+  full end-to-end pass that builds a real registry, real structures and a real
+  era boundary and assembles the report exactly as `main.js` does. Verified to
+  fail against the pre-fix file and pass against the fix.
+
+### Notes
+
+- The systemic lesson: a panel that is only ever regex-checked is a panel that
+  can ship a crash. Three analytics panels still have unexported, unexecuted
+  `drawAll` functions (`ecoPanel`, `groupAnalytics`, `intelPanel`). They are
+  correct today but untested in the way that just failed.
+- The long-press help work in v9.1.24 remains **unverified in a real browser**:
+  this sandbox cannot launch Chromium (missing `libglib-2.0.so.0`) and the
+  project ships no DOM library.
+
 ## [4.9.27] - 2026-09-30 → 9.1.24
 
 ### Long-press help for tabs, graphs and readouts

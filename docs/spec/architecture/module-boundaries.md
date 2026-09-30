@@ -9,8 +9,8 @@
 | Repository | 7 | 2 | 2 | 1 |
 | Simulation | 29 | 213 | 78 | 363 |
 | State | 31 | 263 | 56 | 218 |
-| Testing | 126 | 9 | 637 | 449 |
-| Ui | 24 | 73 | 55 | 373 |
+| Testing | 127 | 9 | 644 | 449 |
+| Ui | 24 | 74 | 55 | 373 |
 
 ## Boundary observations
 

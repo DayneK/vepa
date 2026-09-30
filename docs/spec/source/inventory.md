@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `256` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `257` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,8 +11,8 @@ The generator scanned `256` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 1 |
 | Simulation | 29 | 213 | 363 |
 | State | 31 | 263 | 218 |
-| Testing | 126 | 9 | 449 |
-| Ui | 24 | 73 | 373 |
+| Testing | 127 | 9 | 449 |
+| Ui | 24 | 74 | 373 |
 
 ## Module list
 
@@ -121,7 +121,7 @@ The generator scanned `256` files from active repository inputs. Individual modu
 | [src/state/worldSave.js](src/state/worldSave.js) | state | 558 | 18 | 4 | 2 |
 | [src/ui/analyticsPanel.js](src/ui/analyticsPanel.js) | ui | 106 | 3 | 0 | 1 |
 | [src/ui/camera.js](src/ui/camera.js) | ui | 300 | 6 | 0 | 0 |
-| [src/ui/civilizationPanel.js](src/ui/civilizationPanel.js) | ui | 94 | 2 | 2 | 2 |
+| [src/ui/civilizationPanel.js](src/ui/civilizationPanel.js) | ui | 122 | 3 | 2 | 2 |
 | [src/ui/dnaAnalytics.js](src/ui/dnaAnalytics.js) | ui | 549 | 1 | 1 | 3 |
 | [src/ui/dnaPanel.js](src/ui/dnaPanel.js) | ui | 185 | 1 | 3 | 10 |
 | [src/ui/ecoPanel.js](src/ui/ecoPanel.js) | ui | 183 | 1 | 2 | 0 |
@@ -210,6 +210,7 @@ The generator scanned `256` files from active repository inputs. Individual modu
 | [tests/unit/batch5Reports.test.js](tests/unit/batch5Reports.test.js) | testing | 34 | 0 | 2 | 0 |
 | [tests/unit/buffer.test.js](tests/unit/buffer.test.js) | testing | 55 | 0 | 3 | 0 |
 | [tests/unit/civilization.test.js](tests/unit/civilization.test.js) | testing | 257 | 0 | 2 | 1 |
+| [tests/unit/civilizationPanel.test.js](tests/unit/civilizationPanel.test.js) | testing | 262 | 0 | 7 | 0 |
 | [tests/unit/civilizationSequelWiring.test.js](tests/unit/civilizationSequelWiring.test.js) | testing | 286 | 0 | 10 | 0 |
 | [tests/unit/civilizationWiring.test.js](tests/unit/civilizationWiring.test.js) | testing | 90 | 0 | 6 | 0 |
 | [tests/unit/codex.test.js](tests/unit/codex.test.js) | testing | 402 | 0 | 5 | 16 |

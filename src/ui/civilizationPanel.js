@@ -38,6 +38,63 @@ export function createCivilizationPanel(bus) {
   return ctx;
 }
 
+/**
+ * Build the detail-log lines for a civilization report.
+ *
+ * Split out from `draw` so the formatting can be tested without a DOM. This
+ * module previously inlined all of it, and a block-scoped `const` leaked one
+ * line past its `if` — a ReferenceError that `node --check` cannot see and
+ * that the suite missed because nothing ever called `draw`. Keeping the string
+ * building pure means that class of bug now fails a test.
+ *
+ * @param {object} report a `civilizationReport()` payload plus the sequel
+ *   sub-reports (`structures`, `latestRegime`, `codex`)
+ * @returns {string[]} HTML fragments, in display order
+ */
+export function formatCivilizationLines(report) {
+  const lines = [];
+  const detail = (report && report.detail) || {};
+
+  for (const culture of detail.cultures || []) {
+    lines.push(`<div>· ${culture.name || culture.ownerGroupId} — ${culture.symbols} symbols, `
+      + `${culture.norms} norms, cohesion ${(culture.cohesion ?? 1).toFixed(2)}</div>`);
+  }
+  for (const fed of detail.federations || []) {
+    lines.push(`<div>· ${fed.name} (${fed.kind}) — ${fed.members} groups, ${fed.edges} bonds, gen ${fed.generation}</div>`);
+  }
+  for (const polity of detail.polities || []) {
+    lines.push(`<div>· ${polity.name} — ${polity.citizens} citizens, ${polity.provinces} provinces, `
+      + `${polity.institutions.length} institutions, term ${polity.term}</div>`);
+  }
+  if (report.households) lines.push(`<div>· ${report.households} households</div>`);
+
+  // Sequel Phases 4-6. Each sub-report is optional: a save written before a
+  // phase existed simply omits it, and "not measured yet" must not render as
+  // a measured zero.
+  const structures = report.structures;
+  if (structures) {
+    lines.push(`<div>· structures — ${structures.standing} standing, ${structures.dormant} dormant, ${structures.collapsed} collapsed</div>`);
+  }
+
+  // The codex line is the observer's own statement about the world, rendered
+  // with its evidence count so a reader can see how much is actually behind
+  // it rather than having to take the regime name on trust.
+  const codex = report.codex;
+  if (codex) {
+    const tag = codex.wellEvidenced ? '' : ' (not enough evidence)';
+    lines.push(`<div>· codex — ${esc(codex.statement)}${tag}</div>`);
+    lines.push(`<div>· evidence — ${codex.evidence} item(s), confidence ${codex.confidence.toFixed(2)}, `
+      + `${codex.asserted} stated / ${codex.admitted} uncertain</div>`);
+    // A refusal is surfaced rather than swallowed: silence would read as
+    // "nothing to report" when it actually means "the guard declined".
+    if (codex.refused) {
+      lines.push(`<div>· codex declined to explain — ${esc(codex.refused)}</div>`);
+    }
+  }
+
+  return lines;
+}
+
 function draw(ctx, report) {
   host = ctx.host;
   const setVal = ctx.setVal;
@@ -46,11 +103,8 @@ function draw(ctx, report) {
   setVal('civ-polities', report.polities);
   setVal('civ-kin', report.kinEdges);
 
-  // Sequel Phases 4-6. A missing sub-report (older save, or a registry the
-  // boot path has not installed yet) renders as a dash rather than 0, so
-  // "not measured yet" is never displayed as "measured as zero".
-  const s = report.structures;
-  setVal('civ-structures', s ? `${s.standing}/${s.total}` : '—');
+  const structures = report.structures;
+  setVal('civ-structures', structures ? `${structures.standing}/${structures.total}` : '—');
   const regime = report.latestRegime;
   setVal('civ-regime', regime ? regime.regime : '—');
   setVal('civ-confidence', regime ? regime.confidence.toFixed(2) : '—');
@@ -60,33 +114,7 @@ function draw(ctx, report) {
   const log = host.querySelector('#civ-detail');
   if (!log) return;
 
-  const lines = [];
-  for (const c of report.detail.cultures) {
-    lines.push(`<div>· ${c.name || c.ownerGroupId} — ${c.symbols} symbols, ${c.norms} norms, cohesion ${(c.cohesion ?? 1).toFixed(2)}</div>`);
-  }
-  for (const f of report.detail.federations) {
-    lines.push(`<div>· ${f.name} (${f.kind}) — ${f.members} groups, ${f.edges} bonds, gen ${f.generation}</div>`);
-  }
-  for (const p of report.detail.polities) {
-    lines.push(`<div>· ${p.name} — ${p.citizens} citizens, ${p.provinces} provinces, ${p.institutions.length} institutions, term ${p.term}</div>`);
-  }
-  if (report.households) lines.push(`<div>· ${report.households} households</div>`);
-  if (s) {
-    lines.push(`<div>· structures — ${s.standing} standing, ${s.dormant} dormant, ${s.collapsed} collapsed</div>`);
-  }
-  // The codex line is the observer's own statement about the world. It is
-  // rendered with its evidence count so a reader can see how much is
-  // actually behind it, rather than having to take the regime name on trust.
-  if (report.codex) {
-    const c = report.codex;
-    const tag = c.wellEvidenced ? '' : ' (not enough evidence)';
-    lines.push(`<div>· codex — ${esc(c.statement)}${tag}</div>`);
-    lines.push(`<div>· evidence — ${c.evidence} item(s), confidence ${c.confidence.toFixed(2)}, `
-      + `${c.asserted} stated / ${c.admitted} uncertain</div>`);
-  }
-  if (c.refused) {
-    lines.push(`<div>· codex declined to explain — ${esc(c.refused)}</div>`);
-  }
+  const lines = formatCivilizationLines(report);
   log.innerHTML = lines.length ? lines.join('') : '<div>no civilization entities yet</div>';
 }
 
