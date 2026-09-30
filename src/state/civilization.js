@@ -176,7 +176,13 @@ export function transmitCulture(registry, fromCultureId, toCultureId, opts = {})
 
 function tally(ledger, item, field) {
   if (!ledger[item]) ledger[item] = { inherited: 0, mutated: 0, invented: 0, lost: 0 };
-  ledger[item][field]++;
+  // The transmission result calls this bucket `retained` (it reads as a
+  // property of the transfer); the ledger calls it `inherited` (it reads as a
+  // property of the receiving culture). Normalise here, because a reader of
+  // the ledger — continuity.js sums `e.inherited` to measure culture
+  // retention across eras — must not have to know which name won.
+  const key = field === 'retained' ? 'inherited' : field;
+  ledger[item][key]++;
 }
 
 /** Recompute culture cohesion from the share of symbols inherited vs invented. */
@@ -197,7 +203,41 @@ export function updateCultureCohesion(registry) {
   return registry;
 }
 
-// ── Kinship ─────────────────────────────────────────────────────────────────
+/**
+ * The culture record id owned by a group, or null.
+ * Used to route inter-group events (alliances, trade) into cultural
+ * transmission without the caller walking the record store.
+ */
+export function cultureForGroup(registry, groupId) {
+  for (const id of registry.cultures.keys()) {
+    const rec = live(registry, id);
+    if (rec && rec.attributes.ownerGroupId === groupId) return id;
+  }
+  return null;
+}
+
+/**
+ * Transmit culture along a group-to-group relation reported by another system
+ * (governance alliances, economy trade). Safe to call every tick: it is a
+ * no-op unless both groups actually own a culture.
+ *
+ * This is the bridge that makes the culture system react to the rest of the
+ * social stack instead of sitting inert beside it.
+ *
+ * @param {object} registry
+ * @param {string|number} groupA
+ * @param {string|number} groupB
+ * @param {object} [opts] passed through to transmitCulture
+ * @returns {object|null} the transmission result, or null if not applicable
+ */
+export function transmitBetweenGroups(registry, groupA, groupB, opts = {}) {
+  const from = cultureForGroup(registry, groupA);
+  const to = cultureForGroup(registry, groupB);
+  if (!from || !to || from === to) return null;
+  return transmitCulture(registry, from, to, { mode: 'horizontal', ...opts });
+}
+
+// ── Kinship ────────────────────────────────────────────────────────────────
 
 /**
  * Record a kin edge. Callers derive these from lineage data; this module only

@@ -42,11 +42,32 @@ import {
   createFederation,
   foundCulture,
   addFederationMember,
+  transmitBetweenGroups,
   stepCivilization,
   civilizationReport,
   serializeCivilization,
   restoreCivilization,
 } from './state/civilization.js';
+import {
+  createStructureRegistry,
+  foundStructure,
+  structureForGroup,
+  runMaintenance,
+  structureReport,
+} from './state/structures.js';
+import {
+  createContinuityCatalog,
+  recordEraContinuity,
+  latestRegime,
+  regimeHistogram,
+} from './state/continuity.js';
+import {
+  createCodex,
+  recordCodexEntry,
+  codexReport,
+  serializeCodex,
+  restoreCodex,
+} from './state/codex.js';
 import { createExoticState, stepExoticMatter } from './state/exoticMatter.js';
 import { stepRelativity } from './state/relativity.js';
 import { createQuantumState, stepQuantumMacro } from './state/quantumMacro.js';
@@ -87,6 +108,14 @@ let syntheticState = null;
 // first runtime consumer of src/state/systemLifecycle.js, which until now was
 // exercised only by tests and never ran inside the app.
 let civilization = null; // Set P.1 — synthetic organisms, uploaded consciousness, machine groups
+// Durable structures: each detected group founds a nest, which needs upkeep
+// out of the group treasury and can depend on another structure standing.
+let structures = null;
+// Multi-epoch continuity + the observer's regime catalog. Filled at each
+// epoch:boundary by comparing the social world either side of the boundary.
+let continuity = null;
+// The codex speaks only from continuity evidence, never from law state.
+let codex = null;
 // Physics worker bridge. SharedArrayBuffer lets the worker mutate the same
 // particle memory without copying; browsers without cross-origin isolation
 // keep the safe main-thread path instead of paying a per-tick transfer cost.
@@ -110,6 +139,16 @@ const SOCIAL_CADENCE = 4;    // economy/governance/infrastructure/artifacts
 // by default, but culture/federation/polity should never approach that.
 const MAX_CIVILIZATION_CULTURES = 64;
 const CULTURE_SEED_SYMBOLS = Object.freeze(['ember', 'oath', 'mark', 'song', 'stone', 'thread', 'salt', 'bell']);
+// Peers trade culture less faithfully than parents transmit it to children.
+const CULTURE_ALLIANCE_FIDELITY = 0.45;
+// Sequel Phase 4-6 bounds. Structure decay is per *maintenance pass*, not per
+// tick: at DEFAULT_DECAY 0.004 an unfunded nest falls from 1.0 to the 0.15
+// collapse threshold in ~213 passes, so at an 8-tick interval it takes ~28s at
+// 60fps to be lost. Slow enough to watch a group neglect it, fast enough to
+// read as neglect rather than as a glitch.
+const MAX_STRUCTURES = 96;
+const STRUCTURE_UPKEEP_RATIO = 0.35;  // share of groups that can afford upkeep
+const STRUCTURE_MAINTENANCE_INTERVAL = 8;
 const LINEAGE_CADENCE = 4;   // death-transition scan
 let _cachedMetrics = null;
 let _metricsTick = -1;
@@ -407,6 +446,11 @@ async function boot() {
     stellarState = createStellarState();
     syntheticState = createSyntheticState();
     civilization = createCivilizationRegistry();
+    // Sequel Phases 4-6: structures are hosted by the civilization lifecycle,
+    // and the continuity catalog + codex are the observer's per-world memory.
+    structures = createStructureRegistry(civilization.lifecycle);
+    continuity = createContinuityCatalog();
+    codex = createCodex();
     agencyEngine = createAgencyEngine(bus);
     setGoalValue(goalEngine, 'scanInterval', insightEngine.cfg.scanInterval);
     setGoalValue(goalEngine, 'clusterRadius', insightEngine.cfg.clusterRadius);
@@ -707,6 +751,7 @@ function setDNAFromProfile(species, profile) {
         tick,
         name,
         civilization: civilization ? serializeCivilization(civilization) : null,
+        codex: codex ? serializeCodex(codex) : null,
     });
     const emitUndoState = () => {
         bus.emit('world:undoState', { canUndo: undoRing.canUndo(), canRedo: undoRing.canRedo(), enabled: undoEnabled });
@@ -737,7 +782,13 @@ function setDNAFromProfile(species, profile) {
         // resetIntelligence() installs a fresh civilization registry; a save
         // that carries one replaces it. Saves predating the ontology simply
         // leave the fresh (empty) registry in place.
-        if (out.civilization) civilization = restoreCivilization(out.civilization);
+        if (out.civilization) {
+            civilization = restoreCivilization(out.civilization);
+            // Structures live in the civilization lifecycle, so a restored
+            // lifecycle must be re-hosted by a fresh structure registry.
+            structures = createStructureRegistry(civilization.lifecycle);
+        }
+        if (out.codex) codex = restoreCodex(out.codex);
         if (restoreWorker) startPhysicsWorker();
         bus.emit('species:sync', { count: speciesCount });
         bus.emit('dna:sync');
@@ -997,6 +1048,28 @@ function setDNAFromProfile(species, profile) {
     });
     bus.on('epoch:boundary', ({ era, name }) => {
         bus.emit('narrative:system', { text: `Epoch ${era} begins: ${name}.` });
+        // Sequel Phases 5-6: an era boundary is the only place the observer
+        // is allowed to compare one world against another, so it is where the
+        // continuity fingerprint is sampled and the codex is allowed to speak.
+        if (!civilization || !continuity || !codex) return;
+        const entry = recordEraContinuity(continuity, civilization, groupRegistry, { tick, era, name });
+        const filed = recordCodexEntry(codex, entry);
+        if (!filed.ok) {
+            // The guard refused, so the observer is told it cannot say anything
+            // rather than being allowed to invent a reason.
+            bus.emit('codex:uncertain', { tick, reason: filed.reason, regime: null });
+            return;
+        }
+        const c = filed.entry;
+        // Well-evidenced regimes are stated; thin ones are announced as guesses.
+        bus.emit(c.asserted ? 'codex:regime' : 'codex:uncertain', {
+            tick,
+            era,
+            regime: c.regime,
+            statement: c.statement,
+            confidence: c.confidence,
+            evidence: c.evidence,
+        });
     });
     bus.on('epoch:list', () => {
         bus.emit('epoch:listResponse', { eras: epochEngine ? getEpochs(epochEngine) : [] });
@@ -1259,7 +1332,26 @@ function updateIntelligenceCore() {
             // conflicts write tension at the border and raise threat memory; policy
             // drives raids / commerce / dispersal.
             const gov = runGovernance(groupRegistry, particleView, PARTICLE_STRIDE, getFields(), { tick, worldParams, memoryBuffers });
-            for (const ev of gov.events) bus.emit(ev.type, ev);
+            for (const ev of gov.events) {
+                bus.emit(ev.type, ev);
+                // Phase 3: alliances move culture between the two groups. This
+                // is what makes the culture system react to the rest of the
+                // social stack instead of sitting inert beside it.
+                if (civilization && ev.type === 'governance:alliance') {
+                    const sent = transmitBetweenGroups(civilization, ev.group, ev.other, {
+                        fidelity: CULTURE_ALLIANCE_FIDELITY,
+                    });
+                    if (sent) {
+                        bus.emit('culture:transmitted', {
+                            from: ev.group, to: ev.other, tick,
+                            retained: sent.retained.length,
+                            mutated: sent.mutated.length,
+                            lost: sent.lost.length,
+                            invented: sent.invented.length,
+                        });
+                    }
+                }
+            }
             // Infrastructure (Set K.1) — extract ambient field energy into the
             // treasury (conserved), allied grids feed member ENERGY, and
             // era-progressed mega-structures (WALL/BRIDGE/HUB) execute on target.
@@ -1290,6 +1382,39 @@ function updateIntelligenceCore() {
                     for (const gid of ids) addFederationMember(civilization, fed.id, gid);
                 }
                 stepCivilization(civilization, { tick });
+            }
+            // Sequel Phase 4 — durable structures. Each group founds a nest
+            // once, then upkeep is paid out of its treasury on a slower
+            // cadence than the social pass. Upkeep is deliberately partial
+            // (STRUCTURE_UPKEEP_RATIO of groups by treasury rank): a society
+            // that cannot pay for all of its buildings should visibly lose
+            // some of them, which is the whole point of modelling ownership.
+            if (structures && tick % STRUCTURE_MAINTENANCE_INTERVAL === 0) {
+                const live = [...groupRegistry.groups.values()].filter((g) => g.members.size > 0);
+                for (const g of live) {
+                    if (structures.byId.size >= MAX_STRUCTURES) break;
+                    if (!structureForGroup(structures, g.id)) {
+                        foundStructure(structures, g.id, {
+                            kind: 'NEST',
+                            x: g.cx, y: g.cy, z: g.cz,
+                        });
+                    }
+                }
+                const fundable = live
+                    .slice()
+                    .sort((a, b) => (b.treasury || 0) - (a.treasury || 0))
+                    .slice(0, Math.max(1, Math.floor(live.length * STRUCTURE_UPKEEP_RATIO)));
+                const maintain = new Set();
+                for (const g of fundable) {
+                    for (const id of structures.byId.keys()) {
+                        const rec = structures.lifecycle.records.get(id);
+                        if (rec && rec.attributes.ownerGroupId === g.id) maintain.add(id);
+                    }
+                }
+                const up = runMaintenance(structures, groupRegistry, { tick, maintain });
+                if (up.maintained || up.decayed || up.collapsed.length) {
+                    bus.emit('structures:pass', { tick, ...up, report: structureReport(structures) });
+                }
             }
         }
     }
@@ -1419,7 +1544,15 @@ function updateIntelligenceCore() {
             bus.emit('eco:analytics', { eco: ecoEngine });
         }
         if (civilization) {
-            bus.emit('civilization:analytics', { report: civilizationReport(civilization) });
+            const report = civilizationReport(civilization);
+            // Sequel Phases 4-6 ride along with the existing civilization
+            // dashboard rather than claiming a new tab: structures, the
+            // continuity regime and the codex are all the same story.
+            report.structures = structures ? structureReport(structures) : null;
+            report.continuity = continuity ? regimeHistogram(continuity) : null;
+            report.codex = codex ? codexReport(codex) : null;
+            report.latestRegime = continuity ? latestRegime(continuity) : null;
+            bus.emit('civilization:analytics', { report });
         }
     }
 }
@@ -1442,6 +1575,11 @@ function resetIntelligence() {
     if (ecoEngine) { ecoEngine.ring.length = 0; ecoEngine.foodWeb.clear(); ecoEngine.niches.clear(); ecoEngine.splits.length = 0; ecoEngine.extinct.length = 0; }
     // Civilization ontology is per-world: nothing carries across a restart.
     civilization = createCivilizationRegistry();
+    // Structures and the observer's memory are scoped to that same world, so
+    // a restart must not leave a nest standing in an empty registry.
+    structures = createStructureRegistry(civilization.lifecycle);
+    continuity = createContinuityCatalog();
+    codex = createCodex();
     if (worldEventEngine) {
         worldEventEngine.baselineTotal = 0;
         worldEventEngine.baselineEnergy = 0;

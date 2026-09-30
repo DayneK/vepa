@@ -1,5 +1,99 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.26] - 2026-09-30 → 9.1.23
+
+### Civilization sequel — Phases 3–6
+
+Completes the culture-transmission bridge from round 2, then implements the
+three-phase sequel generated from the next three open rows of
+`docs/systems/implementation-gaps.md`. Suite 987 → **1164** tests, 112 → 117
+files; all verification gates green.
+
+**Phase 3 — cultural transmission, horizontal.**
+- `src/state/civilization.js`: `cultureForGroup`, `transmitBetweenGroups`
+  (22 tests). Culture now moves group-to-group, not only parent-to-child.
+- `src/main.js`: the `governance:alliance` branch calls it at
+  `CULTURE_ALLIANCE_FIDELITY = 0.45` and emits `culture:transmitted`, so the
+  culture system reacts to governance instead of sitting inert beside it.
+
+**Phase 4 — durable structures.** New `src/state/structures.js` (49 tests).
+Nine kinds with a stable identity, an owner, treasury-funded upkeep at a
+per-kind cost, and a dependency graph whose satisfaction gates function.
+**Dormant** (dependency gone, still standing) is kept distinct from
+**collapsed**. Runs on its own 8-tick cadence; upkeep is deliberately partial
+(35% of groups by treasury rank) so a society that cannot pay for all of its
+buildings visibly loses some.
+
+**Phase 5 — multi-epoch continuity.** New `src/state/continuity.js`
+(31 tests). Samples a social fingerprint at each `epoch:boundary` and diffs it
+against the previous era to derive one of seven regimes with evidence,
+confidence and a rationale. The fingerprint **deliberately excludes law state** —
+a regime describes a society, so it must be derivable from the society, and the
+function takes no law-state parameter at all.
+
+**Phase 6 — the Codex.** New `src/state/codex.js` (45 tests). Observer
+statements are built from measured social evidence and never from law names.
+Enforced twice, because a comment is not a guarantee: *structurally*
+(`explainRegime` takes only a continuity entry, and any evidence token outside
+the `SOCIAL_EVIDENCE` allow-list is a thrown error) and *textually*
+(`findLawAttribution` scans the finished prose and `recordCodexEntry` refuses to
+file a statement that names a law, recording the refusal where the UI can show
+it). Below the evidence gate the observer is required to say it does not know,
+and `main.js` routes that to `codex:uncertain` rather than `codex:regime`.
+
+### Fixed
+
+- **`civilization.js` `tally()` wrote the wrong ledger key.** It initialised
+  each entry as `{ inherited, mutated, invented, lost }` but incremented
+  `ledger[item][field]` with the transmission bucket name `retained`, so
+  `e.inherited` was permanently `0`. This is a pre-existing latent bug, not a
+  regression: it silently made Phase 5's `cultureRetention` always zero and the
+  `thriving` regime unreachable. Found only because Phase 5 reads that field.
+  `tally` now normalises the two vocabularies, and a test pins the exact key set.
+- **Structure record-id mismatch in new `main.js` wiring.** Record ids are
+  allocated as `infrastructure:<n>`, so an existence check of the form
+  `records.has('infrastructure:group:' + id)` could never match and would have
+  founded a new structure on every maintenance pass, leaking records to the
+  2048 cap. Caught before commit; replaced with a `structureForGroup()` owner
+  lookup and a negative test on the old pattern.
+- **`createContinuityCatalog` / `createCodex` ignored `cap: 0`.** `options.cap
+  || 16` treated an explicit `0` as unset, defeating the documented minimum.
+  Now tests for finiteness.
+
+### Changed
+
+- `src/ui/civilizationPanel.js` + `index.html`: four new cells (STRUCTURES,
+  REGIME, CONFIDENCE, CODEX) plus an evidence line showing how much actually
+  backs the regime name. A missing sub-report renders as `—`, never `0`, so
+  "not measured yet" is never shown as "measured as zero".
+- `src/state/worldSave.js`: additive `codex` field; saves predating it restore
+  to an empty catalog rather than erroring.
+- `docs/systems/implementation-gaps.md`: four rows marked closed with the module
+  that closes them, and "structures as physical objects" added to the
+  must-not-claim list.
+
+### Added
+
+- `docs/CIVILIZATION-SEQUEL-PLAN-2026-09-30.md` — design, decisions, the
+  guard's calibration, and verification for Phases 4–6.
+- `tests/unit/cultureTransmission.test.js` (22), `structures.test.js` (49),
+  `continuity.test.js` (31), `codex.test.js` (45),
+  `civilizationSequelWiring.test.js` (30).
+
+### Notes
+
+- The codex prose scan only matches law identifiers of ≥5 characters or any
+  containing an underscore; `LIFE`, `HEAT`, `VOID`, `MIND` and `WILL` are
+  four-letter keys that are also ordinary English. This is exported as
+  `LAW_SCAN_MIN_LENGTH` so the rule is auditable rather than hidden. The guard
+  caught this repository's own `CULTURE`, `OBSERVER` and `PATTERN` laws in the
+  first draft of the templates; the prose was reworded rather than the
+  dictionary weakened, and two regression tests pin both halves.
+- Still open: **A9** (staged `laws.js` `buffer_global` migration, 85 call
+  sites), **A10** (shared `render/core.js`), **A11** (split `multiplex.js`),
+  **A12** (decompose `main.js` singletons — now larger, as `main.js` gained
+  ~90 lines and eight sibling registries this round).
+
 ## [4.9.25] - 2026-09-23 → 9.1.22
 
 ### feat(audit): executable audit-signoff gate (remediation §4.1)

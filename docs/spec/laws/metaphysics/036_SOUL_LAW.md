@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_10.test.js](tests/audit/batch_10.test.js)
+- Tests: [tests/audit/batch_10.test.js](tests/audit/batch_10.test.js), [tests/unit/codex.test.js](tests/unit/codex.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/metaphysics.md](docs/audit/laws/a3/metaphysics.md), [docs/audit/laws/a3/stage-1/36_SOUL_LAW.md](docs/audit/laws/a3/stage-1/36_SOUL_LAW.md), [docs/audit/laws/a3/stage-2/36_SOUL_LAW.md](docs/audit/laws/a3/stage-2/36_SOUL_LAW.md), [docs/audit/laws/a3/stage-3/36_SOUL_LAW.md](docs/audit/laws/a3/stage-3/36_SOUL_LAW.md)
 
 ## Interpretation boundary

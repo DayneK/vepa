@@ -174,6 +174,9 @@ export function captureWorldState(opts = {}) {
     // Additive: absent on saves written before the civilization ontology
     // existed. Restores treat a missing key as "no civilization state".
     civilization: opts.civilization ?? null,
+    // Additive: the observer's codex. Absent on every save written before the
+    // codex existed; a missing key restores as an empty catalog, not an error.
+    codex: opts.codex ?? null,
     summary: summarizeWorld(view, count, laws),
   };
 }
@@ -241,6 +244,9 @@ export function restoreWorldState(state, target = {}) {
     // Caller rebuilds the registry with restoreCivilization(); we only hand
     // back the raw snapshot so the shape stays free of a state-module import.
     civilization: state.civilization ?? null,
+    // Same contract as civilization: handed back raw so worldSave stays free
+    // of an import from the codex module.
+    codex: state.codex ?? null,
   };
 }
 

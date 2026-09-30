@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_11.test.js](tests/audit/batch_11.test.js)
+- Tests: [tests/audit/batch_11.test.js](tests/audit/batch_11.test.js), [tests/unit/codex.test.js](tests/unit/codex.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/42_MELT.md](docs/audit/laws/a3/stage-1/42_MELT.md), [docs/audit/laws/a3/stage-1/45_DEPOSIT.md](docs/audit/laws/a3/stage-1/45_DEPOSIT.md), [docs/audit/laws/a3/stage-2/42_MELT.md](docs/audit/laws/a3/stage-2/42_MELT.md), [docs/audit/laws/a3/stage-2/45_DEPOSIT.md](docs/audit/laws/a3/stage-2/45_DEPOSIT.md), [docs/audit/laws/a3/stage-3/42_MELT.md](docs/audit/laws/a3/stage-3/42_MELT.md), [docs/audit/laws/a3/stage-3/45_DEPOSIT.md](docs/audit/laws/a3/stage-3/45_DEPOSIT.md), [docs/audit/laws/a3/thermodynamics.md](docs/audit/laws/a3/thermodynamics.md)
 
 ## Interpretation boundary

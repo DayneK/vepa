@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `244` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `252` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -10,9 +10,9 @@ The generator scanned `244` files from active repository inputs. Individual modu
 | Benchmark | 4 | 5 | 9 |
 | Repository | 7 | 2 | 1 |
 | Simulation | 29 | 213 | 363 |
-| State | 28 | 222 | 201 |
-| Testing | 119 | 9 | 431 |
-| Ui | 22 | 54 | 366 |
+| State | 31 | 263 | 218 |
+| Testing | 124 | 9 | 449 |
+| Ui | 22 | 54 | 367 |
 
 ## Module list
 
@@ -54,7 +54,7 @@ The generator scanned `244` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](src/engines/timelineEngine.js) | application | 180 | 8 | 0 | 0 |
 | [src/engines/worldEvents.js](src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](src/main.js) | application | 1588 | 0 | 45 | 12 |
+| [src/main.js](src/main.js) | application | 1724 | 0 | 48 | 12 |
 | [src/multiplex/multiplex.js](src/multiplex/multiplex.js) | application | 1523 | 30 | 11 | 7 |
 | [src/multiplex/multiplexHelp.js](src/multiplex/multiplexHelp.js) | application | 460 | 7 | 0 | 5 |
 | [src/multiplex/multiplexUI.js](src/multiplex/multiplexUI.js) | application | 837 | 1 | 2 | 2 |
@@ -92,8 +92,10 @@ The generator scanned `244` files from active repository inputs. Individual modu
 | [src/render/zeroCopy.js](src/render/zeroCopy.js) | application | 26 | 1 | 0 | 1 |
 | [src/spawn/distribution.js](src/spawn/distribution.js) | simulation | 108 | 4 | 1 | 1 |
 | [src/state/artifacts.js](src/state/artifacts.js) | state | 152 | 2 | 3 | 1 |
-| [src/state/civilization.js](src/state/civilization.js) | state | 614 | 31 | 2 | 2 |
+| [src/state/civilization.js](src/state/civilization.js) | state | 654 | 33 | 2 | 2 |
+| [src/state/codex.js](src/state/codex.js) | state | 324 | 16 | 3 | 15 |
 | [src/state/construction.js](src/state/construction.js) | state | 139 | 2 | 2 | 0 |
+| [src/state/continuity.js](src/state/continuity.js) | state | 246 | 8 | 1 | 1 |
 | [src/state/defaultPresets.js](src/state/defaultPresets.js) | state | 71 | 1 | 0 | 19 |
 | [src/state/economy.js](src/state/economy.js) | state | 105 | 2 | 2 | 0 |
 | [src/state/exoticMatter.js](src/state/exoticMatter.js) | state | 332 | 8 | 3 | 3 |
@@ -110,15 +112,16 @@ The generator scanned `244` files from active repository inputs. Individual modu
 | [src/state/relativity.js](src/state/relativity.js) | state | 209 | 7 | 2 | 3 |
 | [src/state/runtimeConfig.js](src/state/runtimeConfig.js) | state | 41 | 1 | 1 | 2 |
 | [src/state/stellar.js](src/state/stellar.js) | state | 348 | 6 | 3 | 2 |
+| [src/state/structures.js](src/state/structures.js) | state | 253 | 15 | 2 | 1 |
 | [src/state/synthetic.js](src/state/synthetic.js) | state | 297 | 11 | 3 | 3 |
 | [src/state/systemFoundation.js](src/state/systemFoundation.js) | state | 71 | 4 | 0 | 1 |
 | [src/state/systemLifecycle.js](src/state/systemLifecycle.js) | state | 465 | 23 | 3 | 1 |
 | [src/state/systemVariants.js](src/state/systemVariants.js) | state | 119 | 7 | 1 | 1 |
 | [src/state/worldParams.js](src/state/worldParams.js) | state | 257 | 6 | 1 | 65 |
-| [src/state/worldSave.js](src/state/worldSave.js) | state | 552 | 18 | 3 | 2 |
+| [src/state/worldSave.js](src/state/worldSave.js) | state | 558 | 18 | 4 | 2 |
 | [src/ui/analyticsPanel.js](src/ui/analyticsPanel.js) | ui | 106 | 3 | 0 | 1 |
 | [src/ui/camera.js](src/ui/camera.js) | ui | 300 | 6 | 0 | 0 |
-| [src/ui/civilizationPanel.js](src/ui/civilizationPanel.js) | ui | 59 | 2 | 2 | 1 |
+| [src/ui/civilizationPanel.js](src/ui/civilizationPanel.js) | ui | 94 | 2 | 2 | 2 |
 | [src/ui/dnaAnalytics.js](src/ui/dnaAnalytics.js) | ui | 542 | 1 | 1 | 3 |
 | [src/ui/dnaPanel.js](src/ui/dnaPanel.js) | ui | 185 | 1 | 3 | 10 |
 | [src/ui/ecoPanel.js](src/ui/ecoPanel.js) | ui | 183 | 1 | 2 | 0 |
@@ -205,9 +208,13 @@ The generator scanned `244` files from active repository inputs. Individual modu
 | [tests/unit/batch5Reports.test.js](tests/unit/batch5Reports.test.js) | testing | 34 | 0 | 2 | 0 |
 | [tests/unit/buffer.test.js](tests/unit/buffer.test.js) | testing | 55 | 0 | 3 | 0 |
 | [tests/unit/civilization.test.js](tests/unit/civilization.test.js) | testing | 257 | 0 | 2 | 1 |
+| [tests/unit/civilizationSequelWiring.test.js](tests/unit/civilizationSequelWiring.test.js) | testing | 286 | 0 | 10 | 0 |
 | [tests/unit/civilizationWiring.test.js](tests/unit/civilizationWiring.test.js) | testing | 90 | 0 | 6 | 0 |
+| [tests/unit/codex.test.js](tests/unit/codex.test.js) | testing | 402 | 0 | 5 | 16 |
 | [tests/unit/computeEngines.test.js](tests/unit/computeEngines.test.js) | testing | 70 | 0 | 8 | 1 |
 | [tests/unit/constructionEconomy.test.js](tests/unit/constructionEconomy.test.js) | testing | 128 | 0 | 6 | 0 |
+| [tests/unit/continuity.test.js](tests/unit/continuity.test.js) | testing | 308 | 0 | 3 | 1 |
+| [tests/unit/cultureTransmission.test.js](tests/unit/cultureTransmission.test.js) | testing | 228 | 0 | 2 | 0 |
 | [tests/unit/deepTime.test.js](tests/unit/deepTime.test.js) | testing | 129 | 0 | 4 | 0 |
 | [tests/unit/dna.test.js](tests/unit/dna.test.js) | testing | 79 | 0 | 3 | 0 |
 | [tests/unit/drawer.test.js](tests/unit/drawer.test.js) | testing | 154 | 0 | 1 | 0 |
@@ -252,6 +259,7 @@ The generator scanned `244` files from active repository inputs. Individual modu
 | [tests/unit/sliderControl.test.js](tests/unit/sliderControl.test.js) | testing | 149 | 0 | 2 | 0 |
 | [tests/unit/spawnDistribution.test.js](tests/unit/spawnDistribution.test.js) | testing | 13 | 0 | 3 | 0 |
 | [tests/unit/stellar.test.js](tests/unit/stellar.test.js) | testing | 281 | 0 | 5 | 2 |
+| [tests/unit/structures.test.js](tests/unit/structures.test.js) | testing | 451 | 0 | 3 | 1 |
 | [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js) | testing | 62 | 0 | 4 | 28 |
 | [tests/unit/synthetic.test.js](tests/unit/synthetic.test.js) | testing | 420 | 0 | 6 | 1 |
 | [tests/unit/systemFoundation.test.js](tests/unit/systemFoundation.test.js) | testing | 45 | 0 | 2 | 1 |

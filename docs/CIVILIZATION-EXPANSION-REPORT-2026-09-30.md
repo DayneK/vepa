@@ -196,3 +196,39 @@ none duplication-critical.
   contracts (3 export snapshots, one permanently-unresolved provenance record,
   a `scaffold` evidence level). Each was updated to assert the new **stricter**
   condition, not merely to pass.
+
+---
+
+## 7. Addendum — Phase 3 completed, and the Phases 4–6 sequel
+
+**Delivered 2026-09-30.** Full design, decisions and verification are in
+`docs/CIVILIZATION-SEQUEL-PLAN-2026-09-30.md`; this section only closes the
+loop on this report.
+
+**Phase 3 (the slice proposed above) is done.** `transmitBetweenGroups` and
+`cultureForGroup` were added to `src/state/civilization.js`, and the
+`governance:alliance` branch in `main.js` now calls them at
+`CULTURE_ALLIANCE_FIDELITY = 0.45`, emitting `culture:transmitted`. 22 tests.
+
+**Phases 4–6 were then generated from the next three rows of the same gap
+table** and implemented: `src/state/structures.js` (durable structures),
+`src/state/continuity.js` (multi-epoch continuity + regime catalog) and
+`src/state/codex.js` (evidence-cited observer explanations). 155 further
+tests, all four files wired into the orchestrator, the panel and the save path.
+
+Two bugs were found and fixed while building them, both of the kind that look
+like working code:
+
+1. **A record-id mismatch in the new `main.js` wiring** that would have founded
+   a new structure on *every* maintenance pass and leaked records to the
+   lifecycle cap. Caught before commit; fixed with a `structureForGroup()`
+   owner lookup, and pinned by a negative test on the old pattern.
+2. **A pre-existing latent bug in `civilization.js`'s `tally()`** — it wrote
+   the bucket name `retained` into a ledger whose readers expect `inherited`,
+   so `e.inherited` was permanently `0`. This silently made Phase 5's
+   `cultureRetention` always zero and the `thriving` regime unreachable. Found
+   only because Phase 5 was written to read that field; it predates this work.
+
+**Suite: 987 → 1164 tests across 117 files, all gates green.** A9, A10, A11 and
+A12 remain open and are now listed in the sequel plan.
+
