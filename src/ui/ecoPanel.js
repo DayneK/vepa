@@ -31,6 +31,10 @@ export function createEcoPanel(bus) {
       { id: 'eco-bio', label: 'BIODIVERSITY', value: '0.00' },
       { id: 'eco-osc', label: 'OSCILLATION', value: '—' },
       { id: 'eco-pop', label: 'POPULATION' },
+      { id: 'eco-peak', label: 'PEAK POP' },
+      { id: 'eco-extinct', label: 'EXTINCTIONS' },
+      { id: 'eco-predators', label: 'PREDATOR EDGES' },
+      { id: 'eco-splits', label: 'SPLITS' },
     ],
     canvases: [
       { id: 'eco-curves', w: CURVE_W, h: CURVE_H },
@@ -45,6 +49,18 @@ export function createEcoPanel(bus) {
   setVal = ctx.setVal;
 }
 
+/**
+ * Peak population over the retained ring window, plus how much of the window
+ * is actually retained — so a high "peak" cannot be mistaken for a lifetime
+ * high on a world that just booted.
+ */
+export function peakPopulation(eco) {
+  if (!eco || !eco.ring || !eco.ring.length) return { peak: 0, samples: 0 };
+  let peak = 0;
+  for (const r of eco.ring) if (r.total > peak) peak = r.total;
+  return { peak, samples: eco.ring.length };
+}
+
 function drawAll(ctx, eco) {
   host = ctx.host;
   setVal = ctx.setVal;
@@ -52,11 +68,16 @@ function drawAll(ctx, eco) {
   const pop = last ? last.total : 0;
   const shannon = biodiversity(eco);
   const osc = oscillationScore(eco);
+  const { peak } = peakPopulation(eco);
 
   setVal('eco-species', last ? last.speciesAlive : 0);
   setVal('eco-pop', pop);
   setVal('eco-bio', shannon.toFixed(2));
   setVal('eco-osc', osc < 0.02 ? 'STABLE' : osc < 0.1 ? 'MILD' : 'WILD');
+  setVal('eco-peak', peak);
+  setVal('eco-extinct', eco.extinct ? eco.extinct.length : 0);
+  setVal('eco-predators', eco.foodWeb ? eco.foodWeb.size : 0);
+  setVal('eco-splits', eco.splits ? eco.splits.length : 0);
 
   drawCurves(eco);
   drawFoodWeb(eco);

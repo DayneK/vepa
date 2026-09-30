@@ -276,6 +276,9 @@ export const GRAPH_HELP = Object.freeze({
 export const CELL_HELP = Object.freeze({
   // INTELLIGENCE
   'intel-clusters': { title: 'CLUSTERS', summary: 'Particle clusters detected this scan by the insight engine.', sections: [['Definition', 'A group of nearby particles that cluster detection considers cohesive. Rescanned on an interval, so the count lags the simulation slightly.']] },
+  'intel-largest': { title: 'LARGEST CLUSTER', summary: 'Size of the biggest single detected cluster.', sections: [['Why it matters', 'A cluster holding most of the population means the world has organised into one body rather than many. Compare against CLUSTERS to see whether one dominates or many are similar.']] },
+  'intel-cluster-energy': { title: 'CLUSTER ENERGY', summary: 'Total energy summed across every detected cluster.', sections: [['Same pass', 'Derived from the same detection scan as CLUSTERS, so the two cannot disagree.'], ['Interpretation', 'High total energy with few clusters means dense, energetic bodies; the same energy spread over many clusters means a diffuse world.']] },
+  'intel-net': { title: 'NET GROWTH', summary: 'Births minus deaths, signed.', sections: [['Signed, not absolute', 'Shown signed so the direction is readable at a glance. BIRTHS and DEATHS sit beside it, so you would otherwise have to subtract them yourself.'], ['Caveat', 'These are cumulative lineage events since the last reset, not a per-second rate, and they lag the actual population.']] },
   'intel-births': { title: 'BIRTHS', summary: 'Cumulative reproduction events in this world.', sections: [['Cumulative, not per second', 'This only resets when the world is reset. Divide by elapsed ticks for a rate.']] },
   'intel-deaths': { title: 'DEATHS', summary: 'Cumulative death events in this world.', sections: [['Cumulative, not per second', 'Compare against BIRTHS on the same panel: births minus deaths is the net direction of the population.']] },
   'intel-lineage': { title: 'LINEAGE DEPTH', summary: 'Deepest generation of descent observed by the lineage tracker.', sections: [['Stalled', 'A depth that never grows while births continue means offspring are not surviving into the tracked lineage.']] },
@@ -287,12 +290,20 @@ export const CELL_HELP = Object.freeze({
   'ga-members': { title: 'MEMBERS', summary: 'Total particles assigned to any group.', sections: [['Ungrouped particles', 'Particles not in a group are not counted here, so this can be lower than the total population.']] },
   'ga-treasury': { title: 'TREASURY', summary: 'Total currency held across all group treasuries.', sections: [['Income and sinks', 'Foragers earn income and the leader takes a tithe. Groups spend on artifacts, structure upkeep and trade.']] },
   'ga-volume': { title: 'TRADE VOLUME', summary: 'How much moved between groups in the last economy pass.', sections: [['Directional', 'Exchange is proportional to the difference between two groups\' treasuries, so value flows from rich to poor.']] },
+  'ga-leaders': { title: 'LEADERS', summary: 'Total leader-role particles across all groups.', sections: [['Role, not species', 'Leadership is a role assigned on group membership, not a species trait. A leader earns a tithe of its group\'s income.'], ['Zero leaders', 'Groups with no leader collect no tithe, so their treasury grows more slowly.']] },
+  'ga-artifacts': { title: 'ARTIFACTS', summary: 'Crafted TOOL / WEAPON / BARRIER items held across all groups.', sections: [['What they do', 'Tools pay an income dividend, weapons damp threat memory, barriers write impassable wall cells at the territory edge.'], ['Treasury-funded', 'Crafting spends the treasury, so a rich group out-produces a poor one.']] },
+  'ga-alliances': { title: 'ALLIANCES', summary: 'Distinct allied group pairs.', sections: [['Halved on purpose', 'Each pair is recorded from both sides, so this is pairs, not stored edges. Allied groups pool treasuries.']] },
+  'ga-conflicts': { title: 'CONFLICTS', summary: 'Distinct group pairs currently in conflict.', sections: [['Halved on purpose', 'As with alliances, each pair is stored from both sides. Conflicts raise threat memory at the border and can escalate into raids.']] },
 
   // ECOSYSTEM
   'eco-species': { title: 'SPECIES', summary: 'Species currently present in the world.', sections: [['Slots', 'The world carries a bounded number of species slots. Once all are filled, new ones must split from existing ones.']] },
   'eco-bio': { title: 'BIODIVERSITY', summary: 'How evenly the living population is spread across species, 0–1.', sections: [['Reading it', 'Near 0 means one species dominates; higher is a more even spread. It responds slowly to extinction events.']] },
   'eco-osc': { title: 'OSCILLATION', summary: 'Degree to which the population is cycling rather than settling.', sections: [['Meaning', 'High values indicate boom-and-bust dynamics; a value that decays to zero means the world has found a steady state.']] },
   'eco-pop': { title: 'POPULATION', summary: 'Total living particles across all species.', sections: [['Compared to EPOCH', 'The extinction window opens when this falls below a configured fraction of its baseline.']] },
+  'eco-peak': { title: 'PEAK POP', summary: 'Highest population seen within the retained ring window.', sections: [['Window, not lifetime', 'The eco ring is a bounded buffer, so this is the peak over recent history only. A world that just booted will show a low peak that says nothing about its eventual size.'], ['Use it against POPULATION', 'POPULATION near PEAK means the world is near its recent high; a large gap means it has declined.']] },
+  'eco-extinct': { title: 'EXTINCTIONS', summary: 'Species extinctions recorded in this world.', sections: [['Bounded feed', 'The engine keeps a capped list of recent extinctions with the tick they happened on.'], ['Permanent', 'An extinct species slot does not refill. Sustained loss here is what eventually opens an extinction window.']] },
+  'eco-predators': { title: 'PREDATOR EDGES', summary: 'Predation relationships detected in the food web.', sections: [['How edges form', 'Species A is recorded as preying on B when A is larger and overlaps B\'s niche. Structural, not behavioural — it reflects size and spatial overlap.']] },
+  'eco-splits': { title: 'SPLITS', summary: 'Speciation events, where one species became two.', sections: [['Driven by GENOTYPE', 'A split happens when a species\' trait distribution separates enough for the speciation engine to declare a new one.'], ['See the feed below', 'The species panel lists each split with its parent, isolation and tick.']] },
 
   // CIVILIZATION
   'civ-cultures': { title: 'CULTURES', summary: 'Number of cultures founded, one per detected group.', sections: [['What a culture holds', 'A pool of symbols and norms, plus a ledger recording what was inherited, mutated, reinvented or lost in transfer.']] },
@@ -303,6 +314,9 @@ export const CELL_HELP = Object.freeze({
   'civ-regime': { title: 'REGIME', summary: 'Name of the civilizational regime observed at the last era boundary.', sections: [['Derived, not declared', 'Chosen by comparing the social world against the previous era: thriving, settled, strained, fragmenting, collapsing, empty or emergent.']] },
   'civ-confidence': { title: 'CONFIDENCE', summary: 'How much evidence supports the current regime name, 0–1.', sections: [['Read it with the name', 'Low confidence means the observer has too little to say. Below the evidence threshold the codex states its uncertainty instead of a conclusion.']] },
   'civ-codex': { title: 'CODEX', summary: 'Stated claims over total entries filed.', sections: [['Never law-derived', 'Statements are built from measured social evidence only. If the evidence is insufficient, the codex declines rather than inventing a reason.']] },
+  'civ-households': { title: 'HOUSEHOLDS', summary: 'Households formed from kin edges.', sections: [['What a household is', 'A caregiving unit built from recorded kinship. Households are what kin resource flow operates through.'], ['Forms over time', 'A household exists only once kin edges have been recorded, so this stays at zero early in a world.']] },
+  'civ-citizens': { title: 'CITIZENS', summary: 'Particles holding citizenship in a polity.', sections: [['Distinct from members', 'Citizenship is membership of a polity, not of a group. A group member is not automatically a citizen.'], ['Revocable', 'Citizenship can be granted and revoked, so this can fall as well as rise.']] },
+  'civ-generations': { title: 'FED GEN', summary: 'Deepest generation number reached by any federation.', sections: [['What it counts', 'Increments each time a federation splits and re-fuses. A high number means the social structure has repeatedly reorganised itself rather than settling.']] },
 });
 
 /** Kind of help surface a target gets. Drives modal vs tooltip in the overlay. */
@@ -310,6 +324,24 @@ export const HELP_KIND = Object.freeze({
   TAB: 'tab',
   GRAPH: 'graph',
 });
+
+/**
+ * Which sub-tabs belong to which tab, in display order.
+ *
+ * The modal needs this to offer a route out of a summary and into the detail,
+ * so reading a tab's help does not end in a dead end. Display order matches
+ * index.html exactly; the coverage test enforces both directions.
+ */
+export const TAB_SUBTABS = Object.freeze({
+  'tab-setup': ['setup-laws', 'setup-world', 'setup-species', 'setup-settings'],
+  'tab-data': ['data-intel', 'data-dna', 'data-logs', 'data-groups', 'data-eco', 'data-civilization'],
+  'tab-saves': [],
+});
+
+/** The sub-tab ids under a tab, or an empty list for a tab without any. */
+export function subtabsForTab(tabId) {
+  return TAB_SUBTABS[tabId] ? [...TAB_SUBTABS[tabId]] : [];
+}
 
 /**
  * Look up help for a tab or sub-tab button.

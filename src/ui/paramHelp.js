@@ -7,7 +7,12 @@
  *
  * Lookup precedence: EXACT_KEY_HELP[key] → DNA_HELP[key] → generic fallback
  * assembled from the slider's own metadata (range, step, default).
+ *
+ * The popup is a reading surface: it stays open once shown, and is dismissed
+ * by pressing anywhere else or pressing Escape (see tooltipDismiss.js).
  */
+
+import { registerTooltip } from './tooltipDismiss.js';
 
 // ── World parameter help (key → sections) ────────────────────────────────
 export const EXACT_KEY_HELP = {
@@ -346,12 +351,12 @@ export const DNA_HELP = {
   'Ploidy Level': { what: 'Chromosome sets per cell (REPRO input).', effect: 'Higher ploidy adds genetic redundancy.', tuning: '1 = haploid, 2 = diploid.', units: 'sets 1–4.' },
   'Codon Bias': { what: 'Codon usage preference (GENOTYPE).', effect: 'Biases which genes are read efficiently.', tuning: 'Subtle expression-level effect.', units: 'bias.' },
   'Regulatory Depth': { what: 'Depth of gene-regulatory networks (GENOTYPE).', effect: 'Also scales quantum observation (Set N).', tuning: 'Deep regulation means complex phenotypes.', units: 'depth 0–1.' },
-};
-
-// ── Popup infrastructure ─────────────────────────────────────────────────
-
+};// ── Popup infrastructure ─────────────────────────────────────────────────
 let popupEl = null;
 let hideTimer = null;
+let currentAnchor = null;
+let unregister = null;
+let paramHelpDismissReady = false;
 
 function ensurePopup() {
   if (popupEl) return popupEl;
@@ -385,6 +390,18 @@ function showPopup(anchorEl, html) {
   clearTimeout(hideTimer);
   popup.innerHTML = html;
   popup.classList.remove('hidden');
+  currentAnchor = anchorEl;
+  // Registered press-insensitive: the popup is a reading surface, not a
+  // momentary hint, so the press that opened it (and the pointerup that ends
+  // it) must not take it away. A press elsewhere still clears it via the bus.
+  if (typeof registerTooltip === 'function' && !unregister) {
+    unregister = registerTooltip({
+      name: 'param-help',
+      anchor: anchorEl,
+      dismiss: () => hideParamPopup(),
+      pressInsensitive: true,
+    });
+  }
   const rect = anchorEl.getBoundingClientRect();
   popup.style.visibility = 'hidden';
   popup.style.display = 'block';
@@ -403,6 +420,31 @@ function showPopup(anchorEl, html) {
 
 export function hideParamPopup() {
   if (popupEl) popupEl.classList.add('hidden');
+  currentAnchor = null;
+  if (unregister) { unregister(); unregister = null; }
+}
+
+/** True when a parameter popup is currently open. Test seam. */
+export function isParamPopupVisible() {
+  return Boolean(popupEl) && !popupEl.classList.contains('hidden');
+}
+
+/**
+ * Install the Escape-to-close listener once.
+ *
+ * The popup is press-insensitive (it must survive the pointerup that ends its
+ * own long press), so it needs a keyboard escape hatch or it would have no
+ * dismissal at all. Called from the UI bootstrap rather than at import time so
+ * a headless import stays side-effect free.
+ */
+export function initParamHelpDismiss() {
+  if (typeof document === 'undefined' || paramHelpDismissReady) return false;
+  paramHelpDismissReady = true;
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    if (isParamPopupVisible()) hideParamPopup();
+  });
+  return true;
 }
 
 /**
@@ -438,9 +480,11 @@ export function attachParamHelp(labelEl, lookup) {
   };
   const cancel = () => {
     clearTimeout(pressTimer);
-    if (!pressed) return;
-    pressed = false;
-    hideTimer = setTimeout(hideParamPopup, 120);
+    // The popup deliberately does NOT hide here. It used to hide 120ms after
+    // release, which meant a long press flashed a wall of text and then took
+    // it away before it could be read. It now stays until a press elsewhere
+    // (see tooltipDismiss.js) or Escape. Press-insensitivity is what makes the
+    // pointerup that ends the long press safe to ignore.
   };
 
   // Long-press with mouse / touch / pen

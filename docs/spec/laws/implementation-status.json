@@ -33,6 +33,7 @@
         "tests/unit/octree.test.js",
         "tests/unit/physics.test.js",
         "tests/unit/synergyCache.test.js",
+        "tests/unit/tidalBloom.test.js",
         "tests/unit/worldSave.test.js"
       ],
       "relationshipTypes": [
@@ -62,7 +63,8 @@
         "tests/audit/params_batch_08.test.js",
         "tests/audit/params_batch_10.test.js",
         "tests/unit/lawGating.test.js",
-        "tests/unit/lawGraph.test.js"
+        "tests/unit/lawGraph.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -84,7 +86,8 @@
         "tests/audit/params_batch_02.test.js",
         "tests/audit/params_batch_03.test.js",
         "tests/audit/params_batch_04.test.js",
-        "tests/audit/params_batch_09.test.js"
+        "tests/audit/params_batch_09.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -162,7 +165,8 @@
         "tests/unit/provenance.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/structures.test.js",
-        "tests/unit/synergyCache.test.js"
+        "tests/unit/synergyCache.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -263,7 +267,8 @@
         "tests/unit/exoticMatter.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/multiplex.test.js",
-        "tests/unit/synergyCache.test.js"
+        "tests/unit/synergyCache.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -344,7 +349,8 @@
         "tests/audit/params_batch_15.test.js",
         "tests/unit/multiplex.test.js",
         "tests/unit/relationshipExplorer.test.js",
-        "tests/unit/synergyCache.test.js"
+        "tests/unit/synergyCache.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
         "dependsOn",
@@ -759,7 +765,8 @@
         "tests/audit/batch_26.test.js",
         "tests/audit/params_batch_04.test.js",
         "tests/audit/params_batch_14.test.js",
-        "tests/unit/codex.test.js"
+        "tests/unit/codex.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -810,7 +817,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_07.test.js"
+        "tests/audit/batch_07.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -1333,7 +1341,8 @@
         "tests/audit/batch_03.test.js",
         "tests/audit/batch_13.test.js",
         "tests/audit/params_batch_15.test.js",
-        "tests/unit/relationshipExplorer.test.js"
+        "tests/unit/relationshipExplorer.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -1362,7 +1371,8 @@
         "tests/audit/params_batch_18.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/signal.test.js",
-        "tests/unit/synergyCache.test.js"
+        "tests/unit/synergyCache.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -1686,7 +1696,8 @@
         "tests/unit/lawsSingleton.test.js",
         "tests/unit/memoryCulture.test.js",
         "tests/unit/signal.test.js",
-        "tests/unit/synergyCache.test.js"
+        "tests/unit/synergyCache.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -1732,7 +1743,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_18.test.js",
-        "tests/unit/lawCategories.test.js"
+        "tests/unit/lawCategories.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -1773,7 +1785,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_18.test.js",
-        "tests/unit/lawGraph.test.js"
+        "tests/unit/lawGraph.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
         "dependsOn",
@@ -1955,7 +1968,8 @@
         "tests/unit/civilization.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/lawCategories.test.js",
-        "tests/unit/synergyCache.test.js"
+        "tests/unit/synergyCache.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -2058,7 +2072,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_21.test.js"
+        "tests/audit/batch_21.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -2356,7 +2371,8 @@
       "testFiles": [
         "tests/audit/batch_25.test.js",
         "tests/audit/params_batch_13.test.js",
-        "tests/audit/params_batch_14.test.js"
+        "tests/audit/params_batch_14.test.js",
+        "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",

@@ -1392,16 +1392,19 @@ body {
   padding-bottom: 2px;
 }
 .law-info-module .info-title {
-  color: var(--text);
-  font-size: 11px;
+  /* --text-primary: `var(--text)` is not defined in this codebase, so the
+   * original declaration was invalid and silently inherited its colour. */
+  color: var(--text-primary);
+  font-size: 15px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 .law-info-module .info-category {
-  font-size: 9px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  opacity: 0.8;
+  opacity: 1;
+  font-weight: bold;
 }
 .law-info-module .info-close {
   margin-left: auto;
@@ -1412,23 +1415,27 @@ body {
   font-size: 12px;
   padding: 0 2px;
 }
-.law-info-module .info-close:hover { color: var(--text); }
+.law-info-module .info-close:hover { color: var(--text-primary); }
+/* Law info contrast raised. The system formula was rgba(255,255,255,0.35) on
+ * near-black — roughly 3:1 against the panel, below the WCAG AA threshold for
+ * body text, and at 8px it was effectively decorative. The formula is the most
+ * valuable line in the panel (it is the actual law), so it now reads clearly. */
 .law-info-module .info-hint {
-  color: var(--text);
-  font-size: 10px;
-  line-height: 1.4;
-  margin-bottom: 2px;
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.45;
+  margin-bottom: 4px;
 }
 .law-info-module .info-explanation {
-  color: var(--text-dim);
-  font-size: 9px;
-  line-height: 1.3;
-  margin-bottom: 2px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+  margin-bottom: 4px;
 }
 .law-info-module .info-system {
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 8px;
-  line-height: 1.3;
+  color: var(--text-primary);
+  font-size: 11px;
+  line-height: 1.45;
   font-style: italic;
 }
 .law-info-module .info-toggle {
@@ -1522,8 +1529,8 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--text);
-  font-size: 11px;
+  color: var(--text-primary);
+  font-size: 12px;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 3px;
@@ -1573,7 +1580,7 @@ body {
 }
 .view-mode-toggle:hover {
   border-color: var(--accent-blue);
-  color: var(--text);
+  color: var(--text-primary);
 }
 .view-mode-toggle.word-mode {
   border-color: var(--accent-blue);
@@ -3085,47 +3092,53 @@ body {
 }
 
 /* ── Parameter help popup (long-press on a parameter name) ── */
+/* Type sizes raised across the popup (was 11/13/10/9, now 13/16/12/11): the
+ * popup carries four labelled paragraphs of real tuning guidance, and at the
+ * old sizes it was a wall of 9px grey that most people simply did not read. */
 .param-help-popup {
   position: fixed;
   z-index: 200;
-  max-width: 320px;
-  background: rgba(8, 8, 16, 0.97);
-  border: 1px solid var(--border);
+  max-width: 400px;
+  background: rgba(8, 8, 16, 0.98);
+  border: 1px solid rgba(74, 158, 255, 0.5);
   border-left: 3px solid var(--accent-blue, #4a9eff);
   border-radius: 4px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   font-family: 'Courier New', monospace;
-  font-size: 11px;
-  line-height: 1.45;
-  color: var(--text, #cfd6e4);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+  font-size: 13px;
+  line-height: 1.5;
+  /* --text-primary, not the undefined --text: the old declaration fell back to
+   * inheriting, which is what made the popup look washed out. */
+  color: var(--text-primary);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7);
   pointer-events: none;
 }
 .param-help-popup.hidden { display: none; }
 .param-help-popup .php-title {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: bold;
   letter-spacing: 1px;
-  color: var(--accent-blue, #4a9eff);
-  margin-bottom: 2px;
+  color: var(--accent-blue);
+  margin-bottom: 3px;
 }
 .param-help-popup .php-key {
-  font-size: 10px;
-  color: rgba(255,255,255,0.45);
+  font-size: 12px;
+  color: var(--text-secondary);
   margin-left: 8px;
   letter-spacing: 0;
 }
 .param-help-popup .php-range {
-  font-size: 10px;
-  color: rgba(255,255,255,0.55);
-  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
 }
-.param-help-popup .php-section { margin-top: 6px; }
+.param-help-popup .php-section { margin-top: 9px; }
 .param-help-popup .php-label {
-  font-size: 9px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: rgba(255,255,255,0.4);
+  color: var(--accent-gold, #ffc857);
+  margin-bottom: 2px;
 }
-.param-help-popup .php-text { color: var(--text, #cfd6e4); }
-.law-info-module .info-advanced { color: rgba(255,255,255,0.55); font-size: 10px; }
+.param-help-popup .php-text { color: var(--text-primary); }
+.law-info-module .info-advanced { color: var(--text-secondary); font-size: 12px; line-height: 1.45; }

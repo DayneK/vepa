@@ -4,17 +4,17 @@
 
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 16 | NONE |
-| 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 6 | NONE |
-| 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 5 | NONE |
+| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 17 | NONE |
+| 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 7 | NONE |
+| 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 6 | NONE |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | NONE |
-| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 8 | 13 | NONE |
+| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 8 | 14 | NONE |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 4 | NONE |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 4 | 5 | NONE |
-| 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 13 | NONE |
+| 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 14 | NONE |
 | 8 | [GLOW](../laws/biology/008_GLOW.md) | biology | 2 | 3 | 2 | NONE |
 | 9 | [AFFINITY](../laws/biology/009_AFFINITY.md) | biology | 1 | 2 | 7 | NONE |
-| 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 8 | NONE |
+| 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 9 | NONE |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | NONE |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | NONE |
 | 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 59 | NONE |
@@ -29,9 +29,9 @@
 | 22 | [ISOMERIZATION](../laws/chemistry/022_ISOMERIZATION.md) | chemistry | 1 | 2 | 1 | NONE |
 | 23 | [CHIRALITY](../laws/chemistry/023_CHIRALITY.md) | chemistry | 1 | 2 | 1 | NONE |
 | 24 | [CRYSTALLIZATION](../laws/chemistry/024_CRYSTALLIZATION.md) | chemistry | 1 | 3 | 1 | NONE |
-| 25 | [HEAT](../laws/thermodynamics/025_HEAT.md) | thermodynamics | 1 | 4 | 7 | NONE |
+| 25 | [HEAT](../laws/thermodynamics/025_HEAT.md) | thermodynamics | 1 | 4 | 8 | NONE |
 | 26 | [COLD](../laws/thermodynamics/026_COLD.md) | thermodynamics | 1 | 3 | 2 | NONE |
-| 27 | [CONVECTION](../laws/thermodynamics/027_CONVECTION.md) | thermodynamics | 1 | 2 | 1 | NONE |
+| 27 | [CONVECTION](../laws/thermodynamics/027_CONVECTION.md) | thermodynamics | 1 | 2 | 2 | NONE |
 | 28 | [PHASE_RADIATION](../laws/thermodynamics/028_PHASE_RADIATION.md) | thermodynamics | 1 | 2 | 1 | NONE |
 | 29 | [SUBLIMATION](../laws/thermodynamics/029_SUBLIMATION.md) | thermodynamics | 1 | 2 | 1 | NONE |
 | 30 | [TIME_DILATION](../laws/metaphysics/030_TIME_DILATION.md) | metaphysics | 1 | 2 | 3 | NONE |
@@ -55,8 +55,8 @@
 | 48 | [CLAIRVOYANCE](../laws/metaphysics/048_CLAIRVOYANCE.md) | metaphysics | 1 | 2 | 1 | NONE |
 | 49 | [PRECOGNITION](../laws/metaphysics/049_PRECOGNITION.md) | metaphysics | 1 | 2 | 1 | NONE |
 | 50 | [ASTRAL](../laws/metaphysics/050_ASTRAL.md) | metaphysics | 1 | 2 | 1 | NONE |
-| 51 | [PREDATION](../laws/biology/051_PREDATION.md) | biology | 1 | 4 | 4 | NONE |
-| 52 | [COMMS](../laws/biology/052_COMMS.md) | biology | 1 | 5 | 8 | NONE |
+| 51 | [PREDATION](../laws/biology/051_PREDATION.md) | biology | 1 | 4 | 5 | NONE |
+| 52 | [COMMS](../laws/biology/052_COMMS.md) | biology | 1 | 5 | 9 | NONE |
 | 53 | [CHARGE_LAW](../laws/electromagnetism/053_CHARGE_LAW.md) | electromagnetism | 1 | 3 | 5 | NONE |
 | 54 | [ELECTRIC_FIELD](../laws/electromagnetism/054_ELECTRIC_FIELD.md) | electromagnetism | 0 | 0 | 0 | NONE |
 | 55 | [CURRENT](../laws/electromagnetism/055_CURRENT.md) | electromagnetism | 1 | 3 | 3 | NONE |
@@ -70,11 +70,11 @@
 | 63 | [DISCHARGE](../laws/electromagnetism/063_DISCHARGE.md) | electromagnetism | 1 | 3 | 2 | NONE |
 | 64 | [PLASMA](../laws/electromagnetism/064_PLASMA.md) | electromagnetism | 1 | 3 | 2 | NONE |
 | 65 | [SUPERCONDUCTIVITY](../laws/electromagnetism/065_SUPERCONDUCTIVITY.md) | electromagnetism | 1 | 3 | 3 | NONE |
-| 66 | [MEMORY](../laws/information/066_MEMORY.md) | information | 1 | 6 | 26 | NONE |
+| 66 | [MEMORY](../laws/information/066_MEMORY.md) | information | 1 | 6 | 27 | NONE |
 | 67 | [PATTERN](../laws/information/067_PATTERN.md) | information | 1 | 3 | 3 | NONE |
-| 68 | [STIGMERGY](../laws/information/068_STIGMERGY.md) | information | 1 | 3 | 2 | NONE |
+| 68 | [STIGMERGY](../laws/information/068_STIGMERGY.md) | information | 1 | 3 | 3 | NONE |
 | 69 | [SIGNAL_BOOST](../laws/information/069_SIGNAL_BOOST.md) | information | 1 | 3 | 1 | NONE |
-| 70 | [LEARN](../laws/information/070_LEARN.md) | information | 1 | 3 | 2 | NONE |
+| 70 | [LEARN](../laws/information/070_LEARN.md) | information | 1 | 3 | 3 | NONE |
 | 71 | [SYMBOL](../laws/information/071_SYMBOL.md) | information | 1 | 3 | 1 | NONE |
 | 72 | [METRIC](../laws/information/072_METRIC.md) | information | 1 | 2 | 1 | NONE |
 | 73 | [PREDICT](../laws/information/073_PREDICT.md) | information | 1 | 3 | 1 | NONE |
@@ -82,11 +82,11 @@
 | 75 | [PROTOCOL](../laws/information/075_PROTOCOL.md) | information | 1 | 3 | 1 | NONE |
 | 76 | [FEEDBACK](../laws/information/076_FEEDBACK.md) | information | 1 | 3 | 4 | NONE |
 | 77 | [LANGUAGE](../laws/information/077_LANGUAGE.md) | information | 1 | 3 | 3 | NONE |
-| 78 | [CULTURE](../laws/information/078_CULTURE.md) | information | 1 | 3 | 5 | NONE |
+| 78 | [CULTURE](../laws/information/078_CULTURE.md) | information | 1 | 3 | 6 | NONE |
 | 79 | [SINGULARITY](../laws/physics/079_SINGULARITY.md) | physics | 1 | 4 | 4 | NONE |
 | 80 | [ENTANGLEMENT](../laws/metaphysics/080_ENTANGLEMENT.md) | metaphysics | 1 | 5 | 5 | NONE |
 | 81 | [HISTORY](../laws/information/081_HISTORY.md) | information | 1 | 3 | 3 | NONE |
-| 82 | [TIDE](../laws/physics/082_TIDE.md) | physics | 1 | 2 | 1 | NONE |
+| 82 | [TIDE](../laws/physics/082_TIDE.md) | physics | 1 | 2 | 2 | NONE |
 | 83 | [FRICTION](../laws/physics/083_FRICTION.md) | physics | 1 | 2 | 2 | NONE |
 | 84 | [HORIZON](../laws/physics/084_HORIZON.md) | physics | 1 | 3 | 2 | NONE |
 | 85 | [RADIATION_PRESSURE](../laws/physics/085_RADIATION_PRESSURE.md) | physics | 1 | 1 | 0 | NONE |
@@ -101,7 +101,7 @@
 | 94 | [PRECIPITATION](../laws/chemistry/094_PRECIPITATION.md) | chemistry | 1 | 1 | 1 | NONE |
 | 95 | [NEUTRALIZATION](../laws/chemistry/095_NEUTRALIZATION.md) | chemistry | 1 | 1 | 1 | NONE |
 | 96 | [STOICHIOMETRY](../laws/chemistry/096_STOICHIOMETRY.md) | chemistry | 1 | 1 | 1 | NONE |
-| 97 | [AUTOCATALYSIS](../laws/chemistry/097_AUTOCATALYSIS.md) | chemistry | 1 | 1 | 3 | NONE |
+| 97 | [AUTOCATALYSIS](../laws/chemistry/097_AUTOCATALYSIS.md) | chemistry | 1 | 1 | 4 | NONE |
 | 98 | [ADIABATIC](../laws/thermodynamics/098_ADIABATIC.md) | thermodynamics | 1 | 2 | 1 | NONE |
 | 99 | [COMPRESSION](../laws/thermodynamics/099_COMPRESSION.md) | thermodynamics | 1 | 2 | 1 | NONE |
 | 100 | [EXPANSION](../laws/thermodynamics/100_EXPANSION.md) | thermodynamics | 1 | 2 | 1 | NONE |

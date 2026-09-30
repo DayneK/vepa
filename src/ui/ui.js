@@ -17,6 +17,7 @@ import { createSavePanel } from './savePanel.js';
 import { createSettingsPanel } from './settingsPanel.js';
 import { initTooltip } from './tooltip.js';
 import { initHelpLongPress } from './helpOverlay.js';
+import { initParamHelpDismiss } from './paramHelp.js';
 import { resetCamera } from './camera.js';
 import './toolbarHelp.css';
 
@@ -49,6 +50,9 @@ export function initUI(bus, lawStateObj, dnaBuffer) {
   createSavePanel(bus);
   createSettingsPanel(bus, lawStateObj);
   initTooltip(bus, lawStateObj);
+  // The parameter popup is press-insensitive by design, so it needs its own
+  // keyboard dismissal rather than relying on the shared press-to-close bus.
+  initParamHelpDismiss();
 }
 
 export function setupTabSwitching() {

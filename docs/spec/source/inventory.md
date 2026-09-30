@@ -2,17 +2,17 @@
 
 # Source: Inventory
 
-The generator scanned `257` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `262` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
-| Application | 35 | 154 | 454 |
+| Application | 35 | 154 | 453 |
 | Benchmark | 4 | 5 | 9 |
 | Repository | 7 | 2 | 1 |
 | Simulation | 29 | 213 | 363 |
-| State | 31 | 263 | 218 |
-| Testing | 127 | 9 | 449 |
-| Ui | 24 | 74 | 373 |
+| State | 31 | 265 | 242 |
+| Testing | 131 | 11 | 465 |
+| Ui | 25 | 86 | 375 |
 
 ## Module list
 
@@ -54,7 +54,7 @@ The generator scanned `257` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](src/engines/timelineEngine.js) | application | 180 | 8 | 0 | 0 |
 | [src/engines/worldEvents.js](src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](src/main.js) | application | 1726 | 0 | 48 | 12 |
+| [src/main.js](src/main.js) | application | 1755 | 0 | 48 | 11 |
 | [src/multiplex/multiplex.js](src/multiplex/multiplex.js) | application | 1523 | 30 | 11 | 7 |
 | [src/multiplex/multiplexHelp.js](src/multiplex/multiplexHelp.js) | application | 460 | 7 | 0 | 5 |
 | [src/multiplex/multiplexUI.js](src/multiplex/multiplexUI.js) | application | 837 | 1 | 2 | 2 |
@@ -96,7 +96,7 @@ The generator scanned `257` files from active repository inputs. Individual modu
 | [src/state/codex.js](src/state/codex.js) | state | 324 | 16 | 3 | 15 |
 | [src/state/construction.js](src/state/construction.js) | state | 139 | 2 | 2 | 0 |
 | [src/state/continuity.js](src/state/continuity.js) | state | 246 | 8 | 1 | 1 |
-| [src/state/defaultPresets.js](src/state/defaultPresets.js) | state | 71 | 1 | 0 | 19 |
+| [src/state/defaultPresets.js](src/state/defaultPresets.js) | state | 237 | 3 | 0 | 43 |
 | [src/state/economy.js](src/state/economy.js) | state | 105 | 2 | 2 | 0 |
 | [src/state/exoticMatter.js](src/state/exoticMatter.js) | state | 332 | 8 | 3 | 3 |
 | [src/state/governance.js](src/state/governance.js) | state | 243 | 2 | 4 | 0 |
@@ -121,30 +121,31 @@ The generator scanned `257` files from active repository inputs. Individual modu
 | [src/state/worldSave.js](src/state/worldSave.js) | state | 558 | 18 | 4 | 2 |
 | [src/ui/analyticsPanel.js](src/ui/analyticsPanel.js) | ui | 106 | 3 | 0 | 1 |
 | [src/ui/camera.js](src/ui/camera.js) | ui | 300 | 6 | 0 | 0 |
-| [src/ui/civilizationPanel.js](src/ui/civilizationPanel.js) | ui | 122 | 3 | 2 | 2 |
+| [src/ui/civilizationPanel.js](src/ui/civilizationPanel.js) | ui | 140 | 3 | 2 | 2 |
 | [src/ui/dnaAnalytics.js](src/ui/dnaAnalytics.js) | ui | 549 | 1 | 1 | 3 |
 | [src/ui/dnaPanel.js](src/ui/dnaPanel.js) | ui | 185 | 1 | 3 | 10 |
-| [src/ui/ecoPanel.js](src/ui/ecoPanel.js) | ui | 183 | 1 | 2 | 0 |
-| [src/ui/groupAnalytics.js](src/ui/groupAnalytics.js) | ui | 218 | 1 | 1 | 0 |
-| [src/ui/helpOverlay.js](src/ui/helpOverlay.js) | ui | 284 | 11 | 1 | 0 |
-| [src/ui/helpRegistry.js](src/ui/helpRegistry.js) | ui | 372 | 8 | 0 | 6 |
+| [src/ui/ecoPanel.js](src/ui/ecoPanel.js) | ui | 204 | 2 | 2 | 0 |
+| [src/ui/groupAnalytics.js](src/ui/groupAnalytics.js) | ui | 297 | 3 | 1 | 0 |
+| [src/ui/helpOverlay.js](src/ui/helpOverlay.js) | ui | 343 | 11 | 2 | 0 |
+| [src/ui/helpRegistry.js](src/ui/helpRegistry.js) | ui | 404 | 10 | 0 | 7 |
 | [src/ui/hud.js](src/ui/hud.js) | ui | 112 | 2 | 1 | 0 |
-| [src/ui/intelPanel.js](src/ui/intelPanel.js) | ui | 109 | 1 | 1 | 0 |
+| [src/ui/intelPanel.js](src/ui/intelPanel.js) | ui | 130 | 1 | 1 | 1 |
 | [src/ui/lawPanel.js](src/ui/lawPanel.js) | ui | 196 | 1 | 2 | 0 |
 | [src/ui/mechanicsIcons.js](src/ui/mechanicsIcons.js) | ui | 16 | 1 | 0 | 8 |
 | [src/ui/narrativePanel.js](src/ui/narrativePanel.js) | ui | 126 | 1 | 0 | 1 |
-| [src/ui/paramHelp.js](src/ui/paramHelp.js) | ui | 467 | 4 | 0 | 81 |
+| [src/ui/paramHelp.js](src/ui/paramHelp.js) | ui | 511 | 6 | 3 | 81 |
 | [src/ui/presetPanel.js](src/ui/presetPanel.js) | ui | 148 | 1 | 4 | 0 |
 | [src/ui/savePanel.js](src/ui/savePanel.js) | ui | 266 | 2 | 1 | 0 |
 | [src/ui/settingsPanel.js](src/ui/settingsPanel.js) | ui | 195 | 1 | 6 | 1 |
 | [src/ui/sliderControl.js](src/ui/sliderControl.js) | ui | 430 | 14 | 1 | 0 |
 | [src/ui/speciesPanel.js](src/ui/speciesPanel.js) | ui | 251 | 1 | 3 | 10 |
-| [src/ui/toolbarHelp.css](src/ui/toolbarHelp.css) | ui | 301 | 0 | 0 | 0 |
+| [src/ui/toolbarHelp.css](src/ui/toolbarHelp.css) | ui | 339 | 0 | 0 | 0 |
 | [src/ui/tooltip.js](src/ui/tooltip.js) | ui | 171 | 2 | 4 | 122 |
-| [src/ui/ui.js](src/ui/ui.js) | ui | 493 | 5 | 16 | 1 |
+| [src/ui/tooltipDismiss.js](src/ui/tooltipDismiss.js) | ui | 102 | 5 | 0 | 0 |
+| [src/ui/ui.js](src/ui/ui.js) | ui | 497 | 5 | 17 | 1 |
 | [src/ui/worldPanel.js](src/ui/worldPanel.js) | ui | 554 | 3 | 6 | 127 |
 | [src/worker/physics.worker.js](src/worker/physics.worker.js) | simulation | 438 | 0 | 5 | 3 |
-| [style.css](style.css) | repository | 3132 | 0 | 0 | 0 |
+| [style.css](style.css) | repository | 3145 | 0 | 0 | 0 |
 | [tests/audit/batch_01.test.js](tests/audit/batch_01.test.js) | testing | 224 | 0 | 7 | 8 |
 | [tests/audit/batch_02.test.js](tests/audit/batch_02.test.js) | testing | 323 | 0 | 8 | 8 |
 | [tests/audit/batch_03.test.js](tests/audit/batch_03.test.js) | testing | 249 | 0 | 6 | 8 |
@@ -218,6 +219,7 @@ The generator scanned `257` files from active repository inputs. Individual modu
 | [tests/unit/constructionEconomy.test.js](tests/unit/constructionEconomy.test.js) | testing | 128 | 0 | 6 | 0 |
 | [tests/unit/continuity.test.js](tests/unit/continuity.test.js) | testing | 308 | 0 | 3 | 1 |
 | [tests/unit/cultureTransmission.test.js](tests/unit/cultureTransmission.test.js) | testing | 228 | 0 | 2 | 0 |
+| [tests/unit/dataPanels.test.js](tests/unit/dataPanels.test.js) | testing | 327 | 0 | 8 | 0 |
 | [tests/unit/deepTime.test.js](tests/unit/deepTime.test.js) | testing | 129 | 0 | 4 | 0 |
 | [tests/unit/dna.test.js](tests/unit/dna.test.js) | testing | 79 | 0 | 3 | 0 |
 | [tests/unit/drawer.test.js](tests/unit/drawer.test.js) | testing | 154 | 0 | 1 | 0 |
@@ -228,6 +230,7 @@ The generator scanned `257` files from active repository inputs. Individual modu
 | [tests/unit/fmmParity.test.js](tests/unit/fmmParity.test.js) | testing | 71 | 0 | 5 | 0 |
 | [tests/unit/governance.test.js](tests/unit/governance.test.js) | testing | 208 | 0 | 6 | 0 |
 | [tests/unit/groupRegistry.test.js](tests/unit/groupRegistry.test.js) | testing | 195 | 0 | 3 | 4 |
+| [tests/unit/helpNavigation.test.js](tests/unit/helpNavigation.test.js) | testing | 276 | 2 | 7 | 0 |
 | [tests/unit/helpOverlay.test.js](tests/unit/helpOverlay.test.js) | testing | 174 | 0 | 2 | 0 |
 | [tests/unit/helpRegistry.test.js](tests/unit/helpRegistry.test.js) | testing | 302 | 0 | 5 | 0 |
 | [tests/unit/hud.test.js](tests/unit/hud.test.js) | testing | 13 | 0 | 2 | 0 |
@@ -270,6 +273,8 @@ The generator scanned `257` files from active repository inputs. Individual modu
 | [tests/unit/systemFoundation.test.js](tests/unit/systemFoundation.test.js) | testing | 45 | 0 | 2 | 1 |
 | [tests/unit/systemLifecycle.test.js](tests/unit/systemLifecycle.test.js) | testing | 58 | 0 | 2 | 0 |
 | [tests/unit/systemVariants.test.js](tests/unit/systemVariants.test.js) | testing | 108 | 0 | 3 | 1 |
+| [tests/unit/tidalBloom.test.js](tests/unit/tidalBloom.test.js) | testing | 209 | 0 | 6 | 16 |
+| [tests/unit/tooltipDismiss.test.js](tests/unit/tooltipDismiss.test.js) | testing | 230 | 0 | 2 | 0 |
 | [tests/unit/webgpuContract.test.js](tests/unit/webgpuContract.test.js) | testing | 95 | 0 | 4 | 0 |
 | [tests/unit/worldSave.test.js](tests/unit/worldSave.test.js) | testing | 322 | 0 | 7 | 4 |
 | [vercel.json](vercel.json) | repository | 35 | 0 | 0 | 0 |

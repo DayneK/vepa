@@ -29,6 +29,9 @@ export function createCivilizationPanel(bus) {
       { id: 'civ-regime', label: 'REGIME' },
       { id: 'civ-confidence', label: 'CONFIDENCE' },
       { id: 'civ-codex', label: 'CODEX' },
+      { id: 'civ-households', label: 'HOUSEHOLDS' },
+      { id: 'civ-citizens', label: 'CITIZENS' },
+      { id: 'civ-generations', label: 'FED GEN' },
     ],
     logs: ['civ-detail'],
     subscribe: (b, deliver) => b.on('civilization:analytics', ({ report }) => deliver(report)),
@@ -57,14 +60,17 @@ export function formatCivilizationLines(report) {
 
   for (const culture of detail.cultures || []) {
     lines.push(`<div>· ${culture.name || culture.ownerGroupId} — ${culture.symbols} symbols, `
-      + `${culture.norms} norms, cohesion ${(culture.cohesion ?? 1).toFixed(2)}</div>`);
+      + `${culture.norms} norms, cohesion ${(culture.cohesion ?? 1).toFixed(2)}, `
+      + `${culture.events || 0} transmission event(s)</div>`);
   }
   for (const fed of detail.federations || []) {
     lines.push(`<div>· ${fed.name} (${fed.kind}) — ${fed.members} groups, ${fed.edges} bonds, gen ${fed.generation}</div>`);
   }
   for (const polity of detail.polities || []) {
     lines.push(`<div>· ${polity.name} — ${polity.citizens} citizens, ${polity.provinces} provinces, `
-      + `${polity.institutions.length} institutions, term ${polity.term}</div>`);
+      + `${polity.institutions.length} institution(s), term ${polity.term}, `
+      + `${polity.eligible || 0} eligible heir(s), `
+      + `stability ${(polity.stability ?? 1).toFixed(2)}, legitimacy ${(polity.legitimacy ?? 0).toFixed(2)}</div>`);
   }
   if (report.households) lines.push(`<div>· ${report.households} households</div>`);
 
@@ -73,7 +79,14 @@ export function formatCivilizationLines(report) {
   // a measured zero.
   const structures = report.structures;
   if (structures) {
-    lines.push(`<div>· structures — ${structures.standing} standing, ${structures.dormant} dormant, ${structures.collapsed} collapsed</div>`);
+    // A kind breakdown is what tells you whether a society built walls or just
+    // nests; the bare standing/total counts cannot distinguish the two.
+    const kinds = Object.entries(structures.kinds || {})
+      .sort((a, b) => b[1] - a[1])
+      .map(([k, n]) => `${n} ${k.toLowerCase()}`)
+      .join(', ');
+    lines.push(`<div>· structures — ${structures.standing} standing, ${structures.dormant} dormant, ${structures.collapsed} collapsed`
+      + `${kinds ? ` (${kinds})` : ''}</div>`);
   }
 
   // The codex line is the observer's own statement about the world, rendered
@@ -110,6 +123,11 @@ function draw(ctx, report) {
   setVal('civ-confidence', regime ? regime.confidence.toFixed(2) : '—');
   const codex = report.codex;
   setVal('civ-codex', codex ? `${codex.asserted}/${codex.entries}` : '—');
+  setVal('civ-households', report.households ?? '—');
+  setVal('civ-citizens', report.citizens ?? '—');
+  const gens = (report.detail && report.detail.federations ? report.detail.federations : [])
+    .map((f) => f.generation || 0);
+  setVal('civ-generations', gens.length ? Math.max(...gens) : '—');
 
   const log = host.querySelector('#civ-detail');
   if (!log) return;

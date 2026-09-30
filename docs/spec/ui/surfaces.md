@@ -26,5 +26,6 @@
 | ui | [src/ui/speciesPanel.js](src/ui/speciesPanel.js) | programmatic |
 | ui | [src/ui/toolbarHelp.css](src/ui/toolbarHelp.css) | programmatic |
 | ui | [src/ui/tooltip.js](src/ui/tooltip.js) | programmatic |
+| ui | [src/ui/tooltipDismiss.js](src/ui/tooltipDismiss.js) | programmatic |
 | ui | [src/ui/ui.js](src/ui/ui.js) | programmatic |
 | ui | [src/ui/worldPanel.js](src/ui/worldPanel.js) | programmatic |

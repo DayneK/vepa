@@ -28,18 +28,23 @@ function groupColor(id) {
 export function createGroupAnalytics(bus) {
   const ctx = mountAnalyticsPanel(bus, {
     mountId: 'groups-dashboard',
-    title: 'CIVILIZATIONS',
+    title: 'GROUPS',
     cells: [
       { id: 'ga-groups', label: 'GROUPS' },
       { id: 'ga-members', label: 'MEMBERS' },
       { id: 'ga-treasury', label: 'TREASURY' },
       { id: 'ga-volume', label: 'TRADE VOLUME' },
+      { id: 'ga-leaders', label: 'LEADERS' },
+      { id: 'ga-artifacts', label: 'ARTIFACTS' },
+      { id: 'ga-alliances', label: 'ALLIANCES' },
+      { id: 'ga-conflicts', label: 'CONFLICTS' },
     ],
     canvases: [
       { id: 'ga-overlay', w: CANVAS_W, h: CANVAS_H, className: 'ga-canvas' },
       { id: 'ga-network', w: CANVAS_W, h: CANVAS_H, className: 'ga-canvas' },
       { id: 'ga-sankey', w: CANVAS_W, h: CANVAS_H, className: 'ga-canvas' },
     ],
+    logs: ['ga-detail'],
     subscribe: (b, deliver) => b.on('groups:analytics', ({ registry }) => deliver(registry)),
     draw: (c, registry) => drawAll(c, registry),
   });
@@ -48,36 +53,110 @@ export function createGroupAnalytics(bus) {
   setVal = ctx.setVal;
 }
 
-function drawAll(ctx, registry) {
-  host = ctx.host;
-  setVal = ctx.setVal;
-  const groups = [...registry.groups.values()];
-  const summaries = groups.map((g) => ({
+/**
+ * Per-group detail lines.
+ *
+ * Pure and exported so it can be tested without a DOM. The civilization panel
+ * shipped a runtime ReferenceError for a full release because its formatter was
+ * inlined in `draw` and nothing ever called it; this one is called directly by
+ * tests/unit/groupAnalytics.test.js.
+ *
+ * @param {object[]} summaries entries shaped by summariseGroups()
+ * @returns {string[]} HTML fragments, sorted richest group first
+ */
+export function formatGroupLines(summaries) {
+  const lines = [];
+  const list = [...(summaries || [])].sort((a, b) => b.treasury - a.treasury || b.members - a.members);
+  for (const g of list) {
+    const parts = [`${g.members} members`, `${g.treasury.toFixed(1)} treasury`];
+    if (g.species) parts.push(`${g.species} species`);
+    const roles = [];
+    if (g.leaders) roles.push(`${g.leaders} lead`);
+    if (g.foragers) roles.push(`${g.foragers} forage`);
+    if (g.builders) roles.push(`${g.builders} build`);
+    if (roles.length) parts.push(roles.join('/'));
+    const art = [];
+    if (g.tools) art.push(`${g.tools} tool`);
+    if (g.weapons) art.push(`${g.weapons} weapon`);
+    if (g.barriers) art.push(`${g.barriers} barrier`);
+    if (art.length) parts.push(art.join('/'));
+    if (g.allies) parts.push(`${g.allies} allied`);
+    if (g.conflicts) parts.push(`${g.conflicts} at war`);
+    const origin = g.declared ? 'declared' : 'detected';
+    lines.push(`<div>· <strong>${g.name}</strong> (${origin}) — ${parts.join(', ')}`
+      + ` · stability ${(g.stability ?? 1).toFixed(2)}`
+      + ` · policy agg ${(g.policy?.aggression ?? 0).toFixed(2)}/open ${(g.policy?.openness ?? 0).toFixed(2)}/mig ${(g.policy?.migration ?? 0).toFixed(2)}</div>`);
+  }
+  return lines;
+}
+
+/** Flatten group records into the shape both the canvases and the log use. */
+export function summariseGroups(registry) {
+  const groups = registry && registry.groups ? [...registry.groups.values()] : [];
+  return groups.map((g) => ({
     id: g.id,
     name: g.name,
     declared: g.declared,
     members: g.members.size,
     treasury: g.treasury || 0,
     species: g.species ? g.species.size : 0,
+    leaders: g.roles ? g.roles.leader : 0,
+    foragers: g.roles ? g.roles.forager : 0,
+    builders: g.roles ? g.roles.builder : 0,
+    tools: g.artifacts ? (g.artifacts.TOOL || 0) : 0,
+    weapons: g.artifacts ? (g.artifacts.WEAPON || 0) : 0,
+    barriers: g.artifacts ? (g.artifacts.BARRIER || 0) : 0,
+    allies: g.allies ? g.allies.size : 0,
+    conflicts: g.conflicts ? g.conflicts.size : 0,
+    stability: g.stability,
+    policy: g.policy || { aggression: 0, openness: 0, migration: 0 },
     cx: g.cx, cy: g.cy, cz: g.cz,
     minX: g.minX, minY: g.minY, minZ: g.minZ,
     maxX: g.maxX, maxY: g.maxY, maxZ: g.maxZ,
   }));
+}
+
+function drawAll(ctx, registry) {
+  host = ctx.host;
+  setVal = ctx.setVal;
+  const summaries = summariseGroups(registry);
 
   let totalMembers = 0;
   let totalTreasury = 0;
+  let totalLeaders = 0;
+  let totalArtifacts = 0;
+  let totalAllies = 0;
+  let totalConflicts = 0;
+  for (const g of summaries) {
+    totalMembers += g.members;
+    totalTreasury += g.treasury;
+    totalLeaders += g.leaders;
+    totalArtifacts += g.tools + g.weapons + g.barriers;
+    totalAllies += g.allies;
+    totalConflicts += g.conflicts;
+  }
   let volume = 0;
-  for (const g of summaries) { totalMembers += g.members; totalTreasury += g.treasury; }
-  for (const t of registry.tradeLog || []) volume += t.amount;
+  for (const t of (registry.tradeLog || [])) volume += t.amount;
 
   setVal('ga-groups', summaries.length);
   setVal('ga-members', totalMembers);
   setVal('ga-treasury', Math.round(totalTreasury));
   setVal('ga-volume', Math.round(volume * 10) / 10);
+  setVal('ga-leaders', totalLeaders);
+  setVal('ga-artifacts', totalArtifacts);
+  // Alliances and conflicts are counted from both directions, so halve to show
+  // distinct pairs rather than edges.
+  setVal('ga-alliances', Math.round(totalAllies / 2));
+  setVal('ga-conflicts', Math.round(totalConflicts / 2));
 
   drawOverlay(summaries);
   drawNetwork(summaries, registry.tradeLog || []);
   drawSankey(summaries, registry.tradeLog || []);
+
+  const log = host.querySelector('#ga-detail');
+  if (!log) return;
+  const lines = formatGroupLines(summaries);
+  log.innerHTML = lines.length ? lines.join('') : '<div>no groups detected yet</div>';
 }
 
 /** World → canvas projection helper shared by overlay + network. */

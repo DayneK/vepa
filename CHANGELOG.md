@@ -1,5 +1,150 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.29] - 2026-09-30 → 9.1.26
+
+### Tab help navigation, sticky tooltips, legible law info, wider data panels,
+### and the TIDAL_BLOOM default world
+
+Seven user-facing changes in one pass: the tab help modal can now reach its
+sub-tabs, parameter tooltips stay open, every tooltip obeys one dismissal rule,
+tooltip and law-info type is larger and more legible, the DATA panels show
+what the engines were already computing, and the world boots into a designed
+default instead of a test substrate.
+
+### Added
+
+- **Sub-tab buttons inside the tab help modal.** A tab's help used to be a
+  dead end: it explained the tab and then stopped, leaving you to close the
+  modal and hunt for the sub-tab that held the answer. `TAB_SUBTABS` and
+  `subtabsForTab()` in `helpRegistry.js` map each tab to its sub-tabs, and
+  `navHtml()` in `helpOverlay.js` renders a parent-plus-children nav that
+  re-renders in place. Drilling through four sub-tabs leaves one modal, not
+  four. The current entry carries `aria-current`.
+- **`src/ui/tooltipDismiss.js` — one dismissal rule for every tooltip.** The
+  drawer had four tooltip systems that each decided for themselves when to hide.
+  Now a `pointerdown` anywhere (capture phase, so a panel that stops
+  propagation still dismisses) or a `contextmenu` closes all of them. A tooltip
+  may register `pressInsensitive` to survive presses; a right-click still
+  closes it, so the exemption is a convenience rather than a trap.
+- **`peakPopulation(eco)`** (`ecoPanel.js`) — the high-water mark across the
+  retained eco ring, answering "has this world ever been bigger than it is
+  now?" with an explicit sample count, so a peak of 0 is distinguishable from
+  no data.
+- **`formatGroupLines(summaries)` and `summariseGroups(registry)`**
+  (`groupAnalytics.js`) — pure, exported group formatters.
+- **`isParamPopupVisible()` and `initParamHelpDismiss()`** (`paramHelp.js`) —
+  a visibility seam and an Escape handler, both wired from `ui.js` rather than
+  at import time so a headless import stays side-effect free.
+- **`LEGACY_PROFILE_KEYS` in `main.js`.** `setDNAFromProfile` matched a 10-key
+  camelCase table and **silently discarded every other trait**. It now accepts
+  canonical `DNA_INDEXES` names, with the legacy names as fallback.
+
+### Changed
+
+- **Parameter popups stay open.** `cancel()` no longer arms the 120 ms hide
+  timer, so a long press no longer flashes a wall of text and takes it away
+  before it could be read. The popup is registered `pressInsensitive` so the
+  `pointerup` that ends its own long press cannot close it, and Escape is the
+  keyboard hatch.
+- **Tooltip type scale raised.** Help-drone tip 8/10 px → 11/13 px (width
+  280 → 330 px); tab-help sections 11/12 px; parameter popup base 11 → 13 px,
+  title 13 → 16 px, key/range 10 → 12 px, label 9 → 11 px, max-width
+  320 → 400 px.
+- **Law info contrast raised.** `.info-title` 11 → 15 px, `.info-category`
+  9 → 11 px bold, `.info-hint` 10 → 13 px, `.info-explanation` 9 → 12 px,
+  `.info-system` 8 → 11 px, `.info-advanced` 10 → 12 px. The system formula was
+  `rgba(255,255,255,0.35)` on near-black — about 3:1, below the WCAG AA
+  threshold for body text, and at 8 px effectively decorative. It is also the
+  most valuable line in the panel, because it is the actual law.
+- **Removed the last four `var(--text)` declarations.** `--text` is not
+  defined anywhere in this codebase, so every `color: var(--text)` was an
+  invalid declaration that silently inherited. This was a real cause of the
+  washed-out look, not a missing declaration. Now on real tokens
+  (`--text-primary` / `--text-secondary`), including the `.info-close`,
+  `.chaos-cat-row` and `.view-mode-toggle:hover` cases.
+- **The DATA panels now show what the engines already computed.**
+  - GROUPS (4 → 8 cells): added LEADERS, ARTIFACTS, ALLIANCES, CONFLICTS.
+    Alliance and conflict counts are halved, because the registry stores a
+    mutual relationship on both groups. Per-group detail gained roles,
+    artifacts, ally/conflict counts, stability and the full J.1 policy vector
+    (aggression / openness / migration) instead of one aggregate. The panel is
+    titled GROUPS; it was labelled CIVILIZATIONS, which is the CIVILIZATION
+    panel's name, and the sub-tab button in `index.html` is corrected to match.
+  - ECO (4 → 8 cells): added PEAK POP, EXTINCTIONS, PREDATOR EDGES, SPLITS.
+  - CIVILIZATION (8 → 11 cells): added HOUSEHOLDS, CITIZENS, FED GEN. Culture
+    lines report their transmission-event count; polity lines report
+    institutions, term length, eligible heirs, stability and legitimacy;
+    structures report a kind breakdown. `stability`, `legitimacy` and
+    `eligible` were on the report object and none were on screen.
+  - INTEL (6 → 9 cells): added LARGEST CLUSTER, CLUSTER ENERGY, NET GROWTH.
+    All three are derived from the same `cluster:detected` payload as the
+    count beside them, so they cannot drift apart. NET GROWTH is signed, so
+    direction is readable without subtracting BIRTHS from DEATHS yourself.
+- **All 14 new cells have a `CELL_HELP` entry** with a matching title, a real
+  summary, and at least one section explaining what the number *means* rather
+  than what it is called.
+- **`SPECIES_PROFILES` is derived from the preset.** `main.js` kept a second
+  hand-maintained copy of the species list, so editing the preset's species did
+  not change what actually spawned. It is now
+  `DEFAULT_PRESET.species.map((s) => ({ ...s, ...s.dna }))`.
+- **`applyPrimeWorldConfig` → `applyDefaultWorldConfig`.** Spreads the preset's
+  params, layers `WELL_COUNT: 3`, and routes the legacy `worldSize` / `entropy`
+  / `gravity` / `dt` through `LEGACY_WORLD_PARAM_KEYS`. The timestep goes to
+  `runtimeConfig.simSpeed` — there is no `FIXED_DT` world param, and
+  `applyWorldParam` returns state unchanged for an unknown key, so that
+  mistake would have been invisible.
+
+### Added — the default world
+
+- **`TIDAL_BLOOM` is now the boot preset** (`DEFAULT_PRESET` in
+  `defaultPresets.js`): 40 laws, 39 world params, 5 species. `PRIME_DEFAULT`
+  is still exported and intact for anyone who wants it.
+
+  The world is a thermal cycle. **Bloom** is the catalyst — `HEAT_OUTPUT 0.95`,
+  stiff, low `REACTION_THRESHOLD`. **Anchor** is the dense counterweight: no
+  heat at all, high `HIDDEN_MASS`, so convection is visible as a difference
+  rather than as uniform warmth. **Stalker** preys. **Chorus** signals hard
+  enough to coordinate. **Drift** mutates. The laws were chosen so each species
+  has something to do: thermochemistry for Bloom's heat, information for
+  Chorus, predation for Stalker, buoyancy and gravity for Anchor's mass, and
+  genetics for Drift.
+
+  `ALPHA` is transparency and is clamped at 0, so "cold" is expressed as mass
+  and stiffness rather than as a negative heat output. Every trait was
+  validated against `DNA_RANGES` — the first draft had seven out-of-range
+  values and would have spawned with defaults.
+
+### Tests
+
+- **1228 → 1342 tests / 124 files.** New: `tidalBloom.test.js` (25),
+  `tooltipDismiss.test.js` (21), `helpNavigation.test.js` (38),
+  `dataPanels.test.js` (30), plus the 14 new `CELL_HELP` entries covered by
+  `helpRegistry.test.js`.
+- The 14 new cells are asserted to have a `CELL_HELP` entry whose title
+  matches the label the panel renders, so the two cannot drift.
+- `helpNavigation.test.js` checks `TAB_SUBTABS` against `index.html` in **both
+  directions** and in order, so a sub-tab button with no nav entry fails the
+  suite.
+- Every `drawAll`-declared value cell is asserted to be written, so a cell
+  cannot be added to a panel and left permanently blank.
+- The CSS assertions are static-source checks: vitest runs `environment: 'node'`
+  and the project ships no DOM library.
+
+### Verification
+
+All ten gates green: `syntax-check`, `test` (1342), `spec:generate`,
+`spec:check`, `repository:check`, `validate-provenance`, `validate-signoff`,
+`check-export-publication`, `audit-corpus-report`, `build`.
+
+### Known limitation
+
+The long-press help system (v9.1.24) and this release's popup persistence are
+**still unverified in a real browser**. Chromium cannot launch in this sandbox
+(`libglib-2.0.so.0` missing) and the project ships no DOM library, so the
+behaviour is pinned by unit tests and static source assertions only. An earlier
+Playwright script was written, failed to launch, and was deleted rather than
+shipped unverified.
+
 ## [4.9.28] - 2026-09-30 → 9.1.25
 
 ### Fix runtime crash in the civilization dashboard

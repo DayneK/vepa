@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_18.test.js](tests/audit/batch_18.test.js), [tests/unit/lawGraph.test.js](tests/unit/lawGraph.test.js)
+- Tests: [tests/audit/batch_18.test.js](tests/audit/batch_18.test.js), [tests/unit/lawGraph.test.js](tests/unit/lawGraph.test.js), [tests/unit/tidalBloom.test.js](tests/unit/tidalBloom.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/70_LEARN.md](docs/audit/laws/a3/stage-1/70_LEARN.md), [docs/audit/laws/a3/stage-1/73_PREDICT.md](docs/audit/laws/a3/stage-1/73_PREDICT.md), [docs/audit/laws/a3/stage-2/70_LEARN.md](docs/audit/laws/a3/stage-2/70_LEARN.md), [docs/audit/laws/a3/stage-2/73_PREDICT.md](docs/audit/laws/a3/stage-2/73_PREDICT.md), [docs/audit/laws/a3/stage-3/70_LEARN.md](docs/audit/laws/a3/stage-3/70_LEARN.md), [docs/audit/laws/a3/stage-3/73_PREDICT.md](docs/audit/laws/a3/stage-3/73_PREDICT.md)
 
 ## Interpretation boundary

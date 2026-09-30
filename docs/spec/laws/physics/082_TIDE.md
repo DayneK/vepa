@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_21.test.js](tests/audit/batch_21.test.js)
+- Tests: [tests/audit/batch_21.test.js](tests/audit/batch_21.test.js), [tests/unit/tidalBloom.test.js](tests/unit/tidalBloom.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/82_TIDE.md](docs/audit/laws/a3/stage-1/82_TIDE.md), [docs/audit/laws/a3/stage-2/82_TIDE.md](docs/audit/laws/a3/stage-2/82_TIDE.md), [docs/audit/laws/a3/stage-3/82_TIDE.md](docs/audit/laws/a3/stage-3/82_TIDE.md)
 
 ## Interpretation boundary

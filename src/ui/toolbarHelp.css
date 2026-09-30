@@ -163,18 +163,21 @@
   position: fixed;
   z-index: 13000;
   display: grid;
-  gap: 4px;
-  width: min(280px, calc(100vw - 16px));
-  padding: 9px 10px;
+  gap: 5px;
+  width: min(330px, calc(100vw - 16px));
+  padding: 11px 13px;
   border: 1px solid var(--accent-cyan);
   border-radius: 5px;
-  background: rgba(5, 10, 20, 0.96);
-  box-shadow: 0 0 22px rgba(74,232,255,0.25);
+  background: rgba(5, 10, 20, 0.97);
+  box-shadow: 0 0 22px rgba(74,232,255,0.28);
   pointer-events: none;
   font-family: var(--font-mono);
 }
-.help-drone-tip strong { color: var(--accent-cyan); font-size: 8px; letter-spacing: 1.5px; }
-.help-drone-tip span { color: var(--text-primary); font-size: 10px; line-height: 1.45; }
+/* Type raised from 8/10px to 11/13px: this tooltip is the only place a reader
+ * learns what a graph actually measures, so it has to be readable without
+ * pinning your face to the screen. */
+.help-drone-tip strong { color: var(--accent-cyan); font-size: 11px; letter-spacing: 1.2px; }
+.help-drone-tip span { color: #e2ebf8; font-size: 13px; line-height: 1.5; }
 
 .dna-overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-bottom: 10px; padding: 6px; background: #0a0a0a; border: 1px solid #222; }
 .dna-overview-stat { display: grid; gap: 2px; padding: 5px 2px; border: 1px solid transparent; background: transparent; color: #666; cursor: pointer; font: inherit; text-align: center; }
@@ -278,20 +281,55 @@
   filter: brightness(1.25);
 }
 .tab-help-tip {
-  max-width: 340px;
+  max-width: 400px;
 }
 .tab-help-tip strong {
   color: var(--accent-gold);
+  font-size: 13px;
 }
 .tab-help-tip-sections {
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
   display: grid;
-  gap: 5px;
+  gap: 7px;
 }
-.tab-help-tip-sections .help-drone-section span {
-  font-size: 9px;
+.tab-help-tip-sections .help-drone-section strong { font-size: 11px; }
+.tab-help-tip-sections .help-drone-section span { font-size: 12px; }
+
+/* ── Sub-tab navigation inside the tab help modal ────────────────────────
+ * Without these, a tab's help is a dead end: you learn what SETUP is for and
+ * still have to close the modal and hunt for the button yourself. */
+.tab-help-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0 0 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.tab-help-nav-btn {
+  padding: 5px 9px;
+  border: 1px solid rgba(74, 232, 255, 0.4);
+  border-radius: 3px;
+  background: rgba(74, 232, 255, 0.06);
+  color: var(--accent-cyan);
+  font: 10px var(--font-mono);
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.tab-help-nav-btn:hover,
+.tab-help-nav-btn:focus-visible {
+  background: rgba(74, 232, 255, 0.16);
+  border-color: var(--accent-cyan);
+  outline: none;
+}
+.tab-help-nav-btn.current {
+  background: rgba(74, 232, 255, 0.24);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  cursor: default;
 }
 /* The help modal inherits the drone's overlay layout; this hook only widens it,
  * because tab help carries more prose than a two-column control map. */

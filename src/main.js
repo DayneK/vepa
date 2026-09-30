@@ -28,7 +28,7 @@ import { createLineageTracker, trackBirth, trackDeath } from './engines/lineageT
 import { createGoalEngine, setGoalValue, updateGoal } from './engines/goalEngine.js';
 import { createTimelineEngine, snapshot as timelineSnapshot, getTimeline as getTimelineList, clearTimeline as clearTimelineEngine, scrub as timelineScrub } from './engines/timelineEngine.js';
 import { createGroupRegistry, updateGroups, groupCount, declareGroup } from './state/groupRegistry.js';
-import { PRIME_DEFAULT } from './state/defaultPresets.js';
+import { PRIME_DEFAULT, DEFAULT_PRESET } from './state/defaultPresets.js';
 import { createMemoryBuffers, speciesMemory, groupMemory, blendMemory, adaptMemory, decayMemory, pruneGroupMemory, resetMemoryBuffers, MEM } from './state/memoryBuffers.js';
 import { createAgencyEngine, updateAgency, detectMilestones, resetAgency } from './engines/agencyEngine.js';
 import { computeSpeciesGoals, applyGoalNudges } from './engines/goalBehavior.js';
@@ -164,21 +164,39 @@ let lastParamSnapshotAt = 0;
 const PARAM_SNAPSHOT_DEBOUNCE = 1200;
 let spawnRate = worldParams.SPAWN_RATE;
 let spawnAccumulator = 0;
-const DEFAULT_LAWS = PRIME_DEFAULT.laws;
+const DEFAULT_LAWS = DEFAULT_PRESET.laws;
 
-function applyPrimeWorldConfig() {
-    const overrides = {
-        FIELD_THERMAL: 0.5,   // thermal gradient → extraction + governance
-        FIELD_INFO: 0.5,      // info medium → economy/markets + lensing
-        WELL_COUNT: 3,        // gravity wells → density → groups + stars
-        SPAWN_CENTRES: 4,     // clustered start → speciation structure
-        SPAWN_CENTRE_BIAS: 0.15,
-    };
-    for (const [key, value] of Object.entries(overrides)) {
-        worldParams = applyWorldParam(worldParams, key, value);
+/**
+ * Apply the active preset's world parameters at boot.
+ *
+ * The preset declares its own parameters so there is one place to read what a
+ * world is made of. `WELL_COUNT` is layered on here rather than in the preset
+ * because it belongs to the physics substrate every preset shares.
+ */
+function applyDefaultWorldConfig() {
+    const declared = { ...DEFAULT_PRESET.worldParams, WELL_COUNT: 3 };
+
+    // Four preset keys predate WORLD_PARAM_DEF and need translating. `dt` is
+    // not a world param at all — the timestep is a runtime tunable — so it is
+    // routed to runtimeConfig instead of being dropped.
+    const legacy = LEGACY_WORLD_PARAM_KEYS;
+    for (const [key, value] of Object.entries(declared)) {
+        if (key === legacy.dt) {
+            if (Number.isFinite(value) && value > 0) runtimeConfig.simSpeed = value;
+            continue;
+        }
+        const paramKey = legacy[key] || key;
+        worldParams = applyWorldParam(worldParams, paramKey, value);
     }
     runtimeConfig.worldParams = worldParams;
 }
+
+const LEGACY_WORLD_PARAM_KEYS = Object.freeze({
+    worldSize: 'WORLD_SIZE',
+    entropy: 'ENTROPY',
+    gravity: 'GLOBAL_G',
+    dt: '__RUNTIME_DT__',
+});
 
 function rng() { return prng.next(); }
 
@@ -367,7 +385,7 @@ async function boot() {
         if (LAW_INDEXES[name] !== undefined) lawSet(lawState, LAW_INDEXES[name]);
     }
 
-    applyPrimeWorldConfig();
+    applyDefaultWorldConfig();
 
     spawnDefaultPopulation();
 
@@ -486,13 +504,26 @@ function profileColor(s) {
     return EXTRA_SPECIES_COLORS[s % EXTRA_SPECIES_COLORS.length];
 }
 
-const SPECIES_PROFILES = [
-    { name: 'Predator', color: [255, 80, 80], force: 1.2, viscosity: 0.95, birthRate: 0.3, predationBias: 0.8 },
-    { name: 'Sol', color: [255, 200, 50], force: 0.8, viscosity: 0.97, birthRate: 0.1, fusion: 2.0 },
-    { name: 'Life', color: [80, 255, 120], force: 1.0, viscosity: 0.98, birthRate: 0.5, mutation: 0.3 },
-    { name: 'Aether', color: [120, 160, 255], force: 0.5, viscosity: 0.99, signalResp: 2.0, pulseRate: 0.3 },
-    { name: 'Void', color: [100, 60, 140], force: -0.5, viscosity: 0.96, deathRate: 0.2, hiddenMass: 3.0 },
-];
+/**
+ * Legacy camelCase aliases for saved profiles written before presets carried
+ * canonical DNA_INDEXES names. Kept so an older saved profile still restores;
+ * new profiles should use the canonical name directly.
+ */
+const LEGACY_PROFILE_KEYS = Object.freeze({
+    force: 'FORCE', viscosity: 'VISCOSITY', birthRate: 'BIRTH_RATE',
+    predationBias: 'PREDATION_BIAS', fusion: 'FUSION', mutation: 'MUTATION',
+    signalResp: 'SIGNAL_RESP', pulseRate: 'PULSE_RATE', deathRate: 'DEATH_RATE',
+    hiddenMass: 'HIDDEN_MASS',
+});
+
+/**
+ * Boot species, derived from the active preset so the two cannot drift.
+ *
+ * Previously this was a second, hand-maintained copy of the species list living
+ * in main.js — changing the preset's species would not have changed what
+ * actually spawned.
+ */
+const SPECIES_PROFILES = DEFAULT_PRESET.species.map((s) => ({ ...s, ...s.dna }));
 
 /** Append one freshly spawned particle at `pos` with the given species. */
 function spawnSingleParticle(species, pos) {
@@ -724,14 +755,12 @@ function advancePopulation(offspring = null) {
 }
 
 function setDNAFromProfile(species, profile) {
-    const MAP = {
-        force: 'FORCE', viscosity: 'VISCOSITY', birthRate: 'BIRTH_RATE',
-        predationBias: 'PREDATION_BIAS', fusion: 'FUSION', mutation: 'MUTATION',
-        signalResp: 'SIGNAL_RESP', pulseRate: 'PULSE_RATE', deathRate: 'DEATH_RATE',
-        hiddenMass: 'HIDDEN_MASS',
-    };
     for (const [key, value] of Object.entries(profile)) {
-        const dnaKey = MAP[key];
+        // Canonical form: the profile keys ARE DNA_INDEXES names, so any of the
+        // 64 traits can be set without touching this function. Previously a
+        // hand-maintained MAP listed ten camelCase aliases, and every other
+        // trait a preset tried to set was silently discarded.
+        const dnaKey = DNA_INDEXES[key] !== undefined ? key : LEGACY_PROFILE_KEYS[key];
         if (!dnaKey) continue;
         const paramIdx = DNA_INDEXES[dnaKey];
         if (paramIdx === undefined) continue;
