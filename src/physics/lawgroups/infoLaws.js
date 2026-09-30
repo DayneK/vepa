@@ -6,16 +6,7 @@
 // ============================================================================
 
 import { PARTICLE_STRIDE, STRIDE_INDEXES as S, DNA_INDEXES as D } from '../../constants.js';
-
-function clamp(v, lo, hi) {
-  if (v < lo) return lo;
-  if (v > hi) return hi;
-  return v;
-}
-
-function nanGuard(v) {
-  return Number.isFinite(v) ? v : 0;
-}
+import { clamp, nanGuard } from '../../core/numeric.js';
 
 /**
  * Navigation — memory gradient steering.

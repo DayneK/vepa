@@ -22,6 +22,7 @@
  */
 import { STRIDE_INDEXES, DNA_INDEXES } from '../constants.js';
 import { writeField } from '../physics/fields.js';
+import { clamp, num } from '../core/numeric.js';
 
 export const SYNTHETIC_CADENCE = 30; // frames between passes
 
@@ -48,14 +49,6 @@ const DEFAULT_SYNTHETIC_UPKEEP = 0.5;   // ENERGY cost per synthetic per pass
 const DEFAULT_VIRTUAL_LAYER_MAX = 20;   // max uploaded consciousness copies
 const HUB_MIN_TREASURY = 400;           // treasury threshold for HUB to spawn synthetics
 const HUB_MIN_ERA = 2;                  // era threshold for HUB to spawn synthetics
-
-function num(v, dflt) {
-  return Number.isFinite(Number(v)) ? Number(v) : dflt;
-}
-
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}
 
 /**
  * Fresh synthetic state. The organism registry is the long-lived state;

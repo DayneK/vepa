@@ -6,19 +6,13 @@
 // ============================================================================
 
 import { PARTICLE_STRIDE, STRIDE_INDEXES as S, DNA_INDEXES as D } from '../../constants.js';
+import { clamp, nanGuard } from '../../core/numeric.js';
+import { force3 } from '../force.js';
 
 const FORCE_LIMIT = 50;
 const ENERGY_MAX = 200;
 const SIGNAL_MAX = 10;
 const BOUND_MAX = 1e4;
-
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}
-
-function nanGuard(v) {
-  return Number.isFinite(v) ? v : 0;
-}
 
 function applySuperposition(view, iBase, k, prng) {
   // Superposition (v4.6.29): a spread of 4 basis amplitudes over candidate
@@ -74,19 +68,11 @@ function applySuperposition(view, iBase, k, prng) {
       view[iBase + S.SUPER_AMP_2] = basis === 1 ? 1 - 3 * eps : eps;
       view[iBase + S.SUPER_AMP_3] = basis === 2 ? 1 - 3 * eps : eps;
       view[iBase + S.SUPER_AMP_4] = basis === 3 ? 1 - 3 * eps : eps;
-      return {
-        ax: clamp(nanGuard(o.x * k), -FORCE_LIMIT, FORCE_LIMIT),
-        ay: clamp(nanGuard(o.y * k), -FORCE_LIMIT, FORCE_LIMIT),
-        az: clamp(nanGuard(o.z * k), -FORCE_LIMIT, FORCE_LIMIT),
-      };
+      return force3(o.x * k, o.y * k, o.z * k, FORCE_LIMIT);
     }
   }
   // No collapse: gentle interference drift from the rotating phase.
-  return {
-    ax: clamp(nanGuard(Math.sin(phase) * 0.05 * k), -FORCE_LIMIT, FORCE_LIMIT),
-    ay: clamp(nanGuard(Math.cos(phase) * 0.05 * k), -FORCE_LIMIT, FORCE_LIMIT),
-    az: 0,
-  };
+  return force3(Math.sin(phase) * 0.05 * k, Math.cos(phase) * 0.05 * k, 0, FORCE_LIMIT);
 }
 
 function applyTunneling(view, iBase, k, prng) {
@@ -145,11 +131,7 @@ function applyWaveParticle(view, iBase, k) {
   const perpY = vx / speed;
   const phase = view[iBase + S.PHASE_1] || 0;
   const amp = inv * 0.02 * k * (0.5 + 0.5 * Math.sin(phase));
-  return {
-    ax: clamp(nanGuard(perpX * amp), -FORCE_LIMIT, FORCE_LIMIT),
-    ay: clamp(nanGuard(perpY * amp), -FORCE_LIMIT, FORCE_LIMIT),
-    az: 0,
-  };
+  return force3(perpX * amp, perpY * amp, 0, FORCE_LIMIT);
 }
 
 function applyUncertainty(view, iBase, k, prng) {

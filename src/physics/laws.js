@@ -14,6 +14,8 @@ import { PARTICLE_STRIDE, STRIDE_INDEXES, DNA_INDEXES, DNA_RANGES, DNA_COUNT, LA
 import { isSet } from '../state/lawState.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
 import { getDNAFloat } from '../dna/dnaBuffer.js';
+import { clamp } from '../core/numeric.js';
+import { readDNAParam as readSpeciesDNAParam, writeDNAParam as writeSpeciesDNAParam } from '../dna/codec.js';
 
 /** Live world-param state (WORLD panel sliders). */
 function worldParams() {
@@ -46,29 +48,6 @@ function isAccretionLink(view, iBase, jBase, stride) {
     }
   }
   return false;
-}
-
-/**
- * Read a species genome param (DNA buffer, 64×64 Uint16) as a float.
- * Genetics params 42-47 live only in the species genome, not the stride cache.
- */
-function readSpeciesDNAParam(buf, sp, idx) {
-  if (!buf) return 0;
-  const raw = buf[sp * 64 + idx];
-  if (idx < DNA_RANGES.length) {
-    const { min, max } = DNA_RANGES[idx];
-    return min + (raw / 65535) * (max - min);
-  }
-  return raw / 65535;
-}
-
-/** Write a float back into the species genome (quantized to uint16). */
-function writeSpeciesDNAParam(buf, sp, idx, value) {
-  if (!buf) return;
-  const r = DNA_RANGES[idx] || { min: -1, max: 1 };
-  const clamped = Math.max(r.min, Math.min(r.max, value));
-  const normalized = (clamped - r.min) / (r.max - r.min);
-  buf[sp * 64 + idx] = Math.round(normalized * 65535);
 }
 
 /** HSL → RGB (0-1 channels) — used by PHENOTYPE gene expression. */
@@ -117,12 +96,11 @@ function readDNA(ptr, dnaIndex) {
   return buffer_global[ptr + DNA_BASE + dnaIndex];
 }
 
-function clamp(val, lo, hi) {
-  if (val < lo) return lo;
-  if (val > hi) return hi;
-  return val;
-}
-
+// NOTE: this guard is intentionally narrower than core/numeric.js `nanGuard`,
+// which also rejects ±Infinity. Here Infinity is left to the downstream clamp
+// (clamp(Infinity, -50, 50) => 50), whereas the strict guard would yield 0.
+// Changing it is a physics-semantics change, not a refactor — tracked as a
+// follow-up in docs/CODEBASE-AUDIT-2026-09-30.md §2.3.
 function nanGuard(val) {
   return (val !== val) ? 0 : val;
 }
@@ -1421,34 +1399,10 @@ export function applyReduction(b1Ptr, b2Ptr, stride, synergy) {
 // ============================================================================
 // 34. ALLOY — Cross-species fusion
 // ============================================================================
-export function applyAlloy(lawState, view, iBase, jBase, stride, dist, synergy) {
-  if (!isSet(lawState, LAW_INDEXES.ALLOY)) return;
-  const speciesI = view[iBase + S.SPECIES_ID];
-  const speciesJ = view[jBase + S.SPECIES_ID];
-  if (speciesI === speciesJ) return;
-  const r1 = view[iBase + S.RADIUS];
-  const r2 = view[jBase + S.RADIUS];
-  if (dist > (r1 + r2) * 0.5) return;
-  // Real-life alloying: the two materials dissolve into one homogeneous
-  // composite — full mass merge, DNA averaged (hybrid composition), colour
-  // blended. The survivor keeps its species slot but behaves as the mix.
-  const m1 = view[iBase + S.MASS];
-  const m2 = view[jBase + S.MASS];
-  const total = m1 + m2;
-  const w2 = total > 0 ? m2 / total : 0.5;
-  view[iBase + S.MASS] = total;
-  view[jBase + S.DEAD] = 1.0;
-  for (let d = 0; d < 42; d++) {
-    const a = view[iBase + S.DNA_CACHE_START + d];
-    const b = view[jBase + S.DNA_CACHE_START + d];
-    if (Number.isFinite(a) && Number.isFinite(b)) {
-      view[iBase + S.DNA_CACHE_START + d] = a + (b - a) * w2;
-    }
-  }
-  view[iBase + S.COLOR_R] = (view[iBase + S.COLOR_R] + view[jBase + S.COLOR_R]) * 0.5;
-  view[iBase + S.COLOR_G] = (view[iBase + S.COLOR_G] + view[jBase + S.COLOR_G]) * 0.5;
-  view[iBase + S.COLOR_B] = (view[iBase + S.COLOR_B] + view[jBase + S.COLOR_B]) * 0.5;
-}
+// The ALLOY law is implemented in ./mergePhysics.js, which routes through
+// mergeParticles() and additionally skips bonded pairs. The solver imports that
+// version (see solver.js); the earlier inline copy that lived here was dead
+// code and has been removed. See docs/CODEBASE-AUDIT-2026-09-30.md §2.3.
 
 // ============================================================================
 // 35. MELT — High temp particles lose mass

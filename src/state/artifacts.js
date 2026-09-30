@@ -22,6 +22,7 @@
  */
 import { writeWall } from '../physics/fields.js';
 import { groupMemory, MEM } from './memoryBuffers.js';
+import { clampTreasury } from '../core/numeric.js';
 
 const MIN_MEMBERS = 3;          // a group that crafts needs real membership
 const CRAFT_INTERVAL = 6;       // ticks between crafts per group (rate cap)
@@ -143,9 +144,6 @@ function bboxCorners(g, system) {
   ];
 }
 
-function clampTreasury(v) {
-  return v < 0 ? 0 : v > 10000 ? 10000 : v;
-}
 
 function pushCraft(registry, entry) {
   registry.craftLog.push({ ...entry });

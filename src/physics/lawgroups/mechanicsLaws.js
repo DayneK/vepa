@@ -1,7 +1,12 @@
 // VEPA4 — Slate Mechanics laws
 import { STRIDE_INDEXES as S } from '../../constants.js';
+// These laws call clamp() with a single argument, relying on the ±50 default
+// bounds AND the folded finite check. That is `clampForce`, not the plain
+// three-argument `clamp` — using the latter here would evaluate
+// clamp(x, undefined, undefined) => NaN. Aliased so the 20 call sites below
+// keep their existing single-argument form.
+import { clampForce as clamp } from '../../core/numeric.js';
 
-const clamp = (v, lo = -50, hi = 50) => Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : 0;
 const mass = (view, base) => Math.max(0.001, Number.isFinite(view[base + S.MASS]) ? view[base + S.MASS] : 0.001);
 
 export function applyContactCorrection(view, i, j, dx, dy, dz, dist, maxCorrection = Infinity) {

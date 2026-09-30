@@ -30,7 +30,16 @@ describe('repository provenance contracts', () => {
     const audit = JSON.parse(readFileSync('docs/audit/provenance.json', 'utf8'));
     const exports = JSON.parse(readFileSync('exports/provenance.json', 'utf8'));
     expect(audit.authority).toContain('executable tests');
-    expect(exports.records.some((record) => record.status === 'provenance-review-required')).toBe(true);
+    // H3 reconciliation (2026-09-30) resolved the previously-unmapped export:
+    // no live record may be left in 'provenance-review-required' state, and
+    // every retired artifact must carry an explicit recovery boundary.
+    expect(exports.records.some((record) => record.status === 'provenance-review-required')).toBe(false);
+    expect(Array.isArray(exports.retired)).toBe(true);
+    expect(exports.retired.length).toBeGreaterThan(0);
+    for (const entry of exports.retired) {
+      expect(entry.status).toBe('retired-2026-09-30');
+      expect(entry.recoverableFrom).toMatch(/git history/i);
+    }
     expect(readFileSync('src/physics/lawgroups/SPEC.md', 'utf8')).toContain('Lawgroup Implementation Contract');
   });
 });

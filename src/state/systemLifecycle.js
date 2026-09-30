@@ -7,6 +7,7 @@
  * analysis can then derive bounded regime evidence without inventing entities.
  */
 import { SYSTEM_FOUNDATION, SYSTEM_FOUNDATION_ORDER } from './systemFoundation.js';
+import { finite, clamp01 } from '../core/numeric.js';
 import {
   createStaggeredImplementationPlan,
   getStaggeredIntegrationEdges,
@@ -23,14 +24,6 @@ const PHASES = Object.freeze({
 
 const DEFAULT_EVENT_CAP = 256;
 const DEFAULT_RECORD_CAP = 2048;
-
-function finite(value, fallback = 0) {
-  return Number.isFinite(value) ? value : fallback;
-}
-
-function clamp01(value) {
-  return Math.max(0, Math.min(1, finite(value)));
-}
 
 function assertSystem(systemId) {
   if (!SYSTEM_FOUNDATION[systemId]) throw new Error(`Unknown system: ${systemId}`);

@@ -11,10 +11,12 @@
  * canvas 2D — no DOM churn per frame.
  */
 
+import { mountAnalyticsPanel } from './analyticsPanel.js';
+
 const CANVAS_W = 340;
 const CANVAS_H = 150;
 let host = null;
-let lastDraw = 0;
+let setVal = () => {};
 
 function groupColor(id) {
   return `hsl(${(id * 47) % 360}, 75%, 62%)`;
@@ -24,32 +26,31 @@ function groupColor(id) {
  * Create the civilizations dashboard inside #groups-dashboard.
  */
 export function createGroupAnalytics(bus) {
-  const target = document.getElementById('groups-dashboard');
-  if (!target) return;
-  host = target;
-
-  host.innerHTML = `
-    <div class="intel-header">CIVILIZATIONS</div>
-    <div class="intel-grid">
-      <div class="intel-cell"><span class="intel-label">GROUPS</span><span id="ga-groups" class="intel-value">0</span></div>
-      <div class="intel-cell"><span class="intel-label">MEMBERS</span><span id="ga-members" class="intel-value">0</span></div>
-      <div class="intel-cell"><span class="intel-label">TREASURY</span><span id="ga-treasury" class="intel-value">0</span></div>
-      <div class="intel-cell"><span class="intel-label">TRADE VOLUME</span><span id="ga-volume" class="intel-value">0</span></div>
-    </div>
-    <canvas id="ga-overlay" class="ga-canvas" width="${CANVAS_W}" height="${CANVAS_H}"></canvas>
-    <canvas id="ga-network" class="ga-canvas" width="${CANVAS_W}" height="${CANVAS_H}"></canvas>
-    <canvas id="ga-sankey" class="ga-canvas" width="${CANVAS_W}" height="${CANVAS_H}"></canvas>
-  `;
-
-  bus.on('groups:analytics', ({ registry }) => {
-    const now = performance.now();
-    if (now - lastDraw < 500) return; // ~2 Hz
-    lastDraw = now;
-    drawAll(registry);
+  const ctx = mountAnalyticsPanel(bus, {
+    mountId: 'groups-dashboard',
+    title: 'CIVILIZATIONS',
+    cells: [
+      { id: 'ga-groups', label: 'GROUPS' },
+      { id: 'ga-members', label: 'MEMBERS' },
+      { id: 'ga-treasury', label: 'TREASURY' },
+      { id: 'ga-volume', label: 'TRADE VOLUME' },
+    ],
+    canvases: [
+      { id: 'ga-overlay', w: CANVAS_W, h: CANVAS_H, className: 'ga-canvas' },
+      { id: 'ga-network', w: CANVAS_W, h: CANVAS_H, className: 'ga-canvas' },
+      { id: 'ga-sankey', w: CANVAS_W, h: CANVAS_H, className: 'ga-canvas' },
+    ],
+    subscribe: (b, deliver) => b.on('groups:analytics', ({ registry }) => deliver(registry)),
+    draw: (c, registry) => drawAll(c, registry),
   });
+  if (!ctx) return;
+  host = ctx.host;
+  setVal = ctx.setVal;
 }
 
-function drawAll(registry) {
+function drawAll(ctx, registry) {
+  host = ctx.host;
+  setVal = ctx.setVal;
   const groups = [...registry.groups.values()];
   const summaries = groups.map((g) => ({
     id: g.id,
@@ -77,11 +78,6 @@ function drawAll(registry) {
   drawOverlay(summaries);
   drawNetwork(summaries, registry.tradeLog || []);
   drawSankey(summaries, registry.tradeLog || []);
-}
-
-function setVal(id, text) {
-  const el = host && host.querySelector('#' + id);
-  if (el) el.textContent = String(text);
 }
 
 /** World → canvas projection helper shared by overlay + network. */

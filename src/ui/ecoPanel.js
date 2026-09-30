@@ -9,46 +9,45 @@
  */
 
 import { biodiversity, oscillationScore } from '../engines/ecoEngine.js';
+import { mountAnalyticsPanel } from './analyticsPanel.js';
 
 const CURVE_W = 340;
 const CURVE_H = 140;
 const WEB_W = 340;
 const WEB_H = 140;
 let host = null;
-let lastDraw = 0;
+let setVal = () => {};
 
 function speciesColor(sp) {
   return `hsl(${(sp * 53 + 20) % 360}, 70%, 60%)`;
 }
 
 export function createEcoPanel(bus) {
-  const target = document.getElementById('eco-dashboard');
-  if (!target) return;
-  host = target;
-
-  host.innerHTML = `
-    <div class="intel-header">ECOSYSTEM</div>
-    <div class="intel-grid">
-      <div class="intel-cell"><span class="intel-label">SPECIES</span><span id="eco-species" class="intel-value">0</span></div>
-      <div class="intel-cell"><span class="intel-label">BIODIVERSITY</span><span id="eco-bio" class="intel-value">0.00</span></div>
-      <div class="intel-cell"><span class="intel-label">OSCILLATION</span><span id="eco-osc" class="intel-value">—</span></div>
-      <div class="intel-cell"><span class="intel-label">POPULATION</span><span id="eco-pop" class="intel-value">0</span></div>
-    </div>
-    <canvas id="eco-curves" class="ga-canvas" width="${CURVE_W}" height="${CURVE_H}"></canvas>
-    <canvas id="eco-web" class="ga-canvas" width="${WEB_W}" height="${WEB_H}"></canvas>
-    <div id="eco-niches" class="intel-log"></div>
-    <div id="eco-feed" class="intel-log"></div>
-  `;
-
-  bus.on('eco:analytics', ({ eco }) => {
-    const now = performance.now();
-    if (now - lastDraw < 500) return; // ~2 Hz
-    lastDraw = now;
-    drawAll(eco);
+  const ctx = mountAnalyticsPanel(bus, {
+    mountId: 'eco-dashboard',
+    title: 'ECOSYSTEM',
+    cells: [
+      { id: 'eco-species', label: 'SPECIES' },
+      { id: 'eco-bio', label: 'BIODIVERSITY', value: '0.00' },
+      { id: 'eco-osc', label: 'OSCILLATION', value: '—' },
+      { id: 'eco-pop', label: 'POPULATION' },
+    ],
+    canvases: [
+      { id: 'eco-curves', w: CURVE_W, h: CURVE_H },
+      { id: 'eco-web', w: WEB_W, h: WEB_H },
+    ],
+    logs: ['eco-niches', 'eco-feed'],
+    subscribe: (b, deliver) => b.on('eco:analytics', ({ eco }) => deliver(eco)),
+    draw: (c, eco) => drawAll(c, eco),
   });
+  if (!ctx) return;
+  host = ctx.host;
+  setVal = ctx.setVal;
 }
 
-function drawAll(eco) {
+function drawAll(ctx, eco) {
+  host = ctx.host;
+  setVal = ctx.setVal;
   const last = eco.ring[eco.ring.length - 1];
   const pop = last ? last.total : 0;
   const shannon = biodiversity(eco);
@@ -63,11 +62,6 @@ function drawAll(eco) {
   drawFoodWeb(eco);
   drawNicheList(eco);
   drawFeed(eco);
-}
-
-function setVal(id, text) {
-  const el = host && host.querySelector('#' + id);
-  if (el) el.textContent = String(text);
 }
 
 /** Per-species population curves across the ring window. */

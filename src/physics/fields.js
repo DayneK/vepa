@@ -21,15 +21,13 @@
 // wall/well/portal layout) changes. All placement is deterministic — no PRNG.
 // ============================================================================
 
+import { clamp } from '../core/numeric.js';
+
 const SCALARS = ['THERMAL', 'INFO', 'EXOTIC', 'CURVATURE'];
 const VECTORS = ['WIND', 'EM'];
 
 let _system = null;
 let _fingerprint = '';
-
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}
 
 function idx(dim, x, y, z) {
   return (z * dim + y) * dim + x;

@@ -13,6 +13,7 @@
  * a gentle cadence from main.js (every CADENCE ticks, laws must be active).
  */
 import { writeField } from '../physics/fields.js';
+import { clamp, centroidDist2 } from '../core/numeric.js';
 
 const MIN_MEMBERS = 4;         // a nest needs a real group
 const NEST_RADIUS_CELLS = 1;   // nest footprint around the centroid (3³ cells)
@@ -105,7 +106,7 @@ function centroidPairs(groups) {
     const a = groups[i];
     // Nearest two neighbours by centroid distance.
     const dists = groups
-      .map((b, j) => ({ j, d2: dist2(a, b) }))
+      .map((b, j) => ({ j, d2: centroidDist2(a, b) }))
       .filter(({ j }) => j !== i)
       .sort((p, q) => p.d2 - q.d2)
       .slice(0, 2);
@@ -114,10 +115,6 @@ function centroidPairs(groups) {
     }
   }
   return out;
-}
-
-function dist2(a, b) {
-  return (a.cx - b.cx) ** 2 + (a.cy - b.cy) ** 2 + (a.cz - b.cz) ** 2;
 }
 
 /** Cell centres along the straight line a→b (3D DDA), capped in length. */
@@ -139,6 +136,3 @@ function roadCells(system, a, b, maxCells) {
   return out;
 }
 
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}

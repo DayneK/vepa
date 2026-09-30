@@ -15,6 +15,7 @@ import {
     computeAlpha,
 } from '../dna/expression.js';
 import { projectPoint } from '../ui/camera.js';
+import { asParticleView } from './zeroCopy.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -24,21 +25,10 @@ const GRID_DIVISIONS = 8;   // grid lines per axis
 
 // ── Canvas2D Renderer ──────────────────────────────────────────────────────
 
-/**
- * Zero-copy particle view for the draw hot path.
- *
- * The render loop is called every frame with either a raw (Shared)ArrayBuffer
- * or an existing Float32Array view. Wrapping a buffer into `new Float32Array`
- * is free, but doing it over an existing Float32Array would copy 1MB+ per
- * frame — and multiplex mode renders up to 16 shards a frame. This helper
- * returns the typed array itself when one is passed in.
- *
- * @param {SharedArrayBuffer|ArrayBuffer|Float32Array} buffer - Particle storage
- * @returns {Float32Array} A live view over the same memory (never a copy)
- */
-export function asParticleView(buffer) {
-    return buffer instanceof Float32Array ? buffer : new Float32Array(buffer);
-}
+// Re-exported (not re-implemented) so the Canvas2D and PixiJS backends share
+// one zero-copy view. Kept as a named export of this module because it is part
+// of the renderer's public surface and is covered by tests/unit/renderer.test.js.
+export { asParticleView };
 
 // ── Phenotype cache ───────────────────────────────────────────────────────────
 // computeColor / computeRadius / computeAlpha run rgbToHsl + hslToRgb + DNA

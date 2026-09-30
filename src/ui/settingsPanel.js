@@ -8,6 +8,7 @@ import { runtimeConfig } from '../state/runtimeConfig.js';
 import { createLawPanel } from './lawPanel.js';
 import { isDebugVisible, setDebugVisible, debugSnapshot, logDebug } from '../debug.js';
 import { createSliderRow } from './sliderControl.js';
+import { copyText } from '../core/clipboard.js';
 
 const CAMERA_FIELDS = [
   { key: 'focalLength',       label: 'FOCAL DISTANCE',     min: 400,  max: 4000, step: 50,   value: 1200 },
@@ -187,22 +188,7 @@ export function createSettingsPanel(bus, lawStateObj) {
 
 /** Copy the full debug log to the clipboard (used by the DEBUG section). */
 function copyDebugLog() {
-  const text = JSON.stringify(debugSnapshot(), null, 2);
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).catch(() => fallbackCopyText(text));
-  } else {
-    fallbackCopyText(text);
-  }
+  copyText(JSON.stringify(debugSnapshot(), null, 2));
   logDebug('debug log copied from settings');
 }
 
-function fallbackCopyText(text) {
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.cssText = 'position:fixed;opacity:0;';
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  try { document.execCommand('copy'); } catch (e) { /* ignore */ }
-  document.body.removeChild(ta);
-}

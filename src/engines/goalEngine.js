@@ -112,7 +112,7 @@ export function createGoalEngine(bus, config = {}) {
  *                           { populationAlive, speciesAlive, clusterCount,
  *                             avgEnergy, frameDelta, lawActiveCount }
  */
-export function update(engine, metrics) {
+export function updateGoal(engine, metrics) {
   engine.frame++;
   if (engine.frame % engine.cfg.evaluationInterval !== 0) return;
 
@@ -186,7 +186,7 @@ function evaluateGoals(targets, metrics) {
 /**
  * Update a tracked parameter value (call when orchestrator commits a change).
  */
-export function setCurrentValue(engine, paramName, value) {
+export function setGoalValue(engine, paramName, value) {
   engine.currentValues[paramName] = value;
 }
 

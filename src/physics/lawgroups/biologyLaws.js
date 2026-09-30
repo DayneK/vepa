@@ -4,12 +4,7 @@
 // ============================================================================
 
 import { PARTICLE_STRIDE, STRIDE_INDEXES as S, DNA_INDEXES as D } from '../../constants.js';
-
-const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
-
-function nanGuard(v) {
-  return Number.isFinite(v) ? v : 0;
-}
+import { clamp, nanGuard } from '../../core/numeric.js';
 
 function applySymbiosis(view, iBase, jBase, k) {
   if (view[iBase + S.SPECIES_ID] === view[jBase + S.SPECIES_ID]) return null;

@@ -49,9 +49,10 @@ intelligence through a live dashboard.
 - No additional worker modes beyond the deterministic Web Worker path; the
   main-thread solver remains the compatibility fallback when SharedArrayBuffer
   is unavailable.
-- No changes to the v2 legacy tree (`src/`, root `index.html`).
 - No new laws beyond the current mapped law contract; law additions require
   explicit category, state, help, dispatch, audit, and test updates.
+  (The v2-era legacy trees were archived to `gemquota/vepa-archive` on
+  2026-08-10; the root `src/` **is** the v4 tree.)
 
 ## Architecture
 
@@ -90,9 +91,12 @@ synchronous main-thread solver fallback.
 
 ### Predation law
 
-`LAW_INDEXES.PREDATION = 51`, `LAW_COUNT = 52`, added to the biology category,
-`LAW_HELP_DB`, and the law-grid icon map. Solver dispatches `applyPredation`
-under its own bit instead of TRACK.
+`LAW_INDEXES.PREDATION = 51`. The law contract has since grown from the
+52 laws named when PREDATION was added to **`LAW_COUNT = 136`**
+(`src/constants/laws.js:34`), across 9 categories. PREDATION sits in the
+biology category alongside the law-grid icon map and `LAW_HELP_DB`; the solver
+dispatches `applyPredation` (`src/physics/laws.js:286`) under its own bit at
+`solver.js:1021-1025` rather than under TRACK.
 
 ### Goal-engine tunables
 
@@ -115,7 +119,28 @@ integration, and REPRO/LIFE synergy points. Insight consumes `scanInterval` /
 4. **Dashboard renders**: the WORLD tab shows the intelligence section with
    live counters, REC toggle, and scrub slider. *(DOM-driven, no unit test —
    manual verify in browser)*
-5. **No regressions**: `npm test` green (39 tests), `vite build` succeeds.
+5. **No regressions**: `npm test` green — currently **951 tests across 109
+   files** (verified 2026-09-30), `npm run repository:check` green
+   (136 laws, provenance + signoff manifests valid), and `vite build` succeeds.
+
+## Verification Gates
+
+Run before declaring any change complete:
+
+| Gate | Command | Contract |
+|---|---|---|
+| Tests | `npm test` | 109 files / 951 tests, all green |
+| Syntax | `npm run syntax-check` | `node --check` over every `src/**/*.js` |
+| Spec drift | `npm run spec:check` | generated `docs/spec/` matches source byte-for-byte |
+| Repository | `npm run repository:check` | `spec:check` + law/provenance/signoff manifests |
+| Build | `npm run build` | `vite build` → `dist/` + system atlas publication |
+
+`npm run repository:check` runs in CI before deploy. Note that
+`scripts/generate-spec.mjs` reads the constants modules with regex over
+`src/constants/*.js`; the split-module path is declared in its
+`CONSTANTS_SOURCE_FILES` list and guarded against drift against the live
+`LAW_INDEXES`/`LAW_CATEGORIES`. Adding or renaming a constants file requires
+updating that list.
 
 ## User Stories
 

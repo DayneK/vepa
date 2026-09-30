@@ -7,14 +7,8 @@
 // ============================================================================
 
 import { PARTICLE_STRIDE, STRIDE_INDEXES as S, DNA_INDEXES as D } from '../../constants.js';
-
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}
-
-function nanGuard(v) {
-  return Number.isFinite(v) ? v : 0;
-}
+import { clamp, nanGuard } from '../../core/numeric.js';
+import { force3 } from '../force.js';
 
 /**
  * TIDE — long-range tidal pull on i toward j, ∝ massJ * k / dist.
@@ -24,11 +18,7 @@ function applyTide(view, iBase, jBase, dx, dy, dz, dist, k) {
   const massJ = nanGuard(view[jBase + S.MASS]);
   const mag = (massJ * k) / dist;
   const invDist = 1 / dist;
-  return {
-    ax: clamp(nanGuard(dx * invDist * mag), -50, 50),
-    ay: clamp(nanGuard(dy * invDist * mag), -50, 50),
-    az: clamp(nanGuard(dz * invDist * mag), -50, 50),
-  };
+  return force3(dx * invDist * mag, dy * invDist * mag, dz * invDist * mag);
 }
 
 /**
@@ -67,11 +57,7 @@ function applyHorizon(view, iBase, jBase, dx, dy, dz, dist, k) {
   const falloff = Math.max(0, 1 - dist / (horizon * 4));
   const mag = Math.min(50, k * massJ * falloff * falloff / Math.max(dist, 0.1));
   const invDist = 1 / dist;
-  return {
-    ax: clamp(nanGuard(dx * invDist * mag), -50, 50),
-    ay: clamp(nanGuard(dy * invDist * mag), -50, 50),
-    az: clamp(nanGuard(dz * invDist * mag), -50, 50),
-  };
+  return force3(dx * invDist * mag, dy * invDist * mag, dz * invDist * mag);
 }
 
 /** Radiation pressure — outward momentum transfer from radiant/energetic bodies. */
@@ -82,11 +68,7 @@ function applyRadiationPressure(view, iBase, jBase, dx, dy, dz, dist, k) {
     Math.max(0, nanGuard(view[jBase + S.STORED_ENERGY]));
   const mag = Math.min(50, k * energy / Math.max(1, dist * dist));
   const invDist = 1 / dist;
-  return {
-    ax: clamp(nanGuard(-dx * invDist * mag), -50, 50),
-    ay: clamp(nanGuard(-dy * invDist * mag), -50, 50),
-    az: clamp(nanGuard(-dz * invDist * mag), -50, 50),
-  };
+  return force3(-dx * invDist * mag, -dy * invDist * mag, -dz * invDist * mag);
 }
 
 /** Mass inertia — applies a bounded inertial resistance to acceleration. */
@@ -124,11 +106,7 @@ function applyElasticity(view, iBase, jBase, dx, dy, dz, dist, k) {
   const restRaw = view[iBase + S.DNA_CACHE_START + D.ELASTICITY];
   const rest = Number.isFinite(restRaw) ? restRaw : 0.5;
   const mag = (overlap * k * rest) / (mI + mJ);
-  return {
-    ax: clamp(nanGuard((-dx / dist) * mag), -50, 50),
-    ay: clamp(nanGuard((-dy / dist) * mag), -50, 50),
-    az: clamp(nanGuard((-dz / dist) * mag), -50, 50),
-  };
+  return force3((-dx / dist) * mag, (-dy / dist) * mag, (-dz / dist) * mag);
 }
 
 /**
@@ -164,11 +142,7 @@ function applyTurbulence(view, iBase, k, prng) {
     ny /= len;
     nz /= len;
   }
-  return {
-    ax: clamp(nanGuard(nx * k), -50, 50),
-    ay: clamp(nanGuard(ny * k), -50, 50),
-    az: clamp(nanGuard(nz * k), -50, 50),
-  };
+  return force3(nx * k, ny * k, nz * k);
 }
 
 /**
@@ -178,11 +152,7 @@ function applyCentripetal(view, iBase, cx, cy, cz, k) {
   const px = view[iBase + S.POS_X];
   const py = view[iBase + S.POS_Y];
   const pz = view[iBase + S.POS_Z];
-  return {
-    ax: clamp(nanGuard((cx - px) * k), -50, 50),
-    ay: clamp(nanGuard((cy - py) * k), -50, 50),
-    az: clamp(nanGuard((cz - pz) * k), -50, 50),
-  };
+  return force3((cx - px) * k, (cy - py) * k, (cz - pz) * k);
 }
 
 /**
@@ -192,11 +162,7 @@ function applyCentripetal(view, iBase, cx, cy, cz, k) {
 function applyRotation(view, iBase, cx, cy, cz, k) {
   const ox = view[iBase + S.POS_X] - cx;
   const oy = view[iBase + S.POS_Y] - cy;
-  return {
-    ax: clamp(nanGuard(-oy * k), -50, 50),
-    ay: clamp(nanGuard(ox * k), -50, 50),
-    az: 0,
-  };
+  return force3(-oy * k, ox * k, 0);
 }
 export {
   applyTide, applyFriction, applyElasticity, applyTurbulence,

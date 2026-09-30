@@ -52,7 +52,7 @@ export function createInsightEngine(bus, config = {}) {
  *   { lawActiveCount, motionGate } — when provided, scanning is skipped on
  *   a lawless and/or motionless world so the log never fires at idle.
  */
-export function update(engine, particleBuffer, particleCount, stride, worldSize, opts = {}) {
+export function updateInsight(engine, particleBuffer, particleCount, stride, worldSize, opts = {}) {
   engine.frame++;
   if (engine.frame % engine.cfg.scanInterval !== 0) return;
 

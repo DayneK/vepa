@@ -10,7 +10,8 @@
 
 import { DNA_INDEXES as D, STRIDE_INDEXES as S } from '../constants.js';
 
-const clamp01 = (value) => Math.max(0, Math.min(1, Number.isFinite(value) ? value : 0));
+import { clamp01 } from '../core/numeric.js';
+
 const similarity = (a, b, scale = 1) => clamp01(1 - Math.abs((a || 0) - (b || 0)) / Math.max(scale, 1e-6));
 const average = (a, b) => ((Number.isFinite(a) ? a : 0) + (Number.isFinite(b) ? b : 0)) * 0.5;
 

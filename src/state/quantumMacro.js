@@ -35,6 +35,8 @@
  * Everything is deterministic — no PRNG (hash-gated like Set L).
  */
 import { STRIDE_INDEXES, DNA_INDEXES, DNA_RANGES } from '../constants.js';
+import { clamp, num, hash2 } from '../core/numeric.js';
+import { readDNAParam as readDNA } from '../dna/codec.js';
 
 export const QUANTUM_CADENCE = 15; // frames between passes
 
@@ -68,29 +70,9 @@ const COLLAPSE_CAP = 30;                // total collapses per pass
 
 const S = STRIDE_INDEXES;
 
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}
-
-function num(v, dflt) {
-  return Number.isFinite(Number(v)) ? Number(v) : dflt;
-}
-
 /** Deterministic 32-bit integer hash of a pair (no PRNG). */
-function hash2(a, b) {
-  let h = (a * 73856093) ^ (b * 19349663);
-  h = (h ^ (h >>> 13)) * 1274126177;
-  return (h ^ (h >>> 16)) >>> 0;
-}
 
 /** Read a genome-only DNA param (min/max normalized, like laws.js). */
-function readDNA(buf, sp, idx) {
-  if (!buf) return 0;
-  const raw = buf[sp * 64 + idx] || 0;
-  const r = DNA_RANGES[idx];
-  if (r) return r.min + (raw / 65535) * (r.max - r.min);
-  return raw / 65535;
-}
 
 /**
  * Fresh quantum-macroscale state. Arrays are indexed by particle id (aligned

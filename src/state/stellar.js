@@ -31,6 +31,7 @@
  */
 import { STRIDE_INDEXES } from '../constants.js';
 import { writeField } from '../physics/fields.js';
+import { clamp, num, hash2 } from '../core/numeric.js';
 
 export const STELLAR_CADENCE = 15; // frames between passes
 export const STAR_KINDS = { STAR: 0, BLACK_HOLE: 1, REMNANT: 2 };
@@ -62,20 +63,7 @@ const ELEMENT_CELLS = 6;             // exotic cells seeded per detonation
 
 const S = STRIDE_INDEXES;
 
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}
-
-function num(v, dflt) {
-  return Number.isFinite(Number(v)) ? Number(v) : dflt;
-}
-
 /** Deterministic 32-bit integer hash of a pair (no PRNG). */
-function hash2(a, b) {
-  let h = (a * 73856093) ^ (b * 19349663);
-  h = (h ^ (h >>> 13)) * 1274126177;
-  return (h ^ (h >>> 16)) >>> 0;
-}
 
 /**
  * Fresh stellar state. The star registry is the long-lived state; massGrid is

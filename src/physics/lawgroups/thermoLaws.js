@@ -7,14 +7,8 @@
 // ============================================================================
 
 import { PARTICLE_STRIDE, STRIDE_INDEXES as S, DNA_INDEXES as D } from '../../constants.js';
-
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}
-
-function nanGuard(v) {
-  return Number.isFinite(v) ? v : 0;
-}
+import { clamp, nanGuard } from '../../core/numeric.js';
+import { force3 } from '../force.js';
 
 /**
  * ADIABATIC — convert kinetic energy to TEMPERATURE, conserving total energy:
@@ -33,11 +27,7 @@ function applyAdiabatic(view, iBase, k) {
   const removed = 0.5 * mass * (speed * speed - newSpeed * newSpeed);
   view[iBase + S.TEMPERATURE] = nanGuard((view[iBase + S.TEMPERATURE] || 0) + removed);
   const damp = dv / speed;
-  return {
-    ax: clamp(nanGuard(-vx * damp), -50, 50),
-    ay: clamp(nanGuard(-vy * damp), -50, 50),
-    az: clamp(nanGuard(-vz * damp), -50, 50),
-  };
+  return force3(-vx * damp, -vy * damp, -vz * damp);
 }
 
 /**

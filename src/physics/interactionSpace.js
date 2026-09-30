@@ -8,13 +8,7 @@
  */
 
 import { LAW_INDEXES } from '../constants.js';
-
-const freeze = (value) => {
-  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  Object.freeze(value);
-  for (const child of Object.values(value)) freeze(child);
-  return value;
-};
+import { deepFreeze as freeze } from '../core/numeric.js';
 
 const mechanism = (name, category, lawKeys, semantics, implementation) => ({
   name,

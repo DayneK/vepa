@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { EventBus } from '../../src/core/eventBus.js';
 import { PARTICLE_STRIDE, STRIDE_INDEXES } from '../../src/constants.js';
-import { createInsightEngine, update as updateInsight, clusterTrend } from '../../src/engines/insightEngine.js';
+import { createInsightEngine, updateInsight, clusterTrend } from '../../src/engines/insightEngine.js';
 import { createLineageTracker, trackBirth, trackDeath, getStats } from '../../src/engines/lineageTracker.js';
 import { createTimelineEngine, snapshot as timelineSnapshot, scrub as timelineScrub, getTimeline, getLatest, clearTimeline } from '../../src/engines/timelineEngine.js';
-import { createGoalEngine, update as updateGoal, setCurrentValue } from '../../src/engines/goalEngine.js';
+import { createGoalEngine, updateGoal, setGoalValue } from '../../src/engines/goalEngine.js';
 
 describe('VEPA4 Insight Engine', () => {
     it('detects clusters of nearby particles', () => {
@@ -95,7 +95,7 @@ describe('VEPA4 Goal Engine', () => {
         const adjustments = [];
         bus.on('goal:adjusted', (a) => adjustments.push(a));
 
-        setCurrentValue(engine, 'maxForce', 50);
+        setGoalValue(engine, 'maxForce', 50);
         updateGoal(engine, {
             populationAlive: 100,
             speciesAlive: 10,

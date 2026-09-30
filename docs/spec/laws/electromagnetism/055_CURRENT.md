@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_14.test.js](tests/audit/batch_14.test.js), [tests/audit/params_batch_13.test.js](tests/audit/params_batch_13.test.js)
+- Tests: [tests/audit/batch_14.test.js](tests/audit/batch_14.test.js), [tests/audit/params_batch_13.test.js](tests/audit/params_batch_13.test.js), [tests/unit/lawsSingleton.test.js](tests/unit/lawsSingleton.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/55_CURRENT.md](docs/audit/laws/a3/stage-1/55_CURRENT.md), [docs/audit/laws/a3/stage-2/55_CURRENT.md](docs/audit/laws/a3/stage-2/55_CURRENT.md), [docs/audit/laws/a3/stage-3/55_CURRENT.md](docs/audit/laws/a3/stage-3/55_CURRENT.md)
 
 ## Interpretation boundary

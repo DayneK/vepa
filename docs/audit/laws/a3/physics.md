@@ -146,6 +146,7 @@ Physics laws form the spatial & dynamical foundation of the VEPA engine. Gravity
 - **Status**: [x] Complete
 - **Unit Test Coverage**: Verified in `tests/unit/` and `tests/audit/`.
 - **Numerical Stability**: 100% stable; zero vector divergence.
+- **v8.0.0 rework (Matter & Union)**: ACCR upgraded from gradual dissolution to a **true merger** — the fusing pair becomes ONE particle with mass (m1+m2)·(0.5+FUSION), centre-of-mass position, momentum-conserving velocity and **mass-weighted colour** (see `src/physics/mergePhysics.js`). Bonded pairs (BOND/POLYMER molecules) are excluded — they stay as two separate attached orbs. STOICHIOMETRY forces exact mass. Batch-02 tests rewritten to the new semantics; bonded-pair no-merge coverage added.
 
 ---
 

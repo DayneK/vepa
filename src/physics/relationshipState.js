@@ -7,8 +7,7 @@
  * and future relationship-graph consumers.
  */
 
-const clamp01 = (value) => Math.max(0, Math.min(1, Number.isFinite(value) ? value : 0));
-const finite = (value, fallback = 0) => Number.isFinite(value) ? value : fallback;
+import { clamp01, finite } from '../core/numeric.js';
 
 export const RELATIONSHIP_TYPES = Object.freeze([
   'independent',

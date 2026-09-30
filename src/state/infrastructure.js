@@ -25,6 +25,7 @@
  */
 import { STRIDE_INDEXES } from '../constants.js';
 import { writeField, writeWall } from '../physics/fields.js';
+import { clampTreasury, centroidDist2 } from '../core/numeric.js';
 
 const MIN_MEMBERS = 3;               // a civilization needs real membership
 const HARVEST_RATE_DEFAULT = 0.1;    // share of cell energy harvested per pass
@@ -38,10 +39,6 @@ const MEGA_MAX_WRITES = 24;          // griefing cap per completed build
 const BRIDGE_RANGE = 700;            // corridor length cap (world units)
 const ENERGY_FEED_CAP = 100;         // per-member ENERGY ceiling
 export const INFRA_CADENCE = 25;     // frames between passes
-
-function clampTreasury(v) {
-  return v < 0 ? 0 : v > 10000 ? 10000 : v;
-}
 
 /** Scalar field value at a world position (direct grid read, no allocation). */
 function fieldAt(system, name, px, py, pz) {
@@ -64,9 +61,6 @@ function consumeField(system, name, px, py, pz, amount) {
   return taken;
 }
 
-function centroidDist2(a, b) {
-  return (a.cx - b.cx) ** 2 + (a.cy - b.cy) ** 2 + (a.cz - b.cz) ** 2;
-}
 
 /** Nearest non-ally group (bridges connect civilizations). */
 function nearestNonAlly(registry, g) {

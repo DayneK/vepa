@@ -4,7 +4,9 @@
 
 | Surface | File | DOM target |
 | --- | --- | --- |
+| ui | [src/ui/analyticsPanel.js](src/ui/analyticsPanel.js) | programmatic |
 | ui | [src/ui/camera.js](src/ui/camera.js) | programmatic |
+| ui | [src/ui/civilizationPanel.js](src/ui/civilizationPanel.js) | programmatic |
 | ui | [src/ui/dnaAnalytics.js](src/ui/dnaAnalytics.js) | programmatic |
 | ui | [src/ui/dnaPanel.js](src/ui/dnaPanel.js) | programmatic |
 | ui | [src/ui/ecoPanel.js](src/ui/ecoPanel.js) | programmatic |

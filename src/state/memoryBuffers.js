@@ -13,17 +13,15 @@
  *   THREAT       — flee/defend response strength
  */
 
-export const MEMORY_DIM = 4;
-export const MEM = {
+import { clamp01 } from '../core/numeric.js';
+
+export const MEMORY_DIM = 4;export const MEM = {
   ACTIVITY: 0,
   COHESION: 1,
   EXPLORATION: 2,
   THREAT: 3,
 };
 
-function clamp01(v) {
-  return Math.max(0, Math.min(1, Number.isFinite(v) ? v : 0));
-}
 
 export function createMemoryBuffers(opts = {}) {
   return {

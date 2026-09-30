@@ -32,6 +32,7 @@
  */
 import { STRIDE_INDEXES } from '../constants.js';
 import { writeField } from '../physics/fields.js';
+import { clamp, num, hash2 } from '../core/numeric.js';
 
 export const EXOTIC_CADENCE = 15; // frames between passes
 export const EXOTIC_KINDS = { ANTIMATTER: 1, DARK: 2, STRANGE: 3, NEGATIVE: 4 };
@@ -58,25 +59,12 @@ const MAX_ZONE_WRITES = 1600;         // griefing cap for zone re-assertion
 
 const S = STRIDE_INDEXES;
 
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}
-
-function num(v, dflt) {
-  return Number.isFinite(Number(v)) ? Number(v) : dflt;
-}
-
 /** Combined THERMAL+INFO density at a cell index (mass proxy for anti-gravity). */
 function densityAt(therm, info, i) {
   return (therm[i] || 0) + (info[i] || 0);
 }
 
 /** Deterministic 32-bit integer hash of a particle pair (no PRNG). */
-function hash2(a, b) {
-  let h = (a * 73856093) ^ (b * 19349663);
-  h = (h ^ (h >>> 13)) * 1274126177;
-  return (h ^ (h >>> 16)) >>> 0;
-}
 
 /**
  * Fresh exotic-matter state. Arrays are indexed by particle id (aligned with

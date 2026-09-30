@@ -17,7 +17,7 @@
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 8 | NONE |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | NONE |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | NONE |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 12 | 58 | NONE |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 58 | NONE |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 3 | NONE |
 | 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 2 | NONE |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | NONE |
@@ -59,7 +59,7 @@
 | 52 | [COMMS](../laws/biology/052_COMMS.md) | biology | 1 | 5 | 8 | NONE |
 | 53 | [CHARGE_LAW](../laws/electromagnetism/053_CHARGE_LAW.md) | electromagnetism | 1 | 3 | 5 | NONE |
 | 54 | [ELECTRIC_FIELD](../laws/electromagnetism/054_ELECTRIC_FIELD.md) | electromagnetism | 0 | 0 | 0 | NONE |
-| 55 | [CURRENT](../laws/electromagnetism/055_CURRENT.md) | electromagnetism | 1 | 3 | 2 | NONE |
+| 55 | [CURRENT](../laws/electromagnetism/055_CURRENT.md) | electromagnetism | 1 | 3 | 3 | NONE |
 | 56 | [RESISTANCE](../laws/electromagnetism/056_RESISTANCE.md) | electromagnetism | 1 | 3 | 1 | NONE |
 | 57 | [CAPACITANCE](../laws/electromagnetism/057_CAPACITANCE.md) | electromagnetism | 1 | 2 | 1 | NONE |
 | 58 | [INDUCTANCE](../laws/electromagnetism/058_INDUCTANCE.md) | electromagnetism | 1 | 2 | 1 | NONE |
@@ -70,7 +70,7 @@
 | 63 | [DISCHARGE](../laws/electromagnetism/063_DISCHARGE.md) | electromagnetism | 1 | 3 | 2 | NONE |
 | 64 | [PLASMA](../laws/electromagnetism/064_PLASMA.md) | electromagnetism | 1 | 3 | 2 | NONE |
 | 65 | [SUPERCONDUCTIVITY](../laws/electromagnetism/065_SUPERCONDUCTIVITY.md) | electromagnetism | 1 | 3 | 3 | NONE |
-| 66 | [MEMORY](../laws/information/066_MEMORY.md) | information | 1 | 6 | 25 | NONE |
+| 66 | [MEMORY](../laws/information/066_MEMORY.md) | information | 1 | 6 | 26 | NONE |
 | 67 | [PATTERN](../laws/information/067_PATTERN.md) | information | 1 | 3 | 2 | NONE |
 | 68 | [STIGMERGY](../laws/information/068_STIGMERGY.md) | information | 1 | 3 | 2 | NONE |
 | 69 | [SIGNAL_BOOST](../laws/information/069_SIGNAL_BOOST.md) | information | 1 | 3 | 1 | NONE |
@@ -82,7 +82,7 @@
 | 75 | [PROTOCOL](../laws/information/075_PROTOCOL.md) | information | 1 | 3 | 1 | NONE |
 | 76 | [FEEDBACK](../laws/information/076_FEEDBACK.md) | information | 1 | 3 | 4 | NONE |
 | 77 | [LANGUAGE](../laws/information/077_LANGUAGE.md) | information | 1 | 3 | 3 | NONE |
-| 78 | [CULTURE](../laws/information/078_CULTURE.md) | information | 1 | 3 | 3 | NONE |
+| 78 | [CULTURE](../laws/information/078_CULTURE.md) | information | 1 | 3 | 4 | NONE |
 | 79 | [SINGULARITY](../laws/physics/079_SINGULARITY.md) | physics | 1 | 4 | 4 | NONE |
 | 80 | [ENTANGLEMENT](../laws/metaphysics/080_ENTANGLEMENT.md) | metaphysics | 1 | 5 | 5 | NONE |
 | 81 | [HISTORY](../laws/information/081_HISTORY.md) | information | 1 | 3 | 3 | NONE |

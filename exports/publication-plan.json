@@ -22,10 +22,13 @@
     "requiredEnvironment": ["VEPA_EXPORTS_REPOSITORY", "VEPA_EXPORTS_TOKEN"],
     "safety": "never publish from a dirty worktree; never publish secrets into artifacts"
   },
-  "nonCanonical": [
+  "nonCanonical": [],
+  "retired": [
     {
       "path": "vepa-codebase-full-concat.md",
-      "reason": "legacy snapshot; producer and consumers still require review"
+      "reason": "legacy parallel full snapshot; producer never uniquely established and consumer unmapped",
+      "retiredOn": "2026-09-30",
+      "recoverableFrom": "git history"
     }
   ]
 }

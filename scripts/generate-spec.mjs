@@ -8,6 +8,23 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSy
 import { join, relative, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { LAW_RELATIONSHIPS, LAW_RELATIONSHIP_TYPES } from '../src/state/lawOntology.js';
+import {
+  LAW_COUNT as REAL_LAW_COUNT,
+  LAW_INDEXES as REAL_LAW_INDEXES,
+  LAW_CATEGORIES as REAL_LAW_CATEGORIES,
+} from '../src/constants.js';
+
+// The live constants modules are split (src/constants.js is a barrel
+// re-export). Regex extraction must read the defining modules, not the barrel
+// — otherwise every match misses and the generator silently falls back to
+// hardcoded defaults while producing empty law catalogs.
+const CONSTANTS_SOURCE_FILES = [
+  'src/constants/stride.js',
+  'src/constants/dna.js',
+  'src/constants/laws.js',
+  'src/constants/help.js',
+  'src/constants/world.js',
+];
 
 const ROOT = dirname(fileURLToPath(import.meta.url)) + '/..';
 const SPEC_DIR = join(ROOT, 'docs', 'spec');
@@ -95,7 +112,7 @@ function esc(s) {
 // ── Parse constants.js ───────────────────────────────────────────────────────
 
 function parseConstants() {
-  const src = read('src/constants.js');
+  const src = CONSTANTS_SOURCE_FILES.map(read).join('\n');
   const fullSrc = src + '\n' + read('src/physics/lawgroups/mechanicsHelp.js');
 
   // Extract PARTICLE_STRIDE
@@ -141,6 +158,45 @@ function parseConstants() {
       }
       LAW_CATEGORIES[catName] = { color, laws: lawNums };
     }
+  }
+
+  // ── Parse integrity guard ──────────────────────────────────────────────
+  // Regex extraction over source text is inherently fragile. If it ever stops
+  // matching (constants split / renamed / moved), the fallbacks above would
+  // emit an empty law catalog while still printing plausible numbers. Compare
+  // the parsed result against the live modules and fail loudly on any drift.
+  const parsedLawCount = Object.keys(LAW_INDEXES).length;
+  const realLawCount = Object.keys(REAL_LAW_INDEXES).length;
+  const problems = [];
+  if (parsedLawCount === 0) {
+    problems.push('LAW_INDEXES parsed as empty — the constants modules were not read');
+  } else if (parsedLawCount !== realLawCount) {
+    problems.push(`LAW_INDEXES count mismatch: parsed ${parsedLawCount}, live ${realLawCount}`);
+  } else {
+    for (const [name, idx] of Object.entries(REAL_LAW_INDEXES)) {
+      if (LAW_INDEXES[name] !== idx) {
+        problems.push(`LAW_INDEXES.${name}: parsed ${LAW_INDEXES[name]}, live ${idx}`);
+        break;
+      }
+    }
+  }
+  if (Object.keys(LAW_CATEGORIES).length === 0) {
+    problems.push('LAW_CATEGORIES parsed as empty — category coverage would report 0');
+  } else if (Object.keys(LAW_CATEGORIES).length !== Object.keys(REAL_LAW_CATEGORIES).length) {
+    problems.push(`LAW_CATEGORIES count mismatch: parsed ${Object.keys(LAW_CATEGORIES).length}, live ${Object.keys(REAL_LAW_CATEGORIES).length}`);
+  }
+  if (LAW_COUNT !== REAL_LAW_COUNT) {
+    problems.push(`LAW_COUNT mismatch: parsed ${LAW_COUNT}, live ${REAL_LAW_COUNT}`);
+  }
+  if (problems.length) {
+    throw new Error(
+      'generate-spec: constants parse integrity check failed:\n  - '
+      + problems.join('\n  - ')
+      + '\n\nThe generator reads the constants modules with regex. If they were '
+      + 'split, renamed, or reformatted, update CONSTANTS_SOURCE_FILES in '
+      + 'scripts/generate-spec.mjs. Refusing to generate a spec tree from an '
+      + 'empty law catalog.'
+    );
   }
 
   // Extract LAW_PARAMETERS

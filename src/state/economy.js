@@ -18,6 +18,7 @@
  * deterministic — no PRNG.
  */
 import { writeField } from '../physics/fields.js';
+import { clampTreasury as clampTreasuryTo } from '../core/numeric.js';
 
 const MIN_MEMBERS = 2;            // a lone particle does not trade
 const TRADE_RANGE = 450;          // centroid distance for a trade route
@@ -91,8 +92,9 @@ export function runEconomy(registry, view, stride, fieldSystem, opts = {}) {
   return res;
 }
 
+/** Treasury/price clamp bound to this module's sanity cap. */
 function clampTreasury(v) {
-  return v < 0 ? 0 : v > MAX_TREASURY ? MAX_TREASURY : v;
+  return clampTreasuryTo(v, MAX_TREASURY);
 }
 
 function pushTrade(registry, entry) {

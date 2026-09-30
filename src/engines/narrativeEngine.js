@@ -167,7 +167,7 @@ export function createNarrativeEngine(bus, config = {}) {
  * @param {number}  particleCount
  * @param {number}  stride
  */
-export function update(engine, particleBuffer, particleCount, stride) {
+export function updateNarrative(engine, particleBuffer, particleCount, stride) {
   engine.frame++;
 
   // v8.1.1: global pacing — at most one entry per globalCooldown frames.

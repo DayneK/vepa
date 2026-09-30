@@ -7,12 +7,19 @@
  */
 
 const SYSTEMS = [
-  ['family-kinship', 1, 'scaffold', ['src/engines/lineageTracker.js', 'src/state/groupRegistry.js']],
-  ['group-tribe-clan', 2, 'scaffold', ['src/state/groupRegistry.js', 'src/state/memoryBuffers.js']],
+  // Evidence levels: 'implemented' (runtime + focused tests), 'proxy' (runtime
+  // and tested, but an explicit approximation of the named concept), 'scaffold'
+  // (identity and evidence contract only), 'substrate' (shared support layer).
+  // family-kinship, group-tribe-clan, nation-polity, culture-memory and
+  // civilization gained real runtime entities in src/state/civilization.js on
+  // 2026-09-30; they are 'proxy', not 'implemented', because the cultural
+  // fidelity model is an explicit accounting rather than a measurement.
+  ['family-kinship', 1, 'proxy', ['src/engines/lineageTracker.js', 'src/state/groupRegistry.js', 'src/state/civilization.js']],
+  ['group-tribe-clan', 2, 'proxy', ['src/state/groupRegistry.js', 'src/state/memoryBuffers.js', 'src/state/civilization.js']],
   ['mating-reproduction', 3, 'proxy', ['src/physics/relationshipCompatibility.js', 'src/physics/laws.js', 'src/engines/lineageTracker.js']],
-  ['nation-polity', 4, 'proxy', ['src/state/governance.js', 'src/state/economy.js']],
-  ['civilization', 5, 'proxy', ['src/state/construction.js', 'src/state/infrastructure.js', 'src/state/economy.js', 'src/engines/epochEngine.js']],
-  ['culture-memory', 6, 'substrate', ['src/state/memoryBuffers.js', 'src/physics/lawgroups/infoLaws.js']],
+  ['nation-polity', 4, 'proxy', ['src/state/governance.js', 'src/state/economy.js', 'src/state/civilization.js']],
+  ['civilization', 5, 'proxy', ['src/state/construction.js', 'src/state/infrastructure.js', 'src/state/economy.js', 'src/engines/epochEngine.js', 'src/state/civilization.js']],
+  ['culture-memory', 6, 'proxy', ['src/state/memoryBuffers.js', 'src/physics/lawgroups/infoLaws.js', 'src/state/civilization.js']],
   ['relationship-laboratory', 7, 'implemented', ['src/physics/relationshipExplorer.js', 'src/physics/relationshipState.js']],
   ['synthetic-society', 8, 'proxy', ['src/state/synthetic.js', 'src/state/groupRegistry.js']],
   ['ecology', 9, 'implemented', ['src/engines/ecoEngine.js', 'src/engines/worldEvents.js']],

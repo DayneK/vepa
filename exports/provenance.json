@@ -23,13 +23,24 @@
       "status": "retained-derived-artifact",
       "consumer": "manual documentation review",
       "retention": "retain until CI artifact or external archive replacement is confirmed"
-    },
+    }
+  ],
+  "retired": [
     {
       "path": "exports/vepa-codebase-full-concat.md",
       "role": "parallel or legacy full snapshot",
-      "status": "provenance-review-required",
-      "consumer": "not currently mapped",
-      "retention": "retain; deletion requires consumer mapping and reversible archive boundary"
+      "status": "retired-2026-09-30",
+      "retiredBy": "H3 reconciliation; producer was never uniquely established and consumer was unmapped",
+      "recoverableFrom": "git history (removed in the H3 reconciliation commit)",
+      "retainedInGit": true
+    },
+    {
+      "path": "exports/vepa-codebase-concat.mjs",
+      "role": "20-module headless core concatenation",
+      "status": "retired-2026-09-30",
+      "retiredBy": "H3 reconciliation; its only generator (exports/generate-concat.mjs) no longer exists, so the artifact was unregenerable",
+      "recoverableFrom": "git history (removed in the H3 reconciliation commit)",
+      "retainedInGit": true
     }
   ]
 }

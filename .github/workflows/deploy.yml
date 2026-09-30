@@ -25,8 +25,19 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
+      # Gate the deploy on the full test suite. 951 unit + audit tests cover
+      # the law contract, solver, engines and subsystems; a regression must not
+      # reach gh-pages green.
+      - run: npm ci
+      - run: npm test
+
+      # Contract gates: the generated spec tree must match its source, and the
+      # repository law/provenance/signoff manifests must be internally valid.
+      - name: Verify spec + repository contracts
+        run: npm run repository:check
+
       # Build the v4 app (repo root) for the /vepa/ project page.
-      - run: npm ci && npm run build
+      - run: npm run build
         env:
           VITE_BASE: /vepa/
 

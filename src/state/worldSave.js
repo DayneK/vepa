@@ -171,6 +171,9 @@ export function captureWorldState(opts = {}) {
     },
     worldParams: { ...(opts.worldParams || {}) },
     runtime: pickRuntime(opts.runtime || {}),
+    // Additive: absent on saves written before the civilization ontology
+    // existed. Restores treat a missing key as "no civilization state".
+    civilization: opts.civilization ?? null,
     summary: summarizeWorld(view, count, laws),
   };
 }
@@ -235,6 +238,9 @@ export function restoreWorldState(state, target = {}) {
     particleCount,
     speciesCount,
     worldSize: Number.isFinite(state.worldSize) ? state.worldSize : WORLD_SIZE,
+    // Caller rebuilds the registry with restoreCivilization(); we only hand
+    // back the raw snapshot so the shape stays free of a state-module import.
+    civilization: state.civilization ?? null,
   };
 }
 

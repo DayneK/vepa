@@ -28,6 +28,7 @@
  * Everything is deterministic — no PRNG.
  */
 import { STRIDE_INDEXES } from '../constants.js';
+import { clamp, num } from '../core/numeric.js';
 
 export const RELATIVITY_CADENCE = 15; // frames between passes
 export const MAX_CURVATURE = 10;      // curvature ceiling (bounded field)
@@ -46,13 +47,6 @@ const MASS_CAP = 10;               // below STAR_MASS 12 — no accidental stars
 
 const S = STRIDE_INDEXES;
 
-function clamp(v, lo, hi) {
-  return v < lo ? lo : v > hi ? hi : v;
-}
-
-function num(v, dflt) {
-  return Number.isFinite(Number(v)) ? Number(v) : dflt;
-}
 
 /**
  * Bucket particle mass into the CURVATURE scalar field (SET semantics).

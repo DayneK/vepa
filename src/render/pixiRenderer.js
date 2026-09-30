@@ -12,6 +12,7 @@ import { STRIDE_INDEXES } from '../constants.js';
 import { computeColor, computeRadius, computeAlpha } from '../dna/expression.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
 import { projectPoint } from '../ui/camera.js';
+import { asParticleView } from './zeroCopy.js';
 
 const PHENOTYPE_CACHE_FRAMES = 6;
 const MIN_PARTICLE_RADIUS_PX = 1.5;
@@ -23,7 +24,7 @@ function clampDpr(value) {
 }
 
 function asView(buffer) {
-    return buffer instanceof Float32Array ? buffer : new Float32Array(buffer);
+    return asParticleView(buffer);
 }
 
 function makeParticleTexture() {

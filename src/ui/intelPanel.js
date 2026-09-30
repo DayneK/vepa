@@ -4,6 +4,8 @@
  * lineage tracking, goal tuning, and timeline recording/scrubbing.
  */
 
+import { setCellValue } from './analyticsPanel.js';
+
 let host = null;
 let clusterCount = 0;
 let births = 0, deaths = 0, longestGen = 0;
@@ -94,8 +96,7 @@ export function createIntelPanel(bus) {
 }
 
 function setValue(id, text) {
-  const elv = host && host.querySelector('#' + id);
-  if (elv) elv.textContent = String(text);
+  setCellValue(host, id, text);
 }
 
 function pushGoalLog(text) {

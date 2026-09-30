@@ -11,6 +11,7 @@ import { createDNAAnalytics } from './dnaAnalytics.js';
 import { createNarrativePanel } from './narrativePanel.js';
 import { createGroupAnalytics } from './groupAnalytics.js';
 import { createEcoPanel } from './ecoPanel.js';
+import { createCivilizationPanel } from './civilizationPanel.js';
 import { createPresetPanel } from './presetPanel.js';
 import { createSavePanel } from './savePanel.js';
 import { createSettingsPanel } from './settingsPanel.js';
@@ -42,6 +43,7 @@ export function initUI(bus, lawStateObj, dnaBuffer) {
   createNarrativePanel(bus);
   createGroupAnalytics(bus);
   createEcoPanel(bus);
+  createCivilizationPanel(bus);
   createPresetPanel(bus);
   createSavePanel(bus);
   createSettingsPanel(bus, lawStateObj);

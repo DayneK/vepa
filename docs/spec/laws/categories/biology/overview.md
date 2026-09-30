@@ -14,7 +14,7 @@
 | 10 | [REPRO](../../biology/010_REPRO.md) | wired | NONE | src/physics/interactionSpace.js |
 | 11 | [TRACK](../../biology/011_TRACK.md) | wired | NONE | src/physics/laws.js |
 | 12 | [SENESCENCE](../../biology/012_SENESCENCE.md) | wired | NONE | src/physics/laws.js |
-| 13 | [ENERGY](../../biology/013_ENERGY.md) | wired | NONE | src/physics/lawgroups/biologyLaws.js |
+| 13 | [ENERGY](../../biology/013_ENERGY.md) | wired | NONE | src/physics/force.js |
 | 14 | [RADIATION](../../biology/014_RADIATION.md) | wired | NONE | src/physics/laws.js |
 | 15 | [GENOTYPE](../../biology/015_GENOTYPE.md) | wired | NONE | src/physics/laws.js |
 | 16 | [PHENOTYPE](../../biology/016_PHENOTYPE.md) | wired | NONE | src/physics/laws.js |

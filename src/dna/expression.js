@@ -7,14 +7,11 @@
 
 import { STRIDE_INDEXES, DNA_INDEXES, DNA_RANGES } from '../constants.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
+import { clamp } from '../core/numeric.js';
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 /** Clamp `v` to [lo, hi]. */
-function clamp(v, lo, hi) {
-    return v < lo ? lo : v > hi ? hi : v;
-}
-
 /** Linearly interpolate `a → b` by `t ∈ [0,1]`. */
 function lerp(a, b, t) {
     return a + (b - a) * t;

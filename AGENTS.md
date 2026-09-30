@@ -28,7 +28,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 | **Branches** | `master` (stable) · `main` (**current**) · `docs/systems-assessment-20260920` · `new` · `feature/slider-controls` · `feature/multiplayer-investigation` · `feature/nuclear-rewrite` (remote) |
 | **Backup branches** | `backup/pre-*` — cut before risky work (see §10.4) |
 | **License** | ISC (`package.json`) |
-| **Package Manager** | npm (`package-lock.json`, `node_modules/` installed) |
+| **Package Manager** | npm (`package-lock.json` is the single lockfile SSOT). bun may be used locally but `bun.lock` is gitignored (H6 reconciliation, 2026-09-30) — two lockfiles for one dependency set drift silently. |
 | **Runtime** | Browser (ESM) + Node.js (scripts, `bench/`, `audit-suite/`) |
 | **Key Dependencies** | `pixi.js` ^8.18.1 · `vite` ^8.0.8 · `vitest` ^3.2.7 · `@playwright/test` ^1.60.0 |
 | **Module System** | ESM (`"type": "module"`) |

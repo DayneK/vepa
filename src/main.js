@@ -12,19 +12,20 @@ import { runtimeConfig } from './state/runtimeConfig.js';
 import { createWorldParams, applyWorldParam, spawnCaps } from './state/worldParams.js';
 import { sampleSpawnPosition, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from './spawn/distribution.js';
 import { createDNABuffer, loadDefaults, getDNAFloat } from './dna/dnaBuffer.js';
+import { quantizeDNA } from './dna/codec.js';
 import { createRendererAsync, resize as resizeRenderer, paintBackground } from './render/renderer.js';
 import { syncSprites } from './render/spriteSync.js';
 import { initUI } from './ui/ui.js';
 import { initCamera, resetCamera, setWorldSize } from './ui/camera.js';
 import { solve as solveMain, resetOffspringRing, drainOffspring as drainSolverOffspring } from './physics/solver.js';
-import { createInsightEngine, update as updateInsight } from './engines/insightEngine.js';
+import { createInsightEngine, updateInsight } from './engines/insightEngine.js';
 import { createSpeciationEngine, updateSpeciation } from './engines/speciation.js';
 import { createEcoEngine } from './engines/ecoEngine.js';
 import { createWorldEventEngine } from './engines/worldEvents.js';
 import { createEpochEngine, updateEpoch, getEpochs, getEpochSnapshot, resetEpoch } from './engines/epochEngine.js';
-import { createNarrativeEngine, update as updateNarrative } from './engines/narrativeEngine.js';
+import { createNarrativeEngine, updateNarrative } from './engines/narrativeEngine.js';
 import { createLineageTracker, trackBirth, trackDeath } from './engines/lineageTracker.js';
-import { createGoalEngine, setCurrentValue as setGoalValue, update as updateGoal } from './engines/goalEngine.js';
+import { createGoalEngine, setGoalValue, updateGoal } from './engines/goalEngine.js';
 import { createTimelineEngine, snapshot as timelineSnapshot, getTimeline as getTimelineList, clearTimeline as clearTimelineEngine, scrub as timelineScrub } from './engines/timelineEngine.js';
 import { createGroupRegistry, updateGroups, groupCount, declareGroup } from './state/groupRegistry.js';
 import { PRIME_DEFAULT } from './state/defaultPresets.js';
@@ -36,6 +37,16 @@ import { runEconomy } from './state/economy.js';
 import { runArtifacts } from './state/artifacts.js';
 import { runGovernance } from './state/governance.js';
 import { runInfrastructure } from './state/infrastructure.js';
+import {
+  createCivilizationRegistry,
+  createFederation,
+  foundCulture,
+  addFederationMember,
+  stepCivilization,
+  civilizationReport,
+  serializeCivilization,
+  restoreCivilization,
+} from './state/civilization.js';
 import { createExoticState, stepExoticMatter } from './state/exoticMatter.js';
 import { stepRelativity } from './state/relativity.js';
 import { createQuantumState, stepQuantumMacro } from './state/quantumMacro.js';
@@ -71,7 +82,11 @@ let memoryBuffers = null; // Set G.1 — persistent species/group memory
 let exoticState = null; // Set L.1 — exotic matter zones + per-particle states
 let quantumState = null; // Set N.1 — macroscale superposition + entanglement
 let stellarState = null; // Set O.1 — stars, black holes, supernovae
-let syntheticState = null; // Set P.1 — synthetic organisms, uploaded consciousness, machine groups
+let syntheticState = null;
+// Civilization ontology (culture / kin / federation / polity). This is the
+// first runtime consumer of src/state/systemLifecycle.js, which until now was
+// exercised only by tests and never ran inside the app.
+let civilization = null; // Set P.1 — synthetic organisms, uploaded consciousness, machine groups
 // Physics worker bridge. SharedArrayBuffer lets the worker mutate the same
 // particle memory without copying; browsers without cross-origin isolation
 // keep the safe main-thread path instead of paying a per-tick transfer cost.
@@ -91,6 +106,10 @@ let timelineRecording = false;
 const TIMELINE_SNAPSHOT_INTERVAL = 150;
 const METRICS_CADENCE = 8;   // full particle metric scan (computeMetrics)
 const SOCIAL_CADENCE = 4;    // economy/governance/infrastructure/artifacts
+// Civilization ontology bounds — the lifecycle substrate caps records at 2048
+// by default, but culture/federation/polity should never approach that.
+const MAX_CIVILIZATION_CULTURES = 64;
+const CULTURE_SEED_SYMBOLS = Object.freeze(['ember', 'oath', 'mark', 'song', 'stone', 'thread', 'salt', 'bell']);
 const LINEAGE_CADENCE = 4;   // death-transition scan
 let _cachedMetrics = null;
 let _metricsTick = -1;
@@ -387,6 +406,7 @@ async function boot() {
     quantumState = createQuantumState();
     stellarState = createStellarState();
     syntheticState = createSyntheticState();
+    civilization = createCivilizationRegistry();
     agencyEngine = createAgencyEngine(bus);
     setGoalValue(goalEngine, 'scanInterval', insightEngine.cfg.scanInterval);
     setGoalValue(goalEngine, 'clusterRadius', insightEngine.cfg.clusterRadius);
@@ -672,9 +692,7 @@ function setDNAFromProfile(species, profile) {
         const paramIdx = DNA_INDEXES[dnaKey];
         if (paramIdx === undefined) continue;
         const r = DNA_RANGES[paramIdx];
-        const clamped = Math.max(r.min, Math.min(r.max, value));
-        const normalized = (clamped - r.min) / (r.max - r.min);
-        dnaBuffer[species * 64 + paramIdx] = Math.round(normalized * 65535);
+        dnaBuffer[species * 64 + paramIdx] = quantizeDNA(value, r.min, r.max);
     }
 }function wireEvents() {
     const currentWorldState = (name = '') => captureWorldState({
@@ -688,6 +706,7 @@ function setDNAFromProfile(species, profile) {
         worldSize,
         tick,
         name,
+        civilization: civilization ? serializeCivilization(civilization) : null,
     });
     const emitUndoState = () => {
         bus.emit('world:undoState', { canUndo: undoRing.canUndo(), canRedo: undoRing.canRedo(), enabled: undoEnabled });
@@ -715,6 +734,10 @@ function setDNAFromProfile(species, profile) {
         setWorldSize(out.worldSize);
         resetOffspringRing();
         resetIntelligence();
+        // resetIntelligence() installs a fresh civilization registry; a save
+        // that carries one replaces it. Saves predating the ontology simply
+        // leave the fresh (empty) registry in place.
+        if (out.civilization) civilization = restoreCivilization(out.civilization);
         if (restoreWorker) startPhysicsWorker();
         bus.emit('species:sync', { count: speciesCount });
         bus.emit('dna:sync');
@@ -880,9 +903,7 @@ function setDNAFromProfile(species, profile) {
                 if (Math.random() > 0.85) {
                     const r = DNA_RANGES[p];
                     const val = r.min + Math.random() * (r.max - r.min);
-                    const clamped = Math.max(r.min, Math.min(r.max, val));
-                    const normalized = (clamped - r.min) / (r.max - r.min);
-                    dnaBuffer[s * 64 + p] = Math.round(normalized * 65535);
+                    dnaBuffer[s * 64 + p] = quantizeDNA(val, r.min, r.max);
                 }
             }
         }
@@ -1246,6 +1267,30 @@ function updateIntelligenceCore() {
                 tick, worldParams, era: epochEngine ? epochEngine.era : 0,
             });
             for (const ev of inf.events) bus.emit(ev.type, ev);
+            // Civilization ontology (culture / kin / federation / polity).
+            // Each detected group is founded a culture exactly once, then the
+            // registry ages its own cohesion and prunes dead members. This is
+            // the runtime path for src/state/systemLifecycle.js.
+            if (civilization) {
+                for (const g of groupRegistry.groups.values()) {
+                    if (civilization.cultures.size >= MAX_CIVILIZATION_CULTURES) break;
+                    const key = `group:${g.id}`;
+                    if (!civilization.lifecycle.records.has(`culture-memory:${key}`)) {
+                        foundCulture(civilization, g.id, {
+                            name: `culture-of-${g.name || g.id}`,
+                            symbols: CULTURE_SEED_SYMBOLS.slice(0, 2 + (g.id % 3)),
+                        });
+                    }
+                }
+                // Federate the strongest groups so tribe/clan identity is
+                // reachable without a separate authoring step.
+                if (civilization.federations.size === 0 && groupRegistry.groups.size >= 2) {
+                    const ids = [...groupRegistry.groups.keys()].slice(0, 6);
+                    const fed = createFederation(civilization, { name: 'first-tribe', kind: 'tribe' });
+                    for (const gid of ids) addFederationMember(civilization, fed.id, gid);
+                }
+                stepCivilization(civilization, { tick });
+            }
         }
     }
     // Set L — Exotic Matter (L.1): EXOTIC field zones tag particles with
@@ -1373,6 +1418,9 @@ function updateIntelligenceCore() {
         if (ecoEngine) {
             bus.emit('eco:analytics', { eco: ecoEngine });
         }
+        if (civilization) {
+            bus.emit('civilization:analytics', { report: civilizationReport(civilization) });
+        }
     }
 }
 
@@ -1392,6 +1440,8 @@ function resetIntelligence() {
         speciationEngine.frame = 0;
     }
     if (ecoEngine) { ecoEngine.ring.length = 0; ecoEngine.foodWeb.clear(); ecoEngine.niches.clear(); ecoEngine.splits.length = 0; ecoEngine.extinct.length = 0; }
+    // Civilization ontology is per-world: nothing carries across a restart.
+    civilization = createCivilizationRegistry();
     if (worldEventEngine) {
         worldEventEngine.baselineTotal = 0;
         worldEventEngine.baselineEnergy = 0;

@@ -9,15 +9,7 @@
 
 import { getInteractionPreset } from './interactionSpace.js';
 import { SplitMix32 } from '../core/prng.js';
-
-const clamp01 = (value) => Math.max(0, Math.min(1, Number.isFinite(value) ? value : 0));
-const finite = (value) => Number.isFinite(value) ? value : 0;
-const freeze = (value) => {
-  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  Object.freeze(value);
-  for (const child of Object.values(value)) freeze(child);
-  return value;
-};
+import { clamp01, finite, deepFreeze as freeze } from '../core/numeric.js';
 
 export const RELATIONSHIP_EXPLORATION_AXES = Object.freeze([
   'attachment',

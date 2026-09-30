@@ -7,6 +7,7 @@
  */
 
 import pkg from '../package.json';
+import { copyText } from './core/clipboard.js';
 
 const STORAGE_KEY = 'vepa4.debugOverlay';
 const APP_VERSION = pkg.version;
@@ -58,25 +59,6 @@ export function debugSnapshot() {
     messageCount: messages.length,
     messages: messages.map((m) => ({ at: fmtClock(m.t), level: m.level, text: m.text })),
   };
-}
-
-function copyText(text) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
-  } else {
-    fallbackCopy(text);
-  }
-}
-
-function fallbackCopy(text) {
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.cssText = 'position:fixed;opacity:0;';
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  try { document.execCommand('copy'); } catch (e) { /* ignore */ }
-  document.body.removeChild(ta);
 }
 
 function flashCopied() {

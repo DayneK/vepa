@@ -32,6 +32,7 @@
 import { STRIDE_INDEXES } from '../constants.js';
 import { writeField } from '../physics/fields.js';
 import { MEM } from './memoryBuffers.js';
+import { clamp01, clampTreasury, centroidDist2 } from '../core/numeric.js';
 
 const MIN_MEMBERS = 3;             // a polity needs real membership
 const ALLY_POLICY_DIST = 0.25;     // similar enough to ally
@@ -48,18 +49,6 @@ const POLICY_RATE_DEFAULT = 0.1;   // policy blend rate per pass
 const ALLIANCE_RANGE_DEFAULT = 350;
 const CONFLICT_THRESHOLD_DEFAULT = 0.5;
 export const GOVERNANCE_CADENCE = 25; // frames between passes
-
-function clamp01(v) {
-  return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0;
-}
-
-function clampTreasury(v) {
-  return v < 0 ? 0 : v > 10000 ? 10000 : v;
-}
-
-function centroidDist2(a, b) {
-  return (a.cx - b.cx) ** 2 + (a.cy - b.cy) ** 2 + (a.cz - b.cz) ** 2;
-}
 
 function policyDist(a, b) {
   return Math.max(

@@ -2,10 +2,10 @@
 # VEPA4 launcher — works from any working directory.
 # Usage:  vepa4 [dev|build|preview|test|syntax|bench] [port]
 #   dev     start dev server with COOP/COEP headers (default)
-#   build   production build into .dist
+#   build   production build into dist/
 #   preview serve the built app
 #   test    run the vitest unit suite
-#   syntax  node --check every JS file in v4/src and v4/tests
+#   syntax  node --check every JS file in src/ and tests/
 #   bench   headless physics-solver benchmark (bench/solver.bench.mjs)
 set -euo pipefail
 

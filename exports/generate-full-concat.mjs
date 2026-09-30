@@ -13,7 +13,6 @@ const OUT = path.resolve(outFile);
 
 const EXCLUDE_DIRS = new Set(['node_modules', '.git', '.dist', '.rsirrp', '.shots', 'docs', 'audit-suite']);
 const EXCLUDE_FILES = new Set([
-  'exports/vepa-codebase-full-concat.md',
   'exports/vepa-full-codebase-concat.md',
   'exports/vepa-docs-concat.md',
 ]);
@@ -153,9 +152,7 @@ const NOTES = {
   'vercel.json': 'Vercel static build + COOP/COEP headers for SharedArrayBuffer.',
   'vepa4': 'Bash launcher: dev|build|preview|test|syntax|bench (+ optional port); wraps npm scripts; default dev port 5180.',
   'bench/solver.bench.mjs': 'Headless solver benchmark: table/per-law (--laws)/stress (--all)/JSON modes; builds synthetic worlds, medians ms/tick over frozen snapshots.',
-  'exports/generate-concat.mjs': 'Regenerates vepa-codebase-concat.mjs: bundles the 20-module headless core into one self-contained file via __define/__import registry.',
   'exports/generate-docs-concat.mjs': 'Regenerates vepa-docs-concat.md: merges all markdown docs + VERSION/package.json metadata with a TOC.',
-  'exports/vepa-codebase-concat.mjs': 'Generated artifact — the 20-module headless core concatenation (byte-identical regeneration verified).',
   'exports/README.md': 'Exports directory guide (md — documented in the docs concatenation).',
 };
 

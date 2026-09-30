@@ -401,6 +401,7 @@
       "category": "biology",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/force.js",
         "src/physics/lawgroups/biologyLaws.js",
         "src/physics/lawgroups/chemistryLaws.js",
         "src/physics/lawgroups/emLaws.js",
@@ -1410,7 +1411,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_14.test.js",
-        "tests/audit/params_batch_13.test.js"
+        "tests/audit/params_batch_13.test.js",
+        "tests/unit/lawsSingleton.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -1667,6 +1669,7 @@
         "tests/unit/lawGraph.test.js",
         "tests/unit/lawgroupsEmInfoMeta.test.js",
         "tests/unit/lawgroupsQuantum.test.js",
+        "tests/unit/lawsSingleton.test.js",
         "tests/unit/memoryCulture.test.js",
         "tests/unit/signal.test.js",
         "tests/unit/synergyCache.test.js"
@@ -1933,6 +1936,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_20.test.js",
+        "tests/unit/civilization.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/synergyCache.test.js"
       ],

@@ -10,7 +10,13 @@ const ROOT = join(fileURLToPath(new URL('..', import.meta.url)));
 const EXPORTS = [
   { path: 'exports/vepa-full-codebase-concat.md', kind: 'full-codebase-snapshot', producer: 'exports/generate-vepa-all.mjs → exports/generate-full-concat.mjs', status: 'retained-derived-artifact' },
   { path: 'exports/vepa-docs-concat.md', kind: 'documentation-snapshot', producer: 'exports/generate-docs-concat.mjs', status: 'retained-derived-artifact' },
-  { path: 'exports/vepa-codebase-full-concat.md', kind: 'legacy-or-parallel-full-snapshot', producer: 'not uniquely established', status: 'provenance-review-required' },
+];
+
+// Retired 2026-09-30 (H3 reconciliation). Kept as a record so the inventory
+// still explains where the removed files went; they are not expected on disk.
+const RETIRED = [
+  { path: 'exports/vepa-codebase-full-concat.md', kind: 'legacy-or-parallel-full-snapshot', status: 'retired-2026-09-30', note: 'producer never uniquely established, consumer unmapped; recoverable from git history' },
+  { path: 'exports/vepa-codebase-concat.mjs', kind: 'headless-core-concatenation', status: 'retired-2026-09-30', note: 'generator exports/generate-concat.mjs no longer exists; unregenerable; recoverable from git history' },
 ];
 
 const TOOLS = [
@@ -32,6 +38,7 @@ export function inspectRepositoryArtifacts() {
   return {
     generatedAt: 'runtime',
     exports: EXPORTS.map(inspect),
+    retired: RETIRED.map(inspect),
     tooling: TOOLS.map(inspect),
     policy: {
       sourceOfTruth: 'src/ and executable tests',
@@ -49,6 +56,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.log('Repository artifact inventory');
     for (const item of [...report.exports, ...report.tooling]) {
       console.log(`${item.exists ? 'present' : 'MISSING'}  ${item.path}  ${item.status}`);
+    }
+    for (const item of report.retired) {
+      console.log(`${item.exists ? 'present' : 'retired '}  ${item.path}  ${item.status}  (${item.note})`);
     }
     console.log('No files were modified.');
   }
