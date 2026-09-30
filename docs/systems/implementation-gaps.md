@@ -11,13 +11,13 @@
 | Individual recognition | particle memory/relationship state | stable individual IDs and pair-specific history | P1 |
 | Tribe/clan | groups + memory + alliances | multi-group identity, kin/culture federation, fission/fusion | P2 |
 | Nation | group governance | polity container, jurisdiction, citizenship, succession, institutions | P2 |
-| Civilization | group economy/infrastructure/epochs | cumulative culture and multi-group continuity across member turnover | P2 |
-| Structure ownership | field writes and artifacts | durable object registry, ownership, maintenance, dependencies | P2 |
-| Cultural transmission | signal/memory/culture laws | explicit symbol/norm objects, fidelity, mutation, horizontal/vertical lineage | P2 |
+| Civilization | group economy/infrastructure/epochs | cumulative culture and multi-group continuity across member turnover | P2 ✅ |
+| Structure ownership | `src/state/structures.js` | durable object registry, ownership, maintenance, dependencies | P2 ✅ |
+| Cultural transmission | signal/memory/culture laws | explicit symbol/norm objects, fidelity, mutation, horizontal/vertical lineage | P2 ✅ |
 | Relationship graph | bond slots + semantic utilities | sparse typed edge registry, per-edge history, graph queries | P1 |
 | Reproductive architectures | one REPRO lifecycle path | unary/binary/multi-parent/budding/fragmentation/colony measurements | P2 |
 | Emergent boundaries | group density and roles | statistical organism boundary, merge/split events, collective fitness | P2 |
-| Codex ontology | narrative and analytics | observer-generated regime names with evidence and confidence | P3 |
+| Codex ontology | `src/state/continuity.js` + `src/state/codex.js` | observer-generated regime names with evidence and confidence | P3 ✅ |
 
 ## What is already safe to claim
 
@@ -26,11 +26,14 @@
 - ACCR preserves separate particle identities; ALLOY is the one-body fusion path.
 - Relationship compatibility and exploration are implemented support layers.
 - All twelve ranked systems now have shared lifecycle records, causal events, bounded emergence evidence, and reports; these are cross-system observations rather than domain-specific entity registries.
+- Culture, kin, federation and polity have explicit entity registries (`src/state/civilization.js`); structures, era continuity and the codex followed in `src/state/structures.js`, `src/state/continuity.js` and `src/state/codex.js`. See `docs/CIVILIZATION-SEQUEL-PLAN-2026-09-30.md`.
+- Regime names and observer statements are derived from measured social evidence with an explicit confidence, and are structurally prevented from being reconstructed from law state. This is `proxy`-level fidelity: it accounts for what was observed, it does not model culture or cognition.
 
 ## What must not yet be claimed as complete
 
 - Full mating or family simulation.
 - Explicit tribe, clan, nation, or civilization entities.
+- Structures as *physical* objects. `structures.js` records ownership, upkeep and condition; it does not yet write field cells, so `construction.js` still owns terrain.
 - Individual recognition and pair-specific historical memory.
 - General-purpose social graph persistence.
 - Open-ended evolution of institutions or relationship grammars.
