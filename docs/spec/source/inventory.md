@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `252` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `256` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,8 +11,8 @@ The generator scanned `252` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 1 |
 | Simulation | 29 | 213 | 363 |
 | State | 31 | 263 | 218 |
-| Testing | 124 | 9 | 449 |
-| Ui | 22 | 54 | 367 |
+| Testing | 126 | 9 | 449 |
+| Ui | 24 | 73 | 373 |
 
 ## Module list
 
@@ -22,7 +22,7 @@ The generator scanned `252` files from active repository inputs. Individual modu
 | [bench/results/renderer-benchmark.json](bench/results/renderer-benchmark.json) | benchmark | 253 | 0 | 0 | 0 |
 | [bench/solver.bench.mjs](bench/solver.bench.mjs) | benchmark | 587 | 0 | 6 | 9 |
 | [bench/worker-bench-worker.mjs](bench/worker-bench-worker.mjs) | benchmark | 79 | 0 | 7 | 0 |
-| [index.html](index.html) | repository | 203 | 0 | 0 | 1 |
+| [index.html](index.html) | repository | 204 | 0 | 0 | 1 |
 | [package-lock.json](package-lock.json) | repository | 2618 | 0 | 0 | 0 |
 | [package.json](package.json) | repository | 40 | 0 | 0 | 0 |
 | [playwright.config.js](playwright.config.js) | application | 22 | 1 | 1 | 0 |
@@ -122,10 +122,12 @@ The generator scanned `252` files from active repository inputs. Individual modu
 | [src/ui/analyticsPanel.js](src/ui/analyticsPanel.js) | ui | 106 | 3 | 0 | 1 |
 | [src/ui/camera.js](src/ui/camera.js) | ui | 300 | 6 | 0 | 0 |
 | [src/ui/civilizationPanel.js](src/ui/civilizationPanel.js) | ui | 94 | 2 | 2 | 2 |
-| [src/ui/dnaAnalytics.js](src/ui/dnaAnalytics.js) | ui | 542 | 1 | 1 | 3 |
+| [src/ui/dnaAnalytics.js](src/ui/dnaAnalytics.js) | ui | 549 | 1 | 1 | 3 |
 | [src/ui/dnaPanel.js](src/ui/dnaPanel.js) | ui | 185 | 1 | 3 | 10 |
 | [src/ui/ecoPanel.js](src/ui/ecoPanel.js) | ui | 183 | 1 | 2 | 0 |
 | [src/ui/groupAnalytics.js](src/ui/groupAnalytics.js) | ui | 218 | 1 | 1 | 0 |
+| [src/ui/helpOverlay.js](src/ui/helpOverlay.js) | ui | 284 | 11 | 1 | 0 |
+| [src/ui/helpRegistry.js](src/ui/helpRegistry.js) | ui | 372 | 8 | 0 | 6 |
 | [src/ui/hud.js](src/ui/hud.js) | ui | 112 | 2 | 1 | 0 |
 | [src/ui/intelPanel.js](src/ui/intelPanel.js) | ui | 109 | 1 | 1 | 0 |
 | [src/ui/lawPanel.js](src/ui/lawPanel.js) | ui | 196 | 1 | 2 | 0 |
@@ -137,9 +139,9 @@ The generator scanned `252` files from active repository inputs. Individual modu
 | [src/ui/settingsPanel.js](src/ui/settingsPanel.js) | ui | 195 | 1 | 6 | 1 |
 | [src/ui/sliderControl.js](src/ui/sliderControl.js) | ui | 430 | 14 | 1 | 0 |
 | [src/ui/speciesPanel.js](src/ui/speciesPanel.js) | ui | 251 | 1 | 3 | 10 |
-| [src/ui/toolbarHelp.css](src/ui/toolbarHelp.css) | ui | 226 | 0 | 0 | 0 |
+| [src/ui/toolbarHelp.css](src/ui/toolbarHelp.css) | ui | 301 | 0 | 0 | 0 |
 | [src/ui/tooltip.js](src/ui/tooltip.js) | ui | 171 | 2 | 4 | 122 |
-| [src/ui/ui.js](src/ui/ui.js) | ui | 488 | 5 | 15 | 1 |
+| [src/ui/ui.js](src/ui/ui.js) | ui | 493 | 5 | 16 | 1 |
 | [src/ui/worldPanel.js](src/ui/worldPanel.js) | ui | 554 | 3 | 6 | 127 |
 | [src/worker/physics.worker.js](src/worker/physics.worker.js) | simulation | 438 | 0 | 5 | 3 |
 | [style.css](style.css) | repository | 3132 | 0 | 0 | 0 |
@@ -225,6 +227,8 @@ The generator scanned `252` files from active repository inputs. Individual modu
 | [tests/unit/fmmParity.test.js](tests/unit/fmmParity.test.js) | testing | 71 | 0 | 5 | 0 |
 | [tests/unit/governance.test.js](tests/unit/governance.test.js) | testing | 208 | 0 | 6 | 0 |
 | [tests/unit/groupRegistry.test.js](tests/unit/groupRegistry.test.js) | testing | 195 | 0 | 3 | 4 |
+| [tests/unit/helpOverlay.test.js](tests/unit/helpOverlay.test.js) | testing | 174 | 0 | 2 | 0 |
+| [tests/unit/helpRegistry.test.js](tests/unit/helpRegistry.test.js) | testing | 302 | 0 | 5 | 0 |
 | [tests/unit/hud.test.js](tests/unit/hud.test.js) | testing | 13 | 0 | 2 | 0 |
 | [tests/unit/infrastructure.test.js](tests/unit/infrastructure.test.js) | testing | 201 | 0 | 5 | 1 |
 | [tests/unit/interactionSpace.test.js](tests/unit/interactionSpace.test.js) | testing | 52 | 0 | 3 | 5 |

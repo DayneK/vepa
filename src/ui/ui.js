@@ -16,6 +16,7 @@ import { createPresetPanel } from './presetPanel.js';
 import { createSavePanel } from './savePanel.js';
 import { createSettingsPanel } from './settingsPanel.js';
 import { initTooltip } from './tooltip.js';
+import { initHelpLongPress } from './helpOverlay.js';
 import { resetCamera } from './camera.js';
 import './toolbarHelp.css';
 
@@ -51,6 +52,10 @@ export function initUI(bus, lawStateObj, dnaBuffer) {
 }
 
 export function setupTabSwitching() {
+  // Long-press help for tabs, sub-tabs, graphs and analytics cells. Delegated
+  // from the document, so it also covers the canvases and intel cells that the
+  // analytics panels build at mount time.
+  initHelpLongPress(document.body);
   // Only real tabs carry a data-tab — the drawer's zoom/hide/minimize buttons
   // share the .tab-btn class and must not be treated as tabs (that used to
   // strip the active tab and leave the drawer blank on expand).
@@ -342,11 +347,11 @@ function showHelpDrone() {
       <div class="help-drone-body">
         <p class="help-drone-lead">Tap actions are on the left; hold actions are on the right. Enable the drone to make any UI element explain itself.</p>
         <div class="help-drone-mapping">
-          <div><strong>TAP</strong><span>▶ / ⏸ pause or resume</span><span>🔄 restart population</span><span>☢️ randomize laws and DNA</span><span>↶ undo last world change</span></div>
-          <div><strong>HOLD</strong><span>🔄 full reset and reload</span><span>☢️ open Chaos Settings</span><span>Graph expand / parameter help</span><span>Drawer gestures and controls</span></div>
+          <div><strong>TAP</strong><span>▶ / ⏸ pause or resume</span><span>🔄 restart population</span><span>☢️ randomize laws and DNA</span><span>↶ undo last world change</span><span>🧬 graph double-click expand / shrink</span></div>
+          <div><strong>HOLD</strong><span>🔄 full reset and reload</span><span>☢️ open Chaos Settings</span><span>Any tab or sub-tab: what it is for</span><span>Any graph or readout: what it measures</span><span>Parameter labels: range and tuning</span></div>
         </div>
         <button class="help-drone-enable" type="button">ENABLE DRONE</button>
-        <div class="help-drone-footer">VEPA4 · SETUP = controls · DATA = telemetry · DNA = history</div>
+        <div class="help-drone-footer">VEPA4 · SETUP = controls · WORLD STATES = save/restore · DATA = telemetry</div>
       </div>
     </section>`;
   document.body.appendChild(overlay);

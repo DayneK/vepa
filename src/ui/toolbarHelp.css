@@ -223,3 +223,78 @@
   100% { filter: hue-rotate(360deg); }
 }
 .hud-tick-compact { white-space: nowrap; }
+
+/* ── Long-press help: tabs (modal) and graphs/cells (tooltip) ────────────
+ * Built on the help-drone shell above so the drone's own map and a long-press
+ * help modal read as one system rather than two competing ones.
+ */
+.tab-help-kind {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 7px;
+  border: 1px solid rgba(74, 232, 255, 0.35);
+  border-radius: 3px;
+  color: var(--accent-cyan);
+  font: 7px var(--font-mono);
+  letter-spacing: 1.2px;
+}
+.tab-help-sections {
+  display: grid;
+  gap: 9px;
+  margin-top: 4px;
+}
+.help-drone-section {
+  display: grid;
+  gap: 3px;
+}
+.help-drone-section strong {
+  color: var(--accent-gold);
+  font-size: 9px;
+  letter-spacing: 0.6px;
+}
+.help-drone-section span {
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.55;
+}
+/* Graphs are pointer targets, not buttons: suppress the native drag-select
+ * and the touch callout so a long press reads as a deliberate gesture. */
+#dna-charts canvas,
+.intel-cell {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.intel-cell {
+  cursor: help;
+}
+.chart-section canvas {
+  cursor: help;
+}
+/* A pressed tab should look pressed while the hold timer runs, so the gesture
+ * has feedback before the modal appears. */
+.tab-btn:active,
+.sub-tab-btn:active {
+  filter: brightness(1.25);
+}
+.tab-help-tip {
+  max-width: 340px;
+}
+.tab-help-tip strong {
+  color: var(--accent-gold);
+}
+.tab-help-tip-sections {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: grid;
+  gap: 5px;
+}
+.tab-help-tip-sections .help-drone-section span {
+  font-size: 9px;
+}
+/* The help modal inherits the drone's overlay layout; this hook only widens it,
+ * because tab help carries more prose than a two-column control map. */
+.tab-help-overlay .help-drone-panel {
+  max-width: 560px;
+}

@@ -283,21 +283,22 @@ function setupDNAInteractions() {
   const analytics = document.getElementById('dna-analytics');
   if (!charts || charts.dataset.interactionsReady === 'true') return;
   charts.dataset.interactionsReady = 'true';
-  let holdTimer = null;
-  let holdTarget = null;
-  charts.addEventListener('pointerdown', (event) => {
+  // Expanding moved from long-press to double-click on purpose. Long-press is
+  // now the universal "explain this" gesture (helpOverlay.js) across every tab,
+  // and it has to mean the same thing everywhere or users cannot learn it.
+  // Expanding is a mode change rather than a question, so a deliberate
+  // double-click is the better fit. Long-press help on a graph is handled by
+  // the delegated handler on document, which is why nothing here listens for it.
+  charts.addEventListener('dblclick', (event) => {
     const canvas = event.target.closest('canvas');
     if (!canvas) return;
-    holdTarget = canvas.closest('.chart-section');
-    holdTimer = setTimeout(() => {
-      if (holdTarget) expandChart(holdTarget);
-      holdTimer = null;
-    }, 600);
+    const section = canvas.closest('.chart-section');
+    if (!section) return;
+    // Double-clicking an already-expanded chart collapses it, so the gesture
+    // is its own inverse and there is no dead end.
+    if (section.classList.contains('dna-chart-expanded')) collapseChart(section);
+    else expandChart(section);
   });
-  ['pointerup', 'pointercancel', 'pointerleave'].forEach((type) => charts.addEventListener(type, () => {
-    if (holdTimer) clearTimeout(holdTimer);
-    holdTimer = null;
-  }));
   if (analytics) analytics.addEventListener('click', (event) => {
     const stat = event.target.closest('[data-dna-history]');
     if (stat) openHistoryModule(stat.dataset.dnaHistory, stat.querySelector('span')?.textContent || stat.dataset.dnaHistory);
@@ -323,16 +324,22 @@ function openHistoryModule(key, label) {
 
 function expandChart(section) {
   document.querySelectorAll('.dna-chart-expanded').forEach((el) => el.classList.remove('dna-chart-expanded'));
+  document.querySelectorAll('.dna-chart-close').forEach((el) => el.remove());
   section.classList.add('dna-chart-expanded');
   const close = document.createElement('button');
   close.className = 'dna-chart-close';
   close.type = 'button';
   close.textContent = 'CLOSE GRAPH';
-  close.addEventListener('click', () => {
-    section.classList.remove('dna-chart-expanded');
-    close.remove();
-  });
+  close.addEventListener('click', () => collapseChart(section));
   section.appendChild(close);
+}
+
+/** Shrink a chart, removing the close control. Safe to call when not expanded. */
+function collapseChart(section) {
+  if (!section) return;
+  section.classList.remove('dna-chart-expanded');
+  const close = section.querySelector('.dna-chart-close');
+  if (close) close.remove();
 }
 
 // ── Line Chart (multi-species population) ──

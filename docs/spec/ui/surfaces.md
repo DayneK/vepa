@@ -11,6 +11,8 @@
 | ui | [src/ui/dnaPanel.js](src/ui/dnaPanel.js) | programmatic |
 | ui | [src/ui/ecoPanel.js](src/ui/ecoPanel.js) | programmatic |
 | ui | [src/ui/groupAnalytics.js](src/ui/groupAnalytics.js) | programmatic |
+| ui | [src/ui/helpOverlay.js](src/ui/helpOverlay.js) | programmatic |
+| ui | [src/ui/helpRegistry.js](src/ui/helpRegistry.js) | programmatic |
 | ui | [src/ui/hud.js](src/ui/hud.js) | programmatic |
 | ui | [src/ui/intelPanel.js](src/ui/intelPanel.js) | programmatic |
 | ui | [src/ui/lawPanel.js](src/ui/lawPanel.js) | programmatic |

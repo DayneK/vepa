@@ -1,5 +1,66 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.27] - 2026-09-30 → 9.1.24
+
+### Long-press help for tabs, graphs and readouts
+
+Every tab, sub-tab, graph and analytics cell now answers "what am I looking
+at?" on a long press. Suite 1164 → **1212** tests, 117 → 119 files.
+
+- **`src/ui/helpRegistry.js`** (new) — the content source of truth: 3 tabs,
+  10 sub-tabs, 9 graphs and 22 analytics cells, each with a summary and
+  sections. Pure data and lookup, no DOM.
+- **`src/ui/helpOverlay.js`** (new) — one delegated gesture serving two
+  surfaces, because the two questions are different. A **tab or sub-tab opens a
+  modal**: a tab covers a whole subsystem and will not fit in a tooltip the
+  width of a 28px emoji. A **graph or readout shows a tooltip anchored to the
+  thing itself**, because you are looking at it while asking.
+- Gesture matches the existing long-press idiom (`paramHelp.js`,
+  `sliderControl.js`, `multiplexHelp.js`): 500ms, cancelled by 10px of movement
+  so a scroll never misfires. Right-click gives the same help immediately.
+- A long press that opens help suppresses the trailing click, so the tab does
+  not switch out from under the modal explaining it.
+- Styles extend the existing help-drone shell in `toolbarHelp.css` rather than
+  introducing a second visual system.
+
+### Fixed
+
+- **`data-civilization` was unreachable.** The CIVILIZATION sub-tab shipped as
+  a `sub-tab-content` with no `sub-tab-btn`, so the entire civilization
+  dashboard — built across three releases — could not be opened from the UI.
+  The button now exists. A test asserts every `sub-tab-content` has a button,
+  so an orphaned panel cannot ship again.
+- **Long-press on a DNA chart no longer expands it.** That gesture meant
+  "expand" while also being the app's natural "explain this" gesture, and a
+  gesture has to mean one thing to be learnable. Expand moved to
+  **double-click** (which is its own inverse, so there is no dead end);
+  long-press is now help everywhere. The drone's control map still advertised
+  "Graph expand" on hold and is now corrected.
+
+### Changed
+
+- `src/ui/dnaAnalytics.js`: `expandChart` gained a matching `collapseChart`,
+  so double-click toggles and only one chart is expanded at a time.
+- `src/ui/ui.js`: the drone's control map and footer were stale ("DNA =
+  history"; no mention of WORLD STATES). Both corrected.
+
+### Notes
+
+- Every help entry was written from the code that renders the thing, not from
+  the chart title. Several titles understate what is plotted, and
+  `tests/unit/helpRegistry.test.js` pins the definitions that would otherwise
+  drift — e.g. the diversity metric samples exactly FORCE, POLARITY,
+  BIRTH_RATE, MUTATION and TIDAL across up to 500 particles.
+- The `data-groups` panel is labelled "Civilizations (Set F)" in the shell but
+  shows individual groups; its help entry says so rather than repeating the
+  label. Worth relabelling in a follow-up.
+- Coverage is enforced from `index.html` and the panel modules rather than a
+  hand-written list, so a new panel without help fails the suite.
+- **Not verified in a real browser.** This sandbox cannot launch Chromium
+  (missing `libglib-2.0.so.0`) and the project ships no DOM library, so the
+  gestures are covered by logic and wiring tests only. Rendering, pointer
+  timing and tooltip placement remain unverified by automation.
+
 ## [4.9.26] - 2026-09-30 → 9.1.23
 
 ### Civilization sequel — Phases 3–6
