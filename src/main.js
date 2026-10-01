@@ -29,6 +29,14 @@ import { createGoalEngine, setGoalValue, updateGoal } from './engines/goalEngine
 import { createTimelineEngine, snapshot as timelineSnapshot, getTimeline as getTimelineList, clearTimeline as clearTimelineEngine, scrub as timelineScrub } from './engines/timelineEngine.js';
 import { createGroupRegistry, updateGroups, groupCount, declareGroup } from './state/groupRegistry.js';
 import { PRIME_DEFAULT, DEFAULT_PRESET } from './state/defaultPresets.js';
+import { showLaunchModal } from './ui/launchModal.js';
+import {
+    readLaunchSettings,
+    writeLaunchSettings,
+    normaliseLaunchSettings,
+    presetFor,
+    defaultLaunchSettings,
+} from './state/launchSettings.js';
 import { createMemoryBuffers, speciesMemory, groupMemory, blendMemory, adaptMemory, decayMemory, pruneGroupMemory, resetMemoryBuffers, MEM } from './state/memoryBuffers.js';
 import { createAgencyEngine, updateAgency, detectMilestones, resetAgency } from './engines/agencyEngine.js';
 import { computeSpeciesGoals, applyGoalNudges } from './engines/goalBehavior.js';
@@ -164,7 +172,8 @@ let lastParamSnapshotAt = 0;
 const PARAM_SNAPSHOT_DEBOUNCE = 1200;
 let spawnRate = worldParams.SPAWN_RATE;
 let spawnAccumulator = 0;
-const DEFAULT_LAWS = DEFAULT_PRESET.laws;
+let DEFAULT_LAWS = DEFAULT_PRESET.laws;
+let ACTIVE_PRESET = DEFAULT_PRESET;
 
 /**
  * Apply the active preset's world parameters at boot.
@@ -172,9 +181,13 @@ const DEFAULT_LAWS = DEFAULT_PRESET.laws;
  * The preset declares its own parameters so there is one place to read what a
  * world is made of. `WELL_COUNT` is layered on here rather than in the preset
  * because it belongs to the physics substrate every preset shares.
+ *
+ * The launch overrides come last so they win: a world size or an initial
+ * population chosen at launch is a deliberate answer to the question the
+ * preset's own defaults only guessed at.
  */
 function applyDefaultWorldConfig() {
-    const declared = { ...DEFAULT_PRESET.worldParams, WELL_COUNT: 3 };
+    const declared = { ...ACTIVE_PRESET.worldParams, WELL_COUNT: 3 };
 
     // Four preset keys predate WORLD_PARAM_DEF and need translating. `dt` is
     // not a world param at all — the timestep is a runtime tunable — so it is
@@ -188,7 +201,59 @@ function applyDefaultWorldConfig() {
         const paramKey = legacy[key] || key;
         worldParams = applyWorldParam(worldParams, paramKey, value);
     }
+    for (const [key, value] of Object.entries(launchOverrides)) {
+        if (value === null || value === undefined) continue;
+        const paramKey = legacy[key] || key;
+        worldParams = applyWorldParam(worldParams, paramKey, value);
+    }
     runtimeConfig.worldParams = worldParams;
+}
+
+/** Launch-modal answers that override the preset. Empty until boot resolves. */
+let launchOverrides = {};
+
+/**
+ * Resolve the launch configuration before anything is built.
+ *
+ * Runs first in boot() on purpose: a preset decides which laws are set, which
+ * world parameters exist and which species spawn, so choosing one later would
+ * mean tearing the world down and rebuilding it. Dismissal is a supported
+ * answer, not a failure — `null` falls through to the defaults.
+ */
+async function resolveLaunchConfiguration() {
+    const remembered = readLaunchSettings();
+    const isFirstRun = remembered.presetId === defaultLaunchSettings().presetId
+        && typeof localStorage !== 'undefined'
+        && !localStorage.getItem('vepa-launch-settings');
+    let choice = null;
+    try {
+        choice = await showLaunchModal({ settings: remembered, isFirstRun });
+    } catch (error) {
+        // The modal is the first thing that touches the DOM, so a failure here
+        // is the one failure that has nothing behind it. Never let it be one.
+        logDebug('launch modal unavailable, booting defaults: ' + (error && error.message), 'warn');
+        choice = null;
+    }
+    const settings = normaliseLaunchSettings(choice || remembered);
+    if (choice) writeLaunchSettings(settings);
+
+    ACTIVE_PRESET = presetFor(settings);
+    DEFAULT_LAWS = ACTIVE_PRESET.laws || [];
+    SPECIES_PROFILES.length = 0;
+    SPECIES_PROFILES.push(...(ACTIVE_PRESET.species || []).map((s) => ({ ...s, ...s.dna })));
+
+    launchOverrides = {};
+    if (settings.worldSize !== null) launchOverrides.worldSize = settings.worldSize;
+    if (settings.initialPop !== null) launchOverrides.INITIAL_POP = settings.initialPop;
+
+    runtimeConfig.renderBackend = settings.renderBackend;
+    runtimeConfig.computeEngine = settings.computeEngine;
+    runtimeConfig.simSpeed = settings.simSpeed;
+    try {
+        localStorage.setItem('vepa-render-backend', settings.renderBackend);
+    } catch { /* private mode: the backend simply will not be remembered */ }
+
+    return settings;
 }
 
 const LEGACY_WORLD_PARAM_KEYS = Object.freeze({
@@ -381,6 +446,11 @@ async function boot() {
     dnaBuffer = createDNABuffer();
     loadDefaults(dnaBuffer, DNA_RANGES);
 
+    // Before the laws, the world parameters and the spawn: the launch choice
+    // decides all three, and re-deciding any of them afterwards means tearing
+    // the world down first.
+    await resolveLaunchConfiguration();
+
     for (const name of DEFAULT_LAWS) {
         if (LAW_INDEXES[name] !== undefined) lawSet(lawState, LAW_INDEXES[name]);
     }
@@ -521,7 +591,9 @@ const LEGACY_PROFILE_KEYS = Object.freeze({
  *
  * Previously this was a second, hand-maintained copy of the species list living
  * in main.js — changing the preset's species would not have changed what
- * actually spawned.
+ * actually spawned. It is a `let` list that `resolveLaunchConfiguration` refills
+ * in place, so every closure that captured it at module scope sees the launch
+ * choice rather than the compile-time default.
  */
 const SPECIES_PROFILES = DEFAULT_PRESET.species.map((s) => ({ ...s, ...s.dna }));
 

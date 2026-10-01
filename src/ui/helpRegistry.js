@@ -344,6 +344,62 @@ export function subtabsForTab(tabId) {
 }
 
 /**
+ * The top-level tabs in drawer order, which is the order the switcher cycles.
+ *
+ * Declared rather than inferred from `Object.keys(TAB_HELP)`: key order is an
+ * implementation detail of how the object literal was written, and a stray
+ * reordering during an edit would silently reverse the arrows in the help
+ * modal. The coverage test pins it against index.html.
+ */
+export const TAB_ORDER = Object.freeze(['tab-setup', 'tab-saves', 'tab-data']);
+
+/** The id of the tab `step` places away from `currentId`, wrapping at both ends. */
+export function cycleTabId(currentId, step) {
+  const at = TAB_ORDER.indexOf(currentId);
+  const from = at === -1 ? 0 : at;
+  const next = (from + step + TAB_ORDER.length) % TAB_ORDER.length;
+  return TAB_ORDER[next];
+}
+
+/**
+ * The top-level tab that owns `id`, whether `id` is a tab or a sub-tab.
+ * The help switcher needs this: drilling into DATA > CIVILIZATION and then
+ * hitting the arrows should move to SETUP, not to "no tab".
+ */
+export function owningTabId(id) {
+  if (Object.prototype.hasOwnProperty.call(TAB_HELP, id || '')) return id;
+  for (const tab of TAB_ORDER) {
+    if ((TAB_SUBTABS[tab] || []).includes(id)) return tab;
+  }
+  return TAB_ORDER[0];
+}
+
+/**
+ * The switcher model for the help modal: the owning tab of `id` (expanded, with
+ * its title) plus every other top-level tab (collapsed, icon only), in drawer
+ * order. An entry carries only what the strip renders, so the overlay has no
+ * content decisions of its own.
+ *
+ * @param {string} id the tab or sub-tab currently being explained
+ * @returns {Array<{id:string,title:string,icon:string,current:boolean,own:boolean}>}
+ */
+export function tabSwitcher(id) {
+  const owner = owningTabId(id);
+  return TAB_ORDER.map((tabId) => {
+    const entry = TAB_HELP[tabId];
+    return {
+      id: tabId,
+      title: entry ? entry.title : tabId,
+      icon: entry ? entry.icon || '' : '',
+      current: tabId === owner,
+      // True when a sub-tab of this tab is what is actually on screen, which is
+      // what tells the reader the arrows moved them away from where they were.
+      own: tabId === owner && tabId !== id,
+    };
+  });
+}
+
+/**
  * Look up help for a tab or sub-tab button.
  * @param {string} id the `data-tab` / `data-sub` value
  * @returns {{title:string, kind:string, summary:string, sections:Array}|null}

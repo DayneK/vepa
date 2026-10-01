@@ -1,3 +1,5 @@
+import { escapeHtml } from './html.js';
+
 /**
  * VEPA v3 — Narrative / Log Panel
  * Scrollback display for narrative entries with voice-based coloring.
@@ -69,11 +71,6 @@ function appendEntry(entry) {
 /**
  * Escape HTML entities to prevent XSS from narrative text.
  */
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
 
 /**
  * Create the narrative panel in #narrative-panel.

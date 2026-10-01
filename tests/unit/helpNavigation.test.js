@@ -137,10 +137,21 @@ describe('the parameter popup stays open', () => {
     expect(PARAM_HELP_SRC).toMatch(/pointercancel', cancel/);
   });
 
-  it('registers on the dismissal bus as press-insensitive', () => {
-    // The long press that opens the popup emits a pointerdown; without this
-    // exemption that press would close the popup as it opened it.
-    expect(PARAM_HELP_SRC).toMatch(/registerTooltip\(\{[\s\S]*?name: 'param-help'[\s\S]*?pressInsensitive: true/);
+  it('registers on the dismissal bus with no exemption, so any tap closes it', () => {
+    // The long press that opens the popup emits a pointerdown, but it arrives
+    // 500ms *before* the popup exists and is consumed by the press timer, so
+    // it never reaches the bus. That removed the only reason the old
+    // `pressInsensitive` exemption existed — and with it the bug where the
+    // popup survived every tap that followed.
+    expect(PARAM_HELP_SRC).toMatch(/registerTooltip\(\{[\s\S]*?name: 'param-help'/);
+    expect(PARAM_HELP_SRC).not.toMatch(/pressInsensitive/);
+  });
+
+  it('re-registers on every open, so a stale anchor cannot strand the popup', () => {
+    // The bus exempts a press on the tooltip's own anchor. If the record kept
+    // the anchor from the *first* long press, a tap on a different parameter
+    // would be treated as a press on the anchor and the popup would survive it.
+    expect(PARAM_HELP_SRC).toMatch(/if \(unregister\) unregister\(\);\s*unregister = registerTooltip\(/);
   });
 
   it('anchors itself to the label it describes', () => {
@@ -151,7 +162,7 @@ describe('the parameter popup stays open', () => {
     expect(PARAM_HELP_SRC).toMatch(/if \(unregister\) \{ unregister\(\); unregister = null; \}/);
   });
 
-  it('offers an Escape hatch, because press-insensitive means no press closes it', () => {
+  it('offers an Escape hatch alongside tap-anywhere dismissal', () => {
     expect(PARAM_HELP_SRC).toMatch(/export function initParamHelpDismiss/);
     expect(PARAM_HELP_SRC).toMatch(/event\.key !== 'Escape'/);
     expect(PARAM_HELP_SRC).toMatch(/isParamPopupVisible\(\)/);

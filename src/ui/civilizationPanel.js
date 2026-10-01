@@ -9,12 +9,10 @@
 
 import { mountAnalyticsPanel } from './analyticsPanel.js';
 import { setCellValue } from './analyticsPanel.js';
+import { escapeHtml as esc } from './html.js';
 
 let host = null;
 
-function esc(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
 
 export function createCivilizationPanel(bus) {
   const ctx = mountAnalyticsPanel(bus, {

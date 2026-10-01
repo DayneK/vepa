@@ -50,9 +50,80 @@ export function initUI(bus, lawStateObj, dnaBuffer) {
   createSavePanel(bus);
   createSettingsPanel(bus, lawStateObj);
   initTooltip(bus, lawStateObj);
-  // The parameter popup is press-insensitive by design, so it needs its own
-  // keyboard dismissal rather than relying on the shared press-to-close bus.
+  // Escape also closes the parameter popup, which is deliberately
+  // press-insensitive so it can survive the pointerup that ends its own long
+  // press. It still needs a keyboard dismissal route.
   initParamHelpDismiss();
+}
+
+/** Arrow-key movement within a strip, per the WAI-ARIA tabs pattern. */
+const TAB_STRIP_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End']);
+
+/**
+ * Make one strip of buttons behave as a single tab stop.
+ *
+ * Three jobs, all of which used to be missing and all of which are the
+ * difference between "works with a mouse" and "works":
+ *
+ *   - ACTIVATION. Click and keyboard both route through one function, so a
+ *     tab cannot end up selected on screen but unselected in ARIA state.
+ *   - ROVING TABINDEX. A seven-button strip should be one Tab press, not
+ *     seven; arrows then move within it. Home/End jump to the ends.
+ *   - SEMANTICS. role=tablist/tab/tabpanel plus aria-selected and aria-controls,
+ *     so a screen reader announces "tab 2 of 6, selected" rather than a bare
+ *     emoji button.
+ *
+ * @param {HTMLElement} strip        the `.tabs` / `.sub-tabs` container
+ * @param {string} buttonSelector    buttons within the strip
+ * @param {string} panelSelector     the panels those buttons reveal
+ * @param {string} key               the dataset property naming the panel id
+ */
+function wireTabStrip(strip, buttonSelector, panelSelector, key) {
+  if (!strip) return [];
+  const buttons = [...strip.querySelectorAll(buttonSelector)];
+  if (!buttons.length) return buttons;
+  strip.setAttribute('role', 'tablist');
+  if (!strip.hasAttribute('aria-label') && strip.id) strip.setAttribute('aria-label', strip.id);
+
+  const activate = (btn) => {
+    const scope = strip.closest('.tab-content') || strip.parentElement;
+    for (const other of buttons) {
+      const on = other === btn;
+      other.classList.toggle('active', on);
+      other.setAttribute('aria-selected', on ? 'true' : 'false');
+      other.tabIndex = on ? 0 : -1;
+    }
+    for (const panel of scope.querySelectorAll(panelSelector)) panel.classList.remove('active');
+    const target = document.getElementById(btn.dataset[key]);
+    if (target) {
+      target.classList.add('active');
+      target.setAttribute('role', 'tabpanel');
+      if (btn.id) target.setAttribute('aria-labelledby', btn.id);
+    }
+  };
+
+  for (const btn of buttons) {
+    if (!btn.id) btn.id = `tabbtn-${key}-${btn.dataset[key] || Math.random().toString(36).slice(2, 8)}`;
+    btn.setAttribute('role', 'tab');
+    if (btn.dataset[key]) btn.setAttribute('aria-controls', btn.dataset[key]);
+    btn.addEventListener('click', () => activate(btn));
+    btn.addEventListener('keydown', (event) => {
+      if (!TAB_STRIP_KEYS.has(event.key)) return;
+      event.preventDefault();
+      const at = buttons.indexOf(btn);
+      let next = at;
+      if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = buttons.length - 1;
+      else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (at + 1) % buttons.length;
+      else next = (at - 1 + buttons.length) % buttons.length;
+      buttons[next].focus();
+      activate(buttons[next]);
+    });
+  }
+
+  const initial = buttons.find((b) => b.classList.contains('active')) || buttons[0];
+  activate(initial);
+  return buttons;
 }
 
 export function setupTabSwitching() {
@@ -63,28 +134,11 @@ export function setupTabSwitching() {
   // Only real tabs carry a data-tab — the drawer's zoom/hide/minimize buttons
   // share the .tab-btn class and must not be treated as tabs (that used to
   // strip the active tab and leave the drawer blank on expand).
-  document.querySelectorAll('#main-panel .tab-btn[data-tab]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#main-panel .tab-btn').forEach((b) => b.classList.remove('active'));
-      document.querySelectorAll('#main-panel .tab-content').forEach((c) => c.classList.remove('active'));
-      btn.classList.add('active');
-      const target = document.getElementById(btn.dataset.tab);
-      if (target) target.classList.add('active');
-    });
-  });
-
+  wireTabStrip(document.querySelector('#main-panel .tabs'), '.tab-btn[data-tab]', '.tab-content', 'tab');
   // Sub-tabs (e.g. DATA > INTELLIGENCE | DNA | LOGS)
-  document.querySelectorAll('#main-panel .sub-tab-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const parent = btn.closest('.tab-content');
-      if (!parent) return;
-      parent.querySelectorAll('.sub-tab-btn').forEach((b) => b.classList.remove('active'));
-      parent.querySelectorAll('.sub-tab-content').forEach((c) => c.classList.remove('active'));
-      btn.classList.add('active');
-      const target = document.getElementById(btn.dataset.sub);
-      if (target) target.classList.add('active');
-    });
-  });
+  for (const strip of document.querySelectorAll('#main-panel .sub-tabs')) {
+    wireTabStrip(strip, '.sub-tab-btn', '.sub-tab-content', 'sub');
+  }
 }
 
 /** Shared drawer state — minimize/expand/hide all keep the active tab intact. */

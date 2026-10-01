@@ -378,7 +378,6 @@ body {
     appearance: none;
     background: var(--bg-tertiary);
     border-radius: 2px;
-    outline: none;
     cursor: pointer;
 }
 .dna-input::-webkit-slider-thumb {
@@ -455,7 +454,6 @@ body {
     color: var(--text-primary);
     font-size: 11px;
     font-family: var(--font-mono);
-    outline: none;
 }
 .preset-input:focus { border-color: var(--accent-blue); }
 
@@ -468,7 +466,6 @@ body {
     color: var(--text-primary);
     font-size: 11px;
     font-family: var(--font-mono);
-    outline: none;
     cursor: pointer;
 }
 .preset-select option {
@@ -1323,7 +1320,7 @@ body {
 .law-btn {
     padding: 4px 2px;
     font-family: var(--font-mono);
-    font-size: 7px;
+    font-size: 9px;
     letter-spacing: 0.5px;
     background: transparent;
     border: 1px solid var(--border);
@@ -1661,9 +1658,7 @@ body {
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
-    #top-toolbar .sq-btn { width: 24px; height: 20px; font-size: 9px; }
     .toolbar-center { gap: 6px; }
-    .hud-item { font-size: 7px; }
     .hud-population-orb::before { width: 5px; height: 5px; flex-basis: 5px; }
     .hud-population-orb::after { font-size: 7px; }
     .hud-tick-compact {
@@ -2489,7 +2484,7 @@ body {
   font-size: 11px;
   padding: 5px 6px;
 }
-.chaos-grid-row input[type="number"]:focus { border-color: var(--accent-red); outline: none; }
+.chaos-grid-row input[type="number"]:focus { border-color: var(--accent-red); }
 .chaos-grid-count {
   margin-left: auto;
   color: var(--accent-red);
@@ -3013,18 +3008,19 @@ body {
 @media (max-width: 480px) {
     #top-toolbar { height: 52px; padding: 0 6px; }
     #top-toolbar .sq-btn { width: 44px; height: 38px; font-size: 18px; }
-    .hud-item { font-size: 9px; }
     .law-cat-row .sq-toggle { width: 50px; height: 48px; flex: 0 0 50px; font-size: 18px; }
     .law-cat-row .sq-toggle .tog-icon { font-size: 18px; }
-    .law-cat-row .sq-toggle .tog-name { font-size: 8px; }
     #law-grid.word-mode { grid-template-columns: repeat(2, 1fr); }
     #law-grid.word-mode .law-cat-row .law-btn { flex: 1 1 140px; font-size: 11px; padding: 8px 10px; }
-    .sc-label { font-size: 9px; min-width: 84px; }
+    /* These three used to carry `font-size` one step *below* the desktop value,
+       which made the phone the least readable surface in the app. Narrowness
+       is a layout problem; it is answered with widths, not with smaller type. */
+    .sc-label { min-width: 84px; }
     .sc-dna .sc-label { min-width: 96px; }
-    .sc-bound, .sc-mode, .sc-zoom { height: 20px; font-size: 9px; line-height: 18px; min-width: 26px; }
+    .sc-bound, .sc-mode, .sc-zoom { height: 20px; min-width: 26px; }
     .sc-input { height: 4px; }
-    .sc-input::-webkit-slider-thumb, .sc-input::-moz-range-thumb { width: 13px; height: 13px; }
-    .sc-value { font-size: 9px; min-width: 44px; }
+    .sc-input::-webkit-slider-thumb, .sc-input::-moz-range-thumb { width: 18px; height: 18px; }
+    .sc-value { min-width: 44px; }
 }
 
 /* ── v8.1: Law icon size toggle — compact dense grid (the pre-double-size look) ── */
@@ -3142,3 +3138,701 @@ body {
 }
 .param-help-popup .php-text { color: var(--text-primary); }
 .law-info-module .info-advanced { color: var(--text-secondary); font-size: 12px; line-height: 1.45; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * TOUCH-FIRST INTERACTION CONTRACT
+ *
+ * Order of support, deliberately: touch first, then mouse, then keyboard. The
+ * drawer was designed around a pointer, and a control that merely declared
+ * `cursor:pointer` was assumed to be reachable by a finger. Three separate
+ * things break that assumption, and all three are fixed here once so that no
+ * future control has to remember to opt in:
+ *
+ *   1. GESTURE OWNERSHIP. Without `touch-action` the browser reserves the
+ *      gesture: a tap waits ~300ms for a possible double-tap zoom, and a drag
+ *      on a slider is claimed as a page pan before the control ever sees it.
+ *      `manipulation` hands the tap back to us while still allowing scroll;
+ *      surfaces that are genuinely dragged opt out with `none`.
+ *
+ *   2. HIT TARGET. A 14px chip is a 14px target — a fingertip is ~44px. Under
+ *      `pointer: coarse` the interactive set below is given a 44px minimum
+ *      (Apple HIG / WCAG 2.5.5). The one deliberate exception is the 128-tile
+ *      law grid in icon mode, where 44px tiles would make the grid unusable;
+ *      those take the WCAG 2.2 AA floor of 24px, and the readable word mode —
+ *      the mode you actually use it in — gets the full 44px.
+ *
+ *   3. HOVER-ONLY AFFORDANCES. Anything revealed by `:hover` alone is
+ *      unreachable by finger and by keyboard. Every hint below is therefore
+ *      also served on `:focus-visible` and on `(hover: none)`.
+ *
+ * The bespoke list in (1c) is asserted complete against every `cursor:pointer`
+ * rule in this file and in toolbarHelp.css by tests/unit/touchSupport.test.js,
+ * so a new clickable surface cannot ship without a tap contract.
+ */
+
+/* (1a) Semantically interactive elements: one rule covers every <button>,
+   <select>, checkbox and range input in the app, present and future. */
+button,
+[role='button'],
+summary,
+select,
+input[type='checkbox'],
+input[type='radio'],
+input[type='range'],
+input[type='number'],
+input[type='text'],
+input[type='search'] {
+  touch-action: manipulation;
+}
+
+/* (1b) Every surface in the app that shows a pointer cursor. The element-type
+   rule in (1a) already covers any real <button>/<select>; this list is the
+   explicit contract for everything that is a div, a label, a row or a classed
+   input, and it is what tests/unit/touchSupport.test.js holds complete. Naming
+   them costs nothing and means a control cannot be tap-blind. */
+.sq-btn,
+#top-toolbar .sq-btn,
+.law-icon-grid .sq-toggle,
+.tab-btn,
+.sub-tab-btn,
+#main-panel .tab-btn,
+#main-panel .sub-tab-btn,
+.law-btn,
+.cat-tab,
+.species-btn,
+.species-dot,
+.species-card,
+.species-remove,
+#add-species-btn,
+#remove-species-btn,
+.preset-btn,
+.preset-select,
+#drawer-show-btn,
+.accordion-header,
+.sub-accordion-header,
+.intel-btn,
+.chaos-btn-action,
+.chaos-cat-row,
+.chaos-check,
+.chaos-radio,
+#mpx-variation,
+.mpx-btn,
+.mpx-check,
+.mpx-mode,
+.mpx-tab,
+.mpx-fit-shard,
+.mpx-metric-chip,
+.mpx-metrics-toggle,
+#multiplex-drawer .mpx-chevron,
+.mpx-tip-guide,
+.mpx-tip-close,
+.mpx-fullscreen-btn,
+#multiplex-drawer .mpx-strip,
+.view-mode-toggle,
+.law-set-btn,
+.law-set-row,
+.law-set-editor button,
+.law-info-module .info-toggle,
+.law-info-module .info-close,
+.vepa-debug-header,
+.vepa-debug-btn,
+.help-drone-close,
+.help-drone-enable,
+.tab-help-nav-btn,
+.dna-overview-stat,
+.dna-chart-close,
+.dna-history-module button {
+  touch-action: manipulation;
+}
+
+/* (1c) Drag surfaces. Declared last and at a specificity that beats (1a), so a
+   slider that is also a class-based control still resolves to `none`: a
+   horizontal drag on a track must be a slider drag, not a page pan. */
+input[type='range'],
+.dna-input,
+.sc-input,
+#main-panel .tabs,
+#drawer-resize-handle,
+.shard-canvas {
+  touch-action: none;
+}
+/* The thumbs are painted, but the gesture target is the input, so they follow
+   it. Listed per row-type because each slider family names its own. */
+.dna-input::-webkit-slider-thumb,
+.dna-input::-moz-range-thumb,
+.sc-input::-webkit-slider-thumb,
+.sc-input::-moz-range-thumb,
+.dna-slider-group input[type='range']::-webkit-slider-thumb,
+.world-slider-row input[type='range']::-webkit-slider-thumb,
+.accordion-slider-row input[type='range']::-webkit-slider-thumb {
+  touch-action: none;
+}
+
+/* (3) Hover-only affordances, made reachable. The toolbar "tap / hold" hint is
+   the only content in the app that `:hover` was the sole route to, and it is
+   exactly the hint a first-time touch user needs. */
+#top-toolbar .toolbar-gesture-btn:focus-visible::after {
+  opacity: 0.9;
+}
+@media (hover: none) {
+  #top-toolbar .toolbar-gesture-btn::after { opacity: 0.8; }
+}
+
+/* (2) Tap targets for coarse pointers. */
+@media (pointer: coarse) {
+  button,
+  [role='button'],
+  summary,
+  select,
+  input[type='checkbox'],
+  input[type='radio'],
+  .sq-btn,
+  .tab-btn,
+  .sub-tab-btn,
+  .cat-tab,
+  .accordion-header,
+  .sub-accordion-header,
+  .species-card,
+  .species-remove,
+  .species-dot,
+  .preset-btn,
+  .preset-select,
+  #add-species-btn,
+  #remove-species-btn,
+  #drawer-show-btn,
+  .drawer-hide-btn,
+  .drawer-minimize-btn,
+  .drawer-zoom-btn,
+  .intel-btn,
+  .chaos-cat-row,
+  .chaos-btn-action,
+  .mpx-btn,
+  .mpx-tab,
+  .mpx-mode,
+  .mpx-check,
+  .mpx-fit-shard,
+  .mpx-metric-chip,
+  .mpx-metrics-toggle,
+  .mpx-tip-guide,
+  .mpx-tip-close,
+  .mpx-fullscreen-btn,
+  .view-mode-toggle,
+  .law-set-btn,
+  .law-set-editor button,
+  .law-info-module .info-toggle,
+  .law-info-module .info-close,
+  .help-drone-close,
+  .help-drone-enable,
+  .tab-help-nav-btn,
+  .dna-overview-stat,
+  .dna-chart-close,
+  .dna-history-module button,
+  .vepa-debug-header,
+  .vepa-debug-btn {
+    min-height: 44px;
+  }
+  /* Square-ish targets need the width too, or the tap lands beside them. */
+  .sq-btn,
+  .species-dot,
+  .species-remove,
+  .help-drone-close,
+  .mpx-fit-shard {
+    min-width: 44px;
+  }
+  /* Sliders: keep the 4px track (it is a visual, not a target) but make the
+     thumb finger-sized and the row tall enough to hit without precision. */
+  .sc-input::-webkit-slider-thumb,
+  .dna-input::-webkit-slider-thumb,
+  .dna-slider-group input[type='range']::-webkit-slider-thumb,
+  .world-slider-row input[type='range']::-webkit-slider-thumb,
+  .accordion-slider-row input[type='range']::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  .sc-input::-moz-range-thumb,
+  .dna-input::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  .sc-row,
+  .world-slider-row,
+  .accordion-slider-row {
+    min-height: 44px;
+  }
+  .sc-bound,
+  .sc-mode,
+  .sc-zoom,
+  .sc-edit {
+    min-height: 44px;
+    line-height: 42px;
+  }
+  /* Dense 128-tile grid: AA floor, not the HIG target — see note (2). */
+  #law-grid .law-btn,
+  #law-grid .sq-toggle {
+    min-height: 24px;
+  }
+  /* The readable law mode is the one you tap deliberately, so it gets 44px. */
+  #law-grid.word-mode .law-btn,
+  #law-grid.word-mode .sq-toggle {
+    min-height: 44px;
+  }
+  /* Hover state still fires on touch for the duration of the tap; make it
+     strong enough to read as feedback. */
+  .tab-btn:active,
+  .sub-tab-btn:active,
+  .sq-btn:active,
+  .law-btn:active {
+    filter: brightness(1.35);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * KEYBOARD SUPPORT
+ *
+ * Third in the order (touch, mouse, keyboard) because it is the cheapest to
+ * get right and the easiest to lose: seven rules in this file removed the user
+ * agent's focus ring with a bare `outline: none`, five of them on range
+ * inputs. A keyboard user arrowing through 23 world parameters and 64 DNA
+ * traits therefore had no way to tell which control held focus at all.
+ *
+ * One global ring covers every focusable surface, including anything added
+ * later, and the five range inputs keep `outline: none` on the track — a 2px
+ * ring around a 2px track is invisible — so they carry the ring on the thumb
+ * instead, which is the part you are actually aiming at.
+ */
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+input[type='range']:focus-visible {
+  outline: none;
+}
+input[type='range']:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(74, 232, 255, 0.55);
+}
+input[type='range']:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(74, 232, 255, 0.55);
+}
+/* Selected/active state must not be carried by colour alone. */
+.tab-btn.active,
+.sub-tab-btn.active,
+.sq-btn.active {
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+/* Roving tabindex needs the ring suppressed on the tab strip itself while
+   keeping it on the individual buttons. */
+.tabs:focus,
+.sub-tabs:focus {
+  outline: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * MINIMUM TYPE SIZE
+ *
+ * Eighty-six rules in this codebase still resolve to 7–9px, and the damage is
+ * not uniform: most of it is real content — help prose, log entries, panel
+ * labels, multiplex settings — that a reader is expected to decipher. A 7px
+ * font is not "compact UI", it is unreadable on a phone and at arm's length on
+ * a desktop, and several of these sit inside controls the touch contract now
+ * makes 44px tall, so the target is finger-sized and the label is not.
+ *
+ * Rather than edit 86 scattered rules — which would be undone by the next
+ * responsive block that happens to mention one of them — the floor is stated
+ * once, here, in the same place as the touch contract, and enforced by
+ * tests/unit/typeScale.test.js. Editing a font size now means editing this
+ * block, which is the point: the minimum is a decision, not an accident.
+ *
+ * Three tiers, because one number cannot be right for all of them:
+ *
+ *   11–12px  CONTENT. Prose and values you are meant to read.
+ *   10–11px  CHROME. Section headings, badges, footers, hints.
+ *    9px     DENSE GRID. The 128-tile law grid in icon mode, where a category
+ *            header competes with 128 neighbours for the same pixels. 9px is
+ *            the floor; the readable word mode carries 11–13px instead.
+ *
+ * Documented exceptions, in EXCEPTIONS below.
+ */
+
+/* (a) CONTENT — help prose, narrative logs, panel values and labels. */
+
+
+
+
+
+.mpx-help-item-title,
+.mpx-help-item-expl,
+.mpx-help-item-hint,
+.mpx-help-sub,
+.mpx-help-section-label,
+.mpx-tip-expl,
+.mpx-tip-hint,
+.chaos-modal-label,
+.chaos-modal-sub,
+.chaos-variation-row,
+.log-entry,
+.intel-label,
+.dna-section-title,
+.dna-stat-row,
+
+
+
+.analytics-card h4,
+.bar-label,
+.bar-value,
+.het-value,
+.fingerprint-label,
+.diversity-metrics,
+.law-set-row-name,
+.law-set-selector,
+.law-set-editor input,
+.law-info-module .info-toggle .toggle-label,
+.species-count,
+.species-name,
+.cat-tab,
+.accordion-header,
+.sub-accordion-header,
+.world-slider-row label,
+.world-slider-row .slider-value,
+.accordion-slider-row label,
+.accordion-slider-row .slider-val,
+.mpx-set-row,
+.mpx-set-row select,
+.mpx-set-value,
+.mpx-settings-title,
+.mpx-metrics-stats,
+.mpx-fit-title,
+.mpx-fit-pct,
+.mpx-num input {
+  font-size: 11px;
+}
+/* Prose wants a little more than a label, and a line height to match. */
+.help-drone-grid span,
+.help-drone-mapping span,
+.help-drone-section span,
+.mpx-help-item-expl,
+.mpx-tip-expl,
+.log-entry {
+  line-height: 1.5;
+}
+.mpx-tip-expl,
+.mpx-help-item-expl,
+.help-drone-grid span,
+.help-drone-mapping span {
+  font-size: 12px;
+}
+
+/* (b) CHROME — headings, badges, footers, control labels. */
+.chart-title,
+.law-section-header,
+.view-mode-toggle,
+.law-set-btn,
+.law-set-check,
+.chaos-btn-action,
+.mpx-action,
+.mpx-stat,
+.mpx-tab,
+.mpx-mode,
+.mpx-fit-row,
+.mpx-fit-shard,
+.mpx-metric-chip,
+.mpx-metrics-toggle,
+#multiplex-drawer .mpx-chevron,
+.mpx-tip-guide,
+.mpx-tip-close,
+#add-species-btn,
+#remove-species-btn,
+.species-remove,
+.sq-toggle-word,
+
+.accordion-header .arrow,
+.sub-accordion-header .arrow {
+  font-size: 10px;
+}
+
+/* (c) DENSE GRID — the 128-tile law grid, and only in its icon mode. */
+#law-grid .law-btn,
+#law-grid.law-icon-grid.compact .law-cat-label,
+.law-cat-row .sq-toggle .tog-name,
+.law-state-indicator,
+.law-set-mini-icon {
+  font-size: 9px;
+}
+/* Word mode is the mode you tap deliberately, so it is not treated as dense:
+   it gets the readable floor even though it is the same 128 laws. */
+#law-grid.word-mode .law-btn,
+#law-grid.word-mode .law-cat-row .law-btn {
+  font-size: 11px;
+}
+
+/* (d) EXCEPTIONS, with the reason each one stays small.
+   A floor is only a rule if the things that break it say why. */
+.hud-population-orb::after,
+.dna-history-values span {
+  /* The population count is painted inside a 14px orb, and the history values
+     are the tick labels of a 34px-tall sparkline. There is no room to grow
+     either without replacing the graphic with a chart — which is what the DATA
+     tab already offers for both. */
+  font-size: 7px;
+}
+.shard-cell::after {
+  /* A shard label sits over the shard it names; it is a locator, not content,
+     and the shard it points at is the thing being read. */
+  font-size: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * LAUNCH MODAL
+ *
+ * The first thing anyone sees, and the only modal that runs before the world
+ * exists — so it carries the same touch contract as the drawer: 44px targets
+ * under a coarse pointer, no hover-only affordances, and a focus ring that
+ * survives keyboard navigation. The settings are generated from
+ * LAUNCH_FIELDS, so the type sizes here have to work for a choice row and a
+ * range row without either one being an exception.
+ */
+.launch-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(3, 5, 12, 0.86);
+  backdrop-filter: blur(6px);
+}
+.launch-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 100%);
+  max-height: 92vh;
+  overflow: auto;
+  color: var(--text-primary);
+  background: linear-gradient(150deg, rgba(17, 24, 40, 0.99), rgba(8, 10, 20, 0.99));
+  border: 1px solid rgba(74, 232, 255, 0.45);
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(74, 232, 255, 0.16), 0 24px 80px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono);
+}
+.launch-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(74, 232, 255, 0.2);
+}
+.launch-kicker {
+  color: var(--accent-green);
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+.launch-header h1 {
+  margin: 2px 0 0;
+  color: var(--accent-cyan);
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+.launch-close {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.launch-close:hover,
+.launch-close:focus-visible {
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+.launch-body {
+  flex: 1;
+  padding: 14px 18px 6px;
+}
+.launch-section-title {
+  margin: 14px 0 8px;
+  color: var(--accent-gold);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+}
+.launch-section-title:first-child { margin-top: 0; }
+
+.launch-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+}
+.launch-preset {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  min-height: 44px;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.launch-preset:hover,
+.launch-preset:focus-visible {
+  background: rgba(74, 232, 255, 0.1);
+  border-color: var(--accent-cyan);
+}
+.launch-preset.current {
+  background: rgba(74, 232, 255, 0.16);
+  border-color: var(--accent-gold);
+  color: var(--text-primary);
+}
+.launch-preset-name {
+  color: var(--accent-cyan);
+  font-size: 14px;
+  letter-spacing: 1.6px;
+}
+.launch-preset.current .launch-preset-name { color: var(--accent-gold); }
+.launch-preset-meta {
+  color: var(--text-dim);
+  font-size: 10px;
+  letter-spacing: 0.6px;
+}
+.launch-preset-blurb {
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.launch-field {
+  margin-bottom: 12px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.launch-field-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 7px;
+}
+.launch-field-label {
+  color: var(--accent-gold);
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+.launch-field-value {
+  color: var(--accent-cyan);
+  font-size: 12px;
+}
+.launch-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.launch-choice {
+  flex: 1 1 180px;
+  min-height: 44px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.launch-choice:hover,
+.launch-choice:focus-visible {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+.launch-choice.current {
+  background: rgba(74, 232, 255, 0.18);
+  border-color: var(--accent-cyan);
+  color: var(--text-primary);
+}
+.launch-range {
+  width: 100%;
+  min-height: 32px;
+  accent-color: var(--accent-cyan);
+  cursor: pointer;
+  touch-action: none;
+}
+.launch-help {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.launch-note {
+  margin: 8px 0 0;
+  color: var(--text-dim);
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+}
+.launch-note-remember { margin-top: 16px; }
+
+.launch-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 12px 18px 16px;
+  border-top: 1px solid rgba(74, 232, 255, 0.2);
+}
+.launch-secondary,
+.launch-primary {
+  min-height: 44px;
+  padding: 9px 16px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.launch-secondary {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+}
+.launch-secondary:hover,
+.launch-secondary:focus-visible {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
+.launch-primary {
+  border: 1px solid var(--accent-cyan);
+  background: rgba(74, 232, 255, 0.16);
+  color: var(--accent-cyan);
+  flex: 1 1 auto;
+}
+.launch-primary:hover,
+.launch-primary:focus-visible {
+  background: rgba(74, 232, 255, 0.28);
+}
+
+@media (pointer: coarse) {
+  .launch-close { min-width: 44px; min-height: 44px; }
+  .launch-preset { min-height: 64px; }
+  .launch-preset-blurb { font-size: 12px; }
+  .launch-field-label { font-size: 12px; }
+  .launch-help { font-size: 12px; }
+  .launch-choice { font-size: 12px; }
+  .launch-range { min-height: 44px; }
+}
+@media (max-width: 480px) {
+  .launch-overlay { padding: 8px; }
+  .launch-header h1 { font-size: 17px; letter-spacing: 2px; }
+  .launch-footer { flex-direction: column-reverse; }
+}

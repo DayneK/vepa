@@ -6,16 +6,24 @@
  * itself when to hide, which produced three different rules and a tooltip you
  * could not get rid of without knowing which system owned it.
  *
- * One rule now: a press anywhere dismisses every open tooltip. A tooltip may
- * declare itself press-insensitive, in which case that press is ignored and
- * only an explicit close dismisses it — used by the parameter popup, which is
- * large enough to read and must survive the pointerup that ends its long press.
+ * One rule: a press anywhere dismisses every open tooltip, with exactly one
+ * exemption — a press on the tooltip's own anchor, which refreshes it instead
+ * of making it vanish under the finger that just asked for it.
+ *
+ * There used to be a second exemption, `pressInsensitive`, for the parameter
+ * popup. It existed so the popup would survive the pointerup that ends its own
+ * long press, which it did — and then also survived every tap after that, so a
+ * wall of text sat on top of the drawer with no way to clear it short of
+ * Escape. The press that opens a tooltip is consumed by the long-press timer
+ * and never reaches this bus at all, so the exemption was never needed. It is
+ * gone, and the bus is now small enough that "can this tooltip be dismissed?"
+ * has one answer.
  *
  * Installed lazily on the first registration so importing this module has no
  * side effect in tests or in a headless import.
  */
 
-/** @type {Set<{name: string, dismiss: Function, pressInsensitive: boolean}>} */
+/** @type {Set<{name: string, dismiss: Function, anchor: HTMLElement|null}>} */
 const registry = new Set();
 let installedOn = null;
 
@@ -28,7 +36,6 @@ function isInside(entry, node) {
 function onPressDown(event) {
   // Snapshot first: a dismiss() may unregister itself mid-iteration.
   for (const entry of [...registry]) {
-    if (entry.pressInsensitive) continue;
     // A press on a tooltip's own anchor must not make it vanish under the
     // finger that is about to re-open it.
     if (isInside(entry, event.target)) continue;
@@ -57,8 +64,6 @@ function install() {
  * @param {Function} entry.dismiss      hide callback
  * @param {HTMLElement} [entry.anchor]  element the tooltip is anchored to; a
  *                                      press inside it will not dismiss it
- * @param {boolean} [entry.pressInsensitive] survive every press; the caller
- *                                      must then provide its own close affordance
  * @returns {Function} unregister
  */
 export function registerTooltip(entry) {
@@ -70,7 +75,6 @@ export function registerTooltip(entry) {
     name: entry.name || 'tooltip',
     dismiss: entry.dismiss,
     anchor: entry.anchor || null,
-    pressInsensitive: entry.pressInsensitive === true,
   };
   registry.add(record);
   return () => registry.delete(record);

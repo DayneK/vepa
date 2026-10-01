@@ -15,6 +15,7 @@
  */
 
 import { attachParamHelp } from './paramHelp.js';
+import { escapeHtml } from './html.js';
 
 export const ZOOM_FACTORS = [1, 4, 16];
 export const LONG_PRESS_MS = 500;
@@ -172,7 +173,7 @@ export function createSliderRow(opts = {}) {
   if (key) el.dataset.key = key;
   el.innerHTML = `
     <div class="sc-controls">
-      <label class="sc-label" title="${escAttr(title)}">${escHtml(label)}</label>
+      <label class="sc-label" title="${escAttr(title)}">${escapeHtml(label)}</label>
       <button type="button" class="sc-bound sc-min" title="Long-press to edit minimum">${formatShort(state.baseMin)}</button>
       <input type="range" class="sc-input" min="0" max="${SLIDER_STEPS}" step="1" value="0" />
       <button type="button" class="sc-bound sc-max" title="Long-press to edit maximum">${formatShort(state.baseMax)}</button>
@@ -416,11 +417,6 @@ export function createSliderRow(opts = {}) {
   };
 }
 
-function escHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  })[c]);
-}
 
 function escAttr(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({

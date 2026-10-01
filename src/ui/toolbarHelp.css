@@ -336,3 +336,175 @@
 .tab-help-overlay .help-drone-panel {
   max-width: 560px;
 }
+
+/* ── Tab-help switcher: arrows, icon squares, expanded current tab ────────
+ * The modal used to be a dead end: you could only leave it by closing it and
+ * hunting for another tab button. The switcher makes the three top-level tabs
+ * reachable from inside the modal, and expands the one you are reading so the
+ * expanded entry doubles as the "which tab is this?" answer. */
+.tab-switch {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  margin: 0 0 10px;
+}
+.tab-switch-squares {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.tab-switch-arrow {
+  flex: 0 0 auto;
+  width: 34px;
+  min-height: 34px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.tab-switch-arrow:hover,
+.tab-switch-arrow:focus-visible {
+  background: rgba(74, 232, 255, 0.12);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+.tab-switch-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 34px;
+  min-height: 34px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.tab-switch-btn:hover,
+.tab-switch-btn:focus-visible {
+  background: rgba(74, 232, 255, 0.12);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+.tab-switch-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+/* The label is always in the DOM (so it is announced and reachable by find-in-
+   page) and only laid out for the expanded entry. */
+.tab-switch-label {
+  display: none;
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tab-switch-btn.current {
+  flex: 1 1 auto;
+  justify-content: flex-start;
+  padding: 4px 12px;
+  background: rgba(74, 232, 255, 0.14);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  cursor: default;
+}
+.tab-switch-btn.current .tab-switch-label { display: block; }
+.tab-switch-btn.current .tab-switch-icon { font-size: 20px; }
+/* Arriving here from a sub-tab (DATA > CIVILIZATION) is worth marking, so the
+ * expanded entry does not pretend the sub-tab view is gone. */
+.tab-switch-btn.own {
+  border-style: dashed;
+}
+.tab-switch-btn.own::after {
+  content: '·';
+  color: var(--accent-gold);
+  font-size: 16px;
+  line-height: 1;
+}
+.tab-switch,
+.tab-switch-arrow,
+.tab-switch-btn {
+  touch-action: manipulation;
+}
+@media (pointer: coarse) {
+  .tab-switch-arrow,
+  .tab-switch-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .tab-switch-icon { font-size: 22px; }
+  .tab-switch-label { font-size: 13px; }
+}
+@media (max-width: 420px) {
+  /* Below this the expanded title stops fitting beside two icons and an arrow,
+     so the entry wraps rather than truncating to a single character. */
+  .tab-switch { flex-wrap: wrap; }
+  .tab-switch-btn.current { flex-basis: 100%; order: 3; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * MINIMUM TYPE SIZE — the half that lives here
+ *
+ * The floor is stated once in style.css and mirrored here for the thirteen
+ * selectors this file owns. It has to be mirrored rather than declared once:
+ * style.css is a <link> in <head>, while this file is injected by the module
+ * graph, so it loads *after* style.css and wins every specificity tie. A floor
+ * rule in style.css for any of these would be silently overridden.
+ *
+ * Sizes and the reasoning behind the tiers: style.css, "MINIMUM TYPE SIZE".
+ * Both halves are enforced together by tests/unit/typeScale.test.js.
+ */
+
+/* CONTENT — 11px floor. */
+.help-drone-grid b,
+.help-drone-grid span,
+.help-drone-mapping strong,
+.help-drone-mapping span,
+.help-drone-section strong,
+.dna-history-module p,
+.dna-overview-stat span,
+.dna-history-module header,
+.tab-help-kind,
+.help-drone-footer,
+.dna-overview-hint,
+.dna-chart-close,
+#top-toolbar .toolbar-gesture-btn::after {
+  font-size: 11px;
+}
+
+/* Prose wants a step above a label, and room to breathe. */
+.help-drone-grid span,
+.help-drone-mapping span,
+.help-drone-section span,
+.dna-history-module p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* CHROME — 10px floor. */
+#top-toolbar .toolbar-gesture-btn::after,
+.tab-help-kind,
+.help-drone-footer,
+.dna-overview-hint,
+.dna-chart-close {
+  font-size: 10px;
+}
+
+/* EXCEPTION: the history values are the tick labels of a 34px sparkline, so they cannot grow
+ * without the graphic being replaced by a chart — which the DATA tab already offers. */
+.dna-history-values span {
+  font-size: 7px;
+}

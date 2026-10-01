@@ -14,35 +14,41 @@ function ensureStyles() {
   styleEl.id = WS_STYLES_ID;
   styleEl.textContent = `
     .ws-header { font-family: var(--font-mono); letter-spacing: 2px; color: var(--accent-red); font-size: 10px; padding: 8px 2px 4px; }
-    .ws-sub { font-size: 9px; color: var(--text-secondary); letter-spacing: 1px; padding: 0 2px 6px; }
+    .ws-sub { font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; padding: 0 2px 6px; }
     .ws-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; flex-wrap: wrap; }
-    .ws-row input[type="text"] { flex: 1; min-width: 90px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 3px; color: var(--text-primary); font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; padding: 5px 6px; }
-    .ws-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 9px; letter-spacing: 1px; cursor: pointer; padding: 5px 8px; }
+    .ws-row input[type="text"] { flex: 1; min-width: 90px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 3px; color: var(--text-primary); font-family: var(--font-mono); font-size: 11px; touch-action: manipulation; letter-spacing: 1px; padding: 5px 6px; }
+    .ws-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 11px; touch-action: manipulation; letter-spacing: 1px; cursor: pointer; padding: 5px 8px; }
     .ws-btn:hover:not(:disabled) { border-color: var(--accent-red); color: var(--accent-red); }
     .ws-btn:disabled { opacity: 0.35; cursor: default; }
     .ws-btn.primary { color: var(--accent-red); border-color: rgba(255,74,74,0.4); }
-    .ws-check { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 9px; letter-spacing: 1px; color: var(--text-secondary); cursor: pointer; }
-    .ws-status { font-family: var(--font-mono); font-size: 9px; letter-spacing: 1px; color: var(--text-secondary); min-height: 12px; }
+    .ws-check { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 11px; touch-action: manipulation; letter-spacing: 1px; color: var(--text-secondary); cursor: pointer; }
+    .ws-status { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; color: var(--text-secondary); min-height: 12px; }
     .ws-list { display: flex; flex-direction: column; gap: 3px; max-height: 240px; overflow-y: auto; border: 1px solid var(--border); border-radius: 4px; padding: 4px; margin: 6px 0; }
-    .ws-item { display: flex; align-items: center; gap: 6px; font-size: 9px; letter-spacing: 1px; color: var(--text-secondary); padding: 4px 6px; border-radius: 3px; }
+    .ws-item { display: flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 1px; color: var(--text-secondary); padding: 4px 6px; border-radius: 3px; }
     .ws-item:hover { background: rgba(255,255,255,0.03); }
     .ws-item .ws-name { flex: 0 0 34%; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .ws-item .ws-meta { flex: 1; font-size: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ws-item .ws-meta { flex: 1; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .ws-item .ws-actions { display: flex; gap: 3px; }
-    .ws-item .ws-actions button { background: none; border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); font-size: 9px; cursor: pointer; padding: 2px 4px; }
+    .ws-item .ws-actions button { background: none; border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); font-size: 11px; cursor: pointer; padding: 2px 4px; touch-action: manipulation; }
     .ws-item .ws-actions button:hover { border-color: var(--accent-red); color: var(--accent-red); }
-    .ws-empty { font-size: 9px; color: var(--text-secondary); letter-spacing: 1px; padding: 8px 4px; }
+    .ws-empty { font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; padding: 8px 4px; }
     .ws-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; align-items: flex-start; justify-content: center; padding: 6vh 4vw; z-index: 1000; }
     .ws-overlay.hidden { display: none; }
     .ws-overlay-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; max-width: 92vw; max-height: 88vh; overflow: auto; padding: 12px; }
     .ws-overlay-head { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-mono); letter-spacing: 2px; color: var(--accent-red); font-size: 10px; padding-bottom: 8px; }
-    .ws-overlay-close { background: none; border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); cursor: pointer; font-size: 10px; padding: 2px 8px; }
+    .ws-overlay-close { background: none; border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); cursor: pointer; font-size: 11px; padding: 2px 8px; touch-action: manipulation; }
     .ws-overlay-close:hover { border-color: var(--accent-red); color: var(--accent-red); }
-    .ws-compare { border-collapse: collapse; width: 100%; font-size: 9px; }
+    .ws-compare { border-collapse: collapse; width: 100%; font-size: 11px; }
     .ws-compare th, .ws-compare td { padding: 4px 8px; text-align: right; white-space: nowrap; font-family: var(--font-mono); letter-spacing: 1px; }
     .ws-compare thead th { color: var(--text-secondary); border-bottom: 1px solid var(--border); }
     .ws-compare tbody td:first-child { text-align: left; color: var(--text-secondary); }
     .ws-compare .best { color: var(--accent-red); font-weight: bold; background: rgba(255,74,74,0.10); }
+    /* Tap contract: the same 44px floor the drawer uses under a coarse
+       pointer, applied to the controls this tab owns. */
+    @media (pointer: coarse) {
+      .ws-btn, .ws-check, .ws-item .ws-actions button, .ws-overlay-close { min-height: 44px; }
+      .ws-row input[type="text"] { min-height: 44px; }
+    }
   `;
   document.head.appendChild(styleEl);
 }

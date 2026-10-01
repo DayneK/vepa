@@ -8,8 +8,11 @@
  * Lookup precedence: EXACT_KEY_HELP[key] → DNA_HELP[key] → generic fallback
  * assembled from the slider's own metadata (range, step, default).
  *
- * The popup is a reading surface: it stays open once shown, and is dismissed
- * by pressing anywhere else or pressing Escape (see tooltipDismiss.js).
+ * The popup is a reading surface: it stays open across the press that summoned
+ * it, and is dismissed by the *next* tap anywhere or by Escape (see
+ * tooltipDismiss.js). Tapping the parameter it is anchored to refreshes it
+ * rather than closing it, so a second long press on the same name does not
+ * require closing in between.
  */
 
 import { registerTooltip } from './tooltipDismiss.js';
@@ -391,17 +394,17 @@ function showPopup(anchorEl, html) {
   popup.innerHTML = html;
   popup.classList.remove('hidden');
   currentAnchor = anchorEl;
-  // Registered press-insensitive: the popup is a reading surface, not a
-  // momentary hint, so the press that opened it (and the pointerup that ends
-  // it) must not take it away. A press elsewhere still clears it via the bus.
-  if (typeof registerTooltip === 'function' && !unregister) {
-    unregister = registerTooltip({
-      name: 'param-help',
-      anchor: anchorEl,
-      dismiss: () => hideParamPopup(),
-      pressInsensitive: true,
-    });
-  }
+  // Re-registered on every open rather than once. The bus keys its self-exemption
+  // on the anchor, so a record left over from a long press on a *different*
+  // parameter would let a tap on that other label pass through and leave this
+  // popup stranded. Re-registering costs one Set entry and removes the class of
+  // bug entirely; `install()` is idempotent, so no duplicate listeners appear.
+  if (unregister) unregister();
+  unregister = registerTooltip({
+    name: 'param-help',
+    anchor: anchorEl,
+    dismiss: () => hideParamPopup(),
+  });
   const rect = anchorEl.getBoundingClientRect();
   popup.style.visibility = 'hidden';
   popup.style.display = 'block';
@@ -432,10 +435,11 @@ export function isParamPopupVisible() {
 /**
  * Install the Escape-to-close listener once.
  *
- * The popup is press-insensitive (it must survive the pointerup that ends its
- * own long press), so it needs a keyboard escape hatch or it would have no
- * dismissal at all. Called from the UI bootstrap rather than at import time so
- * a headless import stays side-effect free.
+ * The bus closes the popup on any press, but the press that *opens* it is
+ * consumed by the 500ms long-press timer and so never reaches the bus; Escape
+ * remains the cheapest confirmation that the popup is dismissible at all.
+ * Called from the UI bootstrap rather than at import time so a headless import
+ * stays side-effect free.
  */
 export function initParamHelpDismiss() {
   if (typeof document === 'undefined' || paramHelpDismissReady) return false;
@@ -482,9 +486,10 @@ export function attachParamHelp(labelEl, lookup) {
     clearTimeout(pressTimer);
     // The popup deliberately does NOT hide here. It used to hide 120ms after
     // release, which meant a long press flashed a wall of text and then took
-    // it away before it could be read. It now stays until a press elsewhere
-    // (see tooltipDismiss.js) or Escape. Press-insensitivity is what makes the
-    // pointerup that ends the long press safe to ignore.
+    // it away before it could be read. It now stays until the next tap
+    // anywhere (see tooltipDismiss.js) or Escape. The pointerup that ends the
+    // long press is not a tap — the popup is not even open when it fires — so
+    // it is safe to ignore.
   };
 
   // Long-press with mouse / touch / pen

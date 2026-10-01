@@ -104,25 +104,29 @@ export function createMultiplexController(bus, getSource, applyShard) {
       const styleEl = document.createElement('style');
       styleEl.id = 'mpx-compare-styles';
       styleEl.textContent = `
-        .mpx-compare { max-height: 170px; overflow: auto; border: 1px solid var(--border); border-radius: 4px; font-size: 8px; margin-top: 6px; }
+        .mpx-compare { max-height: 170px; overflow: auto; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; margin-top: 6px; }
         .mpx-compare-table { border-collapse: collapse; width: 100%; }
         .mpx-compare-table th, .mpx-compare-table td { padding: 2px 5px; text-align: right; white-space: nowrap; }
-        .mpx-compare-table thead th { font-family: var(--font-mono); letter-spacing: 1px; color: var(--text-secondary); cursor: pointer; user-select: none; position: sticky; top: 0; background: var(--bg-panel); }
+        .mpx-compare-table thead th { font-family: var(--font-mono); letter-spacing: 1px; color: var(--text-secondary); cursor: pointer; user-select: none; position: sticky; top: 0; background: var(--bg-panel); touch-action: manipulation; }
         .mpx-compare-table thead th:hover, .mpx-compare-table thead th.selected { color: var(--accent-red); }
         .mpx-compare-table tbody td:first-child { text-align: left; color: var(--text-secondary); letter-spacing: 1px; }
         .mpx-compare-val { color: var(--text-primary); }
         .mpx-compare-val.best { color: var(--accent-red); font-weight: bold; background: rgba(255,74,74,0.10); }
         .mpx-history { display: flex; flex-direction: column; gap: 2px; max-height: 150px; overflow-y: auto; border: 1px solid var(--border); border-radius: 4px; padding: 4px; margin-top: 6px; }
-        .mpx-hist-row { display: flex; align-items: center; gap: 6px; font-size: 8px; letter-spacing: 1px; color: var(--text-secondary); padding: 2px 4px; border-radius: 3px; }
+        .mpx-hist-row { display: flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 1px; color: var(--text-secondary); padding: 2px 4px; border-radius: 3px; }
         .mpx-hist-row.current { background: rgba(255,74,74,0.14); color: var(--accent-red); }
         .mpx-hist-gen { flex: 0 0 28px; color: var(--text-primary); }
         .mpx-hist-best { flex: 1; }
-        .mpx-hist-revert { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 8px; letter-spacing: 1px; cursor: pointer; padding: 2px 6px; }
+        .mpx-hist-revert { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; cursor: pointer; padding: 2px 6px; touch-action: manipulation; }
         .mpx-hist-revert:hover:not(:disabled) { border-color: var(--accent-red); color: var(--accent-red); }
         .mpx-hist-revert:disabled { opacity: 0.4; cursor: default; }
-        .mpx-ch-toggle { background: none; border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 8px; letter-spacing: 1px; cursor: pointer; padding: 2px 6px; margin-top: 6px; }
+        .mpx-ch-toggle { background: none; border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; cursor: pointer; padding: 2px 6px; margin-top: 6px; touch-action: manipulation; }
         .mpx-ch-toggle:hover { border-color: var(--accent-red); color: var(--accent-red); }
         .mpx-ch-body.collapsed { display: none; }
+        /* Tap contract, matching the drawer: 44px floor for coarse pointers. */
+        @media (pointer: coarse) {
+          .mpx-hist-revert, .mpx-ch-toggle, .mpx-compare-table thead th { min-height: 44px; }
+        }
       `;
       document.head.appendChild(styleEl);
     }

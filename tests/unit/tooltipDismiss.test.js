@@ -10,6 +10,7 @@
  * can be imported headlessly; a minimal fake is installed here to exercise the
  * press-routing logic directly.
  */
+import { readFileSync } from 'node:fs';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 import {
@@ -109,13 +110,22 @@ describe('a press elsewhere dismisses', () => {
     expect(calls).toBe(1);
   });
 
-  it('dismisses on contextmenu even a press-insensitive tooltip', () => {
-    // The escape hatch is a tap elsewhere, not a permanent exemption: a
-    // long-press popup must not be able to trap the user.
+  it('dismisses a long-press popup on contextmenu, so it cannot trap the user', () => {
+    // There is no exemption left to abuse: a right-click anywhere clears the
+    // parameter popup that a long press opened.
     let calls = 0;
-    registerTooltip({ name: 'param', dismiss: () => { calls += 1; }, pressInsensitive: true });
+    registerTooltip({ name: 'param', dismiss: () => { calls += 1; } });
     for (const fn of handlers.contextmenu) fn({});
     expect(calls).toBe(1);
+  });
+
+  it('has no pressInsensitive escape hatch left to opt into', () => {
+    // The option was removed: the press that OPENS a tooltip is consumed by the
+    // long-press timer and never reaches the bus, so nothing needed to survive
+    // it — and the exemption's only lasting effect was a popup that no tap
+    // could close. Comments may still name it; code may not.
+    const SRC = readFileSync(new URL('../../src/ui/tooltipDismiss.js', import.meta.url), 'utf8');
+    expect(SRC.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '')).not.toMatch(/pressInsensitive/);
   });
 
   it('survives a dismiss() that unregisters itself mid-iteration', () => {
@@ -126,36 +136,6 @@ describe('a press elsewhere dismisses', () => {
     registerTooltip({ name: 'after', dismiss: () => hits.push('after') });
     press(fakeElement('canvas'));
     expect(hits.sort()).toEqual(['after', 'self']);
-  });
-});
-
-describe('press-insensitive tooltips', () => {
-  it('ignores a press anywhere', () => {
-    let calls = 0;
-    registerTooltip({ name: 'param', dismiss: () => { calls += 1; }, pressInsensitive: true });
-    press(fakeElement('canvas'));
-    expect(calls).toBe(0);
-  });
-
-  it('is required so the param popup survives the pointerup that ends its long press', () => {
-    // Without this the long-press that OPENS the popup emits a pointerdown
-    // that immediately closes it again, so the popup could never be read.
-    let calls = 0;
-    registerTooltip({ name: 'param', dismiss: () => { calls += 1; }, pressInsensitive: true });
-    press(fakeElement('input'));
-    press(fakeElement('label'));
-    expect(calls).toBe(0);
-  });
-
-  it('is opt-in: an unflagged tooltip with the same anchor is still dismissed', () => {
-    const anchor = fakeElement();
-    let strict = 0;
-    let loose = 0;
-    registerTooltip({ name: 'strict', anchor, dismiss: () => { strict += 1; }, pressInsensitive: true });
-    registerTooltip({ name: 'loose', anchor, dismiss: () => { loose += 1; } });
-    press(fakeElement('span'));
-    expect(strict).toBe(0);
-    expect(loose).toBe(1);
   });
 });
 
@@ -199,16 +179,16 @@ describe('anchor awareness', () => {
 describe('dismissTooltips', () => {
   it('dismisses all registered tooltips programmatically', () => {
     const hits = [];
-    registerTooltip({ name: 'a', dismiss: () => hits.push('a'), pressInsensitive: true });
-    registerTooltip({ name: 'b', dismiss: () => hits.push('b'), pressInsensitive: true });
+    registerTooltip({ name: 'a', dismiss: () => hits.push('a') });
+    registerTooltip({ name: 'b', dismiss: () => hits.push('b') });
     dismissTooltips();
     expect(hits.sort()).toEqual(['a', 'b']);
   });
 
   it('spares one by name', () => {
     const hits = [];
-    registerTooltip({ name: 'a', dismiss: () => hits.push('a'), pressInsensitive: true });
-    registerTooltip({ name: 'b', dismiss: () => hits.push('b'), pressInsensitive: true });
+    registerTooltip({ name: 'a', dismiss: () => hits.push('a') });
+    registerTooltip({ name: 'b', dismiss: () => hits.push('b') });
     dismissTooltips('a');
     expect(hits).toEqual(['b']);
   });

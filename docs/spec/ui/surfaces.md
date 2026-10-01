@@ -13,8 +13,10 @@
 | ui | [src/ui/groupAnalytics.js](src/ui/groupAnalytics.js) | programmatic |
 | ui | [src/ui/helpOverlay.js](src/ui/helpOverlay.js) | programmatic |
 | ui | [src/ui/helpRegistry.js](src/ui/helpRegistry.js) | programmatic |
+| ui | [src/ui/html.js](src/ui/html.js) | programmatic |
 | ui | [src/ui/hud.js](src/ui/hud.js) | programmatic |
 | ui | [src/ui/intelPanel.js](src/ui/intelPanel.js) | programmatic |
+| ui | [src/ui/launchModal.js](src/ui/launchModal.js) | programmatic |
 | ui | [src/ui/lawPanel.js](src/ui/lawPanel.js) | programmatic |
 | ui | [src/ui/mechanicsIcons.js](src/ui/mechanicsIcons.js) | programmatic |
 | ui | [src/ui/narrativePanel.js](src/ui/narrativePanel.js) | programmatic |

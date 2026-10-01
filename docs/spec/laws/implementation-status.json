@@ -945,7 +945,9 @@
         "tests/unit/physics.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/systemFoundation.test.js",
-        "tests/unit/systemVariants.test.js"
+        "tests/unit/systemVariants.test.js",
+        "tests/unit/tabHelpSwitcher.test.js",
+        "tests/unit/typeScale.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -2182,6 +2184,7 @@
       "testFiles": [
         "tests/audit/batch_14.test.js",
         "tests/unit/fields.test.js",
+        "tests/unit/launchModal.test.js",
         "tests/unit/lawCategories.test.js"
       ],
       "relationshipTypes": [],

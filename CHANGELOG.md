@@ -1,5 +1,122 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.30] - 2026-10-01 → 9.1.27
+
+**Touch first, then mouse, then keyboard — plus a launch screen and a report you can read.**
+
+### Launch modal (new)
+- `src/ui/launchModal.js` + `src/state/launchSettings.js`: a pre-boot screen that picks the
+  preset and the launch settings. Renderer (Canvas2D / PixiJS), compute engine (GPU / CPU),
+  sim speed, world size and initial population are all declared in `LAUNCH_FIELDS`, so a
+  setting's control, its range and its help text cannot drift apart.
+- The choice persists to `localStorage` and is re-applied on every boot, so you stop
+  re-picking the same preset. Escape, the backdrop and "Use defaults" all resolve to
+  `null`, and `main.js` treats `null` as a fully-handled answer.
+- `resolveLaunchConfiguration()` runs **before** the laws, the world parameters and the
+  spawn, because the preset decides all three. `SPECIES_PROFILES` is refilled *in place*
+  rather than reassigned — the closures that read it captured it at module scope.
+- The modal is wrapped in try/catch: it is the only UI that runs before anything is
+  initialised, so a throw there has nothing behind it to fall back on.
+
+### Tab-help switcher
+- The help modal is no longer a dead end. An arrow at each end cycles the three top-level
+  tabs, every other tab's icon sits in a tappable square, and the tab you are reading
+  **expands to show its title** — so the expanded entry doubles as the answer to "which
+  tab am I looking at?" without reading the body.
+- `TAB_ORDER`, `cycleTabId`, `owningTabId` and `tabSwitcher` in `helpRegistry.js`.
+  `TAB_ORDER` is declared rather than inferred from `Object.keys(TAB_HELP)`: key order is
+  an implementation detail of how the object literal was written, and a stray reordering
+  would silently reverse the arrows.
+- Arrow keys cycle the modal too, with a guard so they are never stolen from a form control.
+
+### Parameter tooltip now closes on any tap (reverts last release's item 2)
+- Removed `pressInsensitive` from the tooltip bus entirely. The press that *opens* a
+  tooltip is consumed by the 500 ms long-press timer and never reaches the bus, so the
+  exemption was never needed — and its only lasting effect was a wall of text that no tap
+  could clear short of Escape.
+- `showPopup` re-registers on every open. The bus exempts a press on the tooltip's own
+  anchor; a record left over from a long press on a *different* parameter would treat that
+  tap as an anchor press and strand the popup.
+
+### Touch support (the reason most of this release exists)
+- Every one of the **77** surfaces that show `cursor: pointer` now resolves to a
+  `touch-action`. Previously 50 had none, so the browser reserved the gesture: a tap waited
+  ~300 ms for a possible double-tap zoom, and a slider drag was claimed as a page pan.
+- `style.css` now carries a **touch-first interaction contract** covering gesture ownership,
+  hit targets and hover-only affordances, in one place, with the 44px floor under
+  `pointer: coarse` (Apple HIG / WCAG 2.5.5). The one documented exception is the 128-tile
+  law grid in icon mode, held to the 24px WCAG 2.2 AA floor — 44px tiles make that grid
+  unusable — while the readable word mode gets the full 44px.
+- The toolbar's "tap / hold" hint was reachable only by `:hover`, which is unreachable by
+  finger and by keyboard. It now also answers to `:focus-visible` and `(hover: none)`.
+- **Blind spot found and closed:** two UI modules inject their CSS from a JavaScript
+  template literal. An audit reading only `style.css` reports the app clean while the whole
+  WORLD STATES tab sits at 8–9px with no tap contract. `tests/helpers/cssSources.js` now
+  collects every stylesheet the app actually ships, in load order, and both audits read
+  through it. The WORLD STATES tab and the multiplex history were fixed at source.
+
+### Keyboard and mouse
+- **Seven rules removed the user agent's focus ring** with a bare `outline: none`, five of
+  them on range inputs — so a keyboard user arrowing through 23 world parameters and 64 DNA
+  traits had no way to tell which control held focus. One global `:focus-visible` ring now
+  covers everything; sliders carry it on the thumb, because a 2px ring around a 2px track
+  is invisible.
+- The tab strip is a real `tablist` now: `role=tab`/`tabpanel`, `aria-selected`,
+  `aria-controls`, and a roving tabindex so seven buttons are one Tab press. Arrow keys,
+  Home and End move within it. The two near-duplicate click handlers for tabs and sub-tabs
+  are one `wireTabStrip()`.
+- Selected state is no longer carried by colour alone.
+
+### Type scale
+- **86 rules resolved to 7–9px** and most of them were real content: help prose, narrative
+  logs, panel labels, multiplex settings. Three tiers are now declared once per stylesheet
+  and enforced: 11–12px content, 10–11px chrome, 9px for the dense law grid only.
+- **Two stale mobile media queries were shrinking type below the desktop value** the
+  size-doubling pass had already applied — `.hud-item` was 12px on desktop and 9px on a
+  phone, and the same for `.sc-label`, `.sc-value` and the slider chips. A narrow viewport is
+  a layout problem; it is now answered with widths, not with smaller type.
+- Two documented exceptions, each with its reason: the population count painted inside a
+  14px orb, and the tick labels of a 34px-tall sparkline.
+
+### UI module report (new)
+- `scripts/generate-ui-module-report.mjs` → `docs/systems/ui-module-report.md`, published by
+  `npm run build` to `/docs/systems/ui-module-report.md`. Per tab: the modules inside it, the
+  information they display, their visual characteristics and every control they expose.
+- Nothing in the body is written by hand. It is derived from `index.html`, the help registry,
+  each panel's own source and the stylesheets — so it cannot drift from the code.
+  `npm run report:ui:check` fails `repository:check` if it does.
+- The one hand-maintained table (sub-tab → module file) is validated against the real files
+  at the end of the script, so a rename cannot leave it silently wrong.
+
+### Bugs fixed
+- **Launch modal backdrop was dead space** — the `event.target === overlay` check was
+  missing, so tapping the backdrop (most of the screen on a phone) did nothing and the
+  modal could not be dismissed. Caught by the new tests.
+- **Four private HTML escapers, three escape-set dialects.** All four escaped `& < > "`
+  and none escaped `'`, while being used on `title="…"`, `aria-label="…"` and
+  `data-help-id="…"` — so an apostrophe in a preset blurb ended the attribute early and
+  injected the rest as markup. Now one `escapeHtml` in `src/ui/html.js`, covering all five,
+  used by every UI module including the DOM-based one in `narrativePanel`.
+- `tab-btn` and `sub-tab-btn` lost their active state to a `querySelectorAll` that swept up
+  the drawer's zoom/hide/minimize buttons, which share the class but are not tabs.
+- `mpx-help-item-exp` in CSS vs `mpx-help-item-expl` in markup — a typo that made the
+  multiplex help prose fall back to an unstyled size.
+
+### Verification
+- **1431 tests / 129 files**, all passing (from 1342 / 124).
+- New: `touchSupport` (12), `typeScale` (9), `htmlEscaping` (9), `tabHelpSwitcher` (24),
+  `launchModal` (30), plus 6 new drawer cases. Shared helpers: `tests/helpers/domStub.js`
+  (a minimal DOM with an HTML parser, so the launch modal is tested against real wiring
+  rather than a mock of it) and `tests/helpers/cssSources.js`.
+- Both new audits are mutation-checked: reversing `TAB_ORDER` fails 3 tests, dropping the
+  switcher's current-tab guard fails 1, and `drawer.test.js` gained a 6-test keyboard block.
+- **Limitation, stated plainly:** no browser is available in this environment and the project
+  ships no DOM library, so touch and hover behaviour is pinned by static analysis and unit
+  tests against the stub, not by a real device. The same limitation applied to v9.1.24 and
+  v9.1.26. The known residual blind spot also stands: `ecoPanel.drawAll` and
+  `groupAnalytics.drawAll` still format inline and are never executed by tests — the same
+  class of defect that shipped a `ReferenceError` in `civilizationPanel` for a full release.
+
 ## [4.9.29] - 2026-09-30 → 9.1.26
 
 ### Tab help navigation, sticky tooltips, legible law info, wider data panels,

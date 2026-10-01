@@ -12,12 +12,11 @@
 // See docs/CODEBASE-AUDIT-2026-09-30.md §2.2 (P-4).
 // ============================================================================
 
+import { escapeHtml as esc } from './html.js';
+
 /** Default redraw throttle for analytics panels (~2 Hz). */
 export const PANEL_THROTTLE_MS = 500;
 
-function esc(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
 
 /**
  * Write a value into an intel-value cell inside `host`. Null-safe.

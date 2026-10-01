@@ -37,7 +37,7 @@
 | 30 | [TIME_DILATION](../laws/metaphysics/030_TIME_DILATION.md) | metaphysics | 1 | 2 | 3 | NONE |
 | 31 | [DIMENSIONALITY](../laws/metaphysics/031_DIMENSIONALITY.md) | metaphysics | 1 | 2 | 1 | NONE |
 | 32 | [CHAOS](../laws/metaphysics/032_CHAOS.md) | metaphysics | 1 | 4 | 4 | NONE |
-| 33 | [ORDER](../laws/metaphysics/033_ORDER.md) | metaphysics | 1 | 3 | 6 | NONE |
+| 33 | [ORDER](../laws/metaphysics/033_ORDER.md) | metaphysics | 1 | 3 | 8 | NONE |
 | 34 | [FATE](../laws/metaphysics/034_FATE.md) | metaphysics | 1 | 3 | 2 | NONE |
 | 35 | [WILL](../laws/metaphysics/035_WILL.md) | metaphysics | 1 | 3 | 2 | NONE |
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 2 | NONE |
@@ -91,7 +91,7 @@
 | 84 | [HORIZON](../laws/physics/084_HORIZON.md) | physics | 1 | 3 | 2 | NONE |
 | 85 | [RADIATION_PRESSURE](../laws/physics/085_RADIATION_PRESSURE.md) | physics | 1 | 1 | 0 | NONE |
 | 86 | [MASS_INERTIA](../laws/physics/086_MASS_INERTIA.md) | physics | 1 | 1 | 0 | NONE |
-| 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 3 | 3 | NONE |
+| 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 3 | 4 | NONE |
 | 88 | [SYMBIOSIS](../laws/biology/088_SYMBIOSIS.md) | biology | 1 | 4 | 1 | NONE |
 | 89 | [PARASITE](../laws/biology/089_PARASITE.md) | biology | 1 | 4 | 1 | NONE |
 | 90 | [HIBERNATION](../laws/biology/090_HIBERNATION.md) | biology | 1 | 1 | 1 | NONE |

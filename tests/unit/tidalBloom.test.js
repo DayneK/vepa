@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { TIDAL_BLOOM, PRIME_DEFAULT, DEFAULT_PRESET } from '../../src/state/defaultPresets.js';
+import { DEFAULT_LAUNCH_PRESET_ID, defaultLaunchSettings, presetFor } from '../../src/state/launchSettings.js';
 import { LAW_INDEXES, DNA_INDEXES, DNA_RANGES, LAW_CATEGORIES } from '../../src/constants.js';
 import { WORLD_PARAM_DEFS } from '../../src/state/worldParams.js';
 import { MAX_SPECIES } from '../../src/constants.js';
@@ -174,16 +175,28 @@ describe('TIDAL_BLOOM — species', () => {
 
 describe('boot wiring', () => {
   it('boots the default preset, not PRIME_DEFAULT', () => {
+    // The launch modal now chooses the preset, so the default lives in
+    // state/launchSettings.js rather than as a hard-coded read of
+    // DEFAULT_PRESET in main.js. What still matters is that TIDAL_BLOOM is the
+    // world you get when you do not choose one.
     expect(DEFAULT_PRESET).toBe(TIDAL_BLOOM);
-    expect(MAIN).toMatch(/const DEFAULT_LAWS = DEFAULT_PRESET\.laws/);
+    expect(DEFAULT_LAUNCH_PRESET_ID).toBe('TIDAL_BLOOM');
+    expect(presetFor(defaultLaunchSettings())).toBe(TIDAL_BLOOM);
+    // main.js reads the chosen preset rather than pinning one at module scope.
+    expect(MAIN).toMatch(/let ACTIVE_PRESET = DEFAULT_PRESET/);
+    expect(MAIN).toMatch(/ACTIVE_PRESET = presetFor\(settings\)/);
     expect(MAIN).toMatch(/applyDefaultWorldConfig\(\)/);
     expect(MAIN).not.toMatch(/applyPrimeWorldConfig/);
   });
 
   it('derives the boot species from the preset instead of a second copy', () => {
     // A hand-maintained duplicate of the species list in main.js meant editing
-    // the preset's species did not change what actually spawned.
+    // the preset's species did not change what actually spawned. The launch
+    // modal refills the same array rather than reassigning it, because the
+    // closures that read it captured it at module scope.
     expect(MAIN).toMatch(/SPECIES_PROFILES = DEFAULT_PRESET\.species\.map/);
+    expect(MAIN).toMatch(/SPECIES_PROFILES\.length = 0/);
+    expect(MAIN).toMatch(/SPECIES_PROFILES\.push\(/);
   });
 
   it('accepts canonical DNA names in a profile', () => {

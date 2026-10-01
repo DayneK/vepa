@@ -23,12 +23,16 @@
  * modal must not also switch tabs behind the modal, so the synthetic click is
  * suppressed — but only when a help surface actually opened.
  *
- * Clicking the overlay backdrop, pressing Escape, or clicking ✕ closes it. All
- * listeners are registered once at init and are idempotent.
+ * Clicking the overlay backdrop, pressing Escape, or clicking ✕ closes it. The
+ * modal also carries a switcher — arrows at each end and a square per top-level
+ * tab — so a reader can move between tabs without closing anything, and the tab
+ * currently open is expanded to show its title. All listeners are registered
+ * once at init and are idempotent.
  */
 
-import { helpForTab, helpForGraph, subtabsForTab, TAB_SUBTABS } from './helpRegistry.js';
+import { helpForTab, helpForGraph, subtabsForTab, tabSwitcher, cycleTabId, owningTabId, TAB_SUBTABS, TAB_ORDER } from './helpRegistry.js';
 import { registerTooltip } from './tooltipDismiss.js';
+import { escapeHtml as esc } from './html.js';
 
 /** Hold duration that counts as a long press. */
 export const HELP_LONG_PRESS_MS = 500;
@@ -47,11 +51,6 @@ let suppressNextClick = false;
 let lingerTimer = null;
 let unregisterTooltip = null;
 
-function esc(s) {
-  return String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
 
 function sectionHtml(entry) {
   if (!entry.sections || !entry.sections.length) return '';
@@ -106,14 +105,64 @@ export function isHelpModalOpen() {
 }
 
 function onModalKey(event) {
-  if (event.key === 'Escape') closeHelpModal();
+  if (event.key === 'Escape') { closeHelpModal(); return; }
+  // Arrows cycle the modal from the keyboard too, so the switcher is not a
+  // touch-and-mouse-only affordance.
+  if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+  // Never steal the arrow keys from a control that is actually using them.
+  const active = document.activeElement;
+  if (active && /^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName)) return;
+  const el = modalEl;
+  if (!el) return;
+  const step = event.key === 'ArrowRight' ? 1 : -1;
+  const current = el.querySelector('.tab-switch-btn.current');
+  event.preventDefault();
+  const nextId = cycleTabId(current ? current.dataset.helpId : TAB_ORDER[0], step);
+  const next = helpForTab(nextId);
+  if (next) showHelpModal(next, { id: nextId, scope: 'tab' });
+}
+
+/**
+ * The strip that switches between the three top-level tab help modals.
+ *
+ * A modal you can only leave by closing is a dead end, and a phone gives you
+ * very little room to leave one by accident. So the switcher is always visible:
+ * an arrow at each end cycles through the tabs, the other tabs' icons sit in
+ * squares you can tap directly, and the tab you are actually reading is
+ * expanded so it spells out its title. The expanded entry is the answer to
+ * "which of these three am I looking at?" without reading the body.
+ *
+ * Arrows exist in addition to the squares rather than instead of them: cycling
+ * three items is one gesture, but hunting for a specific icon is faster than
+ * three taps on a small screen, and both cost nothing here.
+ */
+function switcherHtml(currentId) {
+  const items = tabSwitcher(currentId);
+  if (items.length < 2) return '';
+  const squares = items
+    .map((item) => {
+      const cls = `tab-switch-btn${item.current ? ' current' : ''}${item.own ? ' own' : ''}`;
+      const label = item.own ? `Back to ${item.title}` : item.title;
+      return `<button type="button" class="${cls}" data-help-id="${esc(item.id)}"`
+        + ` aria-pressed="${item.current ? 'true' : 'false'}"`
+        + ` aria-label="${esc(label)}" title="${esc(label)}">`
+        + `<span class="tab-switch-icon" aria-hidden="true">${esc(item.icon || '•')}</span>`
+        + `<span class="tab-switch-label">${esc(item.title)}</span>`
+        + '</button>';
+    })
+    .join('');
+  return `<nav class="tab-switch" aria-label="Switch tab help">`
+    + '<button type="button" class="tab-switch-arrow" data-help-step="-1" aria-label="Previous tab help">&#x25C0;</button>'
+    + `<span class="tab-switch-squares">${squares}</span>`
+    + '<button type="button" class="tab-switch-arrow" data-help-step="1" aria-label="Next tab help">&#x25B6;</button>'
+    + '</nav>';
 }
 
 /**
  * Buttons that drill from a tab's help into one of its sub-tabs.
  *
  * A tab modal that only explains the tab is a dead end: the reader now knows
- * what SETUP is for but still has to close the modal and hunt for the button.
+ * what SETUP is for but still have to close the modal and hunt for the button.
  * These route straight there, and the sub-tab view offers a way back up.
  */
 function navHtml(currentId) {
@@ -166,6 +215,7 @@ export function showHelpModal(entry, meta = {}) {
       </header>
       <div class="help-drone-body">
         <span class="tab-help-kind">${esc(where)}</span>
+        ${switcherHtml(id)}
         ${navHtml(id)}
         <p class="help-drone-lead">${esc(entry.summary)}</p>
         <div class="help-drone-mapping tab-help-sections">${sectionHtml(entry)}</div>
@@ -177,17 +227,34 @@ export function showHelpModal(entry, meta = {}) {
   el.querySelector('.help-drone-close').addEventListener('click', closeHelpModal);
   el.addEventListener('click', (event) => {
     if (event.target === el) { closeHelpModal(); return; }
-    const navBtn = event.target.closest('.tab-help-nav-btn');
-    if (!navBtn) return;
-    const targetId = navBtn.dataset.helpId;
-    const next = helpForTab(targetId);
-    if (!next) return;
     // Re-render in place rather than stacking overlays, so drilling through
-    // several sub-tabs leaves exactly one modal on screen.
-    showHelpModal(next, {
-      id: targetId,
-      scope: Object.prototype.hasOwnProperty.call(TAB_SUBTABS, targetId) ? 'tab' : 'subtab',
-    });
+    // several sub-tabs — or cycling every tab — leaves exactly one modal on
+    // screen.
+    const open = (targetId) => {
+      const next = helpForTab(targetId);
+      if (!next) return;
+      showHelpModal(next, {
+        id: targetId,
+        scope: Object.prototype.hasOwnProperty.call(TAB_SUBTABS, targetId) ? 'tab' : 'subtab',
+      });
+    };
+    const arrow = event.target.closest('.tab-switch-arrow');
+    if (arrow) {
+      event.preventDefault();
+      open(cycleTabId(owningTabId(id), Number(arrow.dataset.helpStep) || 1));
+      return;
+    }
+    const switchBtn = event.target.closest('.tab-switch-btn');
+    if (switchBtn) {
+      event.preventDefault();
+      // Tapping the expanded entry is a no-op rather than a re-render, so the
+      // button does not read as broken when it is already the current tab.
+      if (switchBtn.classList.contains('current')) return;
+      open(switchBtn.dataset.helpId);
+      return;
+    }
+    const navBtn = event.target.closest('.tab-help-nav-btn');
+    if (navBtn) open(navBtn.dataset.helpId);
   });
   document.addEventListener('keydown', onModalKey);
   modalEl = el;
