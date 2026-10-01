@@ -34,7 +34,7 @@
     "OBSERVER",
     "CONTACT",
     "MOMENTUM",
-    "INERTIA",
+    "WRAP",
     "CONSTRAINT",
     "TOPOLOGY",
     "ADHESION"
@@ -146,7 +146,7 @@
   "recordsByRelationshipType": {
     "dependsOn": 13,
     "synergizesWith": 30,
-    "antagonizes": 8,
+    "antagonizes": 9,
     "transforms": 31,
     "reads": 33,
     "writes": 34,

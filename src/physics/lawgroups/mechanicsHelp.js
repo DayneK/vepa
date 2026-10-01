@@ -1,7 +1,7 @@
 export const MECHANICS_PARAMETERS = {
   CONTACT: ['RADIUS (Stride 56)', 'MASS (Stride 6)', 'STIFFNESS (DNA 8)'],
   MOMENTUM: ['MASS (Stride 6)', 'VEL_X/Y/Z (Stride 3-5)', 'MOMENTUM_GAIN (World)'],
-  INERTIA: ['MASS (Stride 6)', 'INERTIA (DNA 26)', 'FORCE (DNA 0)'],
+  WRAP: ['POS_X/Y/Z (Stride 0-2)', 'VEL_X/Y/Z (Stride 3-5)', 'TOROIDAL (World)', 'WALL_REFLECT (World)'],
   TORQUE: ['TORQUE (DNA 2)', 'VEL_X/Y/Z (Stride 3-5)', 'POS_X/Y/Z (Stride 0-2)'],
   CONSTRAINT: ['RADIUS (Stride 56)', 'BOND_COUNT (Stride 58)', 'CONSTRAINT_STRENGTH (World)'],
   FRAGMENTATION: ['VEL_X/Y/Z (Stride 3-5)', 'ARMOR (Stride 63)', 'MASS (Stride 6)'],
@@ -12,7 +12,7 @@ export const MECHANICS_PARAMETERS = {
 export const MECHANICS_HELP = {
   CONTACT: { hint: 'Hard contact prevents particle overlap.', explanation: 'Contact applies a mass-weighted positional correction when surfaces interpenetrate.', system: 'Overlap produces a bounded position correction; CONTACT never applies restitution or changes velocity.', advanced: 'The geometric contact primitive complements COLL, whose separate responsibility is impact impulse.' },
   MOMENTUM: { hint: 'Momentum transfers motion between neighbors.', explanation: 'Relative velocity is shared according to partner mass.', system: 'Velocity difference produces a mass-weighted impulse.', advanced: 'Use it for relaxation after contact; it is distinct from COLL restitution.' },
-  INERTIA: { hint: 'Inertia resists acceleration.', explanation: 'Mass scales how strongly accumulated acceleration changes motion.', system: 'Force response is divided by mass.', advanced: 'It does not add particle stride state.' },
+  WRAP: { hint: 'The world edges wrap or bounce.', explanation: 'With WRAP on, a particle that leaves one face of the world re-enters through the opposite one and keeps its velocity. With WRAP off, the same face stops it: WALL REFLECT decides whether it is absorbed, mirrored or over-reflected.', system: 'Each axis is folded back into [0, world size) when the law is on. When it is off, an out-of-range axis is clamped to the face and its outward velocity is scaled by WALL REFLECT.', advanced: 'The TOROIDAL EDGES world param is this law\'s default: it seeds the bit when a world loads, so a saved world remembers its own topology. With WRAP off, PLANETARY\'s z = 0 ground plane becomes a real floor instead of a fold.' },
   TORQUE: { hint: 'Torque turns relative motion around a contact vector.', explanation: 'Tangential relative motion becomes a bounded rotational impulse.', system: 'The cross product of separation and relative velocity supplies the impulse.', advanced: 'It complements the world-centre ROTATION law.' },
   CONSTRAINT: { hint: 'Constraints maintain a separation target.', explanation: 'Neighbor pairs are softly driven toward their combined-radius target distance.', system: 'Distance error becomes a spring-like bounded force.', advanced: 'Use with BOND for persistent composite structures.' },
   FRAGMENTATION: { hint: 'High-speed impacts can separate structures.', explanation: 'Large relative velocity generates a separating impulse when armor cannot absorb it.', system: 'Relative speed above the armor threshold produces repulsion.', advanced: 'It does not delete particles.' },

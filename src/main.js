@@ -9,7 +9,7 @@ import { WORLD_SIZE, PARTICLE_STRIDE, MAX_PARTICLES, MAX_SPECIES, DEFAULT_PARTIC
 import { createParticleBuffer, setX, setY, setVelocity, setMass, setSpeciesId, setEnergy } from './state/particleBuffer.js';
 import { createLawState, set as lawSet, clear as lawClear, serialize as serializeLawState, getActiveCount as getLawCount } from './state/lawState.js';
 import { runtimeConfig } from './state/runtimeConfig.js';
-import { createWorldParams, applyWorldParam, spawnCaps } from './state/worldParams.js';
+import { createWorldParams, applyWorldParam, spawnCaps, syncWrapLaw, syncToroidalParam } from './state/worldParams.js';
 import { sampleSpawnPosition, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from './spawn/distribution.js';
 import { createDNABuffer, loadDefaults, getDNAFloat } from './dna/dnaBuffer.js';
 import { quantizeDNA } from './dna/codec.js';
@@ -92,6 +92,8 @@ import {
   createWorldSaveStore,
   compareWorldSaves,
   createUndoRing,
+  WORLD_SAVE_FORMAT,
+  WORLD_SAVE_VERSION,
 } from './state/worldSave.js';
 initDebug();
 logDebug('main module loaded');
@@ -456,6 +458,12 @@ async function boot() {
     }
 
     applyDefaultWorldConfig();
+
+    // WRAP is seeded from TOROIDAL EDGES rather than from the preset's law
+    // list, so a preset that predates the law still boots with the topology its
+    // world params ask for. Runs after `applyDefaultWorldConfig` because that
+    // is what resolves the preset's world params.
+    syncWrapLaw(worldParams, lawState);
 
     spawnDefaultPopulation();
 
@@ -855,7 +863,14 @@ function setDNAFromProfile(species, profile) {
         codex: codex ? serializeCodex(codex) : null,
     });
     const emitUndoState = () => {
-        bus.emit('world:undoState', { canUndo: undoRing.canUndo(), canRedo: undoRing.canRedo(), enabled: undoEnabled });
+        // The ring's contents ride along: the UNDO sub-tab renders the history,
+        // not just whether a step is available.
+        bus.emit('world:undoState', {
+            canUndo: undoRing.canUndo(),
+            canRedo: undoRing.canRedo(),
+            enabled: undoEnabled,
+            ...undoRing.describe(),
+        });
     };
     const commitAutoSnapshot = () => {
         if (!undoEnabled) return;
@@ -900,6 +915,41 @@ function setDNAFromProfile(species, profile) {
     bus.on('sim:chaos', () => commitAutoSnapshot());
     bus.on('sim:restart', () => commitAutoSnapshot());
     bus.on('preset:load', () => commitAutoSnapshot());
+    // ── Presets (WORLD sub-tab) ──
+    // The preset panel asks the world for its current state rather than reading
+    // the buffer itself: it has no access to the particle view, the law state
+    // or the live world params, and duplicating that reach would be a second
+    // source of truth for "what is this world right now".
+    bus.on('preset:requestState', ({ presetName }) => {
+        const name = String(presetName || '').trim();
+        if (!name) return;
+        bus.emit('preset:stateResponse', {
+            presetName: name,
+            savedAt: Date.now(),
+            law: lawState.serialize(lawState),
+            dna: dnaBuffer ? dnaBuffer.slice() : null,
+            speciesCount,
+            worldParams: { ...worldParams },
+        });
+    });
+    bus.on('preset:load', ({ name, preset }) => {
+        if (!preset) return;
+        commitAutoSnapshot();
+        // Restores laws, DNA and world parameters, and deliberately leaves the
+        // particles alone: a preset is a configuration, not a world snapshot.
+        // `particles` is absent, so restoreWorldState skips the buffer fill.
+        applyWorldRestore({
+            format: WORLD_SAVE_FORMAT,
+            version: WORLD_SAVE_VERSION,
+            particleCount,
+            speciesCount: preset.speciesCount || speciesCount,
+            worldSize,
+            dna: preset.dna || null,
+            laws: preset.law || null,
+            worldParams: preset.worldParams || null,
+        });
+        bus.emit('preset:loaded', { name: String(name || '') });
+    });
     bus.on('species:aboutToChange', () => commitAutoSnapshot());
     bus.on('world:paramChanged', () => {
         if (!undoEnabled) return;
@@ -956,7 +1006,10 @@ function setDNAFromProfile(species, profile) {
         bus.emit('world:list');
     });
     bus.on('world:export', async ({ name }) => {
-        const state = await saveStore.load(String(name || ''));
+        const key = String(name || '');
+        // `LIVE` exports what is on screen right now without saving it first —
+        // the IMPORT/EXPORT sub-tab's "export live world" button.
+        const state = key === 'LIVE' ? currentWorldState('LIVE') : await saveStore.load(key);
         if (!state) return;
         bus.emit('world:exported', { name: state.name, json: exportWorldSave(state) });
     });
@@ -986,8 +1039,29 @@ function setDNAFromProfile(species, profile) {
     });
     emitUndoState();
 
-    bus.on('law:sync', syncPhysicsWorker);
-    bus.on('law:toggled', syncPhysicsWorker);
+    bus.on('law:sync', () => {
+        // A wholesale rebuild of the law state — preset applied, laws cleared,
+        // chaos, external sync — is not a request to change the world's
+        // topology. Re-assert WRAP from TOROIDAL EDGES so "clear all laws"
+        // cannot silently turn a toroidal world into a walled one.
+        //
+        // The panels' own `law:sync` listeners may already have re-rendered by
+        // the time this runs, so when the bit actually moved we broadcast once
+        // more. The second pass changes nothing, so this cannot recurse.
+        if (syncWrapLaw(worldParams, lawState)) bus.emit('law:sync');
+        syncPhysicsWorker();
+    });
+    bus.on('law:toggled', (payload) => {
+        // WRAP is the world's boundary rule, and TOROIDAL EDGES is its slider.
+        // Flip one and the other follows, so the grid and the WORLD panel can
+        // never show opposite answers about the same bit.
+        if (payload && payload.lawIndex === LAW_INDEXES.WRAP) {
+            worldParams = syncToroidalParam(worldParams, lawState);
+            runtimeConfig.worldParams = worldParams;
+            bus.emit('world:paramsRestored');
+        }
+        syncPhysicsWorker(payload);
+    });
     bus.on('dna:sync', syncPhysicsWorker);
     bus.on('dna:changed', syncPhysicsWorker);
     bus.on('world:paramApplied', syncPhysicsWorker);
@@ -1203,6 +1277,9 @@ function setDNAFromProfile(species, profile) {
     bus.on('world:paramChanged', ({ key, value }) => {
         worldParams = applyWorldParam(worldParams, key, value);
         runtimeConfig.worldParams = worldParams;
+        if (key === 'TOROIDAL' && syncWrapLaw(worldParams, lawState)) {
+            bus.emit('law:sync');
+        }
         switch (key) {
             case 'WORLD_SIZE':
                 worldSize = worldParams.WORLD_SIZE;

@@ -141,11 +141,18 @@
                                 <button class="cat-tab active" data-cat="cat-mechanics">MECH</button>
                             </div>
                             <div id="law-info-module" class="law-info-module hidden"></div>
+                            <div class="law-search-row">
+                                <input id="law-search" type="search" autocomplete="off" spellcheck="false"
+                                       placeholder="Search 136 laws…" aria-label="Search laws by name">
+                                <button id="law-search-clear" class="law-search-clear" title="Clear search" aria-label="Clear search">✕</button>
+                                <span id="law-search-count" class="law-search-count" role="status" aria-live="polite"></span>
+                            </div>
                             <div id="law-grid" class="law-icon-grid"></div>
                         </div>
                         <div id="setup-world" class="sub-tab-content">
                             <div class="world-inner">
                                 <div id="world-params" class="world-sliders"></div>
+                                <div id="world-presets" class="world-presets"></div>
                             </div>
                         </div>
                         <div id="setup-species" class="sub-tab-content">
@@ -162,7 +169,20 @@
                     </div>
 
                     <div id="tab-saves" class="tab-content">
-                        <div id="saves-panel"></div>
+                        <div class="sub-tabs">
+                            <button class="sub-tab-btn active" data-sub="saves-states" title="Saved worlds — list, load, compare, delete" aria-label="Saved worlds">🗃️</button>
+                            <button class="sub-tab-btn" data-sub="saves-undo" title="Undo history — step backwards and forwards" aria-label="Undo">↶</button>
+                            <button class="sub-tab-btn" data-sub="saves-io" title="Import and export worlds as files" aria-label="Import / export">⇄</button>
+                        </div>
+                        <div id="saves-states" class="sub-tab-content active">
+                            <div id="saves-panel"></div>
+                        </div>
+                        <div id="saves-undo" class="sub-tab-content">
+                            <div id="undo-panel"></div>
+                        </div>
+                        <div id="saves-io" class="sub-tab-content">
+                            <div id="io-panel"></div>
+                        </div>
                     </div>
                 </div>
             </div>

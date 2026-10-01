@@ -35,11 +35,13 @@ export const TAB_HELP = Object.freeze({
   'tab-saves': {
     title: 'WORLD STATES',
     icon: '🗃️',
-    summary: 'Capture, restore, compare and roll back the entire world. The only tab that is not either a control or a readout.',
+    summary: 'Capture, restore, compare and roll back the entire world. Three sub-tabs: stored worlds, the undo ring, and files.',
     sections: [
+      ['Three sub-tabs', 'WORLD STATES holds the named snapshots, UNDO holds this session\'s step ring, and IMPORT / EXPORT moves a world as a file.'],
       ['Quick save / undo', 'The toolbar saves a snapshot before destructive changes (restart, chaos, species change, preset load) so a single undo step reverses them.'],
       ['Stored states', 'Named snapshots keep particle buffers, DNA, law state, world parameters and the civilization ontology. Comparing two states shows what moved between them.'],
       ['Backwards compatible', 'Saves written before the civilization ontology existed simply restore without it; the missing field is not an error.'],
+      ['Not the same as a preset', 'A preset (WORLD sub-tab) stores laws, DNA and world parameters. A snapshot here stores the particles too.'],
     ],
   },
   'tab-data': {
@@ -97,7 +99,7 @@ export const SUBTAB_HELP = Object.freeze({
       ['Where groups come from', 'Two paths. A group can be declared by the player, or detected organically when particles of similar species cluster densely enough to sustain.'],
       ['TREASURY', 'Each group accumulates a shared treasury from its foragers, and spends it on artifacts, upkeep and trade.'],
       ['TRADE VOLUME', 'How much moved between groups in the last economy pass.'],
-      ['Naming note', 'This panel is titled "Civilizations (Set F)" in its tooltip, which is misleading — these are individual groups. The multi-group CIVILIZATION sub-tab is the one with tribes, polities and culture.'],
+      ['Where this ends', 'These are individual groups. The multi-group CIVILIZATION sub-tab is the one with tribes, polities and culture.'],
     ],
   },
   'data-eco': {
@@ -126,16 +128,48 @@ export const SUBTAB_HELP = Object.freeze({
     ],
   },
 
+  // ── SAVES ────────────────────────────────────────────────────────────────
+  'saves-states': {
+    title: 'WORLD STATES',
+    icon: '🗃️',
+    summary: 'Named snapshots of the whole world, with load, compare and delete.',
+    sections: [
+      ['What a snapshot holds', 'Particles, DNA, the law bitmask, world parameters and the civilization record. Restoring one replaces all of it.'],
+      ['The list', 'Each entry shows when it was saved, how many particles and species it holds, its tick, how many laws were on, and its size on disk.'],
+      ['COMPARE', 'Compares the saved world against the live one, or several saved worlds against each other, and marks the best value per row.'],
+    ],
+  },
+  'saves-undo': {
+    title: 'UNDO',
+    icon: '↶',
+    summary: 'Step backwards and forwards through this session, and see what is in the ring.',
+    sections: [
+      ['What commits a step', 'Chaos, Restart, Reset, preset loads, species edits and world-parameter changes each commit an undo step — when AUTO is on.'],
+      ['The history list', 'The ring is shown oldest first with the current position marked. The UNDO button was previously a button with no history attached to it; now you can see what stepping back will cost you.'],
+      ['UNDO does not leave the page', 'These steps live in this session only. SAVES > WORLD STATES is what survives a reload.'],
+    ],
+  },
+  'saves-io': {
+    title: 'IMPORT / EXPORT',
+    icon: '⇄',
+    summary: 'Move a world in and out as a single .vepa.json file.',
+    sections: [
+      ['The file', 'One file per world: particles, laws, DNA, world parameters and the civilization record, as JSON.'],
+      ['EXPORT LIVE WORLD', 'Writes the world on screen right now without saving it into the list first — useful before a Chaos run you might want to walk back.'],
+      ['IMPORT FILE', 'Reads a .vepa.json back into the saved-world list. It does not load it; load it from WORLD STATES afterwards, so you can compare first.'],
+    ],
+  },
+
   // ── SETUP ───────────────────────────────────────────────────────────────
   'setup-laws': {
     title: 'LAWS',
     icon: '⚖️',
-    summary: 'The law switchboard: 128 physics, biology, chemistry, thermodynamic, metaphysical, electromagnetic, information and quantum laws across nine categories.',
+    summary: 'The law switchboard: 136 physics, biology, chemistry, thermodynamic, metaphysical, electromagnetic, information and quantum laws across nine categories.',
     sections: [
       ['How a law works', 'A law is a permission, not an instruction. Enabling it lets the solver apply that force or rule; it does not by itself move anything.'],
       ['Reading a law', 'Press a law to open its info bar: a one-line hint, a plain-language explanation, and the actual system the solver runs. Long-press a parameter label for its own help.'],
       ['Spectrum colours', 'Each category occupies a 4-point band of the colour wheel and each law gets a distinct hue, so neighbouring toggles stay tellable apart.'],
-      ['Mechanics', 'Elasticity, turbulence, centripetal force and rotation sit in a visually separate slate group: they are classical mechanics rather than a new physics category.'],
+      ['Mechanics', 'Contact, momentum, wrap, torque, constraint, fragmentation, topology and adhesion sit in a visually separate slate group: they are classical mechanics rather than a new physics category.'],
     ],
   },
   'setup-world': {
@@ -313,7 +347,7 @@ export const CELL_HELP = Object.freeze({
   'civ-structures': { title: 'STRUCTURES', summary: 'Standing structures over total built.', sections: [['Dormant vs collapsed', 'A structure whose dependency collapsed still counts as standing but is reported dormant. Falling below the integrity threshold closes it.']] },
   'civ-regime': { title: 'REGIME', summary: 'Name of the civilizational regime observed at the last era boundary.', sections: [['Derived, not declared', 'Chosen by comparing the social world against the previous era: thriving, settled, strained, fragmenting, collapsing, empty or emergent.']] },
   'civ-confidence': { title: 'CONFIDENCE', summary: 'How much evidence supports the current regime name, 0–1.', sections: [['Read it with the name', 'Low confidence means the observer has too little to say. Below the evidence threshold the codex states its uncertainty instead of a conclusion.']] },
-  'civ-codex': { title: 'CODEX', summary: 'Stated claims over total entries filed.', sections: [['Never law-derived', 'Statements are built from measured social evidence only. If the evidence is insufficient, the codex declines rather than inventing a reason.']] },
+  'civ-codex-block': { title: 'CODEX', summary: 'The observer’s own statement about the world, with the tick it was last written at.', sections: [['Never law-derived', 'Statements are built from measured social evidence only. If the evidence is insufficient, the codex declines rather than inventing a reason.'], ['The stamp', 'A codex with no visible age reads as current no matter how long ago it was written, so the block carries the tick it was last changed at.']] },
   'civ-households': { title: 'HOUSEHOLDS', summary: 'Households formed from kin edges.', sections: [['What a household is', 'A caregiving unit built from recorded kinship. Households are what kin resource flow operates through.'], ['Forms over time', 'A household exists only once kin edges have been recorded, so this stays at zero early in a world.']] },
   'civ-citizens': { title: 'CITIZENS', summary: 'Particles holding citizenship in a polity.', sections: [['Distinct from members', 'Citizenship is membership of a polity, not of a group. A group member is not automatically a citizen.'], ['Revocable', 'Citizenship can be granted and revoked, so this can fall as well as rise.']] },
   'civ-generations': { title: 'FED GEN', summary: 'Deepest generation number reached by any federation.', sections: [['What it counts', 'Increments each time a federation splits and re-fuses. A high number means the social structure has repeatedly reorganised itself rather than settling.']] },
@@ -335,7 +369,7 @@ export const HELP_KIND = Object.freeze({
 export const TAB_SUBTABS = Object.freeze({
   'tab-setup': ['setup-laws', 'setup-world', 'setup-species', 'setup-settings'],
   'tab-data': ['data-intel', 'data-dna', 'data-logs', 'data-groups', 'data-eco', 'data-civilization'],
-  'tab-saves': [],
+  'tab-saves': ['saves-states', 'saves-undo', 'saves-io'],
 });
 
 /** The sub-tab ids under a tab, or an empty list for a tab without any. */

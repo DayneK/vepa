@@ -165,7 +165,7 @@ describe('Batch 01 — GRAV / DRAG / ENTR / BUOYANCY (indices 0-3)', () => {
     expect(view[S.VEL_Z]).toBe(0);
   });
 
-  it('TOROIDAL EDGES on (default): particles crossing the edge reappear on the opposite side', () => {
+  it('WRAP on (the TOROIDAL EDGES default): particles crossing the edge reappear on the opposite side', () => {
     const { view, dna } = makeWorld(1, (v, dna, b) => {
       v[b + S.POS_X] = WORLD - 5;
       v[b + S.VEL_X] = 10;
@@ -173,23 +173,22 @@ describe('Batch 01 — GRAV / DRAG / ENTR / BUOYANCY (indices 0-3)', () => {
     // GLOW with zero SIGNAL keeps the sim running without adding any force.
     const laws = createLawState();
     set(laws, LAW_INDEXES.GLOW);
+    set(laws, LAW_INDEXES.WRAP);
     for (let t = 0; t < 3; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
     expect(view[S.POS_X]).toBeGreaterThan(0);
     expect(view[S.POS_X]).toBeLessThan(10);
   });
 
-  it('TOROIDAL EDGES off: soft walls clamp and reflect at the WALL_REFLECT default', () => {
+  it('WRAP off: soft walls clamp and reflect at the WALL_REFLECT default', () => {
     const { view, dna } = makeWorld(1, (v, dna, b) => {
       v[b + S.POS_X] = WORLD - 5;
       v[b + S.VEL_X] = 10;
     });
     const laws = createLawState();
     // GLOW with zero SIGNAL keeps the sim running without adding any force.
+    // WRAP stays clear — the boundary rule is a law now, not a slider read.
     set(laws, LAW_INDEXES.GLOW);
-    const prev = runtimeConfig.worldParams;
-    runtimeConfig.worldParams = { ...prev, TOROIDAL: 0 };
     for (let t = 0; t < 3; t++) solve(view, 1, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-    runtimeConfig.worldParams = prev;
     expect(view[S.POS_X]).toBeLessThan(WORLD);        // clamped inside the world
     expect(view[S.VEL_X]).toBeCloseTo(-10, 5);        // full 100% reflect (default)
   });

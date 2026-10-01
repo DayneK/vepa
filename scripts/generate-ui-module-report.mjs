@@ -36,8 +36,8 @@
  *   without regenerating the report fails the build rather than shipping.
  */
 
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { resolve, dirname } from 'node:path';
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
+import { resolve, dirname, join, relative } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -57,7 +57,11 @@ const PANELS = {
   'setup-world': { file: 'src/ui/worldPanel.js', mount: 'world-params', cellPrefix: null },
   'setup-species': { file: 'src/ui/speciesPanel.js', mount: 'species-list', cellPrefix: null },
   'setup-settings': { file: 'src/ui/settingsPanel.js', mount: 'laws-panel', cellPrefix: null },
-  'tab-saves': { file: 'src/ui/savePanel.js', mount: 'saves-panel', cellPrefix: null },
+  // SAVES carries three sub-tabs, all built by savePanel.js into three
+  // separate mounts — one module, one file, three containers.
+  'saves-states': { file: 'src/ui/savePanel.js', mount: 'saves-panel', cellPrefix: null },
+  'saves-undo': { file: 'src/ui/savePanel.js', mount: 'undo-panel', cellPrefix: null },
+  'saves-io': { file: 'src/ui/savePanel.js', mount: 'io-panel', cellPrefix: null },
   'data-intel': { file: 'src/ui/intelPanel.js', mount: 'intel-dashboard', cellPrefix: 'intel-' },
   'data-dna': { file: 'src/ui/dnaAnalytics.js', mount: 'dna-analytics', cellPrefix: null },
   'data-logs': { file: 'src/ui/narrativePanel.js', mount: 'narrative-panel', cellPrefix: null },
@@ -223,6 +227,210 @@ function visualProfile(classes) {
   };
 }
 
+// ── Semantic map: the wiring, read out of src/** ─────────────────────────
+// The half above answers "what is on this tab". The map answers "how is the
+// layer wired" — what builds what and in what order, which events each module
+// listens to and sends, which modules several panels share, and where a wire
+// is attached to nothing.
+//
+// Like everything above it is derived, not declared. The only structure held by
+// hand is PANELS; the event graph, the boot order and the kernel are read out
+// of call sites, so the map cannot describe wiring that no longer exists.
+
+const SRC_DIR = resolve(ROOT, 'src');
+
+async function walkJs(dir, out = []) {
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith('.') || entry.name === 'node_modules') continue;
+    const abs = join(dir, entry.name);
+    if (entry.isDirectory()) await walkJs(abs, out);
+    else if (entry.name.endsWith('.js')) out.push(relative(ROOT, abs).split('\\').join('/'));
+  }
+  return out;
+}
+
+/** Resolve a relative import specifier against the importing file. */
+function relPath(fromFile, spec) {
+  if (!spec.startsWith('.')) return null;
+  const parts = fromFile.split('/').slice(0, -1);
+  for (const part of spec.split('/')) {
+    if (part === '.' || part === '') continue;
+    if (part === '..') parts.pop();
+    else parts.push(part);
+  }
+  return parts.join('/');
+}
+
+/**
+ * One node per source file: what it emits, what it subscribes to, what it
+ * imports, and the first self-description in its header comment.
+ *
+ * The bus has two dispatch channels and both are in use, so both are read:
+ *
+ *   named    emit('law:toggled')        — the event name is the argument
+ *   object   bus.emit(ev.type, ev)     — the name lives in a `type:` field and
+ *                                         src/main.js dispatches six such
+ *                                         event lists each tick
+ *
+ * Reading only the named channel would report every epoch, speciation and
+ * agency event as an orphan subscription, which is a false alarm in a document
+ * whose whole value is that its claims are checkable.
+ */
+const SRC_FILES = (await walkJs(SRC_DIR)).sort();
+const NODES = new Map();
+for (const rel of SRC_FILES) {
+  const src = await readFile(resolve(ROOT, rel), 'utf8');
+  const emits = new Map();
+  const subs = new Map();
+  const typeDecls = new Map();
+  src.split('\n').forEach((line, i) => {
+    for (const m of line.matchAll(/\bemit\(\s*['"]([A-Za-z:_-]+)['"]/g)) {
+      if (!emits.has(m[1])) emits.set(m[1], i + 1);
+    }
+    for (const m of line.matchAll(/\bon\(\s*['"]([A-Za-z:_-]+)['"]/g)) {
+      if (!subs.has(m[1])) subs.set(m[1], i + 1);
+    }
+    for (const m of line.matchAll(/\btype:\s*['"]([A-Za-z:_-]+)['"]/g)) {
+      if (!typeDecls.has(m[1])) typeDecls.set(m[1], i + 1);
+    }
+  });
+  const imports = new Set();
+  for (const m of [
+    ...src.matchAll(/\bfrom\s+'([^']+)'/g),
+    ...src.matchAll(/\bimport\(\s*['"]([^'"]+)['"]\s*\)/g),
+    // The physics worker is constructed by URL, not imported by specifier.
+    ...src.matchAll(/new\s+(?:URL|Worker)\(\s*['"]([^'"]+)['"]/g),
+  ]) {
+    const target = relPath(rel, m[1]);
+    if (target) imports.add(target);
+  }
+  // First line of the header comment that says something — the module's own
+  // name for itself, rather than one written here about it. A banner line of
+  // `===` rules and a stray JSDoc block further down both have to be skipped,
+  // so the search is over lines and takes whichever candidate comes first.
+  let doc = '';
+  let inBlock = false;
+  for (const line of src.split('\n')) {
+    if (/^\s*\/\*+/.test(line)) { inBlock = true; continue; }
+    if (/^\s*\*\//.test(line)) { inBlock = false; continue; }
+    const body = inBlock
+      ? /^\s*\*\s?(.+)$/.exec(line)
+      : /^\s*\/\/\s?(.+)$/.exec(line);
+    const text = body && body[1].trim();
+    if (!text || /^[=*\-/]/.test(text)) continue;
+    doc = text;
+    break;
+  }
+  const ids = new Set();
+  for (const m of [
+    ...src.matchAll(/\bid=["']([A-Za-z0-9_-]+)["']/g),
+    ...src.matchAll(/\.id\s*=\s*['"]([A-Za-z0-9_-]+)['"]/g),
+  ]) ids.add(m[1]);
+  NODES.set(rel, {
+    rel,
+    src,
+    emits,
+    subs,
+    typeDecls,
+    imports,
+    doc: doc
+      ? doc
+          .replace(/^VEPA\s*v?\d*\s*[-—]\s*/, '')
+          .replace(/[.\s]+$/, '')
+          .trim()
+      : '',
+    lines: src.split('\n').length,
+    ids,
+    references: new Set(
+      [...src.matchAll(/getElementById\(\s*['"]([A-Za-z0-9_-]+)['"]\s*\)/g)].map((m) => m[1]),
+    ),
+  });
+}
+
+/** The event vocabulary, with both channels and every call site. */
+const EVENTS = new Map();
+const eventOf = (name) => {
+  if (!EVENTS.has(name)) EVENTS.set(name, { named: [], object: [], subs: [] });
+  return EVENTS.get(name);
+};
+for (const node of NODES.values()) {
+  for (const [name, line] of node.emits) eventOf(name).named.push({ file: node.rel, line });
+  for (const [name, line] of node.subs) eventOf(name).subs.push({ file: node.rel, line });
+  for (const [name, line] of node.typeDecls) eventOf(name).object.push({ file: node.rel, line });
+}
+
+const UI = (file) => file.startsWith('src/ui/');
+const short = (file) => file.replace(/^src\//, '');
+const EV = (names) => (names.length ? names.map((n) => `\`${n}\``).join(', ') : '—');
+const shortModule = (file) => short(file).replace(/^ui\//, '');
+const site = ({ file, line }) => `\`${shortModule(file)}:${line}\``;
+
+// Reachability from what the browser actually loads: the entry script named in
+// index.html, and anything it pulls in. In-degree alone would call a module
+// "used" because one unreachable module imports it, which is how dead clusters
+// disguise themselves.
+const ROOTS = [...HTML.matchAll(/src="\.\/(src\/[^"]+\.js)"/g)].map((m) => m[1]);
+const REACHABLE = new Set();
+const frontier = ROOTS.filter((f) => NODES.has(f));
+while (frontier.length) {
+  const file = frontier.pop();
+  if (REACHABLE.has(file)) continue;
+  REACHABLE.add(file);
+  for (const next of NODES.get(file).imports) {
+    if (NODES.has(next) && !REACHABLE.has(next)) frontier.push(next);
+  }
+}
+
+/** Everything a bus subscription needs to be judged wired or dangling. */
+function provenance(name) {
+  const ev = EVENTS.get(name);
+  const emitsBus = ev.named.filter(({ file }) => !file.startsWith('src/worker/'));
+  const producedBy = emitsBus.length
+    ? emitsBus
+    : // No named emit: the name is carried by an event object, which only
+      // counts if something actually subscribes to it. Worker postMessage
+      // types have no subscriber and so fall out here.
+      ev.object.filter(({ file }) => !file.startsWith('src/worker/'));
+  return { name, emitsBus, producedBy, subscribers: ev.subs };
+}
+
+// ── Boot order: initUI() ─────────────────────────────────────────────────
+const UI_JS = await readFile(resolve(ROOT, 'src/ui/ui.js'), 'utf8');
+const INIT_UI = /export function initUI\([^)]*\)\s*\{([\s\S]*?)\n\}/.exec(UI_JS)[1];
+const BOOT = [...INIT_UI.matchAll(/^\s{2}(\w+)\(/gm)].map((m) => m[1]);
+
+/** `createWorldPanel` → `src/ui/worldPanel.js`, by who exports it. */
+const EXPORT_OWNER = new Map();
+for (const node of NODES.values()) {
+  if (!UI(node.rel)) continue;
+  for (const m of node.src.matchAll(/export\s+(?:async\s+)?function\s+(\w+)/g)) {
+    EXPORT_OWNER.set(m[1], node.rel);
+  }
+}
+
+const PANEL_FILES = new Map();
+for (const [subId, meta] of Object.entries(PANELS)) PANEL_FILES.set(meta.file, { subId, mount: meta.mount });
+
+/**
+ * Where a module renders. A tab panel is declared by PANELS; anything else is
+ * the set of ids it reaches for that index.html actually declares — so a module
+ * whose mount point was removed from the markup reports nothing rather than
+ * reporting a mount that is not there.
+ */
+function mountsOf(file) {
+  const declared = PANEL_FILES.get(file);
+  if (declared) return [`#${declared.mount}`];
+  const node = NODES.get(file);
+  return node ? [...node.references].filter((id) => HTML.includes(`id="${id}"`)).map((id) => `#${id}`) : [];
+}
+
+/** Ids a module reaches for that neither index.html nor the module itself makes. */
+function absentRefsOf(file) {
+  const node = NODES.get(file);
+  if (!node) return [];
+  return [...node.references].filter((id) => !node.ids.has(id) && !HTML.includes(`id="${id}"`));
+}
+
 // ── Compose ──────────────────────────────────────────────────────────────
 const lines = [];
 const push = (s = '') => lines.push(s);
@@ -370,6 +578,274 @@ push('This is a view of the code, not a copy of it. If a module here looks wrong
 push('fix belongs in `src/ui/`, and the report follows on the next build.');
 push();
 
+// ── SEMANTIC-MAP ──
+const bootRows = BOOT.map((call, i) => {
+  const file = EXPORT_OWNER.get(call) || 'src/ui/ui.js';
+  const node = NODES.get(file);
+  return {
+    order: i + 1,
+    call,
+    file,
+    mounts: mountsOf(file),
+    subs: [...node.subs.keys()].sort(),
+    emits: [...node.emits.keys()].sort(),
+  };
+});
+
+const chromeRows = bootRows.filter((r) => r.file === 'src/ui/ui.js');
+const panelRows = bootRows.filter((r) => r.call.startsWith('create'));
+const helpRows = bootRows.filter((r) => !chromeRows.includes(r) && !panelRows.includes(r));
+const range = (rows) => `${rows[0].order}–${rows[rows.length - 1].order}`;
+
+push('## Semantic map');
+push();
+push('The half above answers *what is on this tab*. This answers *how the layer is');
+push('wired*: what constructs what and in what order, which bus events each module');
+push('listens to and sends, which modules several panels share, and where a wire ends');
+push('up attached to nothing.');
+push();
+push('It is read the same way as the rest of this report — out of call sites in');
+push('`src/**`, not out of a structure written here — so it cannot describe wiring that');
+push('no longer exists. Where it names a loose end it gives the `file:line`, because a');
+push('document full of suspicions is worth nothing.');
+push();
+push('### Boot order');
+push();
+push(`\`src/main.js\` calls \`initUI\` once. \`initUI\` runs ${BOOT.length} steps: ${chromeRows.length} wire the drawer`);
+push(`chrome and the toolbar, ${panelRows.length} construct a panel, ${helpRows.length} install the help layer. The`);
+push('order is a convention, not a dependency — the bus is a plain listener list and');
+push('every mount point is static markup, so an early panel never waits on a later');
+push('one. It is worth knowing anyway, because it is the execution order that decides');
+push('what runs when a panel constructor returns early.');
+push();
+push('| # | Step | Module | Mounts | Listens to | Sends |');
+push('| --- | --- | --- | --- | --- | --- |');
+const mountCell = (r) => (r.mounts.length ? r.mounts.map((m) => `\`${m}\``).join('<br>') : '**nothing**');
+const bootRow = (r, label) => `| ${label} | \`${esc(r.call)}\` | \`${short(r.file)}\` | ${mountCell(r)} | ${EV(r.subs)} | ${EV(r.emits)} |`;
+push(
+  `| ${range(chromeRows)} | ${chromeRows.map((r) => `\`${r.call}\``).join('<br>')}`
+  + ` | \`src/ui/ui.js\`<br><sub>chrome, tabs, shortcuts</sub>`
+  + ` | \`#drawer-container\`<br>\`#top-toolbar\` | ${EV([...new Set(chromeRows.flatMap((r) => r.subs))])} | ${EV([...new Set(chromeRows.flatMap((r) => r.emits))])} |`,
+);
+for (const r of panelRows) push(bootRow(r, String(r.order)));
+push(
+  `| ${range(helpRows)} | ${helpRows.map((r) => `\`${r.call}\``).join('<br>')}`
+  + ` | ${[...new Set(helpRows.map((r) => short(r.file)))].map((f) => `\`${f}\``).join('<br>')}`
+  + ` | overlay, on demand | ${EV(helpRows.flatMap((r) => r.subs))} | ${EV(helpRows.flatMap((r) => r.emits))} |`,
+);
+push();
+const uiSubs = (name) => EVENTS.get(name).subs.filter(({ file }) => UI(file));
+const outsideProducers = (name) => EVENTS.get(name).named.filter(({ file }) => !UI(file));
+const uiProducers = (name) => EVENTS.get(name).named.filter(({ file }) => UI(file));
+const outsideSubs = (name) => EVENTS.get(name).subs.filter(({ file }) => !UI(file));
+
+const PUSH = [...EVENTS.keys()]
+  .filter((n) => outsideProducers(n).length && uiSubs(n).length)
+  .sort();
+const COMMAND = [...EVENTS.keys()]
+  .filter((n) => uiProducers(n).length && outsideSubs(n).length)
+  .sort();
+const INTERNAL = [...EVENTS.keys()]
+  .filter((n) => uiProducers(n).length && uiSubs(n).length)
+  .sort();
+const UI_EVENTS = [...EVENTS.keys()].filter((n) => uiProducers(n).length || uiSubs(n).length);
+// How much of the command channel main.js answers on its own, rather than
+// forwarding: the engines that also listen to UI events are the exception and
+// are named rather than smoothed over.
+const mainOnly = COMMAND.filter((n) => outsideSubs(n).every(({ file }) => file === 'src/main.js'));
+const mainNotOnly = COMMAND.filter((n) => !mainOnly.includes(n));
+
+push('### Two channels to the orchestrator');
+push();
+push(`The UI layer and \`src/main.js\` speak over ${UI_EVENTS.length} named events, which separate by`);
+push('direction. An event can appear in more than one list, which is exactly the');
+push('point of listing them: a panel-to-panel edge is often also a command.');
+push();
+push(`- **${PUSH.length} push in** — produced outside \`src/ui/\`, consumed by a panel. These are the numbers a panel`);
+push('  displays, and they arrive without the panel asking.');
+push(`- **${COMMAND.length} commands out** — sent by a panel, answered outside \`src/ui/\`. ${mainOnly.length} of the ${COMMAND.length} are`);
+push('  answered by `src/main.js` and nothing else, so a panel never reaches an engine,');
+push('  a state module or the worker by name.');
+if (mainNotOnly.length) {
+  push(`- ${mainNotOnly.length} command${mainNotOnly.length === 1 ? '' : 's'} also reach${mainNotOnly.length === 1 ? 'es' : ''} something else:`);
+  for (const name of mainNotOnly) {
+    const elsewhere = outsideSubs(name).filter(({ file }) => file !== 'src/main.js');
+    push(`  \`${name}\` → ${elsewhere.map(({ file }) => `\`${short(file)}\``).join(', ')}.`);
+  }
+}
+push(`- **${INTERNAL.length} exchanged panel to panel**, with the orchestrator out of the path.`);
+push();
+push('#### Push: simulation → panel');
+push();
+push('| Event | Produced by | Panel |');
+push('| --- | --- | --- |');
+for (const name of PUSH) {
+  const prov = provenance(name);
+  const by = prov.producedBy.map(site).join('<br>');
+  const objectOnly = !prov.producedBy.length ? '—' : '';
+  push(
+    `| \`${name}\` | ${by || objectOnly} | ${uiSubs(name).map(({ file }) => `\`${shortModule(file)}\``).join(', ')} |`,
+  );
+}
+push();
+push('#### Command: panel → orchestrator');
+push();
+push('| Event | Sent by | Answered by |');
+push('| --- | --- | --- |');
+for (const name of COMMAND) {
+  push(
+    `| \`${name}\` | ${uiProducers(name).map(({ file }) => `\`${shortModule(file)}\``).join(', ')}`
+    + ` | ${outsideSubs(name).map(({ file }) => `\`${short(file)}\``).join(', ')} |`,
+  );
+}
+push();
+push('#### Inside the layer');
+push();
+if (INTERNAL.length) {
+  push(`${INTERNAL.length} event${INTERNAL.length === 1 ? ' is' : 's are'} delivered straight from one module to`);
+  push('another inside `src/ui/`, with no orchestrator hop on that edge:');
+  push();
+  for (const name of INTERNAL) {
+    push(
+      `- \`${name}\` — ${uiProducers(name).map(({ file }) => shortModule(file)).join(', ')} → ${uiSubs(name).map(({ file }) => shortModule(file)).join(', ')}.`,
+    );
+  }
+} else {
+  push('- None.');
+}
+push();
+const importedBy = (file) => [...NODES.values()].filter((n) => n.imports.has(file)).map((n) => n.rel);
+const BOOT_FILES = new Set(bootRows.map((r) => r.file));
+const KERNEL = SRC_FILES.filter((f) => UI(f) && f !== 'src/ui/ui.js' && !BOOT_FILES.has(f));
+const role = (file) => {
+  const users = importedBy(file);
+  if (!users.length) return '**not imported**';
+  if (users.length > 1) return 'shared';
+  if (users[0] === 'src/ui/ui.js') return 'wired at init';
+  return 'single owner';
+};
+
+push('### The shared kernel');
+push();
+push(`The coverage counts above are tab panels. \`src/ui/\` holds ${SRC_FILES.filter(UI).length} JavaScript modules; the rest are the`);
+push(`orchestrator, ${KERNEL.filter((f) => importedBy(f).length > 1).length} shared helpers and the help layer. A helper earns its place here only`);
+push('by being imported more than once, so this list is the deduplication record:');
+push('every entry is one behaviour that would otherwise be a second implementation.');
+push();
+push('| Module | What it owns | Imported by | Role |');
+push('| --- | --- | --- | --- |');
+for (const file of KERNEL.sort((a, b) => importedBy(b).length - importedBy(a).length || a.localeCompare(b))) {
+  const users = importedBy(file);
+  push(
+    `| \`${short(file)}\`<br><sub>${NODES.get(file).lines} lines</sub>`
+    + ` | ${NODES.get(file).doc ? esc(NODES.get(file).doc) : '—'}`
+    + ` | ${users.length ? users.map((u) => `\`${shortModule(u)}\``).join(', ') : '**nothing**'}`
+    + ` | ${role(file)} |`,
+  );
+}
+push();
+// A dangling subscription is a *listener* nothing sends; an unanswered send is
+// an *emit* nothing hears. Both predicates require the matching half to exist,
+// or every postMessage type in the worker would qualify as a dead listener.
+const dangling = (name) => EVENTS.get(name).subs.length > 0 && provenance(name).producedBy.length === 0;
+const unanswered = (name) => provenance(name).emitsBus.length > 0 && EVENTS.get(name).subs.length === 0;
+
+const dark = panelRows.filter((r) => r.mounts.length === 0);
+const darkBus = dark.map((r) => {
+  const subs = r.subs.filter(dangling);
+  const sends = r.emits.filter(unanswered);
+  return { ...r, subs, sends, absent: absentRefsOf(r.file) };
+}).filter((r) => r.absent.length || r.subs.length || r.sends.length);
+const unreached = SRC_FILES.filter((f) => !REACHABLE.has(f));
+const danglingSubs = [...EVENTS.keys()].filter(dangling).sort();
+const deadSends = [...EVENTS.keys()].filter(unanswered).sort();
+
+push('### Loose ends');
+push();
+push('Facts this map produced that no other part of the report states. Each names a');
+push('call site so it can be checked rather than believed. None of them is a');
+push('recommendation — a wire with nothing on the end of it may be a dormant feature,');
+push('a seam for something not built yet, or a genuine omission, and the code does not');
+push('say which.');
+push();
+if (darkBus.length) {
+  push('**Panels that construct and render nothing.**');
+  push();
+  for (const r of darkBus) {
+    const parts = [];
+    if (r.absent.length) {
+      const where = NODES.get(r.file).src.split('\n');
+      parts.push(
+        `It reaches for ${r.absent.map((id) => `\`#${id}\``).join(', ')}, which neither \`index.html\` nor the module itself declares`,
+      );
+    }
+    if (r.subs.length) parts.push(`${r.subs.length} event${r.subs.length === 1 ? '' : 's'} it waits for (${EV(r.subs)}) never arrive`);
+    if (r.sends.length) parts.push(`${r.sends.length} event${r.sends.length === 1 ? '' : 's'} it sends (${EV(r.sends)}) reach nothing`);
+    push(
+      `- \`${r.call}\` (\`${short(r.file)}\`) is constructed on every boot and writes nothing. ${parts.join('; ')}.`
+      + ' The constructor guards for the missing element, so it is silent: no error, no surface.',
+    );
+  }
+  push();
+}
+if (danglingSubs.length) {
+  push(`**${danglingSubs.length} subscriptions with no producer.** A listener whose event is`);
+  push('never sent, on either dispatch channel.');
+  push();
+  push('| Event | Subscribed at |');
+  push('| --- | --- |');
+  for (const name of danglingSubs) {
+    const subs = EVENTS.get(name).subs;
+    const scope = subs.every(({ file }) => UI(file)) ? 'panel' : 'orchestrator';
+    push(`| \`${name}\`<br><sub>${scope}</sub> | ${subs.map(site).join('<br>')} |`);
+  }
+  push();
+}
+if (deadSends.length) {
+  push(`**${deadSends.length} events sent to an empty room.** Emitted, with no subscriber`);
+  push('anywhere in `src/`.');
+  push();
+  const uiSends = deadSends.filter((n) => uiProducers(n).length);
+  const otherSends = deadSends.filter((n) => !uiProducers(n).length);
+  for (const [label, list] of [['UI', uiSends], ['orchestrator', otherSends]]) {
+    if (!list.length) continue;
+    push(
+      `- **From the ${label}:** ${list.map((n) => `\`${n}\` (${uiProducers(n).length ? uiProducers(n).map(({ file }) => shortModule(file)).join(', ') : EVENTS.get(n).named.map(({ file }) => short(file)).join(', ')})`).join('; ')}.`,
+    );
+  }
+  push();
+}
+if (unreached.length) {
+  const uiUnreached = unreached.filter(UI);
+  const otherUnreached = unreached.filter((f) => !UI(f));
+  push(`**${unreached.length} modules nothing reachable loads.** Walking imports from the entry`);
+  push(`script named in \`index.html\` (${ROOTS.map((r) => `\`${short(r)}\``).join(', ')}) reaches every other file in \`src/\``);
+  push(`except these. They are checked and shipped; nothing calls them.`);
+  push();
+  for (const file of uiUnreached) {
+    const users = importedBy(file);
+    push(
+      `- \`${short(file)}\` (${NODES.get(file).lines} lines) — ${NODES.get(file).doc ? esc(NODES.get(file).doc) : 'no header description'}.`
+      + (users.length
+        ? ` Imported only by ${users.map((u) => `\`${short(u)}\``).join(', ')}, which ${users.length === 1 ? 'is' : 'are'} itself unreachable.`
+        : ' Imported by nothing at all.'),
+    );
+  }
+  if (otherUnreached.length) {
+    push(`- Outside the UI layer: ${otherUnreached.map((f) => `\`${short(f)}\``).join(', ')}.`);
+  }
+  push();
+}
+push('### Cross-references');
+push();
+push('- `docs/spec/architecture/module-boundaries.md` — generated area-level import and');
+push('  export counts, where this map goes down to the individual module.');
+push('- `docs/spec/architecture/dataflow.md` — the tick dataflow behind those push events:');
+push('  configuration → worker → solver → renderer and HUD.');
+push('- `src/core/eventBus.js` — the bus itself: a listener list with no routing, so every');
+push('  edge above is a name string in two files and nothing more.');
+push();
+// ── SEMANTIC-MAP ──
 const report = `${lines.join('\n')}\n`;
 
 // ── Validation: the table must match reality ─────────────────────────────

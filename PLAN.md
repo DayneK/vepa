@@ -1,10 +1,21 @@
 # Implementation Plan: VEPA4 — Integrated Intelligence
 
-**Date**: 2026-09-23 | **Status**: Complete | **Spec**: `SPEC.md`
+**Date**: 2026-10-01 | **Status**: Complete | **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
-> (current `9.1.22`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
+> (current `9.2.0`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
 > Conventional Commits 1.0.0 — see `AGENTS.md` §10.4.
+
+## Milestone note (v9.2.0 — 2026-10-01)
+
+- Executed the UI overhaul plan at `docs/systems/ui-overhaul-plan.md` in six phases:
+  audit infrastructure, the `INERTIA`→`WRAP` mechanics swap, the shared selection context,
+  the SAVES split plus preset revival, the DATA-panel work, the LAWS grid, and SETTINGS
+  precedence.
+- Two audit gates that would have caught shipping defects: no dead law toggles, and the
+  analytics draw paths actually executed.
+- **No browser verification** — see the changelog entry for what that does and does not
+  cover.
 
 ## Milestone note (v9.1.22 — 2026-09-23)
 

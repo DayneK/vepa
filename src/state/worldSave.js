@@ -348,8 +348,26 @@ function metaOf(state) {
     worldSize: state.worldSize,
     particleCount: state.particleCount,
     speciesCount: state.speciesCount,
+    // Payload size, so the list can say how heavy a world is before you load
+    // it. Computed from the data actually written, not guessed from particle
+    // count — a 100k world and a 200-particle world differ by three orders of
+    // magnitude.
+    bytes: state.bytes !== undefined
+      ? state.bytes
+      : estimateBytes(state),
     summary: state.summary,
   };
+}
+
+/** Rough serialized size of a save, in bytes. */
+function estimateBytes(state) {
+  let total = 0;
+  if (state.particles) total += state.particles.byteLength ?? state.particles.length * 4;
+  if (state.dna) total += state.dna.byteLength ?? state.dna.length * 2;
+  try {
+    total += new TextEncoder().encode(JSON.stringify(state.civilization || '')).length;
+  } catch { /* a cyclic record is its own error report */ }
+  return total;
 }
 
 /** Browser adapter: IndexedDB primary, localStorage fallback for small stores. */
@@ -551,6 +569,24 @@ export function createUndoRing(cap = UNDO_RING_CAP) {
     },
     canUndo() { return this.past.length > 0; },
     canRedo() { return this.future.length > 0; },
+    /**
+     * A flat, presentable view of the ring, oldest first.
+     *
+     * The UNDO sub-tab renders this instead of nothing: a button that can undo
+     * without showing what will be undone is a button you cannot predict.
+     * Labels come from the state's own `name` when it has one, and from its tick
+     * otherwise, so a step is identifiable.
+     */
+    describe() {
+      const label = (s) => (s && (s.name || s.label))
+        || (s && Number.isFinite(s.tick) ? `tick ${s.tick}` : 'step');
+      return {
+        history: this.past.map(label),
+        redo: this.future.map(label).reverse(),
+        position: this.past.length - 1,
+        cap: this.cap,
+      };
+    },
     clear() { this.past = []; this.future = []; },
   };
   return ring;

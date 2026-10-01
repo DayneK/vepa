@@ -30,7 +30,7 @@ No implementation file found.
 
 ## Verification evidence
 
-- Tests: No test file mentions this law name.
+- Tests: [tests/unit/deadLawToggles.test.js](tests/unit/deadLawToggles.test.js)
 - Audits: No filename-matched audit record found.
 
 ## Interpretation boundary

@@ -181,6 +181,7 @@ export function createWorldPanel(bus, lawStateObj) {
   }
 
   // ── Build law grid ──
+  setupLawSearch(grid, lawStateObj, bus);
   renderLawGrid(grid, lawStateObj, bus);
 
   // ── Law set bar: save / load presets with a mini-icon dropdown ──
@@ -230,8 +231,18 @@ function renderLawGrid(grid, lawStateObj, bus) {
     const band = LAW_SPECTRUM[cat.color] || LAW_SPECTRUM.BLUE;
     const centerHue = band.grey ? band.hue : Math.round(band.center * 3.6);
     const catSat = band.grey ? band.sat : null;
+    let onCount = 0;
+    for (const idx of cat.laws) if (isSet(lawStateObj, idx)) onCount += 1;
     html += `<div class="law-cat-row" data-cat-row="${catName}">`;
-    html += `<div class="law-cat-label" style="color:hsl(${centerHue} ${catSat ?? 85}% 65%);--law-h:${centerHue};--law-s:${catSat ?? 85}%">${catName}</div>`;
+    // The count answers "what is on?" without counting lit tiles, and the
+    // ON/OFF pair answers "turn this whole category on" — which, with 136
+    // tiles, is the only practical way to build a preset.
+    html += `<div class="law-cat-label" style="color:hsl(${centerHue} ${catSat ?? 85}% 65%);--law-h:${centerHue};--law-s:${catSat ?? 85}%">`
+          + `<span class="law-cat-name">${catName}</span>`
+          + `<span class="law-cat-count">${onCount}/${cat.laws.length}</span>`
+          + `<button class="law-cat-bulk" data-bulk="on" data-cat="${catName}" title="Turn every ${catName} law on" aria-label="Turn every ${catName} law on">ON</button>`
+          + `<button class="law-cat-bulk" data-bulk="off" data-cat="${catName}" title="Turn every ${catName} law off" aria-label="Turn every ${catName} law off">OFF</button>`
+          + `</div>`;
     for (const idx of cat.laws) {
       const name = LAW_NAME_BY_IDX[idx] || `LAW_${idx}`;
       const icon = LAW_ICONS[name] || '?';
@@ -239,12 +250,13 @@ function renderLawGrid(grid, lawStateObj, bus) {
       const catClass = 'cat-' + catName;
       const hue = LAW_HUE_BY_INDEX[idx] !== undefined ? LAW_HUE_BY_INDEX[idx] : centerHue;
       const selectedClass = idx === selectedLawIdx ? ' selected' : '';
+      const searchText = `data-name="${name.toLowerCase()}"`;
       if (isWordMode) {
-        html += `<button class="law-btn ${catClass}${active ? ' active' : ''}${selectedClass}" `
+        html += `<button class="law-btn ${catClass}${active ? ' active' : ''}${selectedClass}" ${searchText} `
               + `style="--law-h:${hue};--law-s:${LAW_SAT_BY_INDEX[idx] ?? 85}" data-law="${idx}" title="${name}">`
               + `<span class="tog-icon">${icon}</span><span class="tog-name">${name}</span></button>`;
       } else {
-        html += `<button class="sq-toggle ${catClass}${active ? ' active' : ''}${selectedClass}" `
+        html += `<button class="sq-toggle ${catClass}${active ? ' active' : ''}${selectedClass}" ${searchText} `
               + `style="--law-h:${hue};--law-s:${LAW_SAT_BY_INDEX[idx] ?? 85}" data-law="${idx}" title="${name}">`
               + `<span class="tog-icon">${icon}</span><span class="tog-name">${name}</span></button>`;
       }
@@ -272,8 +284,33 @@ function renderLawGrid(grid, lawStateObj, bus) {
     });
   });
 
-  // Re-apply category filter
-  applyCategoryFilter(grid);
+  // Wire the per-category ON / OFF pairs. Every tile is toggled through the
+  // same emit a manual tap uses, so the worker, the law panel and the preset
+  // list all see the change by the same path — a bulk path of its own would be
+  // a second way for the world to disagree with the grid.
+  grid.querySelectorAll('.law-cat-bulk').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cat = LAW_CATEGORIES[btn.dataset.cat];
+      if (!cat) return;
+      const wantOn = btn.dataset.bulk === 'on';
+      let changed = 0;
+      for (const idx of cat.laws) {
+        if (isSet(lawStateObj, idx) === wantOn) continue;
+        if (wantOn) setLaw(lawStateObj, idx);
+        else clearLaw(lawStateObj, idx);
+        changed += 1;
+      }
+      if (!changed) return;
+      renderLawGrid(grid, lawStateObj, bus);
+      bus.emit('law:toggled', { category: btn.dataset.cat, active: wantOn, state: wantOn ? 1 : 0, changed });
+      bus.emit('narrative:system', {
+        text: `${btn.dataset.cat}: ${wantOn ? 'enabled' : 'disabled'} (${changed} law${changed === 1 ? '' : 's'}).`,
+      });
+    });
+  });
+
+  // Re-apply category filter + search
+  applyLawVisibility(grid);
 }
 
 // ── Law set bar (save / load presets) ───────────────────────────
@@ -537,17 +574,94 @@ function renderWorldSliders(container, bus) {
 }
 
 function applyCategoryFilter(grid) {
+  applyLawVisibility(grid);
+}
+
+/**
+ * Apply the category filter and the search box together.
+ *
+ * They compose rather than replace each other: a category tab hides a whole
+ * row, and the search hides individual tiles inside the rows that survive. The
+ * count in the search row reports how many laws are currently reachable, so a
+ * search that matches nothing in a hidden category says so instead of
+ * pretending the grid is simply short.
+ */
+function applyLawVisibility(grid) {
   const filterRow = document.querySelector('.category-filter-row');
-  if (!filterRow) return;
   // Build set of active category names from filter tab data-cat attributes
   const activeCats = new Set();
-  filterRow.querySelectorAll('.cat-tab.active').forEach((btn) => {
-    activeCats.add(btn.dataset.cat);
-  });
+  if (filterRow) {
+    filterRow.querySelectorAll('.cat-tab.active').forEach((btn) => {
+      activeCats.add(btn.dataset.cat);
+    });
+  }
+
+  const query = (lawSearchValue() || '').trim().toLowerCase();
+  let visibleTiles = 0;
 
   grid.querySelectorAll('.law-cat-row').forEach((row) => {
     const catName = row.dataset.catRow;
-    const visible = catName !== undefined && activeCats.has('cat-' + catName);
-    row.style.display = visible ? '' : 'none';
+    const catOpen = catName !== undefined && activeCats.has('cat-' + catName);
+    let rowMatches = 0;
+    row.querySelectorAll('[data-law]').forEach((tile) => {
+      const hit = !query || String(tile.dataset.name || '').includes(query);
+      tile.style.display = catOpen && hit ? '' : 'none';
+      if (catOpen && hit) rowMatches += 1;
+    });
+    // A row with nothing left to show is hidden rather than left as a header
+    // with a count and no laws under it.
+    row.style.display = catOpen && (rowMatches > 0 || !query) ? '' : 'none';
+    visibleTiles += rowMatches;
   });
+
+  const countEl = document.getElementById('law-search-count');
+  if (countEl) {
+    countEl.textContent = query ? `${visibleTiles} of ${LAW_COUNT}` : '';
+  }
+  return visibleTiles;
+}
+
+/** The current search text, read from the input if one is mounted. */
+function lawSearchValue() {
+  const input = document.getElementById('law-search');
+  return input ? input.value : '';
+}
+
+/**
+ * Wire the law search box.
+ *
+ * Kept out of `renderLawGrid` so typing does not rebuild 136 tiles per
+ * keystroke — the grid is written once and the filter only toggles `display`.
+ */
+function setupLawSearch(grid, lawStateObj, bus) {
+  const input = document.getElementById('law-search');
+  const clear = document.getElementById('law-search-clear');
+  if (!input) return;
+  input.addEventListener('input', () => {
+    applyLawVisibility(grid);
+    if (clear) clear.disabled = !input.value;
+  });
+  // Enter jumps to the first surviving tile, so a keyboard user reaches a law
+  // without tabbing through 130 hidden buttons.
+  input.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    for (const row of grid.querySelectorAll('.law-cat-row')) {
+      if (row.style.display === 'none') continue;
+      const first = row.querySelectorAll('[data-law]').find((t) => t.style.display !== 'none');
+      if (first) {
+        first.click();
+        return;
+      }
+    }
+  });
+  if (clear) {
+    clear.disabled = !input.value;
+    clear.addEventListener('click', () => {
+      input.value = '';
+      applyLawVisibility(grid);
+      clear.disabled = true;
+      input.focus();
+    });
+  }
 }

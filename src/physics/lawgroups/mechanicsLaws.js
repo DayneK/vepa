@@ -43,9 +43,67 @@ export function applyMomentum(view, i, j, k = 0.04) {
   return { ax: clamp(dvx * k * mj / (mi + mj)), ay: clamp(dvy * k * mj / (mi + mj)), az: clamp(dvz * k * mj / (mi + mj)) };
 }
 
-export function applyInertia(view, i, ax, ay, az, k = 0.02) {
-  const m = mass(view, i);
-  return { ax: clamp(ax * k / m), ay: clamp(ay * k / m), az: clamp(az * k / m) };
+/**
+ * Fold one coordinate back into `[0, worldSize)` — WRAP's toroidal branch.
+ */
+export function wrapCoordinate(value, worldSize) {
+  return ((value % worldSize) + worldSize) % worldSize;
+}
+
+/**
+ * WRAP — the world's boundary rule.
+ *
+ * This body used to be inline in the solver and keyed off the TOROIDAL world
+ * param; it was a law once, lost its toggle, and became a slider nobody could
+ * reason about from the grid. It is a law again at index 130, and the param is
+ * kept as its default: the solver reads the bit, the param seeds it.
+ *
+ *   wrap on  — a particle that leaves one face re-enters through the opposite
+ *              one, and its velocity is untouched.
+ *   wrap off — the same face clamps it and drives the outward velocity through
+ *              WALL REFLECT (0 = absorb, 1 = full reflect, 2 = over-reflect).
+ *
+ * Pure and coordinate-returning, so the solver writes back whichever axes
+ * moved rather than mutating the buffer from inside a law.
+ *
+ * @param {{x: number, y: number, z: number}} position
+ * @param {{x: number, y: number, z: number}} velocity
+ * @param {number} worldSize
+ * @param {boolean} wrap  the law bit
+ * @param {number} wallReflect
+ * @returns {{position: {x, y, z}, velocity: {x, y, z}, mode: 'toroidal'|'walls', touched: string[]}}
+ */
+export function applyWrapBoundary(position, velocity, worldSize, wrap = true, wallReflect = 1) {
+  const reflect = Number.isFinite(wallReflect) ? wallReflect : 1;
+  const pos = { x: position.x, y: position.y, z: position.z };
+  const vel = { x: velocity.x, y: velocity.y, z: velocity.z };
+
+  if (wrap) {
+    return {
+      position: {
+        x: wrapCoordinate(pos.x, worldSize),
+        y: wrapCoordinate(pos.y, worldSize),
+        z: wrapCoordinate(pos.z, worldSize),
+      },
+      velocity: vel,
+      mode: 'toroidal',
+      touched: [],
+    };
+  }
+
+  const touched = [];
+  for (const axis of ['x', 'y', 'z']) {
+    if (pos[axis] < 0) {
+      pos[axis] = 0;
+      vel[axis] = Math.abs(vel[axis]) * reflect;
+      touched.push(`${axis}<0`);
+    } else if (pos[axis] >= worldSize) {
+      pos[axis] = worldSize - 0.01;
+      vel[axis] = -Math.abs(vel[axis]) * reflect;
+      touched.push(`${axis}>=${worldSize}`);
+    }
+  }
+  return { position: pos, velocity: vel, mode: 'walls', touched };
 }
 
 export function applyTorque(view, i, j, dx, dy, dz, k = 0.01) {
@@ -111,16 +169,22 @@ export function diagnoseCollisionImpulse(view, i, j, nx, ny, nz, elasticity = 0.
   });
 }
 
-/** Return INERTIA's mass scaling without mutating the particle buffer. */
-export function diagnoseInertia(view, i, ax, ay, az, k = 0.02) {
-  const particleMass = mass(view, i);
-  const scale = k / particleMass;
+/**
+ * Return WRAP's boundary decision without mutating anything.
+ *
+ * Deliberately separate from the hot path — `tests/unit/mechanics.test.js`
+ * asserts against this rather than re-deriving the fold.
+ */
+export function diagnoseWrapBoundary(position, velocity, worldSize, wrap = true, wallReflect = 1) {
+  const toroidal = applyWrapBoundary(position, velocity, worldSize, true);
+  const walls = applyWrapBoundary(position, velocity, worldSize, false, wallReflect);
   return Object.freeze({
-    mass: particleMass,
-    coefficient: k,
-    scale,
-    input: Object.freeze({ ax, ay, az }),
-    output: Object.freeze({ ax: clamp(ax * scale), ay: clamp(ay * scale), az: clamp(az * scale) }),
+    worldSize,
+    wallReflect: Number.isFinite(wallReflect) ? wallReflect : 1,
+    wrapped: wrap,
+    escapedFaces: walls.touched,
+    toroidal: Object.freeze(toroidal.position),
+    walls: Object.freeze({ position: walls.position, velocity: walls.velocity }),
   });
 }
 

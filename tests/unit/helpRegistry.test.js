@@ -84,6 +84,9 @@ describe('coverage — every reachable control is documented', () => {
     const declared = new Set([
       ...[...panelSources.matchAll(/id="([a-z]+-[a-z-]+)"[^>]*class="intel-value"/g)].map((m) => m[1]),
       ...[...panelSources.matchAll(/\{\s*id:\s*'([a-z]+-[a-z-]+)',\s*label:/g)].map((m) => m[1]),
+      // Panels also build blocks the help overlay can resolve — the codex
+      // stopped being a grid cell and became one of these.
+      ...[...panelSources.matchAll(/\.id\s*=\s*'([a-z]+-[a-z-]+)'/g)].map((m) => m[1]),
     ]);
     for (const id of Object.keys(CELL_HELP)) {
       expect(declared.has(id), `${id} is not a declared cell`).toBe(true);
@@ -178,11 +181,14 @@ describe('content accuracy', () => {
     }
   });
 
-  it('flags the misleading "Civilizations" title on the GROUPS panel', () => {
-    // data-groups is titled "Civilizations (Set F)" in the shell but shows
-    // individual groups. The entry must say so rather than repeat the label.
+  it('distinguishes the GROUPS panel from the multi-group CIVILIZATION sub-tab', () => {
+    // The stale "this panel is titled Civilizations (Set F), which is
+    // misleading" note described a label that no longer existed anywhere. What
+    // is actually true, and useful, is where the two panels stop.
     const text = SUBTAB_HELP['data-groups'].sections.map((s) => s.join(' ')).join(' ');
-    expect(text).toContain('misleading');
+    expect(text).toContain('individual groups');
+    expect(text).toContain('CIVILIZATION sub-tab');
+    expect(text).not.toContain('misleading');
   });
 
   it('records the honesty boundary for the codex', () => {
@@ -235,7 +241,9 @@ describe('helpForGraph', () => {
     expect(ids.tabs).toContain('tab-setup');
     expect(ids.subtabs).toContain('data-civilization');
     expect(ids.graphs).toContain('pop-line-graph');
-    expect(ids.cells).toContain('civ-codex');
+    // The codex is a full-width block now, not a grid cell, so its help key
+    // moved with it.
+    expect(ids.cells).toContain('civ-codex-block');
   });
 });
 

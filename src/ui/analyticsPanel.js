@@ -92,7 +92,11 @@ export function mountAnalyticsPanel(bus, opts) {
 
   const ctx = { host, setVal };
 
-  let lastDraw = 0;
+  // Seeded negative-infinity, not 0: `performance.now()` is also relative to
+  // process/page start, so a literal 0 made the shell compare `now - 0` against
+  // the throttle and swallow every payload that arrived in the first 500 ms of
+  // the page's life. The first payload a panel receives is always drawn.
+  let lastDraw = -Infinity;
   subscribe(bus, (payload) => {
     const now = performance.now();
     if (now - lastDraw < throttleMs) return;

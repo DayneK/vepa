@@ -283,6 +283,24 @@ function setupDNAInteractions() {
   const analytics = document.getElementById('dna-analytics');
   if (!charts || charts.dataset.interactionsReady === 'true') return;
   charts.dataset.interactionsReady = 'true';
+  // Expanding used to be bound to double-click alone: a desktop gesture, in a
+  // drawer that was reworked touch-first, with no visible affordance saying a
+  // graph could be expanded at all. Every chart section now carries explicit
+  // EXPAND and PIN controls, so the gesture is visible, reachable by keyboard,
+  // and works on a pointer with no double-tap.
+  //
+  // Double-click is kept as a shortcut rather than removed — it costs nothing
+  // and preserves the muscle memory of anyone already using it.
+  charts.addEventListener('click', (event) => {
+    if (event.target.closest('[data-dna-expand]')) {
+      const section = event.target.closest('.chart-section');
+      if (section) toggleChart(section);
+    } else if (event.target.closest('[data-dna-pin]')) {
+      const section = event.target.closest('.chart-section');
+      if (section) pinChart(section);
+    }
+  });
+  for (const section of charts.querySelectorAll('.chart-section')) ensureChartControls(section);
   // Expanding moved from long-press to double-click on purpose. Long-press is
   // now the universal "explain this" gesture (helpOverlay.js) across every tab,
   // and it has to mean the same thing everywhere or users cannot learn it.
@@ -322,8 +340,79 @@ function openHistoryModule(key, label) {
   module.querySelector('button').addEventListener('click', () => module.remove());
 }
 
+/**
+ * Add the EXPAND and PIN controls to a chart section if it has neither.
+ *
+ * Built through the DOM rather than markup because the chart sections are
+ * static HTML in index.html and this keeps the affordance next to the drawing
+ * code that gives it meaning.
+ */
+function ensureChartControls(section) {
+  if (!section || section.querySelector('[data-dna-expand]')) return;
+  const expand = document.createElement('button');
+  expand.type = 'button';
+  expand.className = 'dna-chart-expand';
+  expand.setAttribute('data-dna-expand', '');
+  expand.textContent = section.classList.contains('dna-chart-expanded') ? 'CLOSE' : 'EXPAND';
+
+  const pin = document.createElement('button');
+  pin.type = 'button';
+  pin.className = 'dna-chart-pin';
+  pin.setAttribute('data-dna-pin', '');
+  pin.textContent = 'PIN';
+  pin.title = 'Keep this graph open when another is expanded, so two can be compared';
+
+  section.appendChild(expand);
+  section.appendChild(pin);
+}
+
+function toggleChart(section) {
+  if (section.classList.contains('dna-chart-expanded')) collapseChart(section);
+  else expandChart(section);
+}
+
+/**
+ * Pin a chart so it stays expanded while another is opened.
+ *
+ * Without this, expanding a second graph closes the first, which makes
+ * comparing two graphs — the entire reason to expand one — impossible.
+ */
+function pinChart(section) {
+  const wasPinned = section.classList.contains('dna-chart-pinned');
+  document.querySelectorAll('.dna-chart-pinned').forEach((el) => {
+    el.classList.remove('dna-chart-pinned');
+    syncExpandControl(el);
+  });
+  if (wasPinned) {
+    collapseChart(section);
+    return;
+  }
+  if (!section.classList.contains('dna-chart-expanded')) expandChart(section);
+  section.classList.add('dna-chart-pinned');
+  syncExpandControl(section);
+}
+
+function syncExpandControl(section) {
+  const button = section && section.querySelector('[data-dna-expand]');
+  if (button) {
+    const expanded = section.classList.contains('dna-chart-expanded');
+    button.textContent = expanded ? 'CLOSE' : 'EXPAND';
+    button.setAttribute('aria-label', expanded ? 'Close this graph' : 'Expand this graph');
+  }
+  const pin = section && section.querySelector('[data-dna-pin]');
+  if (pin) {
+    const pinned = section.classList.contains('dna-chart-pinned');
+    pin.textContent = pinned ? 'PINNED' : 'PIN';
+    pin.setAttribute('aria-pressed', pinned ? 'true' : 'false');
+  }
+}
+
 function expandChart(section) {
-  document.querySelectorAll('.dna-chart-expanded').forEach((el) => el.classList.remove('dna-chart-expanded'));
+  document.querySelectorAll('.dna-chart-expanded').forEach((el) => {
+    if (el === section) return;
+    el.classList.remove('dna-chart-expanded');
+    syncExpandControl(el);
+  });
   document.querySelectorAll('.dna-chart-close').forEach((el) => el.remove());
   section.classList.add('dna-chart-expanded');
   const close = document.createElement('button');
@@ -332,14 +421,17 @@ function expandChart(section) {
   close.textContent = 'CLOSE GRAPH';
   close.addEventListener('click', () => collapseChart(section));
   section.appendChild(close);
+  syncExpandControl(section);
 }
 
 /** Shrink a chart, removing the close control. Safe to call when not expanded. */
 function collapseChart(section) {
   if (!section) return;
   section.classList.remove('dna-chart-expanded');
+  section.classList.remove('dna-chart-pinned');
   const close = section.querySelector('.dna-chart-close');
   if (close) close.remove();
+  syncExpandControl(section);
 }
 
 // ── Line Chart (multi-species population) ──

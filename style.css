@@ -289,6 +289,231 @@ body {
 .narrative-voice.observer { color: var(--accent-green); }
 .narrative-voice.dissolver { color: var(--accent-purple); }
 
+/* LOGS sub-tab (v9.1.29): header, follow indicator, filter chips, scroll body.
+   These had no rules at all before this pass — the panel rendered unstyled. */
+.narrative-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 4px;
+}
+.narrative-title {
+    flex: 1;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent-red);
+    font-size: 10px;
+    text-transform: uppercase;
+}
+.narrative-pin {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+}
+.narrative-pin.paused { color: var(--accent-gold); border-color: var(--accent-gold); }
+.narrative-clear-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 7px;
+    touch-action: manipulation;
+}
+.narrative-clear-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
+.narrative-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    padding: 4px 0 6px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+}
+.narrative-chip {
+    min-height: 28px;
+    padding: 3px 7px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+.narrative-chip.active { color: var(--accent-red); border-color: var(--accent-red); }
+.narrative-chip:disabled { opacity: 0.35; cursor: default; }
+.narrative-scroll { max-height: 220px; overflow-y: auto; }
+@media (pointer: coarse) {
+    .narrative-chip, .narrative-clear-btn { min-height: 44px; }
+}
+
+/* ── SETTINGS: precedence note + live/pending badges (v9.1.29) ─────────────
+   The badge is the only honest way to show that a backend change is not
+   instant: a select showing PIXI while Canvas2D is still drawing reads as a
+   working switch. */
+.setting-note {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+.setting-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    opacity: 0.7;
+}
+.setting-badge.pending {
+    color: var(--accent-gold);
+    border-color: var(--accent-gold);
+    opacity: 1;
+}
+
+/* ── Law search + per-category bulk (LAWS grid, v9.1.29) ─────────────────
+   136 tiles is past the point where scrolling and counting lit squares is a
+   workable interface. The search box narrows by name; the ON/OFF pair on each
+   category header is the only practical way to build a preset of a whole band. */
+.law-search-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 0 7px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 7px;
+}
+.law-search-row input[type="search"] {
+    flex: 1;
+    min-width: 0;
+    padding: 5px 8px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+.law-search-row input[type="search"]:focus { border-color: var(--accent-blue); outline: none; }
+.law-search-clear {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 4px 8px;
+    touch-action: manipulation;
+}
+.law-search-clear:disabled { opacity: 0.35; cursor: default; }
+.law-search-clear:hover:not(:disabled) { border-color: var(--accent-red); color: var(--accent-red); }
+.law-search-count {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    min-width: 56px;
+    text-align: right;
+}
+
+.law-cat-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.law-cat-name { flex: 1; }
+.law-cat-count {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    opacity: 0.75;
+    letter-spacing: 0.5px;
+}
+.law-cat-bulk {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+.law-cat-bulk[data-bulk="off"]:hover,
+.law-cat-bulk:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+.law-cat-bulk[data-bulk="off"]:hover { border-color: var(--accent-red); color: var(--accent-red); }
+@media (pointer: coarse) {
+    .law-search-clear, .law-cat-bulk, .law-search-row input[type="search"] { min-height: 44px; }
+}
+
+/* ── Chart expand / pin controls (DNA ANALYTICS, v9.1.29) ─────────────────
+   Expanding used to be bound to double-click with no visible affordance. These
+   are that affordance: a discoverable, keyboard-reachable EXPAND, and a PIN so
+   two graphs can stay open at once to be compared. */
+.dna-chart-expand,
+.dna-chart-pin {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 7px;
+    cursor: pointer;
+}
+.dna-chart-expand:hover,
+.dna-chart-pin:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+.dna-chart-pinned .dna-chart-pin { color: var(--accent-gold); border-color: var(--accent-gold); }
+@media (pointer: coarse) {
+    .dna-chart-expand, .dna-chart-pin { min-height: 44px; }
+}
+
+/* ── CODEX block (CIVILIZATION, v9.1.29) ───────────────────────────────────
+   The observer's own statement about the world, given the width of a sentence
+   rather than the width of a number. The stamp is not decoration: a codex with
+   no visible age reads as current no matter how long ago it was written. */
+.civ-codex-block {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 215, 0, 0.28);
+  border-radius: 4px;
+  background: rgba(255, 215, 0, 0.05);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-primary);
+}
+.civ-codex-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+.civ-codex-title {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--accent-gold);
+}
+.civ-codex-regime { font-size: 9px; letter-spacing: 1px; color: var(--text-secondary); }
+.civ-codex-stamp { margin-left: auto; font-size: 9px; color: var(--text-secondary); opacity: 0.75; }
+.civ-codex-statement { line-height: 1.5; }
+.civ-codex-statement em { color: var(--text-secondary); font-size: 10px; }
+.civ-codex-meta { margin-top: 5px; font-size: 9px; color: var(--text-secondary); letter-spacing: 0.5px; }
+.civ-codex-refused { margin-top: 5px; font-size: 10px; color: var(--accent-red); }
+.civ-codex-empty { font-size: 10px; color: var(--text-secondary); line-height: 1.5; }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -429,6 +654,27 @@ body {
 .species-dot:hover { transform: scale(1.1); }
 
 /* ── Preset Panel ─────────────────────────────────────────────────── */
+.world-presets { margin-top: 10px; }
+.preset-section {
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+}
+.preset-note {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+.preset-note strong { color: var(--text-primary); }
+.preset-status {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    min-height: 12px;
+}
 .preset-title {
     font-size: 11px;
     font-weight: 700;
@@ -1864,6 +2110,47 @@ body {
   overflow-y: auto;
 }
 
+/* ── Species leaderboard (ECO, v9.1.29) ───────────────────────────────────
+   A tap row, not a log line: the leaderboard is the drawer's selection
+   surface, so it inherits the same 44px floor as every other touch target. */
+.eco-leaderboard {
+  max-height: none;
+  white-space: normal;
+}
+.eco-board-head {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+.eco-board-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 4px 6px;
+  margin-bottom: 3px;
+  background: rgba(6, 10, 22, 0.55);
+  border: 1px solid rgba(120, 140, 200, 0.18);
+  border-left: 3px solid var(--accent-blue);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.eco-board-row.selected {
+  background: rgba(120, 160, 255, 0.18);
+  border-color: rgba(160, 190, 255, 0.55);
+}
+.eco-board-name { min-width: 34px; }
+.eco-board-spark { flex: 1; color: var(--text-secondary); letter-spacing: 1px; }
+.eco-board-pop { min-width: 44px; text-align: right; }
+.eco-board-share { min-width: 42px; text-align: right; opacity: 0.75; }
+
 /* ── v4: Debug overlay ── */
 .vepa-debug {
   position: fixed;
@@ -3242,6 +3529,9 @@ input[type='search'] {
 .tab-help-nav-btn,
 .dna-overview-stat,
 .dna-chart-close,
+.dna-chart-expand,
+.dna-chart-pin,
+.law-cat-bulk,
 .dna-history-module button {
   touch-action: manipulation;
 }

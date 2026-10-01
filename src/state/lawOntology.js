@@ -62,7 +62,7 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
     writes: ['ACCELERATION'],
   }),
   MOMENTUM: freezeRecord({
-    synergizesWith: ['CONTACT', 'INERTIA', 'TORQUE'],
+    synergizesWith: ['CONTACT', 'WRAP', 'TORQUE'],
     transforms: ['RELATIVE_VELOCITY -> VELOCITY_EXCHANGE'],
     reads: ['MASS', 'VEL_X', 'VEL_Y', 'VEL_Z'],
     writes: ['VEL_X', 'VEL_Y', 'VEL_Z'],
@@ -73,14 +73,15 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
     transforms: ['FORCE -> MASS_SCALED_ACCELERATION'],
     reads: ['MASS', 'FORCE', 'INERTIA'],
     writes: ['ACCELERATION'],
-    notes: ['Legacy physics inertia proxy; compare with INERTIA before changing either implementation.'],
+    notes: ['The inertia law. The mechanics INERTIA that once duplicated this was removed in v9.1.29 — it duplicated this record and its gate was never executed.'],
   }),
-  INERTIA: freezeRecord({
-    synergizesWith: ['MOMENTUM', 'TORQUE'],
-    transforms: ['FORCE -> ACCELERATION_RESISTANCE'],
-    reads: ['MASS', 'FORCE', 'INERTIA'],
-    writes: ['ACCELERATION'],
-    notes: ['Mechanics inertia proxy; possible semantic overlap with MASS_INERTIA is intentionally recorded.'],
+  WRAP: freezeRecord({
+    synergizesWith: ['ENTR', 'PLANETARY'],
+    antagonizes: ['HORIZON'],
+    transforms: ['OUT_OF_BOUNDS_COORDINATE -> REENTERED_OR_REFLECTED'],
+    reads: ['POS_X/Y/Z', 'VEL_X/Y/Z', 'TOROIDAL', 'WALL_REFLECT'],
+    writes: ['POS_X/Y/Z', 'VEL_X/Y/Z'],
+    notes: ['The world boundary rule. It was a law until it lost its toggle and became the TOROIDAL EDGES world param; restored as a law at index 130, with the param kept as its default.'],
   }),
   ACCR: freezeRecord({
     synergizesWith: ['CONTACT', 'TOPOLOGY'],
