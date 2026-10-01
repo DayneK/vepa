@@ -2,7 +2,9 @@
 
 ## [4.9.32] - 2026-10-01 → 9.2.0
 
-**Pending deploy.** Plan: `/docs/systems/ui-overhaul-plan.md`.
+**Deployed** to `https://v5.freebuff.app/` (Freebuff static Vite build, tag `v9.2.0`).
+Plan: `/docs/systems/ui-overhaul-plan.md` — also published at
+`https://v5.freebuff.app/docs/systems/ui-overhaul-plan.md`.
 Report: `/docs/systems/ui-module-report.md`.
 
 **The UI overhaul, in six phases, and the gate that stops the same bug recurring.**
