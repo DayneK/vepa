@@ -2,6 +2,8 @@
 
 ## [4.9.30] - 2026-10-01 → 9.1.27
 
+**Deployed:** `https://v5.freebuff.app/` (Freebuff static Vite hosting, 116 files, no build warnings). Report: `/docs/systems/ui-module-report.md`.
+
 **Touch first, then mouse, then keyboard — plus a launch screen and a report you can read.**
 
 ### Launch modal (new)
