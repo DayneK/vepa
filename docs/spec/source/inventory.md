@@ -61,7 +61,7 @@ The generator scanned `286` files from active repository inputs. Individual modu
 | [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 841 | 1 | 2 | 2 |
 | [src/physics/cipherKey.js](../../../src/physics/cipherKey.js) | simulation | 15 | 1 | 1 | 1 |
 | [src/physics/fields.js](../../../src/physics/fields.js) | simulation | 562 | 14 | 1 | 2 |
-| [src/physics/fmm.js](../../../src/physics/fmm.js) | simulation | 431 | 2 | 1 | 0 |
+| [src/physics/fmm.js](../../../src/physics/fmm.js) | simulation | 450 | 2 | 1 | 0 |
 | [src/physics/force.js](../../../src/physics/force.js) | simulation | 44 | 2 | 1 | 2 |
 | [src/physics/gpuCompute.js](../../../src/physics/gpuCompute.js) | simulation | 399 | 3 | 0 | 4 |
 | [src/physics/interactionSpace.js](../../../src/physics/interactionSpace.js) | simulation | 132 | 4 | 2 | 16 |
@@ -239,7 +239,7 @@ The generator scanned `286` files from active repository inputs. Individual modu
 | [tests/unit/exoticMatter.test.js](../../../tests/unit/exoticMatter.test.js) | testing | 366 | 0 | 5 | 3 |
 | [tests/unit/experimentalBackends.test.js](../../../tests/unit/experimentalBackends.test.js) | testing | 60 | 0 | 5 | 0 |
 | [tests/unit/fields.test.js](../../../tests/unit/fields.test.js) | testing | 274 | 0 | 8 | 5 |
-| [tests/unit/fmmParity.test.js](../../../tests/unit/fmmParity.test.js) | testing | 71 | 0 | 5 | 0 |
+| [tests/unit/fmmParity.test.js](../../../tests/unit/fmmParity.test.js) | testing | 84 | 0 | 5 | 0 |
 | [tests/unit/governance.test.js](../../../tests/unit/governance.test.js) | testing | 208 | 0 | 6 | 0 |
 | [tests/unit/gravEngineAlias.test.js](../../../tests/unit/gravEngineAlias.test.js) | testing | 64 | 0 | 6 | 1 |
 | [tests/unit/groupRegistry.test.js](../../../tests/unit/groupRegistry.test.js) | testing | 195 | 0 | 3 | 4 |
