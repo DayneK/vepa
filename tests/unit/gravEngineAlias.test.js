@@ -29,7 +29,8 @@ function run(engine) {
   const buf = cloud(N, 77);
   const law = createLawState();
   lawSet(law, LAW_INDEXES.GRAV);
-  const prng = new SplitMix32(9);
+  const r = new SplitMix32(9);
+  const prng = () => r.next(); // solve() takes a PRNG function
   for (let t = 0; t < 3; t++) solve(buf, N, STRIDE, law, null, WS, 1, prng);
   return buf;
 }

@@ -26,7 +26,8 @@
     "artifact:inventory": "node scripts/repository-artifact-report.mjs",
     "provenance:check": "node scripts/validate-provenance.mjs",
     "exports:check": "node scripts/check-export-publication.mjs",
-    "bench:backends:json": "node bench/backend-compare.mjs --json"
+    "bench:backends:json": "node bench/backend-compare.mjs --json",
+    "golden:check": "node scripts/golden-parity.mjs --check"
   },
   "dependencies": {
     "pixi.js": "^8.18.1",
