@@ -146,6 +146,18 @@ export function summarizeWorld(view, count, laws) {
  * @param {string} [opts.name]          save name
  * @param {number} [opts.savedAt]       epoch ms
  */
+/**
+ * Save-compatibility gate (docs/WORLD-SAVE-POLICY.md). Saves with no version
+ * or a version up to WORLD_SAVE_VERSION load; a newer version is rejected with
+ * a clear error rather than half-restored.
+ */
+export function assertSupportedVersion(version) {
+  const v = version == null ? 1 : Number(version);
+  if (!Number.isFinite(v) || v > WORLD_SAVE_VERSION) {
+    throw new Error(`Unsupported world save version ${version}: this build reads versions up to ${WORLD_SAVE_VERSION}. Update VEPA to open it.`);
+  }
+}
+
 export function captureWorldState(opts = {}) {
   const view = opts.view;
   const count = Math.max(0, Math.min(opts.count || 0, view ? (view.length / PARTICLE_STRIDE) | 0 : 0));
@@ -204,6 +216,7 @@ export function restoreWorldState(state, target = {}) {
   if (!state || state.format !== WORLD_SAVE_FORMAT) {
     throw new Error('Invalid world save: missing or unknown format');
   }
+  assertSupportedVersion(state.version);
   const particleCount = Math.max(0, Math.min(state.particleCount || 0, MAX_PARTICLES));
   const speciesCount = Math.max(1, Math.min(state.speciesCount || 5, MAX_SPECIES));
 
@@ -274,6 +287,10 @@ export function exportWorldSave(state) {
     worldParams: state.worldParams,
     runtime: state.runtime,
     summary: state.summary,
+    // Additive fields (see docs/WORLD-SAVE-POLICY.md): carried through
+    // export/import so a round trip does not drop them.
+    civilization: state.civilization ?? null,
+    codex: state.codex ?? null,
     particlesB64,
     dnaB64,
   }, null, 2);
@@ -288,7 +305,7 @@ export function parseWorldSave(json) {
     throw new Error('Invalid world save: not valid JSON');
   }
   if (!data || data.format !== WORLD_SAVE_FORMAT) throw new Error('Invalid world save: not a VEPA world file');
-  if ((data.version || 0) > WORLD_SAVE_VERSION) throw new Error(`Unsupported world save version ${data.version}`);
+  assertSupportedVersion(data.version);
   const state = {
     format: WORLD_SAVE_FORMAT,
     version: WORLD_SAVE_VERSION,
@@ -304,6 +321,9 @@ export function parseWorldSave(json) {
     summary: { ...(data.summary || {}) },
     particles: data.particlesB64 ? bytesToF32(decodeBase64(data.particlesB64)) : new Float32Array(0),
     dna: data.dnaB64 ? bytesToU16(decodeBase64(data.dnaB64)) : null,
+    // Additive fields default when absent (older v1 files never had them).
+    civilization: data.civilization ?? null,
+    codex: data.codex ?? null,
   };
   return state;
 }
