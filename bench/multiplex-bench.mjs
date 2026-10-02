@@ -1,19 +1,27 @@
 #!/usr/bin/env node
-// Chaos Multiplex headless sim benchmark (AC-95 / MX-20, sim half).
+// Chaos Multiplex headless benchmark (AC-95 / MX-20).
 //
-//   node bench/multiplex-bench.mjs [--shards 20] [--pop 2500] [--frames 300]
-//        [--warmup 60] [--laws tidal|none] [--field-once] [--json]
+//   node bench/multiplex-bench.mjs                      # all presets + combination grid
+//   node bench/multiplex-bench.mjs --preset smooth-20   # one preset
+//   node bench/multiplex-bench.mjs --grid               # combination grid only
+//   node bench/multiplex-bench.mjs --presets            # presets only
+//   node bench/multiplex-bench.mjs --legacy --shards 20 --pop 2500   # old lock-step stepMultiplex timing
+//   options: --seconds 4  --warmup 1  --workers N  --field-legacy  --json  --md
 //
-// Builds a cols×rows multiplex (clone mode, default TIDAL_BLOOM laws and
-// params) whose shards each hold `pop` particles, then times stepMultiplex()
-// per frame. Reports median / p95 / max frame ms and ticks advanced per shard.
-// Rendering is measured separately in the browser (tests/bench/multiplex.bench.js).
+// Real-time loop: a 60 fps frame clock calls frameMultiplex() each frame
+// (sims dispatched to a worker_threads pool, or ticked in-thread), measures the
+// main-thread cost per frame and the achieved frame interval, and counts sim
+// ticks. The main thread here has no rendering; real render frame times are
+// measured in Chrome (tests/bench/multiplex.bench.js). Box: see os.cpus().
 import { performance } from 'node:perf_hooks';
+import os from 'node:os';
 
-const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i > 0 ? process.argv[i + 1] : d; };
-const SHARDS = +arg('shards', 20), POP = +arg('pop', 2500), FRAMES = +arg('frames', 300), WARMUP = +arg('warmup', 60);
-const LAWS = arg('laws', 'tidal'), JSON_OUT = process.argv.includes('--json');
-const FIELD_ONCE = process.argv.includes('--field-once');
+const argv = process.argv;
+const arg = (k, d) => { const i = argv.indexOf('--' + k); return i > 0 ? argv[i + 1] : d; };
+const has = (k) => argv.includes('--' + k);
+const SECONDS = +arg('seconds', 4), WARMUP_S = +arg('warmup', 1);
+const JSON_OUT = has('json'), MD_OUT = has('md');
+const FIELD_ONCE = !has('field-legacy');
 
 const { PARTICLE_STRIDE, STRIDE_INDEXES: S, DNA_RANGES, LAW_INDEXES, WORLD_SIZE } = await import('../src/constants.js');
 const { createLawState, set: setLaw } = await import('../src/state/lawState.js');
@@ -23,13 +31,18 @@ const { runtimeConfig } = await import('../src/state/runtimeConfig.js');
 const { createWorldParams } = await import('../src/state/worldParams.js');
 const mxMod = await import('../src/multiplex/multiplex.js');
 const { SplitMix32 } = await import('../src/core/prng.js');
+const { createShardPool, defaultPoolSize } = await import('../src/multiplex/shardPool.js');
+const { nodeSpawn } = await import('./multiplex-node-pool.mjs');
 
-function source() {
+const CORES = os.cpus().length;
+const POOL_SIZE = +arg('workers', 0) || defaultPoolSize(20, CORES);
+
+function source(pop) {
   const g = new SplitMix32(20261003);
-  const view = new Float32Array(POP * PARTICLE_STRIDE);
+  const view = new Float32Array(pop * PARTICLE_STRIDE);
   const dna = createDNABuffer();
   loadDefaults(dna, DNA_RANGES);
-  for (let i = 0; i < POP; i++) {
+  for (let i = 0; i < pop; i++) {
     const b = i * PARTICLE_STRIDE, s = i % 5;
     view[b + S.POS_X] = g.nextFloat(5, WORLD_SIZE - 5);
     view[b + S.POS_Y] = g.nextFloat(5, WORLD_SIZE - 5);
@@ -40,38 +53,95 @@ function source() {
     for (let d = 0; d < 42; d++) { const r = DNA_RANGES[d] || { min: -1, max: 1 }; view[b + S.DNA_CACHE_START + d] = getDNAFloat(dna, s, d, r.min, r.max); }
   }
   const laws = createLawState();
-  if (LAWS === 'tidal') for (const n of TIDAL_BLOOM.laws) if (LAW_INDEXES[n] !== undefined) setLaw(laws, LAW_INDEXES[n]);
-  return { view, count: POP, dna, laws, speciesCount: 5 };
+  for (const n of TIDAL_BLOOM.laws) if (LAW_INDEXES[n] !== undefined) setLaw(laws, LAW_INDEXES[n]);
+  return { view, count: pop, dna, laws, speciesCount: 5 };
 }
 
 runtimeConfig.fieldAdvanceOnce = FIELD_ONCE;
-runtimeConfig.worldParams = { ...createWorldParams(), ...(LAWS === 'tidal' ? TIDAL_BLOOM.worldParams : {}) };
-const cols = Math.ceil(Math.sqrt(SHARDS)), rows = Math.ceil(SHARDS / cols);
-const mx = mxMod.createMultiplex(null);
-const memBefore = process.memoryUsage().rss;
-mxMod.startMultiplex(mx, source(), {
-  ...mxMod.MULTIPLEX_DEFAULTS, cols, rows, seed: 7, variation: 0.3, randomizeLaws: LAWS !== 'none', populationScale: 1, populationPercent: POP / 1000, // POP / 100k × 100 %
-}, null);
-const built = mx.shards.length;
-const counts = mx.shards.map((s) => s.count);
-const memMB = (process.memoryUsage().rss - memBefore) / 1048576;
-const t = [];
-const tick0 = mx.shards.map((s) => s.tick);
-for (let f = 0; f < WARMUP + FRAMES; f++) {
-  const a = performance.now();
-  mxMod.stepMultiplex(mx, 1 / 60, 1, WORLD_SIZE);
-  if (f >= WARMUP) t.push(performance.now() - a);
+runtimeConfig.worldParams = { ...createWorldParams(), ...TIDAL_BLOOM.worldParams };
+const SRC = source(2500);
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const pct = (arr, p) => { if (!arr.length) return 0; const a = [...arr].sort((x, y) => x - y); return a[Math.min(a.length - 1, Math.floor(p * a.length))]; };
+const r2 = (x) => Math.round(x * 100) / 100;
+
+async function runCase(name, cfgPatch) {
+  const cfg = { ...mxMod.MULTIPLEX_DEFAULTS, seed: 7, variation: 0.3, randomizeLaws: true, ...cfgPatch };
+  const mx = mxMod.createMultiplex(null);
+  mxMod.startMultiplex(mx, SRC, cfg, null);
+  const pool = cfg.useWorkers !== false ? createShardPool({ size: POOL_SIZE, spawn: nodeSpawn }) : null;
+  mxMod.setMultiplexPool(mx, pool);
+  const FRAME = 1000 / 60;
+  const mainMs = [], intervals = [], workerMs = [];
+  let t0 = performance.now(), last = t0, frames = 0, tickStart = null, tStart = 0, missed0 = 0;
+  const end = t0 + (WARMUP_S + SECONDS) * 1000;
+  while (performance.now() < end) {
+    const now = performance.now();
+    const r = mxMod.frameMultiplex(mx, 1 / 60, 1, WORLD_SIZE, now);
+    const measuring = now - t0 >= WARMUP_S * 1000;
+    if (measuring) {
+      if (tickStart === null) { tickStart = mx.shards.map((s) => s.tick); tStart = now; missed0 = mx.missedTicks || 0; }
+      else intervals.push(now - last);
+      mainMs.push(r.mainMs);
+      for (const s of mx.shards) if (s.lastWorkerMs !== undefined && s._seenMs !== s.tick) { workerMs.push(s.lastWorkerMs); s._seenMs = s.tick; }
+      frames++;
+    }
+    last = now;
+    const next = now + FRAME;
+    const wait = next - performance.now();
+    await sleep(Math.max(0, wait - 1)); // yield to receive worker replies
+    while (performance.now() < next) { /* spin to the frame boundary */ }
+  }
+  const elapsed = (performance.now() - tStart) / 1000;
+  const ticks = mx.shards.map((s, i) => s.tick - tickStart[i]);
+  const tpsPer = ticks.map((t) => t / elapsed);
+  if (pool) { await mxMod.settleMultiplex(mx, WORLD_SIZE, 60000); mxMod.setMultiplexPool(mx, null); }
+  // In-thread modes: approximate per-tick sim cost from main-thread time.
+  const totalTicks = ticks.reduce((a, b) => a + b, 0);
+  const simMsPerTick = pool ? pct(workerMs, 0.5) : (mainMs.reduce((a, b) => a + b, 0) / Math.max(1, totalTicks));
+  const out = {
+    case: name, sims: mx.shards.length, perSim: mx.populationCap, laws: cfg.lawTier, tick: cfg.tickMode + (pool ? ` / pool ${POOL_SIZE}` : ' / in-thread'),
+    mainMedMs: r2(pct(mainMs, 0.5)), mainP95Ms: r2(pct(mainMs, 0.95)),
+    frameMedMs: r2(pct(intervals, 0.5)), frameP95Ms: r2(pct(intervals, 0.95)),
+    simMsPerTick: r2(simMsPerTick),
+    simMsPerFrame: r2((pool ? workerMs.reduce((a, b) => a + b, 0) : mainMs.reduce((a, b) => a + b, 0)) / Math.max(1, frames)),
+    tpsPerSim: r2(tpsPer.reduce((a, b) => a + b, 0) / tpsPer.length), tpsMin: r2(Math.min(...tpsPer)),
+    missedFrameTicks: (mx.missedTicks || 0) - missed0, frames,
+  };
+  out.meets60 = out.frameMedMs <= 16.7 && out.frameP95Ms <= 25 && out.mainP95Ms <= 16.7;
+  mxMod.stopMultiplex(mx);
+  return out;
 }
-if (mxMod.flushMultiplex) await mxMod.flushMultiplex(mx);
-t.sort((a, b) => a - b);
-const q = (p) => t[Math.min(t.length - 1, Math.floor(p * t.length))];
-const ticks = mx.shards.map((s, i) => s.tick - tick0[i]);
-const out = {
-  shardsRequested: SHARDS, shardsBuilt: built, maxShards: mxMod.MAX_SHARDS, popPerShard: Math.min(...counts) + '-' + Math.max(...counts),
-  laws: LAWS, fieldAdvanceOnce: FIELD_ONCE, frames: FRAMES, medianMs: +q(0.5).toFixed(2), p95Ms: +q(0.95).toFixed(2), maxMs: +t[t.length - 1].toFixed(2),
-  ticksPerShard: Math.min(...ticks) + '-' + Math.max(...ticks), shardBufferMB: +((mx.shards[0].view.byteLength) / 1048576).toFixed(1),
-  rssDeltaMB: +memMB.toFixed(0), alive: mx.shards.reduce((a, s) => a + s.count, 0),
-};
-if (mxMod.stopMultiplex) mxMod.stopMultiplex(mx);
-console.log(JSON_OUT ? JSON.stringify(out) : out);
+
+const cases = [];
+if (has('legacy')) {
+  const SHARDS = +arg('shards', 20), POP = +arg('pop', 2500);
+  const cols = Math.ceil(Math.sqrt(SHARDS)), rows = Math.ceil(SHARDS / cols);
+  cases.push(['legacy-lockstep', { cols, rows, particlesPerSim: POP, tickMode: 'frame', useWorkers: false }]);
+} else {
+  const only = arg('preset', null);
+  const doPresets = only || has('presets') || !has('grid');
+  const doGrid = !only && (has('grid') || !has('presets'));
+  if (doPresets) for (const id of Object.keys(mxMod.MULTIPLEX_PRESETS)) {
+    if (only && only !== id) continue;
+    cases.push([`preset ${mxMod.MULTIPLEX_PRESETS[id].label}`, mxMod.applyMultiplexPreset({}, id)]);
+  }
+  if (doGrid) for (const perSim of [125, 500, 1000, 2500]) for (const lawTier of ['light', 'full'])
+    for (const [tickMode, useWorkers, extra] of [['frame', true, {}], ['adaptive', true, {}], ['adaptive', false, { frameBudgetMs: 8 }], ['fixed', true, { ticksPerSecond: 15 }]]) {
+      cases.push([`grid ${perSim}/${lawTier}/${tickMode}${useWorkers ? '' : '-inthread'}`, { cols: 5, rows: 4, particlesPerSim: perSim, lawTier, tickMode, useWorkers, ...extra }]);
+    }
+}
+
+const results = [];
+for (const [name, patch] of cases) {
+  const r = await runCase(name, patch);
+  results.push(r);
+  if (!JSON_OUT && !MD_OUT) console.log(r);
+}
+if (JSON_OUT) console.log(JSON.stringify({ box: { cpus: CORES, model: os.cpus()[0]?.model, gpu: 'none (headless)' }, pool: POOL_SIZE, fieldAdvanceOnce: FIELD_ONCE, results }));
+if (MD_OUT) {
+  console.log(`Box: ${CORES} vCPU, no GPU; pool ${POOL_SIZE} workers; FIELD-ONCE ${FIELD_ONCE}; ${SECONDS}s per case after ${WARMUP_S}s warm-up.\n`);
+  console.log('| Case | Sims × particles | Laws | Ticks | Main ms med / p95 | Frame ms med / p95 | Sim ms / tick | Sim ms / frame (all sims) | Ticks/s per sim (min) | Skipped | 60 fps |');
+  console.log('|---|---|---|---|---|---|---|---|---|---|---|');
+  for (const r of results) console.log(`| ${r.case} | ${r.sims} × ${r.perSim} | ${r.laws} | ${r.tick} | ${r.mainMedMs} / ${r.mainP95Ms} | ${r.frameMedMs} / ${r.frameP95Ms} | ${r.simMsPerTick} | ${r.simMsPerFrame} | ${r.tpsPerSim} (${r.tpsMin}) | ${r.missedFrameTicks} | ${r.meets60 ? 'yes' : 'no'} |`);
+}
 process.exit(0);
