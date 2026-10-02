@@ -29,7 +29,12 @@ Each criterion below maps to exactly one item ID (in brackets). Status in the ta
 - AC-15 [CA-DUP1]: Only one accretion-pair predicate exists in src/; all physics tests pass unchanged.
 - AC-16 [CA-DUP3]: Only one cipher-key derivation exists in src/; ENCRYPTION tests pass unchanged.
 - AC-17 [CA-A7]: A createEngine factory exists and is used by ≥3 engines; engine public APIs and tests are unchanged.
-- AC-18 [CA-A8]: All 7 analytics dashboards use the shared shell or setter; intelPanel has no private setValue; panel DOM ids unchanged (test).
+- AC-18 [CA-A8]: Every analytics dashboard that renders intel-grid value cells uses the shared setter (setCellValue); intelPanel has no private setValue; panel DOM ids unchanged (test). dnaAnalytics, speciesPanel and narrativePanel render no intel-grid cells and are out of scope for this AC (narrowed by D-012).
+
+### B3b — Determinism & save prerequisites (ordered first by D-011, before B4)
+- AC-92 [E9]: World saves (captureWorldState/export) persist the PRNG seed and current PRNG state; restoring a save resumes the same random sequence (test: two restores of one save produce identical subsequent PRNG draws and identical simulation hashes); saves without a seed still load.
+- AC-93 [LAW-PENTA]: Multiplex shard snapshot, restore and clone preserve pentaFlags (Mechanics laws 128–135); randomizeLaws sets laws ≥128 in pentaFlags and never alters laws 96–103 as a side effect (tests).
+- AC-94 [DET-1]: src/physics/laws.js does not read performance.now() or Date.now() for simulation behaviour; time-dependent terms use a sim-time/tick clock; golden-parity hashes are unchanged, or any default-behaviour hash change is recorded as BLOCKED for Gem rather than re-baselined.
 
 ### B4 — Tests, envelopes & CI controls
 - AC-19 [ARP-5]: A test asserts solver pair scalars equal getPairGeometry within 1e-9 on ≥3 fixtures, including a boundary (coincident / max-range) pair.
