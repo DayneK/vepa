@@ -113,6 +113,7 @@ import {
   applyHistoryForce,
   applyHistoryCalc,
   setBuffer,
+  setLawClockMs,
 } from './laws.js';
 import { createSynergyCache } from './synergy.js';
 import { compatibilityForViews, meetsCompatibility } from './relationshipCompatibility.js';
@@ -262,8 +263,20 @@ export function buildNeighborPairs(view, particleCount, stride, worldSize, maxIn
   return pairs;
 }
 
+// DET-1: tick-based law clock. Each solve() call is one tick; the laws' time
+// hash reads tick × LAW_CLOCK_MS_PER_TICK (16 ms, a nominal 60 Hz frame)
+// instead of the wall clock.
+export const LAW_CLOCK_MS_PER_TICK = 16;
+let _solveTick = 0;
+/** Reset the solver tick clock (world restart / restore / tests). */
+export function resetSolverClock(tick = 0) { _solveTick = Math.max(0, Math.floor(tick) || 0); }
+/** Current solver tick clock (number of solve() calls since the last reset). */
+export function getSolverClock() { return _solveTick; }
+
 export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer, worldSize, dt, prng, gpuForces = null) {
   setBuffer(particleBuffer);
+  setLawClockMs(_solveTick * LAW_CLOCK_MS_PER_TICK);
+  _solveTick++;
   const view = particleBuffer; // Float32Array or SharedArrayBuffer view
   const S = STRIDE_INDEXES;
   const halfWorld = worldSize * 0.5;

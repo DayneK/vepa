@@ -20,6 +20,17 @@ import { isAccretionPair } from './mergePhysics.js';
 import { cipherKey } from './cipherKey.js';
 import { readDNAParam as readSpeciesDNAParam, writeDNAParam as writeSpeciesDNAParam } from '../dna/codec.js';
 
+// ── Law clock (DET-1) ──
+// Several laws hash a time value into their noise. It used to be the wall
+// wall clock (the browser high-resolution timer), which made runs depend on machine speed. The
+// solver now sets this from its tick counter (LAW_CLOCK_MS_PER_TICK per
+// solve), so a run is a pure function of its inputs.
+let _lawClockMs = 0;
+/** Set the simulated law clock in milliseconds (called by solve()). */
+export function setLawClockMs(ms) { _lawClockMs = Number.isFinite(ms) ? ms : 0; }
+/** Current simulated law clock in milliseconds. */
+export function getLawClockMs() { return _lawClockMs; }
+
 /** Live world-param state (WORLD panel sliders). */
 function worldParams() {
   return runtimeConfig.worldParams || {};
@@ -398,7 +409,7 @@ export function applyHeat(p1Ptr, stride, dt) {
   if (temp < 0.01) return { ax: 0, ay: 0, az: 0 };
 
   const thermalScale = Math.sqrt(temp) * energyEfficiency * dt;
-  const t = performance.now();
+  const t = _lawClockMs;
   const r1 = Math.sin(t * 12.9898 + p1Ptr * 78.233) * 43758.5453;
   const r2 = Math.sin(t * 78.233 + p1Ptr * 12.9898) * 43758.5453;
   const r3 = Math.sin(t * 43.111 + p1Ptr * 34.567) * 43758.5453;
@@ -454,7 +465,7 @@ export function applyGenotype(p1Ptr, stride, dt) {
   const dnaStart = DNA_BASE;
 
   for (let m = 0; m < numMutations; m++) {
-    const hashVal = Math.sin(p1Ptr * 127.1 + m * 311.7 + performance.now() * 0.001) * 43758.5453;
+    const hashVal = Math.sin(p1Ptr * 127.1 + m * 311.7 + _lawClockMs * 0.001) * 43758.5453;
     const dnaIdx = Math.abs(Math.floor(hashVal)) % 42;
     const perturbHash = Math.sin(p1Ptr * 269.5 + dnaIdx * 183.3) * 43758.5453;
     const perturb = ((perturbHash - Math.floor(perturbHash)) * 2.0 - 1.0) * mutationRate * 0.05;
@@ -1693,7 +1704,7 @@ export function applyRadiationDamage(lawState, view, base, dt, synergy, prng) {
   const mutationRate = view[base + S.DNA_CACHE_START + 12] || 0.5;
   const mutProb = exposure * 0.001 * dt * synergy;
   if (prng && mutProb > 0 && prng() < mutProb) {
-    const hashVal = Math.sin(base * 173.3 + performance.now() * 0.001) * 43758.5453;
+    const hashVal = Math.sin(base * 173.3 + _lawClockMs * 0.001) * 43758.5453;
     const dnaIdx = Math.abs(Math.floor(hashVal)) % 42;
     const perturb = (prng() - 0.5) * mutationRate * 0.05;
     const val = view[base + S.DNA_CACHE_START + dnaIdx];
@@ -1777,7 +1788,7 @@ export function applyGenotypeMutation(lawState, view, base, dt, synergy, prng, d
 
   for (let m = 0; m < numMutations; m++) {
     // Somatic drift — per-particle DNA cache (heritable through REPRO).
-    const hashVal = Math.sin(base * 127.1 + m * 311.7 + performance.now() * 0.001) * 43758.5453;
+    const hashVal = Math.sin(base * 127.1 + m * 311.7 + _lawClockMs * 0.001) * 43758.5453;
     const dnaIdx = Math.abs(Math.floor(hashVal)) % 42;
     const perturbHash = Math.sin(base * 269.5 + dnaIdx * 183.3) * 43758.5453;
     // HETEROZYGOSITY + ALLELE_COUNT + PLOIDY_LEVEL widen variance;
@@ -1825,7 +1836,7 @@ export function applyGenotypeMutation(lawState, view, base, dt, synergy, prng, d
   if (dnaBuffer && prng && prng() < crossoverRate * 0.0002 * dt
       * (0.2 + selectionSensitivity * 0.8)
       * (1 - speciationThreshold * 0.4)) {
-    const gIdx = Math.abs(Math.floor(Math.sin(base * 53.7 + performance.now() * 0.0007) * 43758.5453)) % 42;
+    const gIdx = Math.abs(Math.floor(Math.sin(base * 53.7 + _lawClockMs * 0.0007) * 43758.5453)) % 42;
     const current = readSpeciesDNAParam(dnaBuffer, speciesId, gIdx);
     const gPerturb = (prng() - 0.5) * mutationRate * 0.02 * (0.5 + adaptationRate * 1.5);
     writeSpeciesDNAParam(dnaBuffer, speciesId, gIdx, current + gPerturb);

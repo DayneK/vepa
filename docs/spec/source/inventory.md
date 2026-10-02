@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `288` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `289` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 36 | 156 | 463 |
 | Benchmark | 4 | 5 | 9 |
 | Repository | 7 | 2 | 2 |
-| Simulation | 30 | 214 | 366 |
+| Simulation | 30 | 219 | 366 |
 | State | 31 | 280 | 231 |
-| Testing | 153 | 22 | 618 |
+| Testing | 154 | 22 | 621 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -55,7 +55,7 @@ The generator scanned `288` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 1820 | 0 | 50 | 11 |
+| [src/main.js](../../../src/main.js) | application | 1823 | 0 | 50 | 11 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1533 | 30 | 11 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 460 | 7 | 0 | 5 |
 | [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 841 | 1 | 2 | 2 |
@@ -76,7 +76,7 @@ The generator scanned `288` files from active repository inputs. Individual modu
 | [src/physics/lawgroups/physicsLaws.js](../../../src/physics/lawgroups/physicsLaws.js) | simulation | 173 | 1 | 3 | 6 |
 | [src/physics/lawgroups/quantumLaws.js](../../../src/physics/lawgroups/quantumLaws.js) | simulation | 326 | 1 | 3 | 7 |
 | [src/physics/lawgroups/thermoLaws.js](../../../src/physics/lawgroups/thermoLaws.js) | simulation | 113 | 1 | 3 | 8 |
-| [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2735 | 102 | 8 | 85 |
+| [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2746 | 104 | 8 | 85 |
 | [src/physics/mechanicsDiagnostics.js](../../../src/physics/mechanicsDiagnostics.js) | simulation | 35 | 1 | 3 | 0 |
 | [src/physics/mergePhysics.js](../../../src/physics/mergePhysics.js) | simulation | 344 | 6 | 2 | 8 |
 | [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 383 | 4 | 0 | 0 |
@@ -84,7 +84,7 @@ The generator scanned `288` files from active repository inputs. Individual modu
 | [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 207 | 6 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
-| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 1991 | 8 | 22 | 134 |
+| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2004 | 11 | 22 | 134 |
 | [src/physics/spatialGrid.js](../../../src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
 | [src/react-entry.js](../../../src/react-entry.js) | application | 20 | 0 | 2 | 0 |
@@ -254,6 +254,7 @@ The generator scanned `288` files from active repository inputs. Individual modu
 | [tests/unit/interactionSpace.test.js](../../../tests/unit/interactionSpace.test.js) | testing | 52 | 0 | 3 | 5 |
 | [tests/unit/launchModal.test.js](../../../tests/unit/launchModal.test.js) | testing | 332 | 0 | 4 | 1 |
 | [tests/unit/lawCategories.test.js](../../../tests/unit/lawCategories.test.js) | testing | 292 | 0 | 6 | 16 |
+| [tests/unit/lawClock.test.js](../../../tests/unit/lawClock.test.js) | testing | 88 | 0 | 9 | 3 |
 | [tests/unit/lawGating.test.js](../../../tests/unit/lawGating.test.js) | testing | 186 | 0 | 6 | 8 |
 | [tests/unit/lawGraph.test.js](../../../tests/unit/lawGraph.test.js) | testing | 55 | 0 | 4 | 10 |
 | [tests/unit/lawgroupsBiologyChemistry.test.js](../../../tests/unit/lawgroupsBiologyChemistry.test.js) | testing | 166 | 0 | 4 | 1 |

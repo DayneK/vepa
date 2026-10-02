@@ -17,7 +17,7 @@ import { createRendererAsync, resize as resizeRenderer, paintBackground } from '
 import { syncSprites } from './render/spriteSync.js';
 import { initUI } from './ui/ui.js';
 import { initCamera, resetCamera, setWorldSize } from './ui/camera.js';
-import { solve as solveMain, resetOffspringRing, drainOffspring as drainSolverOffspring } from './physics/solver.js';
+import { solve as solveMain, resetOffspringRing, resetSolverClock, drainOffspring as drainSolverOffspring } from './physics/solver.js';
 import { createInsightEngine, updateInsight } from './engines/insightEngine.js';
 import { createSpeciationEngine, updateSpeciation } from './engines/speciation.js';
 import { createEcoEngine } from './engines/ecoEngine.js';
@@ -869,6 +869,8 @@ function setDNAFromProfile(species, profile) {
         worldSize = out.worldSize;
         // RRP E9: resume the saved random sequence (older saves keep the live one).
         if (out.rng) prng = PRNG.fromSnapshot(out.rng);
+        // DET-1: the law clock resumes from the saved tick.
+        resetSolverClock(state.tick || 0);
         setWorldSize(out.worldSize);
         resetOffspringRing();
         resetIntelligence();
@@ -992,6 +994,7 @@ function setDNAFromProfile(species, profile) {
         prng = new PRNG(Date.now());
         particleView.fill(0);
         resetOffspringRing();
+        resetSolverClock(); // DET-1: law clock restarts with the world
         spawnDefaultPopulation(true, true);
         if (restartWorker) startPhysicsWorker();
         tick = 0;

@@ -481,6 +481,7 @@
         "tests/unit/groupRegistry.test.js",
         "tests/unit/infrastructure.test.js",
         "tests/unit/lawCategories.test.js",
+        "tests/unit/lawClock.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawgroupsBiologyChemistry.test.js",
         "tests/unit/lawgroupsEmInfoMeta.test.js",
@@ -553,6 +554,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_04.test.js",
+        "tests/unit/lawClock.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
@@ -1101,6 +1103,7 @@
         "tests/audit/params_batch_15.test.js",
         "tests/unit/groupRegistry.test.js",
         "tests/unit/interactionSpace.test.js",
+        "tests/unit/lawClock.test.js",
         "tests/unit/mechanics.test.js",
         "tests/unit/relationshipCompatibility.test.js",
         "tests/unit/relationshipExplorer.test.js",

@@ -17,9 +17,9 @@
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 9 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | LAW_HELP_DB |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 62 | LAW_HELP_DB |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 63 | LAW_HELP_DB |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 3 | LAW_HELP_DB |
-| 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 2 | LAW_HELP_DB |
+| 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | LAW_HELP_DB |
 | 17 | [CATALYSIS_LAW](../laws/chemistry/017_CATALYSIS_LAW.md) | chemistry | 1 | 3 | 2 | LAW_HELP_DB |
 | 18 | [SOLVATION](../laws/chemistry/018_SOLVATION.md) | chemistry | 1 | 3 | 1 | LAW_HELP_DB |
@@ -43,7 +43,7 @@
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 2 | LAW_HELP_DB |
 | 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 3 | LAW_HELP_DB |
 | 38 | [VOID](../laws/physics/038_VOID.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
-| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 24 | LAW_HELP_DB |
+| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 25 | LAW_HELP_DB |
 | 40 | [REDUCTION](../laws/chemistry/040_REDUCTION.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 41 | [ALLOY](../laws/chemistry/041_ALLOY.md) | chemistry | 1 | 4 | 2 | LAW_HELP_DB |
 | 42 | [MELT](../laws/thermodynamics/042_MELT.md) | thermodynamics | 1 | 2 | 2 | LAW_HELP_DB |

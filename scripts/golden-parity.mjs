@@ -11,9 +11,11 @@
 //   node scripts/golden-parity.mjs --check    compare with tests/fixtures/golden-parity.json
 //   node scripts/golden-parity.mjs --update   rewrite the fixture
 //
-// Determinism: several laws hash `performance.now()` and a few fall back to
-// Math.random when no PRNG is passed. Both are replaced here by a seeded
-// clock and PRNG, so the fixture measures solver logic, not wall-clock time.
+// Determinism: the laws' time hash now reads the solver's tick clock (DET-1:
+// tick × 16 ms, reset per scenario). The harness still stubs performance.now
+// with the same t × 16 ms values it used before DET-1, so the fixture proves
+// the tick clock reproduces the old stubbed behaviour exactly, and seeds
+// Math.random for the few laws that fall back to it without a PRNG.
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -46,7 +48,7 @@ Math.random = () => mathRng();
 const { PARTICLE_STRIDE, STRIDE_INDEXES: S, DNA_RANGES, LAW_INDEXES, LAW_CATEGORIES } = await import('../src/constants.js');
 const { createLawState, set: setLaw } = await import('../src/state/lawState.js');
 const { createDNABuffer, loadDefaults, setDNAFloat, getDNAFloat } = await import('../src/dna/dnaBuffer.js');
-const { solve, drainOffspring, resetOffspringRing } = await import('../src/physics/solver.js');
+const { solve, drainOffspring, resetOffspringRing, resetSolverClock } = await import('../src/physics/solver.js');
 const { TIDAL_BLOOM } = await import('../src/state/defaultPresets.js');
 const { runtimeConfig } = await import('../src/state/runtimeConfig.js');
 
@@ -101,6 +103,7 @@ const scenarios = [
 function run(names, idx) {
   runtimeConfig.gravEngine = 'reference';
   resetOffspringRing();
+  resetSolverClock();
   clockMs = 0;
   const world = makeWorld(SEED + idx);
   const laws = lawsFor(names);
