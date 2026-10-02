@@ -4,7 +4,8 @@ import {
   WORLD_SAVE_VERSION, WORLD_SAVE_FORMAT, parseWorldSave, restoreWorldState,
   exportWorldSave, captureWorldState, assertSupportedVersion, encodeBase64,
 } from '../../src/state/worldSave.js';
-import { PARTICLE_STRIDE } from '../../src/constants.js';
+import { PARTICLE_STRIDE, LAW_INDEXES } from '../../src/constants.js';
+import { createLawState, set as lawSet, isSet } from '../../src/state/lawState.js';
 
 // A frozen v1 file as written before the civilization/codex fields existed.
 function legacyV1File() {
@@ -74,5 +75,23 @@ describe('world save compatibility (FSM-SAVE)', () => {
     const back = parseWorldSave(exportWorldSave(state));
     expect(back.civilization).toEqual(civ);
     expect(back.codex).toEqual(codex);
+  });
+
+  it('saves and restores Mechanics laws (indexes 128-135, pentaFlags)', () => {
+    const laws = createLawState();
+    lawSet(laws, LAW_INDEXES.TORQUE);
+    expect(LAW_INDEXES.TORQUE).toBeGreaterThanOrEqual(128);
+    const view = new Float32Array(PARTICLE_STRIDE);
+    const back = parseWorldSave(exportWorldSave(captureWorldState({ view, count: 1, laws })));
+    const target = createLawState();
+    restoreWorldState(back, { laws: target });
+    expect(isSet(target, LAW_INDEXES.TORQUE)).toBe(true);
+  });
+
+  it('a legacy save without the penta word leaves Mechanics laws untouched', () => {
+    const target = createLawState();
+    lawSet(target, LAW_INDEXES.TORQUE);
+    restoreWorldState(parseWorldSave(legacyV1File()), { laws: target });
+    expect(isSet(target, LAW_INDEXES.TORQUE)).toBe(true);
   });
 });

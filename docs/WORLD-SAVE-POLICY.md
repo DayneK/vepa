@@ -26,6 +26,10 @@ localStorage fallback) and `.vepa.json` export/import.
 
 ## Known gaps
 
+- Fixed 2026-10-03: Mechanics laws (128-135, `pentaFlags`) were not saved.
+  They are now an additive `laws.penta` field. A save without it leaves the
+  live Mechanics laws as they are.
+
 - The PRNG seed and state are not saved yet (RRP E9, see `.codey/RRP-VERIFY.md`).
   When they are added, they will come in as an additive field per rule 2.
 - `runtime` saves numeric knobs only, so string settings such as `gravEngine`

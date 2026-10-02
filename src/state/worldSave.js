@@ -180,6 +180,8 @@ export function captureWorldState(opts = {}) {
       high: laws.highFlags ? laws.highFlags[0] | 0 : 0,
       ext: laws.extFlags ? laws.extFlags[0] | 0 : 0,
       quad: laws.quadFlags ? laws.quadFlags[0] | 0 : 0,
+      // Additive: Mechanics laws 128-135. Older saves omit it (see restore).
+      penta: laws.pentaFlags ? laws.pentaFlags[0] | 0 : 0,
     },
     worldParams: { ...(opts.worldParams || {}) },
     runtime: pickRuntime(opts.runtime || {}),
@@ -239,6 +241,8 @@ export function restoreWorldState(state, target = {}) {
     target.laws.highFlags[0] = state.laws.high | 0;
     if (target.laws.extFlags) target.laws.extFlags[0] = state.laws.ext | 0;
     if (target.laws.quadFlags) target.laws.quadFlags[0] = state.laws.quad | 0;
+    // Saves written before the penta word existed leave Mechanics laws as they are.
+    if (target.laws.pentaFlags && state.laws.penta !== undefined) target.laws.pentaFlags[0] = state.laws.penta | 0;
   }
   if (target.worldParams && state.worldParams) {
     for (const key of Object.keys(state.worldParams)) {
