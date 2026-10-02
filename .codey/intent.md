@@ -36,6 +36,9 @@ Each criterion below maps to exactly one item ID (in brackets). Status in the ta
 - AC-93 [LAW-PENTA]: Multiplex shard snapshot, restore and clone preserve pentaFlags (Mechanics laws 128–135); randomizeLaws sets laws ≥128 in pentaFlags and never alters laws 96–103 as a side effect (tests).
 - AC-94 [DET-1]: src/physics/laws.js does not read performance.now() or Date.now() for simulation behaviour; time-dependent terms use a sim-time/tick clock; golden-parity hashes are unchanged, or any default-behaviour hash change is recorded as BLOCKED for Gem rather than re-baselined.
 
+### B3c — Chaos Multiplex at scale (D-014, ahead of B4)
+- AC-95 [MX-20]: The Chaos Multiplex runs 20 concurrent sims (5×4 grid), each capped at 2.5% of the default population cap (PARTICLE_COUNT default 100,000 → 2,500 particles per sim), with no lag. "No lag" is measured by `npm run bench:multiplex` in headless Chrome on the box (8 vCPU, standing in for a typical machine), default laws, clone mode, eco previews, ≥300 frames after a 60-frame warm-up: (a) frame time (sim + render of all 20 previews) median ≤ 16.7 ms (60 fps) and p95 ≤ 25 ms; (b) the sims keep up: every shard advances exactly one tick per frame, with no skipped or queued ticks; (c) no per-shard buffer is sized for MAX_PARTICLES (memory scales with the shard cap). MAX_SHARDS ≥ 20. Main-world simulation is unchanged (golden parity).
+
 ### B4 — Tests, envelopes & CI controls
 - AC-19 [ARP-5]: A test asserts solver pair scalars equal getPairGeometry within 1e-9 on ≥3 fixtures, including a boundary (coincident / max-range) pair.
 - AC-20 [ARP-6]: mechanicsDiagnostics returns collImpulse, inertia, topology and momentumBefore/After fields, tested on a collision fixture; simulation output is unchanged (golden check).
