@@ -1,6 +1,7 @@
 // ============================================================================
 // VEPA4 — Physics Law Group
-// TIDE / FRICTION / ELASTICITY / TURBULENCE / CENTRIPETAL / ROTATION
+// TIDE / FRICTION, plus the legacy ELASTICITY / TURBULENCE / CENTRIPETAL /
+// ROTATION force primitives (no longer laws in LAW_INDEXES; kept as tested helpers)
 // Stateless per-particle and pairwise law functions over the flat particle
 // buffer. Force laws return {ax, ay, az} for the solver to integrate; state
 // mutations are written directly to the buffer. Never write NaN/Infinity.
