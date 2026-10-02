@@ -892,6 +892,8 @@ export function snapshotShard(shard) {
       highFlags: shard.laws ? shard.laws.highFlags[0] : 0,
       extFlags: shard.laws && shard.laws.extFlags ? shard.laws.extFlags[0] : 0,
       quadFlags: shard.laws && shard.laws.quadFlags ? shard.laws.quadFlags[0] : 0,
+      // Mechanics laws 128-135 (LAW-PENTA: previously dropped).
+      pentaFlags: shard.laws && shard.laws.pentaFlags ? shard.laws.pentaFlags[0] : 0,
     },
     prngState: shard.prng ? shard.prng.state | 0 : 0,
     count: shard.count,
@@ -917,6 +919,7 @@ export function restoreShard(shard, snap) {
     shard.laws.highFlags[0] = snap.laws.highFlags;
     if (shard.laws.extFlags) shard.laws.extFlags[0] = snap.laws.extFlags;
     if (shard.laws.quadFlags) shard.laws.quadFlags[0] = snap.laws.quadFlags;
+    if (shard.laws.pentaFlags && snap.laws.pentaFlags !== undefined) shard.laws.pentaFlags[0] = snap.laws.pentaFlags;
   }
   if (shard.prng) shard.prng.state = snap.prngState | 0;
   shard.count = snap.count;
@@ -973,6 +976,7 @@ function lightRecord(shard) {
       high: shard.laws.highFlags[0] || 0,
       ext: shard.laws.extFlags[0] || 0,
       quad: shard.laws.quadFlags[0] || 0,
+      penta: (shard.laws.pentaFlags && shard.laws.pentaFlags[0]) || 0,
     },
     speciesCount: shard.speciesCount || 5,
     count: shard.count || 0,
@@ -1104,6 +1108,7 @@ function sourceFromRecord(rec) {
   laws.highFlags[0] = rec.laws.high || 0;
   laws.extFlags[0] = rec.laws.ext || 0;
   laws.quadFlags[0] = rec.laws.quad || 0;
+  laws.pentaFlags[0] = rec.laws.penta || 0;
   const dna = createDNABuffer();
   dna.set(rec.dna || []);
   return {
@@ -1130,6 +1135,7 @@ export function copyShardToWorld(shard, target) {
     target.laws.highFlags[0] = shard.laws.highFlags[0];
     if (target.laws.extFlags && shard.laws.extFlags) target.laws.extFlags[0] = shard.laws.extFlags[0];
     if (target.laws.quadFlags && shard.laws.quadFlags) target.laws.quadFlags[0] = shard.laws.quadFlags[0];
+    if (target.laws.pentaFlags && shard.laws.pentaFlags) target.laws.pentaFlags[0] = shard.laws.pentaFlags[0];
   }
   return { count, speciesCount: shard.speciesCount || 5 };
 }
@@ -1233,6 +1239,7 @@ function createShard(index, seed, source, config, maxCount, recycle) {
   laws.highFlags[0] = source.laws.highFlags[0];
   laws.extFlags[0] = source.laws.extFlags[0] || 0;
   laws.quadFlags[0] = source.laws.quadFlags[0] || 0;
+  laws.pentaFlags[0] = (source.laws.pentaFlags && source.laws.pentaFlags[0]) || 0;
 
   const prng = new SplitMix32(seed);
   // World params: derived from the source shard when it has them (evolutionary
@@ -1307,7 +1314,10 @@ function applyVariation(shard, config) {
         if (l < 32) shard.laws.lowFlags[0] ^= (1 << l);
         else if (l < 64) shard.laws.highFlags[0] ^= (1 << (l - 32));
         else if (l < 96) shard.laws.extFlags[0] ^= (1 << (l - 64));
-        else shard.laws.quadFlags[0] ^= (1 << (l - 96));
+        else if (l < 128) shard.laws.quadFlags[0] ^= (1 << (l - 96));
+        // Mechanics laws (LAW-PENTA): `1 << (l - 96)` wrapped to bits 0-7
+        // here and flipped laws 96-103 instead.
+        else shard.laws.pentaFlags[0] ^= (1 << (l - 128));
       }
     }
   }

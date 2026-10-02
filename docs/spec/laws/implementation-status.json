@@ -488,6 +488,7 @@
         "tests/unit/lawgroupsQuantum.test.js",
         "tests/unit/livingWorld.test.js",
         "tests/unit/multiplex.test.js",
+        "tests/unit/multiplexPenta.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/relativity.test.js",
         "tests/unit/signal.test.js",

@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `287` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `288` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `287` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 214 | 366 |
 | State | 31 | 280 | 231 |
-| Testing | 152 | 22 | 617 |
+| Testing | 153 | 22 | 618 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -56,7 +56,7 @@ The generator scanned `287` files from active repository inputs. Individual modu
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
 | [src/main.js](../../../src/main.js) | application | 1820 | 0 | 50 | 11 |
-| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1523 | 30 | 11 | 7 |
+| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1533 | 30 | 11 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 460 | 7 | 0 | 5 |
 | [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 841 | 1 | 2 | 2 |
 | [src/physics/cipherKey.js](../../../src/physics/cipherKey.js) | simulation | 15 | 1 | 1 | 1 |
@@ -271,6 +271,7 @@ The generator scanned `287` files from active repository inputs. Individual modu
 | [tests/unit/mechanicsArchitecture.test.js](../../../tests/unit/mechanicsArchitecture.test.js) | testing | 105 | 0 | 5 | 1 |
 | [tests/unit/memoryCulture.test.js](../../../tests/unit/memoryCulture.test.js) | testing | 86 | 0 | 2 | 1 |
 | [tests/unit/multiplex.test.js](../../../tests/unit/multiplex.test.js) | testing | 969 | 0 | 9 | 5 |
+| [tests/unit/multiplexPenta.test.js](../../../tests/unit/multiplexPenta.test.js) | testing | 91 | 0 | 6 | 1 |
 | [tests/unit/octree.test.js](../../../tests/unit/octree.test.js) | testing | 151 | 0 | 7 | 1 |
 | [tests/unit/perfKnobs.test.js](../../../tests/unit/perfKnobs.test.js) | testing | 84 | 0 | 3 | 0 |
 | [tests/unit/physics.test.js](../../../tests/unit/physics.test.js) | testing | 60 | 0 | 5 | 4 |
