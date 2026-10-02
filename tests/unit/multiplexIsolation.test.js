@@ -8,7 +8,7 @@ import { createDNABuffer, loadDefaults } from '../../src/dna/dnaBuffer.js';
 import { createWorldParams } from '../../src/state/worldParams.js';
 import { runtimeConfig } from '../../src/state/runtimeConfig.js';
 import { TIDAL_BLOOM } from '../../src/state/defaultPresets.js';
-import { solve } from '../../src/physics/solver.js';
+import { solve, drainOffspring, createSolverContext, enterSolverContext } from '../../src/physics/solver.js';
 import { resetFields } from '../../src/physics/fields.js';
 import {
   createMultiplex, startMultiplex, stopMultiplex, stepMultiplex, frameMultiplex, settleMultiplex, setMultiplexPool, MULTIPLEX_DEFAULTS,
@@ -58,6 +58,27 @@ describe('multiplex sim isolation (HIDDEN-STATE, AC-97)', () => {
     expect(crowded.shards[0].tick).toBe(8);
     expect(hash(crowded.shards[0])).toBe(hash(alone.shards[0]));
     stopMultiplex(alone); stopMultiplex(crowded);
+  });
+});
+
+describe('solver contexts (HIDDEN-STATE, AC-97)', () => {
+  it('two fresh runs with every law on are identical when each gets a fresh solver context', () => {
+    const runOnce = () => {
+      const prev = enterSolverContext(createSolverContext());
+      try {
+        const src = source(150);
+        for (const name of Object.keys(LAW_INDEXES)) lawSet(src.laws, LAW_INDEXES[name]);
+        let s = 9;
+        for (let t = 0; t < 6; t++) {
+          solve(src.view, src.count, PARTICLE_STRIDE, src.laws, src.dna, 2000, 1 / 60, () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296));
+          drainOffspring();
+        }
+        return hash({ view: src.view, count: src.count });
+      } finally {
+        enterSolverContext(prev);
+      }
+    };
+    expect(runOnce()).toBe(runOnce());
   });
 });
 

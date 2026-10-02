@@ -283,7 +283,7 @@ The generator scanned `303` files from active repository inputs. Individual modu
 | [tests/unit/mechanicsArchitecture.test.js](../../../tests/unit/mechanicsArchitecture.test.js) | testing | 105 | 0 | 5 | 1 |
 | [tests/unit/memoryCulture.test.js](../../../tests/unit/memoryCulture.test.js) | testing | 86 | 0 | 2 | 1 |
 | [tests/unit/multiplex.test.js](../../../tests/unit/multiplex.test.js) | testing | 969 | 0 | 9 | 5 |
-| [tests/unit/multiplexIsolation.test.js](../../../tests/unit/multiplexIsolation.test.js) | testing | 90 | 0 | 13 | 3 |
+| [tests/unit/multiplexIsolation.test.js](../../../tests/unit/multiplexIsolation.test.js) | testing | 111 | 0 | 13 | 3 |
 | [tests/unit/multiplexPenta.test.js](../../../tests/unit/multiplexPenta.test.js) | testing | 91 | 0 | 6 | 1 |
 | [tests/unit/multiplexScale.test.js](../../../tests/unit/multiplexScale.test.js) | testing | 77 | 0 | 6 | 2 |
 | [tests/unit/multiplexScheduler.test.js](../../../tests/unit/multiplexScheduler.test.js) | testing | 109 | 0 | 7 | 11 |
