@@ -29,14 +29,14 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 | **Backup branches** | `backup/pre-*` — cut before risky work (see §10.4) |
 | **License** | ISC (`package.json`) |
 | **Package Manager** | npm (`package-lock.json` is the single lockfile SSOT). bun may be used locally but `bun.lock` is gitignored (H6 reconciliation, 2026-09-30) — two lockfiles for one dependency set drift silently. |
-| **Runtime** | Browser (ESM) + Node.js (scripts, `bench/`, `audit-suite/`) |
+| **Runtime** | Browser (ESM) + Node.js (`scripts/`, `bench/`, `tests/audit/`) |
 | **Key Dependencies** | `pixi.js` ^8.18.1 · `vite` ^8.0.8 · `vitest` ^3.2.7 · `@playwright/test` ^1.60.0 |
 | **Module System** | ESM (`"type": "module"`) |
 | **Deploys** | Vercel prod `https://vepa-seven.vercel.app/` · GitHub Pages `https://gemquota.github.io/vepa/` (both auto-deploy from pushes to `master`) |
 
 **Version alignment (new schema since 2026-08-10):** the product is **VEPA4**; versions use `major.minor.build` (npm-semver-native). `VERSION`, the top section of `CHANGELOG.md` (arrow token), `package.json#version`, and this file **must all read 9.1.22** (the audit-remediation + renderer-benchmark build). Since the 2026-08-10 restructure the root manifest IS the v4 manifest (the legacy v2 root `package.json` was archived with the legacy trees).
 
-**GEMINI.md mandates (take precedence over this file):** every significant change must sync `CHANGELOG.md`, `README.md`, `SPEC.md`/`PLAN.md`, `GUIDE.md`, `LAW_HELP_DB`, and `audit-suite/` per GEMINI.md §1.1 (legacy `ENGINE_SSOT.md` / `docs/fullaudit.md` / `codex/` parity were archived 2026-08-10); the B-4RK principle (documentation as a feature — 4-tier `LAW_HELP_DB` for every law); bitmask discipline (`LAW_INDEXES` never hardcoded); and verify doc sync before declaring completion or you incur **Documentation Debt**. Read `GEMINI.md` on entry (§10.1).
+**GEMINI.md mandates (take precedence over this file):** every significant change must sync `CHANGELOG.md`, `README.md`, `SPEC.md`/`PLAN.md`, `GUIDE.md`, `LAW_HELP_DB`, and the law audit records under `docs/audit/` (signoff gate: `docs/spec/audit/signoff-manifest.json`) per GEMINI.md §1.1 (legacy `ENGINE_SSOT.md` / `docs/fullaudit.md` / `codex/` parity were archived 2026-08-10); the B-4RK principle (documentation as a feature — 4-tier `LAW_HELP_DB` for every law); bitmask discipline (`LAW_INDEXES` never hardcoded); and verify doc sync before declaring completion or you incur **Documentation Debt**. Read `GEMINI.md` on entry (§10.1).
 
 ---
 
@@ -104,7 +104,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 ├── bench/                  ← headless solver benchmark (vepa4 bench; --scale/--knobs/--report)
 ├── public/bench-report/    ← benchmark report SPA (served at /bench-report/)
 ├── docs/                   ← v4 docs (mechanics/, dev/)
-├── audit-suite/            ← law fidelity audit (fidelity-audit-v4.6.29.md + historical/)
+├── docs/audit/             ← law audit corpus (laws/a3/ historical records + provenance.json)
 ├── node_modules/           ← installed (vite/vitest/playwright/pixi)
 └── .dist/                  ← vite build output (gitignored)
 ```
@@ -124,7 +124,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 - **Restored docs (2026-08-10):** `docs/` now holds only v4-appropriate docs
   (`docs/mechanics/chaos_multiplex.md`, `docs/dev/`); legacy audit
   docs (`docs/fullaudit.md`, `docs/lawaudit.md`, `docs/LAW_AUDIT.md`, `docs/arch/`, …)
-  were re-archived individually — the v4 law audit lives in `audit-suite/`.
+  were re-archived individually — the v4 law audit lives in `docs/audit/` (historical a3 corpus) with the executable signoff gate in `docs/spec/audit/`.
 
 ### 2.3 Git State
 
@@ -317,10 +317,10 @@ Every significant code change **MUST** be synchronized across these files:
 | `src/physics/lawgroups/SPEC.md` | Law implementation SSOT | Law changes |
 | `src/constants.js` (LAW_HELP_DB) | 4-tier documentation | New laws or parameters |
 | `GUIDE.md` | User-facing design guide | Significant parameter/DNA recipe shifts |
-| `audit-suite/fidelity-audit-*.md` | Law fidelity audit (updated duplicate) | Law behavior changes (see `audit-suite/README.md`) |
+| `docs/spec/audit/signoff-manifest.json` | Law audit signoff records (checked by `repository:check`) | Law behavior changes (see `docs/AUDIT_CORPUS_OWNERSHIP.md`) |
 | `VERSION` | Version marker — must match changelog top + `package.json` | Every release (see §10.4) |
 
-The **B-4RK principle** stands: documentation is not an afterthought; it is a feature. New laws must ship with all four `LAW_HELP_DB` tiers. The law audit lives in `audit-suite/` (fidelity audit + frozen historical copies of `laws-rrp/batch_*.md`); legacy audit docs (`docs/fullaudit.md`, `docs/lawaudit.md`) are archived.
+The **B-4RK principle** stands: documentation is not an afterthought; it is a feature. New laws must ship with all four `LAW_HELP_DB` tiers. The law audit lives in `docs/audit/` (historical a3 corpus, provenance-checked) with per-law behaviour tests in `tests/audit/` and the signoff gate in `docs/spec/audit/`; legacy audit docs (`docs/fullaudit.md`, `docs/lawaudit.md`) are archived.
 
 ---
 
@@ -329,7 +329,7 @@ The **B-4RK principle** stands: documentation is not an afterthought; it is a fe
 - **Unit/audit:** `vepa4 test` (vitest 3.2.7, `tests/`). **86 files / 860 tests** (verified 2026-08-20 — 854 green; the 6 failures are the pre-existing law-category/audit baseline: 4× `lawCategories.test.js` + `batch_08` TIME_DILATION + `batch_30` TELEPORT — untouched by v8.2.0–v8.16.0). Config: `vitest.config.js` includes `tests/**/*.test.js`, node environment, 15 s timeout. Suite layout: `tests/unit/` (30 files incl. `exoticMatter.test.js`, `relativity.test.js`, `quantumMacro.test.js`, `stellar.test.js`, `synthetic.test.js`, `drawer.test.js`, `fields.test.js`, `groupRegistry.test.js`, `constructionEconomy.test.js`, `livingWorld.test.js`, `perfKnobs.test.js`), `tests/audit/` (`batch_01-32.test.js` + `params_batch_01-18.test.js` + `paramsHelpers.js`).
 - **E2E:** `npm run test:e2e` (Playwright) — ⚠️ **no `playwright.config.*` or `*.spec.js` files are committed yet**, so the script is currently unconfigured; treat e2e as aspirational until specs land.
 - **Syntax:** `vepa4 syntax` (`node --check` on `src` + `tests`).
-- **Audit docs:** `audit-suite/` — `fidelity-audit-v4.6.29.md` (updated duplicate for the 8 rewritten laws) + `historical/2026-08-10-v4.6.28/` (frozen pre-rewrite audit incl. `laws-rrp/batch_*.md`).
+- **Audit docs:** `docs/audit/` — historical a3 law-audit corpus (`laws/a3/`, retained in repo per `provenance.json`); signoff gate `docs/spec/audit/signoff-manifest.json` + `scripts/validate-signoff.mjs`.
 - **Build smoke:** `vepa4 build`.
 - **Legacy runner:** `tests/run.mjs` (node:test) is a v3-era artifact — do not use; `vepa4 test` is the suite.
 - `npm test` runs the v4 vitest suite (the legacy v2 root manifest with the dead validator was archived).
@@ -382,7 +382,7 @@ The **B-4RK principle** stands: documentation is not an afterthought; it is a fe
 | Worker postMessage limits | Use Transferable objects for buffer transfers |
 | Physics NaN explosion | NaN shields in solver; MAX_FORCE/MAX_VELOCITY clamps |
 | Law toggle not working | Check `LAW_INDEXES` + `lawState.js` set/clear + `isSet` in solver |
-| HELP_DB / audit drift | After law changes, sync `LAW_HELP_DB` (4 tiers) + `audit-suite/fidelity-audit-*.md` (see GEMINI.md §1.1) |
+| HELP_DB / audit drift | After law changes, sync `LAW_HELP_DB` (4 tiers) + the signoff manifest `docs/spec/audit/signoff-manifest.json` (see GEMINI.md §1.1) |
 | Memory/stride corruption | Every access = `index * PARTICLE_STRIDE + STRIDE_INDEXES.X` |
 | Planet law key | v4 key is `LAW_INDEXES.PLANETARY` |
 | Stale changelog drafts | An earlier `[4.7.0]` draft was removed from the ledger on 2026-08-06 (snapshot: `CHANGELOG.md.bak-20260806`); the current `[4.7.0]` release draft (2026-08-10) drops the planned multiplayer update entirely |
@@ -467,8 +467,8 @@ git tag | tail -1                  # current release tag
 3. Implement a stateless function in `src/physics/lawgroups/<category>Laws.js` per `lawgroups/SPEC.md`
 4. Wire dispatch with `isSet(LAW_INDEXES.X)` in `src/physics/solver.js` (worker consumes via `solve()`)
 5. Add the toggle in `src/ui/lawPanel.js`
-6. Update `lawgroups/SPEC.md` + `audit-suite/laws-rrp/batch_*.md`
-7. Update `audit-suite/fidelity-audit-*.md` + the historical batch copy if the law behavior changed
+6. Update `lawgroups/SPEC.md` + add/extend the law's behaviour test in `tests/audit/`
+7. Add or update its record in `docs/spec/audit/signoff-manifest.json` and run `npm run spec:generate` if the law behavior changed
 8. `vepa4 syntax` + `vepa4 test`
 9. Changelog + version + backup + tag per §10.4
 
@@ -490,7 +490,7 @@ Built-ins live in `src/state/defaultPresets.js`: **PRIME_DEFAULT** (default worl
 ## 13. CURRENT DOCUMENTATION & WORK TRACKS
 
 - `docs/multiplayer/` — **removed with the 4.7.0 release draft (2026-08-10)**; the LAN-hub P0 + phone-grid P1 WIP (`server/`, `multiplayer/`, `net-poc/`, `src/net/`, `src/ui/networkPanel.js`, `tests/unit/net.test.js`) is recoverable from `730f5dc` / backup branches if the multiplayer track is ever resumed.
-- `audit-suite/laws-rrp/` — per-law RRP batches 01-32 (batches 01-14 shipped through v4.6.18; batches 15+ pending).
+- `tests/audit/` — per-law behaviour batches 01-32 + params batches 01-18 (the former per-law RRP batch documents are superseded by these tests).
 - `tests/audit/` — `batch_01-32.test.js` + `params_batch_01-18.test.js`.
 - `docs/stubs.md` — legacy doc gaps; `docs/LAW_AUDIT.md`, `docs/LAW_PARAMETER_RELATIONSHIPS.md` — law/param analysis.
 - `PLAN.md` — milestone plan.
