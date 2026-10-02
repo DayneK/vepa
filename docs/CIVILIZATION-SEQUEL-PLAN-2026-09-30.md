@@ -1,7 +1,7 @@
 # Civilization sequel — Phases 4–6
 
 **Status:** implemented and gated. Extends
-`docs/CIVILIZATION-EXPANSION-REPORT-2026-09-30.md` (round 2, Phases 1–3).
+`.old/docs/CIVILIZATION-EXPANSION-REPORT-2026-09-30.md` (archived; round 2, Phases 1–3).
 **Date:** 2026-09-30 · **Baseline:** VEPA4 9.1.22 · **Branch:** `main`
 
 ## Where this came from

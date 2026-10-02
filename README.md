@@ -246,4 +246,4 @@ choice persists.
 - `SPEC.md` — feature specification for v4
 - `PLAN.md` — implementation plan
 - `CHANGELOG.md` — version history
-- `../audit/FULL_AUDIT_2026-08-01.md` — the audit that scoped this release
+- `docs/CODEBASE-AUDIT-2026-09-30.md` — the current codebase audit (earlier audits are archived in `.old/` and the external `gemquota/vepa-archive`)

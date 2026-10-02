@@ -227,7 +227,7 @@ npx vite build                                        # clean bundle
   capped), and negative-mass anti-gravity nudges. New MATTER > EXOTIC
   world-param subgroup. No new laws (128/128 budget — decision L.1).
   Arc #2: L·M·N the substrate transforms → O·P·Q the world goes cosmic →
-  R·S·T it completes (designs in `docs/dev/rrp-trilogy-4/5/6/`).
+  R·S·T it completes (designs in `.old/docs/dev/rrp-trilogy-4/` (archived) and `docs/dev/rrp-trilogy-5/`, `docs/dev/rrp-trilogy-6/`).
   See `CHANGELOG.md` [8.12.0].
 
 ## Milestone note (v8.11.0 — 2026-08-18)
@@ -257,7 +257,7 @@ npx vite build                                        # clean bundle
 
 - **Set I — Tools & Artifacts** (build 1 of the RRP I·J·K trilogy — the literal
   third trilogy completing the 3×3 trilogy³; design in
-  `docs/dev/rrp-trilogy-3/`): per-group artifact registry
+  `.old/docs/dev/rrp-trilogy-3/`): per-group artifact registry
   (`src/state/artifacts.js`) — TOOL / WEAPON / BARRIER inventories crafted
   from treasury by builders, decay under maintenance, and act through the
   existing substrate: TOOL dividends into the treasury, WEAPON dampens the
@@ -287,7 +287,7 @@ npx vite build                                        # clean bundle
 ## Milestone note (v8.6.0 — 2026-08-18)
 
 - **Set D — Deep Time & Epochs** (build 1 of the RRP D·G·H trilogy; design in
-  `docs/dev/rrp-trilogy-2/`): the world advances through named eras on a tick
+  `.old/docs/dev/rrp-trilogy-2/`): the world advances through named eras on a tick
   boundary (`src/engines/epochEngine.js`) with restorable full-world snapshots
   (capped at 16); extinction / recovery are threshold-gated population deltas,
   answered reversibly via undo checkpoint + INFO field writes. The new TIME
@@ -332,7 +332,7 @@ npx vite build                                        # clean bundle
 ## Milestone note (v8.2.0 — 2026-08-18)
 
 - **Set E.1 — Matter & Medium** (first build of the RRP E·F·A trilogy; design in
-  `docs/dev/rrp-trilogy/`): the dish becomes a field — `src/physics/fields.js` adds a
+  `.old/docs/dev/rrp-trilogy/`): the dish becomes a field — `src/physics/fields.js` adds a
   coarse 3D field grid (12³–24³, auto-scaled) with vector (WIND/EM) + scalar
   (THERMAL/INFO) fields, COLL-gated impassable walls (hard-matter toggle), gravity
   wells, and paired portals; 11 new MEDIUM world sliders; gradient-force coupling,

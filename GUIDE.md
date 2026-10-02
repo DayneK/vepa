@@ -257,9 +257,10 @@ Managing a **Singularity** (Black Hole) is an advanced architect's most dangerou
 
 ## 📚 Further Research: The Encyclopedia
 
-For those requiring a total technical breakdown of the engine's core constants, refer to the **Expanded Physics Encyclopedia**:
+For a total technical breakdown of the engine, use the generated technical specification (regenerated from source by `npm run spec:generate` and checked in CI):
 
-*   **[Batch 01: World Physics Core](./docs/expansion/batches/batch_01.md)**: count, G, dt, globalViscosity, spawnRate, temperature.
-*   **[Batch 02: World Environment: Spatial](./docs/expansion/batches/batch_02.md)**: pressure, windX/Y/Z, dimX/Y (World Dimensions).
+*   **[Technical spec index](./docs/spec/README.md)** — architecture, state, simulation, UI and testing.
+*   **[Law records](./docs/spec/laws/index.md)** — one page per law with parameters, help tiers and implementation evidence.
+*   **[World and particle state](./docs/spec/state/general.md)** — world parameters, stride layout and persistence.
 
-These volumes contain Advanced and Expert-level deep dives into implementation logic and emergent system behaviors.
+The former "Expanded Physics Encyclopedia" batch volumes (`docs/expansion/batches/`) are no longer in the repository; the spec above replaces them.

@@ -1,5 +1,7 @@
 # VEPA systems atlas
 
+> Historical snapshot (past/0). Links to files not kept in this snapshot point at the live `docs/systems/` versions.
+
 **Scope:** source-grounded organization, reproduction, lineage, ecology, and civilization analysis for VEPA4 9.1.12.
 
 This atlas answers two different questions without conflating them:
@@ -12,14 +14,14 @@ A name such as *family*, *tribe*, or *nation* is therefore not treated as proof 
 ## Navigation
 
 - [Systems overview](overview.md) — implementation status and source matrix.
-- [Ontology map](ontology.md) — entity, relation, scale, and lifecycle vocabulary.
-- [Comparison matrix](comparison-matrix.md) — cross-system dimensions and evidence.
-- [Analysis framework](analysis-framework.md) — how to deconstruct, observe, enable, and theorycraft systems.
-- [Meta-model](meta-model.md) — proposed layered architecture and invariants.
+- [Ontology map](../../ontology.md) — entity, relation, scale, and lifecycle vocabulary.
+- [Comparison matrix](../../comparison-matrix.md) — cross-system dimensions and evidence.
+- [Analysis framework](../../analysis-framework.md) — how to deconstruct, observe, enable, and theorycraft systems.
+- [Meta-model](../../meta-model.md) — proposed layered architecture and invariants.
 - [Role catalog](roles/README.md) — one durable analyst/designer role for each system.
 - [Implementation gaps](implementation-gaps.md) — explicit partial/missing boundaries and suggested next slices.
-- [Module decomposition](module-decomposition.md) — source-grounded extraction plan for future runtime modules.
-- [Deployment publication](deployment-publication.md) — why the atlas is copied into the static build output.
+- [Module decomposition](../../module-decomposition.md) — source-grounded extraction plan for future runtime modules.
+- [Deployment publication](../../deployment-publication.md) — why the atlas is copied into the static build output.
 - [Ranked roadmap](roadmap-overview.md) — synchronized multi-phase delivery order.
 - `src/state/systemFoundation.js` — Phase 1 evidence-contract registry used by the runtime/tooling layer.
 

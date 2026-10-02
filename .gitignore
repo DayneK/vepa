@@ -21,3 +21,5 @@ CHANGELOG.md.bak-*
 # Agent planning notes are ephemeral (Codey 3.1 §3.2) — kept out of git and out of the verifier's view
 .codey/PLAN-*.md
 .codey/QUESTIONS-*.md
+.codey/RRP-VERIFY.md
+.codey/VERIFY-*.md
