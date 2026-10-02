@@ -4,11 +4,11 @@
 
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 19 | LAW_HELP_DB |
-| 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 8 | LAW_HELP_DB |
+| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 20 | LAW_HELP_DB |
+| 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 9 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 8 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
-| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 8 | 14 | LAW_HELP_DB |
+| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 8 | 15 | LAW_HELP_DB |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 4 | LAW_HELP_DB |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 4 | 5 | LAW_HELP_DB |
 | 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 14 | LAW_HELP_DB |
@@ -17,7 +17,7 @@
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 9 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | LAW_HELP_DB |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 65 | LAW_HELP_DB |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 67 | LAW_HELP_DB |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 3 | LAW_HELP_DB |
 | 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | LAW_HELP_DB |
@@ -29,7 +29,7 @@
 | 22 | [ISOMERIZATION](../laws/chemistry/022_ISOMERIZATION.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 23 | [CHIRALITY](../laws/chemistry/023_CHIRALITY.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 24 | [CRYSTALLIZATION](../laws/chemistry/024_CRYSTALLIZATION.md) | chemistry | 1 | 3 | 1 | LAW_HELP_DB |
-| 25 | [HEAT](../laws/thermodynamics/025_HEAT.md) | thermodynamics | 1 | 4 | 8 | LAW_HELP_DB |
+| 25 | [HEAT](../laws/thermodynamics/025_HEAT.md) | thermodynamics | 1 | 4 | 9 | LAW_HELP_DB |
 | 26 | [COLD](../laws/thermodynamics/026_COLD.md) | thermodynamics | 1 | 3 | 2 | LAW_HELP_DB |
 | 27 | [CONVECTION](../laws/thermodynamics/027_CONVECTION.md) | thermodynamics | 1 | 2 | 2 | LAW_HELP_DB |
 | 28 | [PHASE_RADIATION](../laws/thermodynamics/028_PHASE_RADIATION.md) | thermodynamics | 1 | 2 | 1 | LAW_HELP_DB |
@@ -43,7 +43,7 @@
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 2 | LAW_HELP_DB |
 | 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 3 | LAW_HELP_DB |
 | 38 | [VOID](../laws/physics/038_VOID.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
-| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 25 | LAW_HELP_DB |
+| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 27 | LAW_HELP_DB |
 | 40 | [REDUCTION](../laws/chemistry/040_REDUCTION.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 41 | [ALLOY](../laws/chemistry/041_ALLOY.md) | chemistry | 1 | 4 | 2 | LAW_HELP_DB |
 | 42 | [MELT](../laws/thermodynamics/042_MELT.md) | thermodynamics | 1 | 2 | 2 | LAW_HELP_DB |
@@ -55,7 +55,7 @@
 | 48 | [CLAIRVOYANCE](../laws/metaphysics/048_CLAIRVOYANCE.md) | metaphysics | 1 | 2 | 1 | LAW_HELP_DB |
 | 49 | [PRECOGNITION](../laws/metaphysics/049_PRECOGNITION.md) | metaphysics | 1 | 2 | 1 | LAW_HELP_DB |
 | 50 | [ASTRAL](../laws/metaphysics/050_ASTRAL.md) | metaphysics | 1 | 2 | 1 | LAW_HELP_DB |
-| 51 | [PREDATION](../laws/biology/051_PREDATION.md) | biology | 1 | 4 | 5 | LAW_HELP_DB |
+| 51 | [PREDATION](../laws/biology/051_PREDATION.md) | biology | 1 | 4 | 6 | LAW_HELP_DB |
 | 52 | [COMMS](../laws/biology/052_COMMS.md) | biology | 1 | 5 | 9 | LAW_HELP_DB |
 | 53 | [CHARGE_LAW](../laws/electromagnetism/053_CHARGE_LAW.md) | electromagnetism | 1 | 3 | 5 | LAW_HELP_DB |
 | 54 | [ELECTRIC_FIELD](../laws/electromagnetism/054_ELECTRIC_FIELD.md) | electromagnetism | 1 | 2 | 3 | LAW_HELP_DB |
@@ -75,24 +75,24 @@
 | 68 | [STIGMERGY](../laws/information/068_STIGMERGY.md) | information | 1 | 3 | 3 | LAW_HELP_DB |
 | 69 | [SIGNAL_BOOST](../laws/information/069_SIGNAL_BOOST.md) | information | 1 | 3 | 1 | LAW_HELP_DB |
 | 70 | [LEARN](../laws/information/070_LEARN.md) | information | 1 | 3 | 3 | LAW_HELP_DB |
-| 71 | [SYMBOL](../laws/information/071_SYMBOL.md) | information | 1 | 3 | 1 | LAW_HELP_DB |
-| 72 | [METRIC](../laws/information/072_METRIC.md) | information | 1 | 2 | 1 | LAW_HELP_DB |
+| 71 | [SYMBOL](../laws/information/071_SYMBOL.md) | information | 1 | 3 | 2 | LAW_HELP_DB |
+| 72 | [METRIC](../laws/information/072_METRIC.md) | information | 1 | 2 | 2 | LAW_HELP_DB |
 | 73 | [PREDICT](../laws/information/073_PREDICT.md) | information | 1 | 3 | 1 | LAW_HELP_DB |
 | 74 | [CODE](../laws/information/074_CODE.md) | information | 1 | 3 | 3 | LAW_HELP_DB |
 | 75 | [PROTOCOL](../laws/information/075_PROTOCOL.md) | information | 1 | 3 | 1 | LAW_HELP_DB |
-| 76 | [FEEDBACK](../laws/information/076_FEEDBACK.md) | information | 1 | 3 | 4 | LAW_HELP_DB |
+| 76 | [FEEDBACK](../laws/information/076_FEEDBACK.md) | information | 1 | 3 | 5 | LAW_HELP_DB |
 | 77 | [LANGUAGE](../laws/information/077_LANGUAGE.md) | information | 1 | 3 | 3 | LAW_HELP_DB |
 | 78 | [CULTURE](../laws/information/078_CULTURE.md) | information | 1 | 3 | 6 | LAW_HELP_DB |
 | 79 | [SINGULARITY](../laws/physics/079_SINGULARITY.md) | physics | 1 | 4 | 4 | LAW_HELP_DB |
 | 80 | [ENTANGLEMENT](../laws/metaphysics/080_ENTANGLEMENT.md) | metaphysics | 1 | 5 | 5 | LAW_HELP_DB |
-| 81 | [HISTORY](../laws/information/081_HISTORY.md) | information | 1 | 3 | 3 | LAW_HELP_DB |
+| 81 | [HISTORY](../laws/information/081_HISTORY.md) | information | 1 | 3 | 4 | LAW_HELP_DB |
 | 82 | [TIDE](../laws/physics/082_TIDE.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
 | 83 | [FRICTION](../laws/physics/083_FRICTION.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
 | 84 | [HORIZON](../laws/physics/084_HORIZON.md) | physics | 1 | 3 | 2 | LAW_HELP_DB |
 | 85 | [RADIATION_PRESSURE](../laws/physics/085_RADIATION_PRESSURE.md) | physics | 1 | 1 | 0 | LAW_HELP_DB |
 | 86 | [MASS_INERTIA](../laws/physics/086_MASS_INERTIA.md) | physics | 1 | 1 | 0 | LAW_HELP_DB |
 | 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 2 | 7 | LAW_HELP_DB |
-| 88 | [SYMBIOSIS](../laws/biology/088_SYMBIOSIS.md) | biology | 1 | 4 | 1 | LAW_HELP_DB |
+| 88 | [SYMBIOSIS](../laws/biology/088_SYMBIOSIS.md) | biology | 1 | 4 | 2 | LAW_HELP_DB |
 | 89 | [PARASITE](../laws/biology/089_PARASITE.md) | biology | 1 | 4 | 1 | LAW_HELP_DB |
 | 90 | [HIBERNATION](../laws/biology/090_HIBERNATION.md) | biology | 1 | 1 | 1 | LAW_HELP_DB |
 | 91 | [IMMUNITY](../laws/biology/091_IMMUNITY.md) | biology | 1 | 2 | 1 | LAW_HELP_DB |

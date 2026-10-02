@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `293` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `302` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
-| Application | 36 | 157 | 463 |
-| Benchmark | 5 | 5 | 12 |
+| Application | 41 | 179 | 480 |
+| Benchmark | 7 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
-| Simulation | 30 | 221 | 366 |
+| Simulation | 30 | 228 | 366 |
 | State | 31 | 280 | 232 |
-| Testing | 157 | 22 | 626 |
+| Testing | 159 | 22 | 640 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -20,7 +20,9 @@ The generator scanned `293` files from active repository inputs. Individual modu
 | --- | --- | --- | --- | --- | --- |
 | [bench/backend-compare.mjs](../../../bench/backend-compare.mjs) | benchmark | 154 | 5 | 4 | 0 |
 | [bench/multiplex-bench.mjs](../../../bench/multiplex-bench.mjs) | benchmark | 78 | 0 | 1 | 3 |
+| [bench/multiplex-node-pool.mjs](../../../bench/multiplex-node-pool.mjs) | benchmark | 13 | 1 | 1 | 0 |
 | [bench/results/renderer-benchmark.json](../../../bench/results/renderer-benchmark.json) | benchmark | 253 | 0 | 0 | 0 |
+| [bench/shard-worker-node.mjs](../../../bench/shard-worker-node.mjs) | benchmark | 10 | 0 | 1 | 0 |
 | [bench/solver.bench.mjs](../../../bench/solver.bench.mjs) | benchmark | 587 | 0 | 6 | 9 |
 | [bench/worker-bench-worker.mjs](../../../bench/worker-bench-worker.mjs) | benchmark | 79 | 0 | 7 | 0 |
 | [index.html](../../../index.html) | repository | 204 | 0 | 0 | 1 |
@@ -57,11 +59,16 @@ The generator scanned `293` files from active repository inputs. Individual modu
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
 | [src/main.js](../../../src/main.js) | application | 1823 | 0 | 50 | 11 |
-| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1553 | 31 | 11 | 7 |
+| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1751 | 37 | 12 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 466 | 7 | 0 | 5 |
+| [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
 | [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 848 | 1 | 2 | 2 |
+| [src/multiplex/previewLaws.js](../../../src/multiplex/previewLaws.js) | application | 57 | 4 | 2 | 16 |
+| [src/multiplex/shardPool.js](../../../src/multiplex/shardPool.js) | application | 52 | 3 | 0 | 0 |
+| [src/multiplex/shardWorker.js](../../../src/multiplex/shardWorker.js) | application | 8 | 0 | 1 | 0 |
+| [src/multiplex/shardWorkerCore.js](../../../src/multiplex/shardWorkerCore.js) | application | 83 | 2 | 5 | 1 |
 | [src/physics/cipherKey.js](../../../src/physics/cipherKey.js) | simulation | 15 | 1 | 1 | 1 |
-| [src/physics/fields.js](../../../src/physics/fields.js) | simulation | 562 | 14 | 1 | 2 |
+| [src/physics/fields.js](../../../src/physics/fields.js) | simulation | 576 | 16 | 1 | 2 |
 | [src/physics/fmm.js](../../../src/physics/fmm.js) | simulation | 450 | 2 | 1 | 0 |
 | [src/physics/force.js](../../../src/physics/force.js) | simulation | 44 | 2 | 1 | 2 |
 | [src/physics/gpuCompute.js](../../../src/physics/gpuCompute.js) | simulation | 399 | 3 | 0 | 4 |
@@ -77,7 +84,7 @@ The generator scanned `293` files from active repository inputs. Individual modu
 | [src/physics/lawgroups/physicsLaws.js](../../../src/physics/lawgroups/physicsLaws.js) | simulation | 173 | 1 | 3 | 6 |
 | [src/physics/lawgroups/quantumLaws.js](../../../src/physics/lawgroups/quantumLaws.js) | simulation | 326 | 1 | 3 | 7 |
 | [src/physics/lawgroups/thermoLaws.js](../../../src/physics/lawgroups/thermoLaws.js) | simulation | 113 | 1 | 3 | 8 |
-| [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2746 | 104 | 8 | 85 |
+| [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2762 | 106 | 8 | 85 |
 | [src/physics/mechanicsDiagnostics.js](../../../src/physics/mechanicsDiagnostics.js) | simulation | 35 | 1 | 3 | 0 |
 | [src/physics/mergePhysics.js](../../../src/physics/mergePhysics.js) | simulation | 344 | 6 | 2 | 8 |
 | [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 383 | 4 | 0 | 0 |
@@ -85,7 +92,7 @@ The generator scanned `293` files from active repository inputs. Individual modu
 | [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 304 | 8 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
-| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2016 | 11 | 22 | 134 |
+| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2054 | 14 | 22 | 134 |
 | [src/physics/spatialGrid.js](../../../src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
 | [src/react-entry.js](../../../src/react-entry.js) | application | 20 | 0 | 2 | 0 |
@@ -275,8 +282,10 @@ The generator scanned `293` files from active repository inputs. Individual modu
 | [tests/unit/mechanicsArchitecture.test.js](../../../tests/unit/mechanicsArchitecture.test.js) | testing | 105 | 0 | 5 | 1 |
 | [tests/unit/memoryCulture.test.js](../../../tests/unit/memoryCulture.test.js) | testing | 86 | 0 | 2 | 1 |
 | [tests/unit/multiplex.test.js](../../../tests/unit/multiplex.test.js) | testing | 969 | 0 | 9 | 5 |
+| [tests/unit/multiplexIsolation.test.js](../../../tests/unit/multiplexIsolation.test.js) | testing | 90 | 0 | 13 | 3 |
 | [tests/unit/multiplexPenta.test.js](../../../tests/unit/multiplexPenta.test.js) | testing | 91 | 0 | 6 | 1 |
 | [tests/unit/multiplexScale.test.js](../../../tests/unit/multiplexScale.test.js) | testing | 77 | 0 | 6 | 2 |
+| [tests/unit/multiplexScheduler.test.js](../../../tests/unit/multiplexScheduler.test.js) | testing | 109 | 0 | 7 | 11 |
 | [tests/unit/octree.test.js](../../../tests/unit/octree.test.js) | testing | 151 | 0 | 7 | 1 |
 | [tests/unit/perfKnobs.test.js](../../../tests/unit/perfKnobs.test.js) | testing | 84 | 0 | 3 | 0 |
 | [tests/unit/physics.test.js](../../../tests/unit/physics.test.js) | testing | 60 | 0 | 5 | 4 |

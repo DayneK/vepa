@@ -160,6 +160,20 @@ export function ensureFields(worldSize, params = {}) {
   return _system;
 }
 
+/**
+ * HIDDEN-STATE (AC-97): the field system is per world. Solver contexts save
+ * and restore it so multiplex sims never share a medium with each other or
+ * with the main world.
+ */
+export function getFieldModuleState() {
+  return { system: _system, fingerprint: _fingerprint };
+}
+
+export function setFieldModuleState(state) {
+  _system = state ? state.system || null : null;
+  _fingerprint = state ? state.fingerprint || '' : '';
+}
+
 export function getFields() {
   return _system;
 }

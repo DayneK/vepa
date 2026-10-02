@@ -21,7 +21,8 @@ import { createLawState, getActiveCount } from '../state/lawState.js';
 import { createSpeciationEngine, updateSpeciation } from '../engines/speciation.js';
 import { createWorldParams, clampWorldParam } from '../state/worldParams.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
-import { solve, drainOffspring } from '../physics/solver.js';
+import { solve, drainOffspring, createSolverContext, enterSolverContext } from '../physics/solver.js';
+import { DEFAULT_LIGHT_LAWS, lawMaskFor, applyLawMask } from './previewLaws.js';
 import { createRenderer, renderFrame, resize as resizeRenderer } from '../render/renderer.js';
 import { initCamera } from '../ui/camera.js';
 import { SplitMix32 } from '../core/prng.js';
@@ -46,6 +47,14 @@ export const MULTIPLEX_DEFAULTS = {
   variationDrift: 0,         // per-iteration variation increase (evolutionary pressure)
   populationScale: 1.0,      // scales the dynamic per-shard population cap (0.25–1)
   populationPercent: 0,      // MX-20: >0 fixes each shard's cap at this % of MAX_PARTICLES (2.5 → 2,500); 0 = sqrt curve
+  particlesPerSim: 0,        // MX-20: >0 fixes each shard's cap in particles (125–2,500 in the UI); wins over populationPercent
+  lawTier: 'full',           // MX-20: 'full' | 'light' — preview law set (see previewLaws.js)
+  lightLaws: null,           // MX-20: user-edited light set (law names); null = DEFAULT_LIGHT_LAWS
+  tickMode: 'frame',         // MX-20: 'frame' | 'fixed' | 'adaptive' — sim ticks decoupled from render
+  ticksPerSecond: 30,        // MX-20: per-sim rate for tickMode 'fixed'
+  frameBudgetMs: 8,          // MX-20: in-thread budget per frame for 'fixed'/'adaptive' without workers
+  useWorkers: true,          // MX-20: step sims in a worker pool when available
+  workerCount: 0,            // MX-20: 0 = one per spare core (max one per sim)
   spawnSpecies: 5,           // species count for freshly SPAWNED shard populations (1–5)
   fitnessWindow: 32,         // rolling alive-count window feeding GROWTH / STABILITY / DELTA
   seed: 0,                   // 0 = random source seed; >0 = deterministic runs
@@ -97,6 +106,34 @@ export const MULTIPLEX_DEFAULTS = {
   },
 };
 
+/**
+ * MX-20 presets (D-016). Each sets grid size, particles per sim, preview law
+ * set and tick scheduling; everything else in the config is left as is.
+ * Measured on the box in docs/MULTIPLEX-PERF.md.
+ */
+export const MULTIPLEX_PRESETS = Object.freeze({
+  'smooth-20': Object.freeze({
+    label: 'Smooth 20', cols: 5, rows: 4, particlesPerSim: 125, lawTier: 'light', tickMode: 'frame', useWorkers: true,
+    note: '20 sims × 125 particles, light laws, one tick per frame (60 fps).',
+  }),
+  balanced: Object.freeze({
+    label: 'Balanced', cols: 5, rows: 4, particlesPerSim: 500, lawTier: 'light', tickMode: 'adaptive', useWorkers: true,
+    note: '20 sims × 500 particles, light laws, ticks as fast as the pool allows; render stays at 60 fps.',
+  }),
+  'full-fidelity': Object.freeze({
+    label: 'Full fidelity', cols: 5, rows: 4, particlesPerSim: 2500, lawTier: 'full', tickMode: 'adaptive', useWorkers: true,
+    note: '20 sims × 2,500 particles (2.5%), full laws, ticks throttled to what the pool sustains; render stays at 60 fps.',
+  }),
+});
+
+/** Merge a preset into a config (returns a new object). */
+export function applyMultiplexPreset(config, presetId) {
+  const p = MULTIPLEX_PRESETS[presetId];
+  if (!p) return { ...config };
+  const { label, note, ...knobs } = p;
+  return { ...config, ...knobs, preset: presetId };
+}
+
 /** Hard cap on concurrent shards (keeps the main thread usable). */
 // MX-20 (D-014): raised from 16 so a 5×4 / 5×5 grid fits.
 export const MAX_SHARDS = 25;
@@ -145,7 +182,9 @@ export const EXPLORATION_BINS = 4;
  * each shard's population gets (inverse-square-root curve), so the combined
  * physics budget stays bounded. `scale` (0.25–1) is the live POP SCALE knob.
  */
-export function computeShardPopulationCap(total, scale = 1, percent = 0) {
+export function computeShardPopulationCap(total, scale = 1, percent = 0, perSim = 0) {
+  const fixed = Math.round(parseFloat(perSim));
+  if (Number.isFinite(fixed) && fixed > 0) return Math.max(1, Math.min(MAX_PARTICLES, fixed));
   const pct = parseFloat(percent);
   if (Number.isFinite(pct) && pct > 0) {
     // MX-20: an explicit per-sim share of the default population cap.
@@ -335,52 +374,65 @@ export function iterateMultiplex(mx, opts = {}) {
   return { ...progress, iteration: mx.iteration };
 }
 
-/** Advance physics on every shard by one step. */
-export function stepMultiplex(mx, dt, simSpeed, worldSize) {
+/** Effective dt per solve sub-step for the current config. */
+function shardStepParams(mx, dt, simSpeed) {
   const cfg = mx.config || {};
-  if (cfg.paused) return; // frozen grid — the main sim keeps stepping
   const effDt = dt * simSpeed * Math.max(0.05, cfg.simSpeed || 1);
   const substeps = Math.max(1, Math.min(8, Math.round(cfg.substeps) || 1));
-  const subDt = effDt / substeps;
-  const t0 = performance.now();
-  // Per-shard world params: the solver reads the runtimeConfig singleton, so
-  // each shard's knobs are swapped in for the duration of its tick and the
-  // live world's params are restored afterwards. The whole loop is
-  // synchronous (no awaits), so the swap is race-free on the main thread.
+  return { substeps, subDt: effDt / substeps };
+}
+
+/** Law set the solver sees for a shard: its own, or ∩ the light preview set. */
+function solveLawsFor(mx, shard) {
+  if ((mx.config && mx.config.lawTier) !== 'light') return shard.laws;
+  if (!mx._lightMask || mx._lightMaskKey !== mx.config.lightLaws) {
+    mx._lightMask = lawMaskFor(mx.config.lightLaws || DEFAULT_LIGHT_LAWS);
+    mx._lightMaskKey = mx.config.lightLaws;
+  }
+  if (!shard.solveLaws) shard.solveLaws = createLawState();
+  return applyLawMask(shard.laws, mx._lightMask, shard.solveLaws);
+}
+
+/**
+ * One in-thread tick of one shard: solve in the shard's own solver context
+ * (HIDDEN-STATE, AC-97), then the main-thread bookkeeping.
+ */
+function tickShardLocal(mx, shard, substeps, subDt, worldSize) {
   const savedWorldParams = runtimeConfig.worldParams;
+  if (shard.worldParams) runtimeConfig.worldParams = shard.worldParams;
+  const prevCtx = enterSolverContext(shard.solverCtx);
+  let offspring;
   try {
-    for (const shard of mx.shards) {
-      if (shard.count <= 0) continue;
-      if (shard.worldParams) runtimeConfig.worldParams = shard.worldParams;
-      for (let s = 0; s < substeps; s++) {
-        solve(
-          shard.view,
-          shard.count,
-          PARTICLE_STRIDE,
-          shard.laws,
-          shard.dna,
-          worldSize,
-          subDt,
-          () => shard.prng.next(),
-        );
-      }
-      collectDeadSlots(shard);
-      spawnShardOffspring(shard);
-      updateShardWindow(shard);
-      shard.tick++;
-      // Set A.3 — per-shard speciation: field isolation proxied by the
-      // shard's own wall preset; silent so shards never touch the main bus.
-      updateSpeciation(shard.speciation, shard.view, shard.count, PARTICLE_STRIDE, shard.dna, worldSize, {
-        lawActiveCount: getActiveCount(shard.laws),
-        wallFactor: shard.worldParams ? Math.min(1, Math.round(shard.worldParams.WALLS_PRESET || 0) / 3) : 0,
-        silent: true,
-      });
+    const laws = solveLawsFor(mx, shard);
+    for (let s = 0; s < substeps; s++) {
+      solve(shard.view, shard.count, PARTICLE_STRIDE, laws, shard.dna, worldSize, subDt, () => shard.prng.next());
     }
+    offspring = drainOffspring();
   } finally {
+    enterSolverContext(prevCtx);
     runtimeConfig.worldParams = savedWorldParams;
   }
-  const tickMs = performance.now() - t0;
-  mx.lastTickMs = mx.lastTickMs === undefined ? tickMs : mx.lastTickMs * 0.85 + tickMs * 0.15;
+  finishShardTick(shard, offspring, worldSize);
+}
+
+/** Main-thread bookkeeping after a shard's solve (local or worker). */
+function finishShardTick(shard, offspring, worldSize) {
+  collectDeadSlots(shard);
+  spawnShardOffspring(shard, offspring);
+  updateShardWindow(shard);
+  shard.tick++;
+  // Set A.3 — per-shard speciation: field isolation proxied by the
+  // shard's own wall preset; silent so shards never touch the main bus.
+  updateSpeciation(shard.speciation, shard.view, shard.count, PARTICLE_STRIDE, shard.dna, worldSize, {
+    lawActiveCount: getActiveCount(shard.laws),
+    wallFactor: shard.worldParams ? Math.min(1, Math.round(shard.worldParams.WALLS_PRESET || 0) / 3) : 0,
+    silent: true,
+  });
+}
+
+/** Grid-level bookkeeping once every shard has advanced a round. */
+function finishRound(mx, worldSize) {
+  const cfg = mx.config || {};
   mx.tick++;
   mx.worldSize = worldSize;
   // One pure per-tick measurement (the UI reads the report without recording).
@@ -395,6 +447,139 @@ export function stepMultiplex(mx, dt, simSpeed, worldSize) {
   // manual iterate (or a knob change) re-arms it.
   if (cfg.autoIterate && mx.shards.length > 0 && withinLimit && !mx.stagnantPaused && (mx.tick % interval === 0)) {
     iterateMultiplex(mx);
+  }
+}
+
+/** Advance physics on every shard by one step (synchronous, in-thread). */
+export function stepMultiplex(mx, dt, simSpeed, worldSize) {
+  const cfg = mx.config || {};
+  if (cfg.paused) return; // frozen grid — the main sim keeps stepping
+  const { substeps, subDt } = shardStepParams(mx, dt, simSpeed);
+  const t0 = performance.now();
+  for (const shard of mx.shards) {
+    if (shard.count <= 0) continue;
+    tickShardLocal(mx, shard, substeps, subDt, worldSize);
+  }
+  const tickMs = performance.now() - t0;
+  mx.lastTickMs = mx.lastTickMs === undefined ? tickMs : mx.lastTickMs * 0.85 + tickMs * 0.15;
+  finishRound(mx, worldSize);
+}
+
+// ── Decoupled tick scheduler + worker pool (MX-20, D-016 option C) ──
+
+/** Tick modes: one tick per frame, a fixed rate, or as fast as fits. */
+export const TICK_MODES = Object.freeze(['frame', 'fixed', 'adaptive']);
+
+/** Attach a worker pool (or null for in-thread stepping). */
+export function setMultiplexPool(mx, pool) {
+  if (mx.pool && mx.pool !== pool) mx.pool.terminate();
+  mx.pool = pool || null;
+  for (const shard of mx.shards) shard.inFlight = 0;
+}
+
+function runtimeSnapshot() {
+  return {
+    gravEngine: runtimeConfig.gravEngine,
+    gravTheta: runtimeConfig.gravTheta,
+    fieldAdvanceOnce: runtimeConfig.fieldAdvanceOnce,
+    starMass: runtimeConfig.starMass,
+  };
+}
+
+function dispatchShard(mx, shard, substeps, subDt, worldSize, now) {
+  const laws = solveLawsFor(mx, shard);
+  const n = shard.count * PARTICLE_STRIDE;
+  const copy = new Float32Array(n);
+  copy.set(shard.view.subarray(0, n));
+  shard.inFlight = mx.pool.post(shard.id, {
+    type: 'tick', epoch: shard.epoch, count: shard.count, view: copy.buffer, capacity: (shard.view.length / PARTICLE_STRIDE) | 0,
+    dna: shard.dna.slice(),
+    laws: [laws.lowFlags[0], laws.highFlags[0], laws.extFlags[0], laws.quadFlags[0], laws.pentaFlags[0]],
+    prngState: shard.prng.state | 0, worldParams: shard.worldParams, runtime: runtimeSnapshot(),
+    worldSize, subDt, substeps,
+  }, [copy.buffer]);
+  shard.lastDispatchAt = now;
+}
+
+function applyReply(mx, reply, worldSize) {
+  const shard = mx.shards[reply.key];
+  if (!shard || shard.inFlight !== reply.seq) return false; // stale (rebuilt/restored meanwhile)
+  shard.inFlight = 0;
+  if (reply.epoch !== shard.epoch) return false;
+  const v = new Float32Array(reply.view);
+  shard.view.set(v.subarray(0, Math.min(v.length, shard.view.length)));
+  shard.dna.set(reply.dna);
+  shard.prng.state = reply.prngState | 0;
+  shard.lastWorkerMs = reply.ms;
+  finishShardTick(shard, reply.offspring, worldSize);
+  return true;
+}
+
+/**
+ * Per-frame driver used by the app loop. Never blocks on simulation work when
+ * a worker pool is attached; in-thread it honours a main-thread budget.
+ *   tickMode 'frame'    — every sim ticks once per frame (in-thread: blocking,
+ *                         legacy; pool: dispatched each frame, a late reply is
+ *                         counted in mx.missedTicks).
+ *   tickMode 'fixed'    — each sim ticks at config.ticksPerSecond.
+ *   tickMode 'adaptive' — sims tick as fast as the pool returns (pool) or as
+ *                         fits in config.frameBudgetMs per frame (in-thread),
+ *                         so render keeps its frame rate.
+ * Returns { mainMs, ticks } for this frame.
+ */
+export function frameMultiplex(mx, dt, simSpeed, worldSize, now = performance.now()) {
+  const cfg = mx.config || {};
+  const t0 = performance.now();
+  let ticks = 0;
+  if (!mx.active || cfg.paused || mx.shards.length === 0) return { mainMs: 0, ticks };
+  const mode = TICK_MODES.includes(cfg.tickMode) ? cfg.tickMode : 'frame';
+  const { substeps, subDt } = shardStepParams(mx, dt, simSpeed);
+  const tps = Math.max(0.1, Math.min(240, parseFloat(cfg.ticksPerSecond) || 30));
+  const dueFor = (shard) => mode !== 'fixed' || !shard.lastDispatchAt || now - shard.lastDispatchAt >= 1000 / tps - 0.5;
+  if (mx.pool && mx.pool.size > 0) {
+    for (const reply of mx.pool.drain()) if (applyReply(mx, reply, worldSize)) ticks++;
+    for (const shard of mx.shards) {
+      if (shard.count <= 0) continue;
+      if (shard.inFlight) { if (mode === 'frame') mx.missedTicks = (mx.missedTicks || 0) + 1; continue; }
+      if (dueFor(shard)) dispatchShard(mx, shard, substeps, subDt, worldSize, now);
+    }
+  } else if (mode === 'frame') {
+    for (const shard of mx.shards) if (shard.count > 0) { tickShardLocal(mx, shard, substeps, subDt, worldSize); ticks++; }
+  } else {
+    // In-thread fixed/adaptive: round-robin within the frame budget.
+    const budget = Math.max(1, parseFloat(cfg.frameBudgetMs) || 8);
+    const n = mx.shards.length;
+    for (let k = 0; k < n; k++) {
+      const shard = mx.shards[(mx._rr = ((mx._rr || 0) + 1) % n)];
+      if (shard.count <= 0 || !dueFor(shard)) continue;
+      shard.lastDispatchAt = now;
+      tickShardLocal(mx, shard, substeps, subDt, worldSize);
+      ticks++;
+      if (performance.now() - t0 >= budget) break;
+    }
+  }
+  // A grid round completes when the slowest sim has advanced past mx.tick.
+  let minTick = Infinity;
+  for (const shard of mx.shards) if (shard.count > 0 && shard.tick < minTick) minTick = shard.tick;
+  // Stale worker replies after a rebuild are discarded by seq/epoch, so a
+  // round can close (and auto-iterate) while ticks are still in flight.
+  for (let k = 0; k < 4 && minTick !== Infinity && minTick > mx.tick && mx.active; k++) finishRound(mx, worldSize);
+  const mainMs = performance.now() - t0;
+  mx.lastTickMs = mx.lastTickMs === undefined ? mainMs : mx.lastTickMs * 0.85 + mainMs * 0.15;
+  return { mainMs, ticks };
+}
+
+function anyInFlight(mx) {
+  for (const shard of mx.shards) if (shard.inFlight) return true;
+  return false;
+}
+
+/** Wait (async) until no sim tick is in flight — call before rebuilds in tests/bench. */
+export async function settleMultiplex(mx, worldSize = mx.worldSize || WORLD_SIZE, timeoutMs = 30000) {
+  const tEnd = performance.now() + timeoutMs;
+  while (mx.pool && anyInFlight(mx) && performance.now() < tEnd) {
+    await new Promise((r) => setTimeout(r, 1));
+    for (const reply of mx.pool.drain()) applyReply(mx, reply, worldSize);
   }
 }
 
@@ -920,6 +1105,10 @@ export function snapshotShard(shard) {
 /** Restore a snapshot onto a (freshly built) shard — keep-selected anchor. */
 export function restoreShard(shard, snap) {
   if (!shard || !snap) return;
+  // A restored sim is a new state: fresh solver context, and any in-flight
+  // worker tick for the old state is discarded (epoch mismatch).
+  shard.epoch = nextShardEpoch();
+  shard.solverCtx = createSolverContext();
   if (snap.view.length > shard.view.length) {
     // Snapshot from a larger-cap grid: grow the (cap-sized) buffer to fit.
     const grown = createParticleBuffer(Math.ceil(snap.view.length / PARTICLE_STRIDE) + SHARD_BUFFER_HEADROOM, PARTICLE_STRIDE);
@@ -1070,7 +1259,7 @@ function rebuildFromRecords(mx, entry) {
   const old = mx.shards;
   mx.shards = [];
   const total = Math.max(1, Math.min(MAX_SHARDS, entry.shards.length));
-  mx.populationCap = computeShardPopulationCap(total, mx.config.populationScale, mx.config.populationPercent);
+  mx.populationCap = computeShardPopulationCap(total, mx.config.populationScale, mx.config.populationPercent, mx.config.particlesPerSim);
   // Re-roll comparison futures from the recorded lineage: the record already
   // encodes that generation's variety, so no fresh randomization is applied.
   const spawnConfig = {
@@ -1200,7 +1389,7 @@ function buildShards(mx, source, fromShard) {
   mx.config.cols = cols;
   mx.config.rows = rows;
   const total = Math.max(1, Math.min(MAX_SHARDS, cols * rows));
-  mx.populationCap = computeShardPopulationCap(total, mx.config.populationScale, mx.config.populationPercent);
+  mx.populationCap = computeShardPopulationCap(total, mx.config.populationScale, mx.config.populationPercent, mx.config.particlesPerSim);
 
   const old = mx.shards;
   mx.shards = [];
@@ -1242,6 +1431,9 @@ function buildShards(mx, source, fromShard) {
   }
   void fromShard;
 }
+
+let _shardEpoch = 0;
+function nextShardEpoch() { _shardEpoch = (_shardEpoch + 1) | 0; return _shardEpoch; }
 
 function createShard(index, seed, source, config, maxCount, recycle) {
   // MX-20: size the buffer to the shard cap (+ headroom) instead of
@@ -1299,6 +1491,12 @@ function createShard(index, seed, source, config, maxCount, recycle) {
     // Set A.3 — shards evolve species independently (silent engine: no bus
     // emissions / roster growth; fitness sees species count via metrics).
     speciation: createSpeciationEngine(null, { prng: () => prng.next() }),
+    // HIDDEN-STATE (AC-97): this sim's own solver module state.
+    solverCtx: createSolverContext(),
+    solveLaws: null,
+    epoch: nextShardEpoch(),
+    inFlight: 0,
+    lastDispatchAt: 0,
   };
 
   if (config.deriveMode === 'spawn') {
@@ -1449,8 +1647,8 @@ function collectDeadSlots(shard) {
 }
 
 /** Append offspring produced by the last solve() into this shard's buffer. */
-function spawnShardOffspring(shard) {
-  const list = drainOffspring();
+function spawnShardOffspring(shard, offspring) {
+  const list = offspring || drainOffspring();
   for (const off of list) {
     // Recycle a fully-dead slot when one exists so shard.count tracks the
     // live population instead of climbing monotonically to maxCount.

@@ -31,6 +31,7 @@
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/multiplex.test.js",
+        "tests/unit/multiplexScheduler.test.js",
         "tests/unit/octree.test.js",
         "tests/unit/physics.test.js",
         "tests/unit/synergyCache.test.js",
@@ -67,6 +68,7 @@
         "tests/unit/fieldAdvanceOnce.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
+        "tests/unit/multiplexScheduler.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [],
@@ -167,6 +169,7 @@
         "tests/unit/fields.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/mechanics.test.js",
+        "tests/unit/multiplexScheduler.test.js",
         "tests/unit/provenance.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/structures.test.js",
@@ -491,8 +494,10 @@
         "tests/unit/lawgroupsQuantum.test.js",
         "tests/unit/livingWorld.test.js",
         "tests/unit/multiplex.test.js",
+        "tests/unit/multiplexIsolation.test.js",
         "tests/unit/multiplexPenta.test.js",
         "tests/unit/multiplexScale.test.js",
+        "tests/unit/multiplexScheduler.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/relativity.test.js",
         "tests/unit/signal.test.js",
@@ -778,6 +783,7 @@
         "tests/audit/params_batch_04.test.js",
         "tests/audit/params_batch_14.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/multiplexScheduler.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
@@ -1108,6 +1114,8 @@
         "tests/unit/interactionSpace.test.js",
         "tests/unit/lawClock.test.js",
         "tests/unit/mechanics.test.js",
+        "tests/unit/multiplexIsolation.test.js",
+        "tests/unit/multiplexScheduler.test.js",
         "tests/unit/relationshipCompatibility.test.js",
         "tests/unit/relationshipExplorer.test.js",
         "tests/unit/worldSave.test.js",
@@ -1357,6 +1365,7 @@
         "tests/audit/batch_03.test.js",
         "tests/audit/batch_13.test.js",
         "tests/audit/params_batch_15.test.js",
+        "tests/unit/multiplexScheduler.test.js",
         "tests/unit/relationshipExplorer.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
@@ -1837,7 +1846,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_18.test.js"
+        "tests/audit/batch_18.test.js",
+        "tests/unit/multiplexScheduler.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -1856,7 +1866,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_19.test.js"
+        "tests/audit/batch_19.test.js",
+        "tests/unit/multiplexScheduler.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -1941,6 +1952,7 @@
         "tests/audit/batch_20.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/lawGraph.test.js",
+        "tests/unit/multiplexScheduler.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
@@ -2078,6 +2090,7 @@
       "testFiles": [
         "tests/audit/batch_21.test.js",
         "tests/unit/lawCategories.test.js",
+        "tests/unit/multiplexIsolation.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [],
@@ -2231,7 +2244,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_23.test.js"
+        "tests/audit/batch_23.test.js",
+        "tests/unit/multiplexScheduler.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,

@@ -1152,6 +1152,22 @@ export function applyOrder(lawState, view, iBase, jBase, distSq, synergy) {
 // species migrate and segregate toward their own fate.
 let _fateTime = 0;
 export function advanceFateClock(dt) { _fateTime += dt; }
+
+/**
+ * HIDDEN-STATE (AC-97): per-world law module state (HISTORY memory field and
+ * the fate clock). Solver contexts save/restore it between worlds.
+ */
+export function getLawModuleState() {
+  return { historyField, historyLast, historyTick, historyBufferRef, fateTime: _fateTime };
+}
+
+export function setLawModuleState(state) {
+  historyField = state ? state.historyField || null : null;
+  historyLast = state ? state.historyLast || null : null;
+  historyTick = state ? state.historyTick || 0 : 0;
+  historyBufferRef = state ? state.historyBufferRef || null : null;
+  _fateTime = state ? state.fateTime || 0 : 0;
+}
 export function getFateTime() { return _fateTime; }
 
 export function applyFate(lawState, view, base, px, py, pz, worldSize, synergy) {

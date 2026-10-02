@@ -114,6 +114,8 @@ import {
   applyHistoryCalc,
   setBuffer,
   setLawClockMs,
+  getLawModuleState,
+  setLawModuleState,
 } from './laws.js';
 import { createSynergyCache } from './synergy.js';
 import { compatibilityForViewsInto, createCompatibilityScratch, meetsCompatibility } from './relationshipCompatibility.js';
@@ -128,7 +130,7 @@ import { applyAntenna, applyShielding, applyPolarization } from './lawgroups/emL
 import { applyNavigation, applyEncryption } from './lawgroups/infoLaws.js';
 import { applyConsciousness, applyPerception, applySynchronicity } from './lawgroups/metaLaws.js';
 import { applySuperposition, applyTunneling, applyDecoherence, applyWaveParticle, applyUncertainty, applyTeleport, applyObserver, applyPlanck, applyCoherence, applyBosonic, applyFermionic, applySpin, applySpectral, applyWavefunction, applyHyperplane, applyAntimatter } from './lawgroups/quantumLaws.js';
-import { ensureFields, fieldsEnabled, advanceFields, sampleFieldForces, wellForce, resolveWall, portalAt } from './fields.js';
+import { ensureFields, fieldsEnabled, advanceFields, sampleFieldForces, wellForce, resolveWall, portalAt, getFieldModuleState, setFieldModuleState } from './fields.js';
 
 // ── Solver Constants ──
 
@@ -269,6 +271,42 @@ export function buildNeighborPairs(view, particleCount, stride, worldSize, maxIn
 // instead of the wall clock.
 export const LAW_CLOCK_MS_PER_TICK = 16;
 let _solveTick = 0;
+
+// ── Solver contexts (HIDDEN-STATE, AC-97) ──
+// solve() keeps per-world state in module variables: the field medium, the
+// HISTORY memory field, the fate clock and the tick clock. A context holds
+// one world's copy. The main world uses the default context; each multiplex
+// sim owns one, and enterSolverContext() swaps the module state in and out,
+// so sims stepping in between never perturb each other or the main world.
+function captureContextState() {
+  return { fields: getFieldModuleState(), laws: getLawModuleState(), solveTick: _solveTick };
+}
+function applyContextState(st) {
+  setFieldModuleState(st ? st.fields : null);
+  setLawModuleState(st ? st.laws : null);
+  _solveTick = st ? st.solveTick || 0 : 0;
+}
+/** A fresh, empty per-world solver context. */
+export function createSolverContext() {
+  return { state: null };
+}
+const _defaultContext = createSolverContext();
+let _activeContext = _defaultContext;
+/** The main world's context (active unless a sim context was entered). */
+export function defaultSolverContext() { return _defaultContext; }
+/**
+ * Make `ctx` the active solver context and return the previous one, so callers
+ * can restore it: `const prev = enterSolverContext(ctx); …; enterSolverContext(prev);`
+ */
+export function enterSolverContext(ctx) {
+  const next = ctx || _defaultContext;
+  const prev = _activeContext;
+  if (next === prev) return prev;
+  prev.state = captureContextState();
+  applyContextState(next.state);
+  _activeContext = next;
+  return prev;
+}
 /** Reset the solver tick clock (world restart / restore / tests). */
 export function resetSolverClock(tick = 0) { _solveTick = Math.max(0, Math.floor(tick) || 0); }
 /** Current solver tick clock (number of solve() calls since the last reset). */
