@@ -22,6 +22,7 @@
     "repository:check": "npm run spec:check && node scripts/check-repository.mjs && npm run report:ui:check",
     "syntax-check": "find src -name '*.js' -exec node --check {} +",
     "bench:backends": "node bench/backend-compare.mjs",
+    "bench:multiplex": "node bench/multiplex-bench.mjs",
     "audit:inventory": "node scripts/audit-corpus-report.mjs",
     "artifact:inventory": "node scripts/repository-artifact-report.mjs",
     "provenance:check": "node scripts/validate-provenance.mjs",

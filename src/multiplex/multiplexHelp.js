@@ -71,6 +71,12 @@ export const MULTIPLEX_HELP_DB = {
     hint: 'Scales the dynamic per-shard population cap.',
     explanation: 'A 0.25–1 multiplier on the per-shard population cap. Lower values make shards lighter and faster to simulate; the cap never drops below 250 particles per shard.',
   },
+  popPercent: {
+    section: 'setup',
+    title: 'POP % / SIM',
+    hint: 'Fixed per-sim population as a percentage of the default cap.',
+    explanation: 'When above 0, every shard is capped at this percentage of the default population cap (100,000 particles), whatever the grid size: 2.5 gives 2,500 particles per sim. 0 keeps the automatic curve, where the cap shrinks with the square root of the shard count and POP SCALE applies. CLONE mode still copies at most the source population.',
+  },
   seed: {
     section: 'setup',
     title: 'SEED',

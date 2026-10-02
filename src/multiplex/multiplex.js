@@ -45,6 +45,7 @@ export const MULTIPLEX_DEFAULTS = {
   maxIterations: 0,          // 0 = unlimited; auto-iterate stops at this count
   variationDrift: 0,         // per-iteration variation increase (evolutionary pressure)
   populationScale: 1.0,      // scales the dynamic per-shard population cap (0.25–1)
+  populationPercent: 0,      // MX-20: >0 fixes each shard's cap at this % of MAX_PARTICLES (2.5 → 2,500); 0 = sqrt curve
   spawnSpecies: 5,           // species count for freshly SPAWNED shard populations (1–5)
   fitnessWindow: 32,         // rolling alive-count window feeding GROWTH / STABILITY / DELTA
   seed: 0,                   // 0 = random source seed; >0 = deterministic runs
@@ -97,7 +98,11 @@ export const MULTIPLEX_DEFAULTS = {
 };
 
 /** Hard cap on concurrent shards (keeps the main thread usable). */
-export const MAX_SHARDS = 16;
+// MX-20 (D-014): raised from 16 so a 5×4 / 5×5 grid fits.
+export const MAX_SHARDS = 25;
+
+/** Extra slots beyond a shard's cap so offspring never index past the buffer. */
+export const SHARD_BUFFER_HEADROOM = 64;
 
 /** Floor for the dynamic per-shard population cap (keeps shards alive at 16×). */
 export const MIN_SHARD_POPULATION = 250;
@@ -140,7 +145,12 @@ export const EXPLORATION_BINS = 4;
  * each shard's population gets (inverse-square-root curve), so the combined
  * physics budget stays bounded. `scale` (0.25–1) is the live POP SCALE knob.
  */
-export function computeShardPopulationCap(total, scale = 1) {
+export function computeShardPopulationCap(total, scale = 1, percent = 0) {
+  const pct = parseFloat(percent);
+  if (Number.isFinite(pct) && pct > 0) {
+    // MX-20: an explicit per-sim share of the default population cap.
+    return Math.max(1, Math.min(MAX_PARTICLES, Math.round(MAX_PARTICLES * Math.min(100, pct) / 100)));
+  }
   const count = Math.max(1, Math.round(total) || 1);
   const base = Math.floor(MAX_PARTICLES / Math.sqrt(count));
   const scaled = Math.floor(base * Math.max(0.1, Math.min(1, parseFloat(scale) || 1)));
@@ -910,6 +920,12 @@ export function snapshotShard(shard) {
 /** Restore a snapshot onto a (freshly built) shard — keep-selected anchor. */
 export function restoreShard(shard, snap) {
   if (!shard || !snap) return;
+  if (snap.view.length > shard.view.length) {
+    // Snapshot from a larger-cap grid: grow the (cap-sized) buffer to fit.
+    const grown = createParticleBuffer(Math.ceil(snap.view.length / PARTICLE_STRIDE) + SHARD_BUFFER_HEADROOM, PARTICLE_STRIDE);
+    shard.buffer = grown.buffer;
+    shard.view = grown.view;
+  }
   shard.view.fill(0);
   shard.view.set(snap.view);
   if (shard.dna && snap.dna) shard.dna.set(snap.dna);
@@ -1054,7 +1070,7 @@ function rebuildFromRecords(mx, entry) {
   const old = mx.shards;
   mx.shards = [];
   const total = Math.max(1, Math.min(MAX_SHARDS, entry.shards.length));
-  mx.populationCap = computeShardPopulationCap(total, mx.config.populationScale);
+  mx.populationCap = computeShardPopulationCap(total, mx.config.populationScale, mx.config.populationPercent);
   // Re-roll comparison futures from the recorded lineage: the record already
   // encodes that generation's variety, so no fresh randomization is applied.
   const spawnConfig = {
@@ -1179,12 +1195,12 @@ export function selectShard(mx, index) {
 
 function buildShards(mx, source, fromShard) {
   let { cols, rows } = mx.config;
-  cols = Math.max(1, Math.min(4, Math.round(cols) || 1));
-  rows = Math.max(1, Math.min(4, Math.round(rows) || 1));
+  cols = Math.max(1, Math.min(5, Math.round(cols) || 1));
+  rows = Math.max(1, Math.min(5, Math.round(rows) || 1));
   mx.config.cols = cols;
   mx.config.rows = rows;
   const total = Math.max(1, Math.min(MAX_SHARDS, cols * rows));
-  mx.populationCap = computeShardPopulationCap(total, mx.config.populationScale);
+  mx.populationCap = computeShardPopulationCap(total, mx.config.populationScale, mx.config.populationPercent);
 
   const old = mx.shards;
   mx.shards = [];
@@ -1228,9 +1244,13 @@ function buildShards(mx, source, fromShard) {
 }
 
 function createShard(index, seed, source, config, maxCount, recycle) {
-  const buf = recycle && recycle.buffer && recycle.view
+  // MX-20: size the buffer to the shard cap (+ headroom) instead of
+  // MAX_PARTICLES — 100k × stride 100 floats was 38 MB per shard. Recycle the
+  // previous buffer only when it is big enough for the new cap.
+  const capacity = Math.min(MAX_PARTICLES, maxCount + SHARD_BUFFER_HEADROOM);
+  const buf = recycle && recycle.buffer && recycle.view && recycle.view.length >= capacity * PARTICLE_STRIDE
     ? { buffer: recycle.buffer, view: recycle.view }
-    : createParticleBuffer(MAX_PARTICLES, PARTICLE_STRIDE);
+    : createParticleBuffer(capacity, PARTICLE_STRIDE);
   const dna = recycle && recycle.dna ? recycle.dna : createDNABuffer();
   dna.set(source.dna.subarray ? source.dna.subarray(0, dna.length) : source.dna);
 

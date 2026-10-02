@@ -203,8 +203,8 @@ export function createMultiplexController(bus, getSource, applyShard) {
         <div class="chaos-modal-section">
           <div class="chaos-modal-label" data-mpx-help="grid">GRID</div>
           <div class="chaos-grid-row" data-mpx-help="grid">
-            <label>Columns <input id="mpx-cols" type="number" min="1" max="4" value="2"></label>
-            <label>Rows <input id="mpx-rows" type="number" min="1" max="4" value="2"></label>
+            <label>Columns <input id="mpx-cols" type="number" min="1" max="5" value="2"></label>
+            <label>Rows <input id="mpx-rows" type="number" min="1" max="5" value="2"></label>
             <span class="chaos-grid-count" id="mpx-shard-count">4 SIMS</span>
           </div>
         </div>
@@ -257,6 +257,11 @@ export function createMultiplexController(bus, getSource, applyShard) {
             <span class="mpx-set-label">POP SCALE</span>
             <input id="mpx-pop-scale" type="range" min="0.25" max="1" step="0.05" value="1">
             <span class="mpx-set-value" id="mpx-pop-scale-value">100%</span>
+          </div>
+          <div class="mpx-set-row" data-mpx-help="popPercent">
+            <span class="mpx-set-label">POP % / SIM</span>
+            <input id="mpx-pop-percent" type="number" min="0" max="100" step="0.5" value="0">
+            <span class="mpx-set-value">0 = auto</span>
           </div>
           <div class="mpx-set-row" data-mpx-help="seed">
             <span class="mpx-set-label">SEED</span>
@@ -383,8 +388,8 @@ export function createMultiplexController(bus, getSource, applyShard) {
     const rows = modal.querySelector('#mpx-rows');
     const count = modal.querySelector('#mpx-shard-count');
     const refreshCount = () => {
-      const c = Math.max(1, Math.min(4, parseInt(cols.value, 10) || 1));
-      const r = Math.max(1, Math.min(4, parseInt(rows.value, 10) || 1));
+      const c = Math.max(1, Math.min(5, parseInt(cols.value, 10) || 1));
+      const r = Math.max(1, Math.min(5, parseInt(rows.value, 10) || 1));
       count.textContent = Math.min(MAX_SHARDS, c * r) + ' SIMS';
     };
     cols.addEventListener('input', refreshCount);
@@ -519,8 +524,8 @@ export function createMultiplexController(bus, getSource, applyShard) {
     });
 
     modal._readConfig = () => {
-      const c = Math.max(1, Math.min(4, parseInt(cols.value, 10) || 1));
-      const r = Math.max(1, Math.min(4, parseInt(rows.value, 10) || 1));
+      const c = Math.max(1, Math.min(5, parseInt(cols.value, 10) || 1));
+      const r = Math.max(1, Math.min(5, parseInt(rows.value, 10) || 1));
       return {
         cols: c,
         rows: r,
@@ -535,6 +540,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
         paramVariation: parseFloat(modal.querySelector('#mpx-param-var').value) || 1,
         deriveMode: (modal.querySelector('input[name="mpx-derive"]:checked') || {}).value || 'clone',
         populationScale: parseFloat(modal.querySelector('#mpx-pop-scale').value) || 1,
+        populationPercent: Math.max(0, Math.min(100, parseFloat((modal.querySelector('#mpx-pop-percent') || {}).value) || 0)),
         seed: Math.max(0, parseInt(modal.querySelector('#mpx-seed').value, 10) || 0),
         substeps: Math.max(1, Math.min(8, parseInt(modal.querySelector('#mpx-substeps').value, 10) || 1)),
         spawnSpecies: Math.max(1, Math.min(5, parseInt(modal.querySelector('#mpx-spawn-species').value, 10) || 1)),
@@ -596,6 +602,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
     const derive = modal.querySelector(`input[name="mpx-derive"][value="${c.deriveMode || 'clone'}"]`);
     if (derive) derive.checked = true;
     setPct('#mpx-pop-scale', '#mpx-pop-scale-value', c.populationScale ?? 1);
+    { const pp = modal.querySelector('#mpx-pop-percent'); if (pp) pp.value = String(c.populationPercent ?? 0); }
     setVal('#mpx-seed', c.seed || 0);
     const sv = modal.querySelector('#mpx-seed-value');
     if (sv) sv.textContent = c.seed > 0 ? String(c.seed) : 'RANDOM';
