@@ -11,8 +11,8 @@ import { createLawState, set as lawSet, clear as lawClear, serialize as serializ
 import { runtimeConfig } from './state/runtimeConfig.js';
 import { createWorldParams, applyWorldParam, spawnCaps } from './state/worldParams.js';
 import { sampleSpawnPosition, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from './spawn/distribution.js';
-import { createDNABuffer, loadDefaults, getDNAFloat } from './dna/dnaBuffer.js';
-import { quantizeDNA } from './dna/codec.js';
+import { createDNABuffer, loadDefaults } from './dna/dnaBuffer.js';
+import { quantizeDNA, writeDNACache } from './dna/codec.js';
 import { createRendererAsync, resize as resizeRenderer, paintBackground } from './render/renderer.js';
 import { syncSprites } from './render/spriteSync.js';
 import { initUI } from './ui/ui.js';
@@ -610,10 +610,7 @@ function spawnSingleParticle(species, pos) {
     setMass(particleBuffer, idx, PARTICLE_STRIDE, 1.0 + prng.nextFloat(0, 1.0));
     setSpeciesId(particleBuffer, idx, PARTICLE_STRIDE, species);
     setEnergy(particleBuffer, idx, PARTICLE_STRIDE, 50 + prng.nextFloat(0, 50));
-    for (let d = 0; d < 42; d++) {
-        const r = DNA_RANGES[d] || { min: -1, max: 1 };
-        particleView[ptr + STRIDE_INDEXES.DNA_CACHE_START + d] = getDNAFloat(dnaBuffer, species, d, r.min, r.max);
-    }
+    writeDNACache(particleView, ptr + STRIDE_INDEXES.DNA_CACHE_START, dnaBuffer, species);
     const sp = SPECIES_PROFILES[species] || SPECIES_PROFILES[0];
     particleView[ptr + STRIDE_INDEXES.COLOR_R] = sp.color[0];
     particleView[ptr + STRIDE_INDEXES.COLOR_G] = sp.color[1];
@@ -694,14 +691,8 @@ function spawnDefaultPopulation(preserveDNA = false, keepSpecies = false) {
             setMass(particleBuffer, idx, PARTICLE_STRIDE, 1.0 + prng.nextFloat(0, 1.0));
             setSpeciesId(particleBuffer, idx, PARTICLE_STRIDE, s);
             setEnergy(particleBuffer, idx, PARTICLE_STRIDE, 50 + prng.nextFloat(0, 50));
-            // Copy species DNA to particle DNA cache (stride 8-49)
-            const dnaBase = s * 64;
-            for (let d = 0; d < 42; d++) {
-                const raw = dnaBuffer[dnaBase + d] || 0;
-                const norm = raw / 65535;
-                const r = DNA_RANGES[d] || { min: -1, max: 1 };
-                particleView[ptr + STRIDE_INDEXES.DNA_CACHE_START + d] = norm * (r.max - r.min) + r.min;
-            }
+            // Copy species DNA to particle DNA cache (stride 8-49) via the codec.
+            writeDNACache(particleView, ptr + STRIDE_INDEXES.DNA_CACHE_START, dnaBuffer, s);
             particleView[ptr + STRIDE_INDEXES.DEAD] = 0;
             particleView[ptr + STRIDE_INDEXES.AGE] = 0;
             particleView[ptr + STRIDE_INDEXES.SIGNAL] = 0;
@@ -733,9 +724,7 @@ function spawnDefaultPopulation(preserveDNA = false, keepSpecies = false) {
             particleView[ptr + STRIDE_INDEXES.ENTANGLE_ID] = -1;
             particleView[ptr + STRIDE_INDEXES.ENTANGLE_PHASE] = 0;
 
-            for (let d = 0; d < 42; d++) {
-                particleView[ptr + STRIDE_INDEXES.DNA_CACHE_START + d] = getDNAFloat(dnaBuffer, s, d, DNA_RANGES[d].min, DNA_RANGES[d].max);
-            }
+            writeDNACache(particleView, ptr + STRIDE_INDEXES.DNA_CACHE_START, dnaBuffer, s);
 
             const col = profileColor(s);
             particleView[ptr + STRIDE_INDEXES.COLOR_R] = col[0];

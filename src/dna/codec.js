@@ -80,3 +80,19 @@ export function quantizeDNA(value, min, max) {
   const normalized = (clamped - min) / (max - min);
   return Math.round(normalized * DNA_PACK_MAX);
 }
+
+/** Number of genome params mirrored into the per-particle stride cache (stride 8-49). */
+export const DNA_CACHE_PARAMS = 42;
+
+/**
+ * Copy a species' genome params 0-41 into a particle's stride DNA cache,
+ * dequantized against DNA_RANGES (the cache never holds params 42-63).
+ *
+ * @param {Float32Array} view   particle buffer view
+ * @param {number} cacheStart   absolute index of the particle's DNA_CACHE_START
+ * @param {Uint16Array} buffer  genome buffer
+ * @param {number} species
+ */
+export function writeDNACache(view, cacheStart, buffer, species) {
+  for (let d = 0; d < DNA_CACHE_PARAMS; d++) view[cacheStart + d] = readDNAParam(buffer, species, d);
+}
