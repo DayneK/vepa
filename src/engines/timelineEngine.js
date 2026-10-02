@@ -10,6 +10,8 @@
  *        timeline:scrubbed  { index, tick, timestamp }
  */
 
+import { createEngine } from './createEngine.js';
+
 const DEFAULTS = {
   maxSnapshots: 100,
   autoSnapshotInterval: 0,   // 0 = disabled; set >0 to auto-snapshot every N frames
@@ -27,18 +29,11 @@ const DEFAULTS = {
  * @returns {object} Engine handle.
  */
 export function createTimelineEngine(bus, config = {}) {
-  const cfg = { ...DEFAULTS, ...config };
-
-  const engine = {
-    bus,
-    cfg,
+  return createEngine(bus, DEFAULTS, config, {
     snapshots: [],         // circular buffer of {tick, timestamp, data, metadata}
-    frame: 0,
     nextIndex: 0,
     isScrubbing: false,    // true while restoring from a snapshot
-  };
-
-  return engine;
+  });
 }
 
 /* ------------------------------------------------------------------ */

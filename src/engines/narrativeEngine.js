@@ -12,6 +12,8 @@
  * Emit:           narrative:entry  { voice, text, timestamp }
  */
 
+import { createEngine } from './createEngine.js';
+
 const VOICES = {
   stabilizer:  { name: 'Stabilizer',  color: '#4488ff', key: 'stabilizer'  },
   diverger:    { name: 'Diverger',    color: '#ff4444', key: 'diverger'    },
@@ -122,17 +124,12 @@ const TEMPLATES = {
  * @returns {object} Engine handle.
  */
 export function createNarrativeEngine(bus, config = {}) {
-  const cfg = { ...DEFAULTS, ...config };
-
-  const engine = {
-    bus,
-    cfg,
+  const engine = createEngine(bus, DEFAULTS, config, {
     lastFrame: {},          // voiceKey -> last frame a narration was emitted
     lastEmit: 0,            // last frame ANY narration was emitted (global pace)
-    frame: 0,
     recentEvents: [],       // ring buffer of recent events
     entries: [],            // all emitted narrative entries
-  };
+  });
 
   // Wire up event subscriptions
   bus.on('cluster:detected', (data) => {

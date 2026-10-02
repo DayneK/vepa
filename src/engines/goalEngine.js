@@ -14,6 +14,8 @@
  * orchestrator to evaluate and commit.
  */
 
+import { createEngine } from './createEngine.js';
+
 const DEFAULTS = {
   evaluationInterval: 120,   // frames between evaluations
   stabilityTarget:   0.6,
@@ -84,12 +86,7 @@ const DEFAULTS = {
  * @returns {object} Engine handle.
  */
 export function createGoalEngine(bus, config = {}) {
-  const cfg = { ...DEFAULTS, ...config };
-
-  const engine = {
-    bus,
-    cfg,
-    frame: 0,
+  return createEngine(bus, DEFAULTS, config, (cfg) => ({
     goals: {
       stability:  cfg.stabilityTarget,
       complexity: cfg.complexityTarget,
@@ -97,9 +94,7 @@ export function createGoalEngine(bus, config = {}) {
     },
     currentValues: {},        // name → current value (populated on first update)
     history: [],              // array of {timestamp, adjustments}
-  };
-
-  return engine;
+  }));
 }
 
 /* ------------------------------------------------------------------ */

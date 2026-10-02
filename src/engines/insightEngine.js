@@ -9,6 +9,7 @@
  */
 
 import { STRIDE_INDEXES } from '../constants.js';
+import { createEngine } from './createEngine.js';
 
 const DEFAULTS = {
   scanInterval:   60,
@@ -25,17 +26,10 @@ const DEFAULTS = {
  * @returns {object} Engine handle.
  */
 export function createInsightEngine(bus, config = {}) {
-  const cfg = { ...DEFAULTS, ...config };
-
-  const engine = {
-    bus,
-    cfg,
-    frame: 0,
+  return createEngine(bus, DEFAULTS, config, {
     history: [],            // array of {timestamp, clusters}
     lastClusters: null,
-  };
-
-  return engine;
+  });
 }
 
 /* ------------------------------------------------------------------ */
