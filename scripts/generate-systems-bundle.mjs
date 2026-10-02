@@ -1,5 +1,5 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
-import { join, relative } from 'node:path';
+import { join, relative, dirname } from 'node:path';
 
 const root = process.cwd();
 const sourceRoot = join(root, 'docs/systems');
@@ -21,6 +21,18 @@ async function markdownFiles(directory) {
 
 function titleFor(path) {
   return relative(sourceRoot, path).replace(/\\/g, '/').replace(/\.md$/, '');
+}
+
+// Each source file's relative links are written for its own directory; rebase
+// them onto docs/systems/ (where the bundle lives) so they still resolve.
+function rebaseLinks(markdown, file) {
+  return markdown.replace(/\]\(([^)\s]+)\)/g, (match, target) => {
+    if (/^(?:[a-z]+:|#|\/)/i.test(target)) return match;
+    const [path, anchor] = target.split('#');
+    if (!path) return match;
+    const rebased = relative(sourceRoot, join(dirname(file), path)).replace(/\\/g, '/');
+    return `](${rebased}${anchor !== undefined ? '#' + anchor : ''})`;
+  });
 }
 
 function demote(markdown) {
@@ -55,7 +67,7 @@ for (const [group, entries] of groups) {
   for (const { file, rel } of entries) {
     const sourceLabel = rel.replace(/\//g, ' / ').replace(/-/g, ' ');
     lines.push(`### ${sourceLabel}`, '', `<a id="${rel.toLowerCase().replace(/[^a-z0-9]+/g, '-')}"></a>`, `<!-- Source: docs/systems/${rel}.md -->`, '');
-    lines.push(demote(await readFile(file, 'utf8')).trim(), '');
+    lines.push(demote(rebaseLinks(await readFile(file, 'utf8'), file)).trim(), '');
   }
 }
 await writeFile(destination, `${lines.join('\n').trim()}\n`, 'utf8');
