@@ -10,7 +10,10 @@ import {
   startMultiplex,
   stopMultiplex,
   iterateMultiplex,
-  stepMultiplex,
+  frameMultiplex,
+  setMultiplexPool,
+  applyMultiplexPreset,
+  MULTIPLEX_PRESETS,
   renderMultiplex,
   resizeMultiplex,
   summarizeMultiplex,
@@ -28,6 +31,10 @@ import {
   openMultiplexHelp,
   closeMultiplexHelp,
 } from './multiplexHelp.js';
+import { MAX_PARTICLES } from '../constants.js';
+import { DEFAULT_LIGHT_LAWS, sanitizeLawNames } from './previewLaws.js';
+import { createShardPool, browserSpawn, defaultPoolSize } from './shardPool.js';
+import { loadMultiplexSettings, saveMultiplexSettings, PARTICLES_PER_SIM_MIN, PARTICLES_PER_SIM_MAX } from './multiplexSettings.js';
 
 const MODAL_ID = 'chaos-modal';
 const OVERLAY_ID = 'multiplex-overlay';
@@ -249,6 +256,50 @@ export function createMultiplexController(bus, getSource, applyShard) {
           <div class="chaos-modal-label" data-mpx-help="derive">DERIVED FROM THE SELECTED SIMULATION</div>
           <label class="chaos-radio" data-mpx-help="derive"><input type="radio" name="mpx-derive" value="clone" checked><span>Clone — copy positions, DNA &amp; laws, then vary</span></label>
           <label class="chaos-radio" data-mpx-help="derive"><input type="radio" name="mpx-derive" value="spawn"><span>Spawn — fresh population, keep DNA &amp; laws</span></label>
+        </div>
+
+        <div class="chaos-modal-section" id="mpx-perf-section">
+          <div class="chaos-modal-label" data-mpx-help="perfPreset">PERFORMANCE</div>
+          <div class="mpx-set-row" data-mpx-help="perfPreset">
+            <span class="mpx-set-label">PRESET</span>
+            <select id="mpx-preset">
+              <option value="custom">Custom</option>
+              ${Object.entries(MULTIPLEX_PRESETS).map(([id, p]) => `<option value="${id}">${p.label}</option>`).join('')}
+            </select>
+            <span class="mpx-set-value" id="mpx-preset-note"></span>
+          </div>
+          <div class="mpx-set-row" data-mpx-help="particlesPerSim">
+            <span class="mpx-set-label">PARTICLES / SIM</span>
+            <input id="mpx-per-sim" type="number" min="0" max="${PARTICLES_PER_SIM_MAX}" step="25" value="0">
+            <span class="mpx-set-value">0 = POP %</span>
+          </div>
+          <div class="mpx-set-row" data-mpx-help="lawTier">
+            <span class="mpx-set-label">PREVIEW LAWS</span>
+            <select id="mpx-law-tier"><option value="full">Full</option><option value="light">Light</option></select>
+            <button id="mpx-light-reset" class="mpx-btn" type="button" title="Restore the default light set">RESET</button>
+          </div>
+          <div class="mpx-set-row" data-mpx-help="lightLaws">
+            <textarea id="mpx-light-laws" rows="2" spellcheck="false" style="width:100%;font:inherit;font-size:10px"></textarea>
+          </div>
+          <div class="mpx-set-row" data-mpx-help="tickMode">
+            <span class="mpx-set-label">SIM TICKS</span>
+            <select id="mpx-tick-mode">
+              <option value="frame">Every frame</option>
+              <option value="fixed">Fixed rate</option>
+              <option value="adaptive">Adaptive (keep 60 fps)</option>
+            </select>
+          </div>
+          <div class="mpx-set-row" data-mpx-help="ticksPerSecond">
+            <span class="mpx-set-label">TICKS / SEC</span>
+            <input id="mpx-tps" type="number" min="0.5" max="240" step="1" value="30">
+            <span class="mpx-set-value">per sim</span>
+          </div>
+          <div class="mpx-set-row" data-mpx-help="frameBudget">
+            <span class="mpx-set-label">BUDGET MS</span>
+            <input id="mpx-budget" type="number" min="1" max="14" step="0.5" value="8">
+            <span class="mpx-set-value">in-thread</span>
+          </div>
+          <label class="chaos-check" data-mpx-help="useWorkers"><input id="mpx-workers" type="checkbox" checked><span>Worker pool (sims off the UI thread)</span></label>
         </div>
 
         <div class="chaos-modal-section">
@@ -523,6 +574,37 @@ export function createMultiplexController(bus, getSource, applyShard) {
       });
     });
 
+    // MX-20 performance controls: presets, particles/sim ↔ POP %, light laws.
+    {
+      const q = (id) => modal.querySelector(id);
+      const preset = q('#mpx-preset');
+      const note = q('#mpx-preset-note');
+      const perSim = q('#mpx-per-sim');
+      const pct = q('#mpx-pop-percent');
+      const markCustom = () => { preset.value = 'custom'; note.textContent = ''; };
+      preset.addEventListener('change', () => {
+        if (preset.value === 'custom') { note.textContent = ''; return; }
+        const id = preset.value;
+        populateModal(applyMultiplexPreset(modal._readConfig(), id));
+        preset.value = id;
+      });
+      perSim.addEventListener('input', () => {
+        const n = parseInt(perSim.value, 10) || 0;
+        if (pct) pct.value = n > 0 ? String(Math.round((n / MAX_PARTICLES) * 100 * 1000) / 1000) : '0';
+        markCustom();
+      });
+      if (pct) pct.addEventListener('input', () => {
+        const p = parseFloat(pct.value) || 0;
+        perSim.value = p > 0 ? String(Math.round((MAX_PARTICLES * Math.min(100, p)) / 100)) : '0';
+        markCustom();
+      });
+      for (const id of ['#mpx-law-tier', '#mpx-light-laws', '#mpx-tick-mode', '#mpx-tps', '#mpx-budget', '#mpx-workers', '#mpx-cols', '#mpx-rows']) {
+        q(id).addEventListener('input', markCustom);
+        q(id).addEventListener('change', markCustom);
+      }
+      q('#mpx-light-reset').addEventListener('click', () => { q('#mpx-light-laws').value = DEFAULT_LIGHT_LAWS.join(' '); markCustom(); });
+    }
+
     modal._readConfig = () => {
       const c = Math.max(1, Math.min(5, parseInt(cols.value, 10) || 1));
       const r = Math.max(1, Math.min(5, parseInt(rows.value, 10) || 1));
@@ -561,6 +643,23 @@ export function createMultiplexController(bus, getSource, applyShard) {
         importOnExit: modal.querySelector('#mpx-import-on-exit').checked,
         fitnessWeights: { ...fit.weights },
         fitnessModes: { ...fit.modes },
+        ...readPerf(),
+      };
+    };
+    const readPerf = () => {
+      const q = (id) => modal.querySelector(id);
+      const perSimRaw = parseInt(q('#mpx-per-sim').value, 10) || 0;
+      const light = sanitizeLawNames(q('#mpx-light-laws').value);
+      const isDefaultLight = light.join(' ') === DEFAULT_LIGHT_LAWS.join(' ');
+      return {
+        preset: q('#mpx-preset').value || 'custom',
+        particlesPerSim: perSimRaw > 0 ? Math.max(PARTICLES_PER_SIM_MIN, Math.min(PARTICLES_PER_SIM_MAX, perSimRaw)) : 0,
+        lawTier: q('#mpx-law-tier').value === 'light' ? 'light' : 'full',
+        lightLaws: light.length && !isDefaultLight ? light : null,
+        tickMode: q('#mpx-tick-mode').value,
+        ticksPerSecond: Math.max(0.5, Math.min(240, parseFloat(q('#mpx-tps').value) || 30)),
+        frameBudgetMs: Math.max(1, Math.min(14, parseFloat(q('#mpx-budget').value) || 8)),
+        useWorkers: q('#mpx-workers').checked,
       };
     };
     modal._fit = fit;
@@ -645,6 +744,16 @@ export function createMultiplexController(bus, getSource, applyShard) {
     check('#mpx-paused', c.paused === true);
     check('#mpx-eco', c.renderQuality !== 'full');
     check('#mpx-import-on-exit', c.importOnExit !== false);
+    setVal('#mpx-preset', c.preset && MULTIPLEX_PRESETS[c.preset] ? c.preset : 'custom');
+    { const n = modal.querySelector('#mpx-preset-note'); if (n) n.textContent = (MULTIPLEX_PRESETS[c.preset] || {}).note || ''; }
+    setVal('#mpx-per-sim', c.particlesPerSim ?? 0);
+    if ((c.particlesPerSim ?? 0) > 0) setVal('#mpx-pop-percent', String(Math.round((c.particlesPerSim / MAX_PARTICLES) * 100 * 1000) / 1000));
+    setVal('#mpx-law-tier', c.lawTier === 'light' ? 'light' : 'full');
+    setVal('#mpx-light-laws', (c.lightLaws && c.lightLaws.length ? c.lightLaws : DEFAULT_LIGHT_LAWS).join(' '));
+    setVal('#mpx-tick-mode', c.tickMode || 'frame');
+    setVal('#mpx-tps', c.ticksPerSecond ?? 30);
+    setVal('#mpx-budget', c.frameBudgetMs ?? 8);
+    check('#mpx-workers', c.useWorkers !== false);
     if (modal._fit) {
       const weights = c.fitnessWeights || MULTIPLEX_DEFAULTS.fitnessWeights;
       const modes = c.fitnessModes || MULTIPLEX_DEFAULTS.fitnessModes;
@@ -659,7 +768,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
   function openModal() {
     ensureDom();
     hideTooltip();
-    populateModal(mx.active ? mx.config : (lastConfig || MULTIPLEX_DEFAULTS));
+    populateModal(mx.active ? mx.config : (lastConfig || { ...MULTIPLEX_DEFAULTS, ...loadMultiplexSettings() }));
     document.getElementById(MODAL_ID).classList.add('open');
   }
 
@@ -674,7 +783,20 @@ export function createMultiplexController(bus, getSource, applyShard) {
     // Derive from the selected simulation — the selected shard while a
     // multiplex is running, otherwise the main sim.
     const source = (mx.active && mx.shards[mx.selected]) ? mx.shards[mx.selected] : getSource();
+    setMultiplexPool(mx, null);
     startMultiplex(mx, source, config, grid);
+    saveMultiplexSettings(mx.config);
+    // MX-20: sims run in a worker pool so the UI thread only renders.
+    if (mx.config.useWorkers !== false && typeof Worker !== 'undefined') {
+      try {
+        const cores = (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) || 4;
+        const size = mx.config.workerCount > 0 ? mx.config.workerCount : defaultPoolSize(mx.shards.length, cores);
+        setMultiplexPool(mx, createShardPool({ size, spawn: browserSpawn }));
+      } catch (err) {
+        console.warn('[multiplex] worker pool unavailable, stepping in-thread', err);
+        setMultiplexPool(mx, null);
+      }
+    }
     lastConfig = {
       ...mx.config,
       fitnessWeights: { ...mx.config.fitnessWeights },
@@ -693,6 +815,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
     if (!mx.active) return;
     const imported = mx.shards[mx.selected];
     const importOnExit = mx.config.importOnExit !== false;
+    setMultiplexPool(mx, null);
     stopMultiplex(mx);
     hideTooltip();
     closeMultiplexHelp();
@@ -825,8 +948,25 @@ export function createMultiplexController(bus, getSource, applyShard) {
     bus.on('multiplex:reverted', updateDrawer);
   }
 
+  // MX-20 diagnostics: recent main-thread sim (step) and render ms per frame.
+  const perf = { step: [], render: [] };
+  function pushPerf(kind, ms) {
+    const a = perf[kind];
+    a.push(ms);
+    if (a.length > 240) a.shift();
+  }
+  function perfSummary() {
+    const med = (a) => { if (!a.length) return 0; const b = [...a].sort((x, y) => x - y); return b[b.length >> 1]; };
+    const p95 = (a) => { if (!a.length) return 0; const b = [...a].sort((x, y) => x - y); return b[Math.min(b.length - 1, Math.floor(b.length * 0.95))]; };
+    return {
+      stepMedMs: med(perf.step), stepP95Ms: p95(perf.step), renderMedMs: med(perf.render), renderP95Ms: p95(perf.render),
+      pool: mx.pool ? mx.pool.size : 0, ticks: mx.shards.map((sh) => sh.tick),
+    };
+  }
+
   return {
     mx,
+    perfSummary,
     openModal,
     closeModal,
     exit,
@@ -834,11 +974,15 @@ export function createMultiplexController(bus, getSource, applyShard) {
     isActive: () => mx.active,
     step: (dt, simSpeed, worldSize) => {
       if (!mx.active) return;
-      stepMultiplex(mx, dt, simSpeed, worldSize);
+      const r = frameMultiplex(mx, dt, simSpeed, worldSize);
+      pushPerf('step', r.mainMs);
       if (++metricsFrame % 24 === 0) updateMetricsDrawer();
     },
     render: (worldSize) => {
-      if (mx.active) renderMultiplex(mx, worldSize);
+      if (!mx.active) return;
+      const t0 = performance.now();
+      renderMultiplex(mx, worldSize);
+      pushPerf('render', performance.now() - t0);
     },
     resize: () => {
       if (mx.active) resizeMultiplex(mx);

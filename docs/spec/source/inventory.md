@@ -2,12 +2,12 @@
 
 # Source: Inventory
 
-The generator scanned `302` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `303` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 41 | 179 | 480 |
-| Benchmark | 7 | 6 | 12 |
+| Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 228 | 366 |
 | State | 31 | 280 | 232 |
@@ -19,8 +19,9 @@ The generator scanned `302` files from active repository inputs. Individual modu
 | Path | Area | Lines | Exports | Imports | Law refs |
 | --- | --- | --- | --- | --- | --- |
 | [bench/backend-compare.mjs](../../../bench/backend-compare.mjs) | benchmark | 154 | 5 | 4 | 0 |
-| [bench/multiplex-bench.mjs](../../../bench/multiplex-bench.mjs) | benchmark | 78 | 0 | 1 | 3 |
+| [bench/multiplex-bench.mjs](../../../bench/multiplex-bench.mjs) | benchmark | 148 | 0 | 2 | 3 |
 | [bench/multiplex-node-pool.mjs](../../../bench/multiplex-node-pool.mjs) | benchmark | 13 | 1 | 1 | 0 |
+| [bench/multiplex-render.mjs](../../../bench/multiplex-render.mjs) | benchmark | 70 | 0 | 1 | 0 |
 | [bench/results/renderer-benchmark.json](../../../bench/results/renderer-benchmark.json) | benchmark | 253 | 0 | 0 | 0 |
 | [bench/shard-worker-node.mjs](../../../bench/shard-worker-node.mjs) | benchmark | 10 | 0 | 1 | 0 |
 | [bench/solver.bench.mjs](../../../bench/solver.bench.mjs) | benchmark | 587 | 0 | 6 | 9 |
@@ -58,11 +59,11 @@ The generator scanned `302` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 1823 | 0 | 50 | 11 |
+| [src/main.js](../../../src/main.js) | application | 1825 | 0 | 50 | 11 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1751 | 37 | 12 | 7 |
-| [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 466 | 7 | 0 | 5 |
+| [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 514 | 7 | 0 | 5 |
 | [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
-| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 848 | 1 | 2 | 2 |
+| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 992 | 1 | 6 | 2 |
 | [src/multiplex/previewLaws.js](../../../src/multiplex/previewLaws.js) | application | 57 | 4 | 2 | 16 |
 | [src/multiplex/shardPool.js](../../../src/multiplex/shardPool.js) | application | 52 | 3 | 0 | 0 |
 | [src/multiplex/shardWorker.js](../../../src/multiplex/shardWorker.js) | application | 8 | 0 | 1 | 0 |

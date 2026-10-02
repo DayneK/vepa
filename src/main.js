@@ -509,6 +509,8 @@ async function boot() {
         logDebug(`multiplex import: ${imported.count} particles / ${imported.speciesCount} species`);
     });
     window.openChaosMultiplex = () => { if (multiplexController) multiplexController.openModal(); };
+    // Read-only diagnostics hook for bench/multiplex-render.mjs (sim/render ms, ticks).
+    window.__VEPA_MX_PERF__ = () => (multiplexController && multiplexController.mx.active ? multiplexController.perfSummary() : null);
     bus.on('multiplex:started', () => {
         paused = true;
         bus.emit('sim:paused', { paused: true });

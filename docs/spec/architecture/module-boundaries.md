@@ -4,8 +4,8 @@
 
 | Area | Files | Exports | Imports | Law references |
 | --- | --- | --- | --- | --- |
-| Application | 41 | 179 | 106 | 480 |
-| Benchmark | 7 | 6 | 20 | 12 |
+| Application | 41 | 179 | 110 | 480 |
+| Benchmark | 8 | 6 | 22 | 12 |
 | Repository | 7 | 2 | 2 | 2 |
 | Simulation | 30 | 228 | 82 | 366 |
 | State | 31 | 280 | 58 | 232 |
