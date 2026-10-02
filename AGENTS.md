@@ -1,11 +1,11 @@
 # AGENTS.md — VEPA Workspace Initialization & Codebase Audit
 
 > **Project:** VEPA — Vector Emergent Physics Automata
-> **Active Target:** **VEPA4 v9.1.22** (legacy label `4.9.25`; v9.1.22 closes the audit-remediation program — executable audit-signoff gate in `repository:check`, documented backend error envelopes, FMM retain-experimental decision, risk-prioritized law-ontology expansion 24→35, PixiJS-vs-Canvas2D renderer benchmark report, and the proposed-only `docs/DECOMPOSITION_PLAN.md` awaiting confirmation; mechanics consolidation separates geometric CONTACT correction from COLL impact impulse; v9.1.2 delivered deterministic hierarchical technical-spec generation; v9.0.2 delivered selectable GPU backend and parity harness; Set P "Synthetic Life" (O·P·Q build 2): non-DNA synthetic organisms born from advanced HUBs (8 archetype programs), species intelligence-threshold uploaded consciousness, machine groups in the F.1 registry; stride offsets 98–99 claimed; plus per-law solver profiling (persistent content-addressed law caches, saved neighbour list, bench-mode timing) and main-thread cadence throttles that fix UI lag at high population; v8.15.1 = perf overhaul (density-scaled AUTO_TUNE grid + allocation-free pairwise hot path, ~9× at 100k); v8.15.0 = Set O "Stellar Physics" (O·P·Q build 1): stars fuse accreted mass into radiant output, collapse to black holes past the horizon (Hawking re-emission), detonate as supernovae past the mass cap (shockwave + exotic element seeding); plus the rich PRIME_DEFAULT substrate (COMMS/LEARN/CULTURE/AFFINITY/STIGMERGY + thermal/info fields + gravity wells + clustered spawn) and `MAX_PARTICLES` 2500→100000 with a renderer off-screen cull; **RRP trilogies** (E·F·A: E.1 v8.2.0 @ `eae1f58` · F v8.3.0 @ `d70ad1b` · A v8.4.0 @ `1e5eead`; D·G·H: D v8.6.0 · G v8.7.0 · H v8.8.0; I·J·K: I v8.9.0 · J v8.10.0 · K v8.11.0 — **complete**; L·M·N: L v8.12.0 · M v8.13.0 · N v8.14.0 — **complete** — O·P·Q: O v8.15.0 · P v8.16.0 **complete** — Q v8.17.0 next); designs in `docs/dev/rrp-trilogy/` + `docs/dev/rrp-trilogy-2/` + `docs/dev/rrp-trilogy-3/` + `docs/dev/rrp-trilogy-4/5/6/` (O·P·Q + R·S·T designs locked — the full 18-set lifecycle))
+> **Active Target:** **VEPA4 v9.1.27** (legacy label `4.9.30`; v9.1.23–9.1.27 added the civilization ontology/structures/continuity/codex and the touch-first drawer, launch modal and tab-help switcher — see CHANGELOG; v9.1.22 closed the audit-remediation program — executable audit-signoff gate in `repository:check`, documented backend error envelopes, FMM retain-experimental decision, risk-prioritized law-ontology expansion 24→35, PixiJS-vs-Canvas2D renderer benchmark report, and the proposed-only `docs/DECOMPOSITION_PLAN.md` awaiting confirmation; mechanics consolidation separates geometric CONTACT correction from COLL impact impulse; v9.1.2 delivered deterministic hierarchical technical-spec generation; v9.0.2 delivered selectable GPU backend and parity harness; Set P "Synthetic Life" (O·P·Q build 2): non-DNA synthetic organisms born from advanced HUBs (8 archetype programs), species intelligence-threshold uploaded consciousness, machine groups in the F.1 registry; stride offsets 98–99 claimed; plus per-law solver profiling (persistent content-addressed law caches, saved neighbour list, bench-mode timing) and main-thread cadence throttles that fix UI lag at high population; v8.15.1 = perf overhaul (density-scaled AUTO_TUNE grid + allocation-free pairwise hot path, ~9× at 100k); v8.15.0 = Set O "Stellar Physics" (O·P·Q build 1): stars fuse accreted mass into radiant output, collapse to black holes past the horizon (Hawking re-emission), detonate as supernovae past the mass cap (shockwave + exotic element seeding); plus the rich PRIME_DEFAULT substrate (COMMS/LEARN/CULTURE/AFFINITY/STIGMERGY + thermal/info fields + gravity wells + clustered spawn) and `MAX_PARTICLES` 2500→100000 with a renderer off-screen cull; **RRP trilogies** (E·F·A: E.1 v8.2.0 @ `eae1f58` · F v8.3.0 @ `d70ad1b` · A v8.4.0 @ `1e5eead`; D·G·H: D v8.6.0 · G v8.7.0 · H v8.8.0; I·J·K: I v8.9.0 · J v8.10.0 · K v8.11.0 — **complete**; L·M·N: L v8.12.0 · M v8.13.0 · N v8.14.0 — **complete** — O·P·Q: O v8.15.0 · P v8.16.0 **complete** — Set Q (Cosmology) not built — prototype pending, see `.codey/`); completed designs E·F·A … L·M·N archived in `.old/docs/dev/rrp-trilogy{,-2,-3,-4}/`, open designs O·P·Q + R·S·T in `docs/dev/rrp-trilogy-5/` + `docs/dev/rrp-trilogy-6/`)
 > **Layout:** the `` tree was promoted to the repo root on 2026-08-10 (legacy trees
 > archived into `gemquota/vepa-archive`); ALL paths below are root-relative.
 > **Working Branch:** `main`
-> **Audit Hash:** `AGENTS_SYNC_v9.1.22_2026-09-23`
+> **Audit Hash:** `AGENTS_SYNC_v9.1.27_2026-10-03`
 >
 > This file is the canonical initialization prompt for any agent entering this workspace. It contains the codebase audit, architectural SSOT, conventions, and operational workflows. All agents **must** read this file first before any code modification. Version control is **strict** — read §10.4 (Version History Control Protocol) before any changelog edit or deploy.
 >
@@ -22,7 +22,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 | Attribute | Value |
 |-----------|-------|
 | **Repository** | `github.com/gemquota/vepa.git` |
-| **Active version** | **VEPA4 v9.1.22** (legacy label `4.9.25`) — systems atlas for organization, reproduction, lineage, culture, civilization proxies, and relationship-laboratory analysis |
+| **Active version** | **VEPA4 v9.1.27** (legacy label `4.9.30`) — systems atlas for organization, reproduction, lineage, culture, civilization proxies, and relationship-laboratory analysis |
 | **Active tree** | repo root (VEPA v4 — "Integrated Intelligence"; `v4/` promoted to root 2026-08-10) |
 | **Legacy trees** | archived 2026-08-10 → `gemquota/vepa-archive` (root `src/` v2.5.0-era · `v3/`, `v3-backup/`, `v3-persistence-design/` · `vaa/`) |
 | **Branches** | `master` (stable) · `main` (**current**) · `docs/systems-assessment-20260920` · `new` · `feature/slider-controls` · `feature/multiplayer-investigation` · `feature/nuclear-rewrite` (remote) |
@@ -34,7 +34,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 | **Module System** | ESM (`"type": "module"`) |
 | **Deploys** | Vercel prod `https://vepa-seven.vercel.app/` · GitHub Pages `https://gemquota.github.io/vepa/` (both auto-deploy from pushes to `master`) |
 
-**Version alignment (new schema since 2026-08-10):** the product is **VEPA4**; versions use `major.minor.build` (npm-semver-native). `VERSION`, the top section of `CHANGELOG.md` (arrow token), `package.json#version`, and this file **must all read 9.1.22** (the audit-remediation + renderer-benchmark build). Since the 2026-08-10 restructure the root manifest IS the v4 manifest (the legacy v2 root `package.json` was archived with the legacy trees).
+**Version alignment (new schema since 2026-08-10):** the product is **VEPA4**; versions use `major.minor.build` (npm-semver-native). `VERSION`, the top section of `CHANGELOG.md` (arrow token), `package.json#version`, and this file **must all read 9.1.27** (the touch-first drawer / launch modal / tab-help build). Since the 2026-08-10 restructure the root manifest IS the v4 manifest (the legacy v2 root `package.json` was archived with the legacy trees).
 
 **GEMINI.md mandates (take precedence over this file):** every significant change must sync `CHANGELOG.md`, `README.md`, `SPEC.md`/`PLAN.md`, `GUIDE.md`, `LAW_HELP_DB`, and the law audit records under `docs/audit/` (signoff gate: `docs/spec/audit/signoff-manifest.json`) per GEMINI.md §1.1 (legacy `ENGINE_SSOT.md` / `docs/fullaudit.md` / `codex/` parity were archived 2026-08-10); the B-4RK principle (documentation as a feature — 4-tier `LAW_HELP_DB` for every law); bitmask discipline (`LAW_INDEXES` never hardcoded); and verify doc sync before declaring completion or you incur **Documentation Debt**. Read `GEMINI.md` on entry (§10.1).
 
@@ -53,7 +53,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 ├── GUIDE.md / GEMINI.md    ← user design guide + project mandates
 ├── index.html              ← app shell
 ├── style.css
-├── package.json            ← v4 manifest (9.1.22 — MUST match changelog top)
+├── package.json            ← v4 manifest (9.1.27 — MUST match changelog top)
 ├── package-lock.json
 ├── vercel.json             ← Vercel static build + COOP/COEP headers
 ├── vite.config.js / vitest.config.js
@@ -99,7 +99,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 │   ├── spawn/              ← distribution.js (initial population)
 │   └── worker/             ← physics.worker.js (SharedArrayBuffer loop)
 │
-├── tests/                  ← vitest: 85 files / 839 tests (unit + audit + params);
+├── tests/                  ← vitest: 129 files / 1431 tests (unit + audit + params); Playwright e2e in tests/e2e/;
 │                               legacy `run.mjs` node:test runner — do not use
 ├── bench/                  ← headless solver benchmark (vepa4 bench; --scale/--knobs/--report)
 ├── public/bench-report/    ← benchmark report SPA (served at /bench-report/)
@@ -131,8 +131,8 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 | Property | Value |
 |----------|-------|
 | **Current Branch** | `main` |
-| **HEAD** | `d2f9aa5` — `feat(systems): complete fourth stagger and publish atlas bundle` |
-| **Working tree** | PixiJS renderer integration/benchmark work in progress; preserved generated `dist/`, `isolate/`, and `test-results/` artifacts remain outside the source change |
+| **HEAD** | `main` @ `436afd2` — `chore(release): record the v9.1.27 deploy target in the ledger` (local work branch `codey/complete-plans` builds on it; never pushed) |
+| **Working tree** | clean on `main`; outdated plans/audits moved to `.old/` (see `.old/README.md`) on `codey/complete-plans` |
 | **Previous releases** | `218dc82` — `Update 19 files` · `43a99a4` — `fix(physics-ui): preserve particle connections and simplify telemetry` · `7e937ec` — `docs(agents): sync map to v8.15.1` · `7f5b2fa` — `chore(release): v8.15.1 — performance overhaul (auto-tuned grid + allocation-free pairwise hot path)` (v8.15.1) · `1ea3201` — `chore(release): v8.15.0 — Set O "Stellar Physics" (stars/black holes/supernovae) + rich prime substrate + MAX_PARTICLES 2500→100000` (v8.15.0) · `e7d9a50` — `chore(release): v8.14.1 — blank-canvas hotfix (Set J/K arity + guarded updateIntelligence)` (v8.14.1) · `499cbc0` — `chore(release): v8.14.0 — Set N "Quantum Macroscale"` (v8.14.0) · `d64be99` — `chore(release): v8.13.0 — Set M "Relativity"` (v8.13.0) · `69a2b71` — `chore(release): v8.12.0 — Set L "Exotic Matter"` (v8.12.0) · `5cbea88` — `chore(release): v8.11.1 — boot with PRIME_DEFAULT starter laws` (v8.11.1 hotfix) · `8a39ce9` — `chore(release): v8.11.0 — Set K "Infrastructure & Energy"` (v8.11.0) · `ce691cb` — `chore(release): v8.10.0 — Set J "Society & Governance"` (v8.10.0) · `2472bac` — `chore(release): v8.9.0 — Set I` (v8.9.0) · `81d19c7` — `feat(ui): full-screen multiplex controls` (v8.1.0) |
 | **Release tags** | `v8.16.2`, `v8.16.0`, `v8.15.1`, `v8.15.0`, `v8.14.1`, `v8.14.0`, `v8.13.0`, `v8.12.0`, `v8.11.1`, `v8.11.0`, `v8.10.0`, `v8.9.0`, `v8.8.0`, `v8.7.0`, `v8.6.0`, `v8.5.0`, `v8.4.0`, `v8.3.0`, `v8.2.0`, `v8.1.1`, `v8.1.0`, `v8.0.0` (repo tagging adopted at v8.0.0, 2026-08-18) |
 | **Backup branches** | `backup/pre-particle-connection-20260919` (cut before particle connection/HUD delivery) · `backup/pre-8160-20260820` (cut before v8.16.0 Set P) · `backup/pre-8151-20260819` (cut before v8.15.1 perf overhaul) · `backup/pre-8150-20260819` (cut before v8.15.0 Set O) · `backup/pre-8141-20260819` (cut before v8.14.1 hotfix) · `backup/pre-8140-20260819` (cut before v8.14.0 Set N) · `backup/pre-8130-20260819` (cut before v8.13.0 Set M) · `backup/pre-8120-20260819` (cut before v8.12.0 Set L) · `backup/pre-8111-20260819` (cut before v8.11.1 hotfix) · `backup/pre-master-switch-20260811` (cut before the master-switch attempt) · `backup/pre-archive-restructure-20260810` (cut before the 2026-08-10 restructure) · `backup/pre-multiplex-20260807` · `backup/pre-metrics-20260807` · `backup/pre-perf-20260807` · `backup/pre-cleanup-20260726` · `backup/pre-lpsbs-20260728` · `backup/pre-vepa4-20260801` · `backup/v47-multiplex-f6900f0` (pre-force-push v4.7 multiplex evolution, preserved for reference) |
@@ -261,7 +261,7 @@ All indices are defined in `DNA_INDEXES` (`src/constants.js`); ranges live in `D
 
 ---
 
-## 5. LAW SYSTEM (128 GLOBAL LAWS — 8 RAINBOW CATEGORIES × 16 + SLATE MECHANICS)
+## 5. LAW SYSTEM (136 GLOBAL LAWS — 8 RAINBOW CATEGORIES × 16 + 8 SLATE MECHANICS)
 
 Laws are multi-state toggles in the 128-bit `lawState` bitmask (§3.5), each with a 4-tier `LAW_HELP_DB` entry (hint, explanation, system, advanced) in `src/constants.js` (export name is **`LAW_HELP_DB`**). Categories are implemented as **stateless functions** in `src/physics/lawgroups/*.js` (see `lawgroups/SPEC.md`).
 
@@ -275,7 +275,7 @@ Laws are multi-state toggles in the 128-bit `lawState` bitmask (§3.5), each wit
 | Electromagnetism | BLUE | `emLaws.js` |
 | Information | VIOLET | `infoLaws.js` |
 | Quantum | PURPLE | `quantumLaws.js` |
-| Mechanics | SLATE | `physicsLaws.js` (ELASTICITY, TURBULENCE, CENTRIPETAL, ROTATION) |
+| Mechanics | SLATE | `mechanicsLaws.js` (CONTACT, MOMENTUM, INERTIA, TORQUE, CONSTRAINT, FRAGMENTATION, TOPOLOGY, ADHESION) |
 
 The law grid renders the eight rainbow categories in the established order, with Mechanics as a visually separated slate-grey category. The current 128-bit map contains 12 Physics laws, 4 implemented Mechanics laws, and six remaining category slots reserved for future implemented Mechanics laws; it does not fabricate inert toggles. `LAW_CATEGORIES` (category → color + 16 indices) and `LAW_SPECTRUM` + `LAW_HUE_BY_INDEX` (128 hues, hue = spectrum position × 3.6) hold the mapping. Since v4.6.14 each category band is **4 spectrum points wide** (center ± 2; RED wraps 98%→102% through 0 — was 10 points before); all 128 laws keep distinct hues. An earlier EM-spectrum draft mapping (physics=BLUE, etc.) was superseded — the verified current mapping is the table above.
 
@@ -326,8 +326,8 @@ The **B-4RK principle** stands: documentation is not an afterthought; it is a fe
 
 ## 8. TESTING & QUALITY ASSURANCE
 
-- **Unit/audit:** `vepa4 test` (vitest 3.2.7, `tests/`). **86 files / 860 tests** (verified 2026-08-20 — 854 green; the 6 failures are the pre-existing law-category/audit baseline: 4× `lawCategories.test.js` + `batch_08` TIME_DILATION + `batch_30` TELEPORT — untouched by v8.2.0–v8.16.0). Config: `vitest.config.js` includes `tests/**/*.test.js`, node environment, 15 s timeout. Suite layout: `tests/unit/` (30 files incl. `exoticMatter.test.js`, `relativity.test.js`, `quantumMacro.test.js`, `stellar.test.js`, `synthetic.test.js`, `drawer.test.js`, `fields.test.js`, `groupRegistry.test.js`, `constructionEconomy.test.js`, `livingWorld.test.js`, `perfKnobs.test.js`), `tests/audit/` (`batch_01-32.test.js` + `params_batch_01-18.test.js` + `paramsHelpers.js`).
-- **E2E:** `npm run test:e2e` (Playwright) — ⚠️ **no `playwright.config.*` or `*.spec.js` files are committed yet**, so the script is currently unconfigured; treat e2e as aspirational until specs land.
+- **Unit/audit:** `npm test` (vitest 3.2.7, `tests/`). **129 files / 1431 tests, all green** (verified 2026-10-03 on Node 22). Config: `vitest.config.js` includes `tests/**/*.test.js`, node environment. Suite layout: `tests/unit/`, `tests/audit/` (`batch_01-32` + `params_batch_01-18`), `tests/bench/`.
+- **E2E:** `npm run test:e2e` (Playwright, `playwright.config.js`) — specs in `tests/e2e/` (`physics-worker.spec.js`, `runtime-acceptance.spec.js`); not yet run in CI.
 - **Syntax:** `vepa4 syntax` (`node --check` on `src` + `tests`).
 - **Audit docs:** `docs/audit/` — historical a3 law-audit corpus (`laws/a3/`, retained in repo per `provenance.json`); signoff gate `docs/spec/audit/signoff-manifest.json` + `scripts/validate-signoff.mjs`.
 - **Build smoke:** `vepa4 build`.
@@ -376,7 +376,7 @@ The **B-4RK principle** stands: documentation is not an afterthought; it is a fe
 | **DNA count confusion** | v4 has **64** DNA params (0-63); `DEFAULT_DNA_STRIDE = 64` is the genome buffer width, not a param count; the 42-param claim applies to the per-particle stride cache only |
 | **Law bitmask width** | The v4 law state is **128 bits** (4 × u32: low/high/ext/**quad**Flags) — not 96 bits. Serialized form is `{low, high, ext, quad}` |
 | **v2 law config** | Do not write nested `this.laws.pure/biol/chem/thermo/meta` objects — that is v2-era; v4 uses `lawState` + `LAW_INDEXES` + `isSet()` |
-| **Version drift** | `VERSION`/changelog arrow token/`package.json#version` must all read 9.1.22 (VEPA4 `major.minor.build`); keep them matched per §10.4 |
+| **Version drift** | `VERSION`/changelog arrow token/`package.json#version` must all read 9.1.27 (VEPA4 `major.minor.build`); keep them matched per §10.4 |
 | **Stale root manifest** | The legacy v2 root manifest is archived — `npm test` / `npm run build` now run the v4 suite from the root |
 | SharedArrayBuffer blocked | Serve with COOP/COEP (`vepa4 dev` handles; `vercel.json` ships them) |
 | Worker postMessage limits | Use Transferable objects for buffer transfers |
@@ -399,7 +399,7 @@ headers carry both labels: `## [4.6.28] - date → 6.28.0`. v2/v3-era entries ke
 their historical labels.
 
 **Authority:** `CHANGELOG.md` is the single source of truth for release history.
-`VERSION`, the changelog top section's arrow token, and `package.json#version` MUST all equal the newest version (`9.1.22`). From here on, drift is a release
+`VERSION`, the changelog top section's arrow token, and `package.json#version` MUST all equal the newest version (`9.1.27`). From here on, drift is a release
 blocker.
 
 **Commit standard (Conventional Commits 1.0.0 — mandatory for all commits from
@@ -457,13 +457,13 @@ git tag | tail -1                  # current release tag
 ### 10.5 Architecture Constraints (v4)
 - `PARTICLE_STRIDE` = 100 · `MAX_SPECIES` = 64 · `MAX_PARTICLES` = 100000
 - `DEFAULT_DNA_STRIDE` = 64 (species genome width) · `DNA_COUNT` = 64 (42 cached per particle, 22 genome-only)
-- `LAW_COUNT` = 128 (8 rainbow categories × 16; Mechanics is an additional slate grouping within the fixed map) · `GRID_DIM` = 12 (12³ cells)
+- `LAW_COUNT` = 136 (8 rainbow categories × 16 + 8 slate Mechanics; 160-bit `lawState`, five `Uint32Array(1)` words) · `GRID_DIM` = 12 (12³ cells, `src/physics/spatialGrid.js`)
 - `MAX_INTERACTIONS` = 500 · `MAX_FORCE` = 50.0
 - Particle buffer: `Float32Array` over `SharedArrayBuffer`
 
 ### 10.6 Adding a New Law (v4)
 1. Add index to `LAW_INDEXES` + `LAW_HELP_DB` (all 4 tiers) in `src/constants.js`
-2. Add to `LAW_CATEGORIES` (16-per-category cap; `LAW_COUNT` ≤ 128) and confirm `LAW_SPECTRUM`/`LAW_HUE_BY_INDEX` coverage
+2. Add to `LAW_CATEGORIES` (16-per-category cap; the 160-bit `lawState` holds up to 160 laws) and confirm `LAW_SPECTRUM`/`LAW_HUE_BY_INDEX` coverage
 3. Implement a stateless function in `src/physics/lawgroups/<category>Laws.js` per `lawgroups/SPEC.md`
 4. Wire dispatch with `isSet(LAW_INDEXES.X)` in `src/physics/solver.js` (worker consumes via `solve()`)
 5. Add the toggle in `src/ui/lawPanel.js`
@@ -507,14 +507,14 @@ grep '"version"' package.json      # must match changelog
 cat VERSION                           # root marker — must match too
 
 # Trust-but-verify (workspace moves fast — code is truth)
-node -e "const c=require('./src/constants.js'); console.log(c.PARTICLE_STRIDE, c.DNA_COUNT, c.LAW_COUNT)"  # → 100 64 128
+node -e "const c=require('./src/constants.js'); console.log(c.PARTICLE_STRIDE, c.DNA_COUNT, c.LAW_COUNT)"  # → 100 64 136
 grep -c '^export const' src/constants.js
 ls src/physics/lawgroups/*.js | wc -l    # lawgroup file count; Mechanics is currently grouped in physicsLaws.js
 git log --oneline -3 -- CHANGELOG.md     # confirm HEAD = changelog top
 
 # v4 workflow
 vepa4 dev                             # dev server (COOP/COEP), port 5180
-vepa4 test                            # vitest unit suite (67 files / 579 tests)
+vepa4 test                            # vitest suite (129 files / 1431 tests)
 vepa4 syntax                          # node --check all v4 JS
 vepa4 build                           # vite build → .dist
 npx playwright test          # e2e suite
@@ -527,11 +527,11 @@ git tag v<version>
 
 # Key constants
 grep 'PARTICLE_STRIDE' src/constants.js   # → 100
-grep 'LAW_COUNT'       src/constants.js   # → 128
+grep 'LAW_COUNT'       src/constants.js   # → 136
 grep 'MAX_SPECIES'     src/constants.js   # → 64
 grep 'DNA_COUNT'       src/constants.js   # → 64
 ```
 
 ---
 
-*Re-synced 2026-09-23 | Workspace state: v9.1.22 audit-remediation + renderer-benchmark work is in the working tree (uncommitted); `docs/DECOMPOSITION_PLAN.md` is proposed and awaits user confirmation before any monolith extraction. The atlas records live organization systems and separates implemented proxies from proposed family, tribal, national, and civilizational ontology.*
+*Re-synced 2026-10-03 | v9.1.27 (`main` @ `436afd2`). Outdated plans/audits archived in `.old/`; `docs/DECOMPOSITION_PLAN.md` approved for execution on the local `codey/complete-plans` branch (see `.codey/`).*
