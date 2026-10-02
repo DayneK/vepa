@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `286` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `287` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -10,8 +10,8 @@ The generator scanned `286` files from active repository inputs. Individual modu
 | Benchmark | 4 | 5 | 9 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 214 | 366 |
-| State | 31 | 279 | 231 |
-| Testing | 151 | 22 | 613 |
+| State | 31 | 280 | 231 |
+| Testing | 152 | 22 | 617 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -38,7 +38,7 @@ The generator scanned `286` files from active repository inputs. Individual modu
 | [src/core/clipboard.js](../../../src/core/clipboard.js) | application | 43 | 2 | 0 | 1 |
 | [src/core/eventBus.js](../../../src/core/eventBus.js) | application | 43 | 2 | 0 | 0 |
 | [src/core/numeric.js](../../../src/core/numeric.js) | application | 97 | 10 | 0 | 1 |
-| [src/core/prng.js](../../../src/core/prng.js) | application | 25 | 1 | 0 | 0 |
+| [src/core/prng.js](../../../src/core/prng.js) | application | 42 | 1 | 0 | 0 |
 | [src/debug.js](../../../src/debug.js) | application | 212 | 6 | 2 | 0 |
 | [src/dna/codec.js](../../../src/dna/codec.js) | state | 99 | 7 | 1 | 1 |
 | [src/dna/dnaBuffer.js](../../../src/dna/dnaBuffer.js) | state | 153 | 10 | 1 | 0 |
@@ -55,7 +55,7 @@ The generator scanned `286` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 1816 | 0 | 50 | 11 |
+| [src/main.js](../../../src/main.js) | application | 1820 | 0 | 50 | 11 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1523 | 30 | 11 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 460 | 7 | 0 | 5 |
 | [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 841 | 1 | 2 | 2 |
@@ -120,7 +120,7 @@ The generator scanned `286` files from active repository inputs. Individual modu
 | [src/state/systemLifecycle.js](../../../src/state/systemLifecycle.js) | state | 465 | 23 | 3 | 1 |
 | [src/state/systemVariants.js](../../../src/state/systemVariants.js) | state | 119 | 7 | 1 | 1 |
 | [src/state/worldParams.js](../../../src/state/worldParams.js) | state | 257 | 6 | 1 | 65 |
-| [src/state/worldSave.js](../../../src/state/worldSave.js) | state | 582 | 19 | 5 | 2 |
+| [src/state/worldSave.js](../../../src/state/worldSave.js) | state | 595 | 20 | 5 | 2 |
 | [src/ui/analyticsPanel.js](../../../src/ui/analyticsPanel.js) | ui | 105 | 3 | 1 | 1 |
 | [src/ui/camera.js](../../../src/ui/camera.js) | ui | 300 | 6 | 0 | 0 |
 | [src/ui/civilizationPanel.js](../../../src/ui/civilizationPanel.js) | ui | 138 | 3 | 3 | 2 |
@@ -301,6 +301,7 @@ The generator scanned `286` files from active repository inputs. Individual modu
 | [tests/unit/webgpuContract.test.js](../../../tests/unit/webgpuContract.test.js) | testing | 95 | 0 | 4 | 0 |
 | [tests/unit/worldSave.test.js](../../../tests/unit/worldSave.test.js) | testing | 322 | 0 | 7 | 4 |
 | [tests/unit/worldSaveCompat.test.js](../../../tests/unit/worldSaveCompat.test.js) | testing | 98 | 0 | 6 | 1 |
+| [tests/unit/worldSaveRng.test.js](../../../tests/unit/worldSaveRng.test.js) | testing | 84 | 0 | 7 | 4 |
 | [vercel.json](../../../vercel.json) | repository | 35 | 0 | 0 | 0 |
 | [vite.config.js](../../../vite.config.js) | repository | 28 | 1 | 1 | 0 |
 | [vitest.config.js](../../../vitest.config.js) | repository | 14 | 1 | 1 | 0 |

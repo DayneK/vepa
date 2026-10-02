@@ -1,6 +1,23 @@
 export class SplitMix32 {
   constructor(seed) {
+    this.seed = seed >>> 0;
     this.state = seed | 0;
+  }
+
+  /** Serializable {seed, state} pair (RRP E9: persisted in world saves). */
+  snapshot() {
+    return { seed: this.seed >>> 0, state: this.state >>> 0 };
+  }
+
+  /**
+   * Rebuild a generator from snapshot(); the next draw continues the saved
+   * sequence exactly. Returns null for a missing/invalid snapshot.
+   */
+  static fromSnapshot(snap) {
+    if (!snap || !Number.isFinite(snap.state)) return null;
+    const g = new SplitMix32(Number.isFinite(snap.seed) ? snap.seed : snap.state);
+    g.state = snap.state | 0;
+    return g;
   }
 
   next() {

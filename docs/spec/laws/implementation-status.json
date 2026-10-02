@@ -35,7 +35,8 @@
         "tests/unit/physics.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js",
-        "tests/unit/worldSave.test.js"
+        "tests/unit/worldSave.test.js",
+        "tests/unit/worldSaveRng.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -89,7 +90,8 @@
         "tests/audit/params_batch_04.test.js",
         "tests/audit/params_batch_09.test.js",
         "tests/unit/helpLawNames.test.js",
-        "tests/unit/tidalBloom.test.js"
+        "tests/unit/tidalBloom.test.js",
+        "tests/unit/worldSaveRng.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -492,7 +494,8 @@
         "tests/unit/stellar.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/synthetic.test.js",
-        "tests/unit/worldSave.test.js"
+        "tests/unit/worldSave.test.js",
+        "tests/unit/worldSaveRng.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -1100,7 +1103,8 @@
         "tests/unit/mechanics.test.js",
         "tests/unit/relationshipCompatibility.test.js",
         "tests/unit/relationshipExplorer.test.js",
-        "tests/unit/worldSave.test.js"
+        "tests/unit/worldSave.test.js",
+        "tests/unit/worldSaveRng.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",

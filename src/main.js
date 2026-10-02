@@ -842,6 +842,7 @@ function setDNAFromProfile(species, profile) {
         name,
         civilization: civilization ? serializeCivilization(civilization) : null,
         codex: codex ? serializeCodex(codex) : null,
+        rng: prng.snapshot(),
     });
     const emitUndoState = () => {
         bus.emit('world:undoState', { canUndo: undoRing.canUndo(), canRedo: undoRing.canRedo(), enabled: undoEnabled });
@@ -866,6 +867,8 @@ function setDNAFromProfile(species, profile) {
         particleCount = out.particleCount;
         speciesCount = out.speciesCount;
         worldSize = out.worldSize;
+        // RRP E9: resume the saved random sequence (older saves keep the live one).
+        if (out.rng) prng = PRNG.fromSnapshot(out.rng);
         setWorldSize(out.worldSize);
         resetOffspringRing();
         resetIntelligence();
@@ -1582,6 +1585,7 @@ function updateIntelligenceCore() {
                 worldSize,
                 tick,
                 name: `Epoch ${epochEngine.era}`,
+                rng: prng.snapshot(),
             }),
         });
         for (const ev of epochEvents) bus.emit(ev.type, ev);

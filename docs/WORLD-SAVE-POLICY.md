@@ -30,8 +30,11 @@ localStorage fallback) and `.vepa.json` export/import.
   They are now an additive `laws.penta` field. A save without it leaves the
   live Mechanics laws as they are.
 
-- The PRNG seed and state are not saved yet (RRP E9, see `.codey/RRP-VERIFY.md`).
-  When they are added, they will come in as an additive field per rule 2.
+- Fixed 2026-10-03 (RRP E9): the main-thread PRNG is saved as an additive
+  `rng: {seed, state}` field (rule 2). Restoring resumes the exact random
+  sequence; a save without it keeps the live generator. The physics worker's
+  own stream is reseeded to a fixed constant whenever the worker starts, so
+  it is deterministic for a given restored buffer without being saved.
 - `runtime` saves numeric knobs only, so string settings such as `gravEngine`
   are not persisted.
 

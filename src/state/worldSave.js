@@ -191,8 +191,16 @@ export function captureWorldState(opts = {}) {
     // Additive: the observer's codex. Absent on every save written before the
     // codex existed; a missing key restores as an empty catalog, not an error.
     codex: opts.codex ?? null,
+    // Additive (RRP E9): main-thread PRNG {seed, state}; null on older saves.
+    rng: normalizeRng(opts.rng),
     summary: summarizeWorld(view, count, laws),
   };
+}
+
+/** Validate a {seed, state} PRNG snapshot; returns null when absent/invalid. */
+export function normalizeRng(rng) {
+  if (!rng || !Number.isFinite(rng.state)) return null;
+  return { seed: (Number.isFinite(rng.seed) ? rng.seed : rng.state) >>> 0, state: rng.state >>> 0 };
 }
 
 function pickRuntime(runtime) {
@@ -264,6 +272,9 @@ export function restoreWorldState(state, target = {}) {
     // Same contract as civilization: handed back raw so worldSave stays free
     // of an import from the codex module.
     codex: state.codex ?? null,
+    // PRNG snapshot for deterministic resume (null on saves without one: the
+    // caller keeps its current generator).
+    rng: normalizeRng(state.rng),
   };
 }
 
@@ -295,6 +306,7 @@ export function exportWorldSave(state) {
     // export/import so a round trip does not drop them.
     civilization: state.civilization ?? null,
     codex: state.codex ?? null,
+    rng: normalizeRng(state.rng),
     particlesB64,
     dnaB64,
   }, null, 2);
@@ -328,6 +340,7 @@ export function parseWorldSave(json) {
     // Additive fields default when absent (older v1 files never had them).
     civilization: data.civilization ?? null,
     codex: data.codex ?? null,
+    rng: normalizeRng(data.rng),
   };
   return state;
 }
