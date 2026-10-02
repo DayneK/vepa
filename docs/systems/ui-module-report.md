@@ -134,7 +134,7 @@ Mounted at `#saves-panel`, 272 lines.
 
 | Sub-tab | Module | What it displays | Controls |
 | --- | --- | --- | --- |
-| 🧠 INTELLIGENCE | `src/ui/intelPanel.js`<br>130 lines | High-level counters for the current world: clusters, births, deaths, lineage depth and snapshots.<br><br>**9 documented readouts:** `intel-clusters`, `intel-largest`, `intel-cluster-energy`, `intel-net`, `intel-births`, `intel-deaths`, `intel-lineage`, `intel-snapshots`, `intel-rec` | `button`, `input` |
+| 🧠 INTELLIGENCE | `src/ui/intelPanel.js`<br>126 lines | High-level counters for the current world: clusters, births, deaths, lineage depth and snapshots.<br><br>**9 documented readouts:** `intel-clusters`, `intel-largest`, `intel-cluster-energy`, `intel-net`, `intel-births`, `intel-deaths`, `intel-lineage`, `intel-snapshots`, `intel-rec` | `button`, `input` |
 | 🧬 DNA ANALYTICS<br><sub>button label "DNA"</sub> | `src/ui/dnaAnalytics.js`<br>549 lines | Nine graphs describing the current population and its history, plus per-species trait tables and click-through history. | `button` |
 | 📜 LOGS | `src/ui/narrativePanel.js`<br>123 lines | The narrative voice: emergent events, milestones and the running story of the world. | `button` |
 | 🏙️ GROUPS | `src/ui/groupAnalytics.js`<br>297 lines | Social groups: how many exist, how many members they hold, their treasuries and their trade volume.<br><br>**8 documented readouts:** `ga-groups`, `ga-members`, `ga-treasury`, `ga-volume`, `ga-leaders`, `ga-artifacts`, `ga-alliances`, `ga-conflicts` | **none — read-only** |

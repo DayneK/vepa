@@ -215,7 +215,8 @@ const cellsOf = (src) => {
 };
 
 /** Every id the panel writes into, from its `setVal(...)` calls. */
-const writtenOf = (src) => new Set([...src.matchAll(/set(?:Val|Value)\('([^']+)'/g)].map((m) => m[1]));
+// Recognises panel-local setters and the shared setCellValue(host, 'id', …) (CA-A8).
+const writtenOf = (src) => new Set([...src.matchAll(/set(?:Val|Value|CellValue)\((?:host, )?'([^']+)'/g)].map((m) => m[1]));
 
 describe('the DATA panels got wider', () => {
   it('GROUPS grew from four cells to eight', () => {
