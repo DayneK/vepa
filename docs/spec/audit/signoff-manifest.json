@@ -5,14 +5,15 @@
   "records": [
     {
       "id": "exact-cpu-solver",
-      "claim": "The exact pairwise CPU solver is the default runtime path and the parity reference for every approximate backend.",
+      "claim": "The reference pairwise CPU solver (gravEngine 'reference'; 'exact' is a permanent legacy alias) is the default runtime path and the parity reference for every approximate backend.",
       "status": "operational",
       "implementation": "src/physics/solver.js",
-      "dispatch": "Every law is gated with isSet(lawState, LAW_INDEXES.*) inside solve(); runtimeConfig.gravEngine defaults to the exact path.",
+      "dispatch": "Every law is gated with isSet(lawState, LAW_INDEXES.*) inside solve(); runtimeConfig.gravEngine defaults to 'reference' (alias 'exact').",
       "tests": [
         "tests/unit/physics.test.js",
         "tests/unit/lawGating.test.js",
-        "tests/unit/backendArchitecture.test.js"
+        "tests/unit/backendArchitecture.test.js",
+        "tests/unit/gravEngineAlias.test.js"
       ]
     },
     {
@@ -94,6 +95,18 @@
       "tests": [
         "tests/unit/mechanics.test.js",
         "tests/unit/physics.test.js"
+      ]
+    },
+    {
+      "id": "electric-field-law",
+      "claim": "ELECTRIC_FIELD applies the per-particle polarity drift (applyFieldDrift); FIELD applies only the central-field gradient.",
+      "status": "operational",
+      "law": "ELECTRIC_FIELD",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "active[LAW_INDEXES.ELECTRIC_FIELD] gates applyFieldDrift in solve() (src/physics/solver.js, per-particle electromagnetism block); FIELD gates applyField in the neighbour pass. Decision D-005 (2026-10-03).",
+      "tests": [
+        "tests/unit/electricFieldSplit.test.js",
+        "tests/audit/batch_14.test.js"
       ]
     },
     {

@@ -2117,7 +2117,7 @@ export function applyChargeForce(p1Ptr, p2Ptr, dx, dy, dz, dist, k) {
   };
 }
 
-/** FIELD — uniform 3D drift along POLARITY sign, scaled by stored charge. */
+/** ELECTRIC_FIELD — uniform 3D drift along POLARITY sign, scaled by stored charge. */
 export function applyFieldDrift(p1Ptr, k) {
   const buf = buffer_global;
   const q = readDNA(p1Ptr, D.POLARITY) || 0;

@@ -176,13 +176,13 @@ describe('Batch 14 — COMMS / CHARGE_LAW / FIELD / CURRENT', () => {
     expect(Math.abs(zero.view[S.VEL_X])).toBeLessThan(1e-6);
   });
 
-  it('FIELD drifts particles along their POLARITY sign', () => {
+  it('ELECTRIC_FIELD drifts particles along their POLARITY sign (was FIELD before D-005)', () => {
     // Positive polarity → +y drift
     const w = makeWorld(2, 10);
     setDNA(w.view, 0, D.POLARITY, 1);
     const st = createLawState();
-    set(st, LAW_INDEXES.FIELD);
-    expect(isSet(st, LAW_INDEXES.FIELD)).toBe(true);
+    set(st, LAW_INDEXES.ELECTRIC_FIELD);
+    expect(isSet(st, LAW_INDEXES.ELECTRIC_FIELD)).toBe(true);
     solve(w.view, 2, PARTICLE_STRIDE, st, w.dna, WORLD, DT, rng);
     expect(w.view[S.VEL_Y]).toBeGreaterThan(0);
 
@@ -190,7 +190,7 @@ describe('Batch 14 — COMMS / CHARGE_LAW / FIELD / CURRENT', () => {
     const w2 = makeWorld(2, 10);
     setDNA(w2.view, 0, D.POLARITY, -1);
     const st2 = createLawState();
-    set(st2, LAW_INDEXES.FIELD);
+    set(st2, LAW_INDEXES.ELECTRIC_FIELD);
     solve(w2.view, 2, PARTICLE_STRIDE, st2, w2.dna, WORLD, DT, rng);
     expect(w2.view[S.VEL_Y]).toBeLessThan(0);
 
@@ -202,12 +202,12 @@ describe('Batch 14 — COMMS / CHARGE_LAW / FIELD / CURRENT', () => {
     expect(w3.view[S.VEL_Y]).toBe(0);
   });
 
-  it('FIELD is uniform in 3D and stored CHARGE scales the drift', () => {
+  it('ELECTRIC_FIELD is uniform in 3D and stored CHARGE scales the drift (was FIELD before D-005)', () => {
     // Uniform: positive polarity accelerates on all three axes
     const w = makeWorld(2, 10);
     setDNA(w.view, 0, D.POLARITY, 1);
     const st = createLawState();
-    set(st, LAW_INDEXES.FIELD);
+    set(st, LAW_INDEXES.ELECTRIC_FIELD);
     solve(w.view, 2, PARTICLE_STRIDE, st, w.dna, WORLD, DT, rng);
     expect(w.view[S.VEL_X]).toBeGreaterThan(0);
     expect(w.view[S.VEL_Y]).toBeGreaterThan(0);
@@ -218,7 +218,7 @@ describe('Batch 14 — COMMS / CHARGE_LAW / FIELD / CURRENT', () => {
     setDNA(charged.view, 0, D.POLARITY, 1);
     charged.view[S.CHARGE] = 2;
     const st2 = createLawState();
-    set(st2, LAW_INDEXES.FIELD);
+    set(st2, LAW_INDEXES.ELECTRIC_FIELD);
     solve(charged.view, 2, PARTICLE_STRIDE, st2, charged.dna, WORLD, DT, rng);
     expect(charged.view[S.VEL_X]).toBeGreaterThan(w.view[S.VEL_X] * 1.5);
     expect(charged.view[S.VEL_Z]).toBeGreaterThan(w.view[S.VEL_Z] * 1.5);

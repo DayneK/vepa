@@ -116,10 +116,10 @@ describe('New law categories', () => {
     expect(Math.abs(x2 - x1)).toBeGreaterThan(0);
   });
 
-  it('FIELD law drifts charged particles even without neighbours', () => {
+  it('ELECTRIC_FIELD law drifts charged particles even without neighbours (was FIELD before D-005)', () => {
     const world = makeWorld(1.0);
     const state = createLawState();
-    set(state, LAW_INDEXES.FIELD);
+    set(state, LAW_INDEXES.ELECTRIC_FIELD);
     const x1 = world.view[0];
     const y1 = world.view[1];
     solve(world.view, COUNT, PARTICLE_STRIDE, state, world.dna, WORLD, DT, rng);

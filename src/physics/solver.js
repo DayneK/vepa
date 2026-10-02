@@ -1381,8 +1381,10 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     }
 
     // ── Electromagnetism (per-particle) ──
-    if (active[LAW_INDEXES.FIELD]) {
-      const fieldForce = applyFieldDrift(iBase, 0.3 * syn[LAW_INDEXES.FIELD]);
+    // CG-5 / D-005: the polarity drift belongs to ELECTRIC_FIELD. FIELD only
+    // drives the central-field gradient in the neighbour pass above.
+    if (active[LAW_INDEXES.ELECTRIC_FIELD]) {
+      const fieldForce = applyFieldDrift(iBase, 0.3 * syn[LAW_INDEXES.ELECTRIC_FIELD]);
       if (fieldForce) {
         ax += fieldForce.ax;
         ay += fieldForce.ay;

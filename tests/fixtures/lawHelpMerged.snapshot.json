@@ -277,10 +277,10 @@
   "advanced": "Push force grows sharply below a species-scaled exclusion radius."
  },
  "FIELD": {
-  "hint": "Uniform electric field drift along the particle's polarity.",
-  "explanation": "Confirmed batch-14: every polarized particle receives a constant uniform acceleration (same on all three axes) along its POLARITY sign — positive drifts one way, negative the other. Stored CHARGE scales the drift strength, so a charged particle feels the field harder.",
-  "system": "POLARITY ≠ 0: acceleration = POLARITY × k × (1 + |CHARGE| × 0.5) on each axis. Combined with CHARGE_LAW it separates species by polarity into opposing drift lanes.",
-  "advanced": "FIELD is the central simulation-field gradient; ELECTRIC_FIELD is the separate electromagnetic polarity drift."
+  "hint": "Central field: a gentle pull toward the centre of the dish.",
+  "explanation": "Every particle is pulled toward the world centre; the pull grows with distance up to 100 units. It does not depend on POLARITY or CHARGE. The polarity-directed electric drift is the separate ELECTRIC_FIELD law.",
+  "system": "Acceleration toward the world centre = k × min(dist, 100) / 100 (k = 0.02 × synergy, capped at 50). It is applied in the neighbour pass, so its strength also scales with the local neighbour count.",
+  "advanced": "FIELD is the central simulation-field gradient only; ELECTRIC_FIELD is the separate electromagnetic polarity drift (decision D-005, 2026-10-03)."
  },
  "FLUX": {
   "hint": "Charge flux: particles are pushed along the charge gradient.",

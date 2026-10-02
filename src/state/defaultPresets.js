@@ -215,6 +215,9 @@ export const TIDAL_BLOOM = {
         // ── Motion: the tide and the bulk medium it drives ──
         'GRAV', 'DRAG', 'ENTR', 'BUOYANCY', 'COLL', 'ACCR', 'BOND', 'TIDE',
         'FIELD', 'FRICTION',
+        // ELECTRIC_FIELD keeps the polarity drift this preset had when FIELD
+        // carried both effects (CG-5 / D-005, 2026-10-03).
+        'ELECTRIC_FIELD',
         // ── Heat: what makes the tide visible as a medium, not a force ──
         'HEAT', 'CONVECTION', 'LATENT_HEAT', 'EQUILIBRIUM',
         // ── Chemistry: where persistent structure comes from ──
