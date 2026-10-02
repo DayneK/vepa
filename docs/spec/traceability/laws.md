@@ -5,7 +5,7 @@
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
 | 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 19 | LAW_HELP_DB |
-| 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 7 | LAW_HELP_DB |
+| 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 8 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 8 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
 | 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 8 | 14 | LAW_HELP_DB |
@@ -17,7 +17,7 @@
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 9 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | LAW_HELP_DB |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 64 | LAW_HELP_DB |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 65 | LAW_HELP_DB |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 3 | LAW_HELP_DB |
 | 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | LAW_HELP_DB |
@@ -91,7 +91,7 @@
 | 84 | [HORIZON](../laws/physics/084_HORIZON.md) | physics | 1 | 3 | 2 | LAW_HELP_DB |
 | 85 | [RADIATION_PRESSURE](../laws/physics/085_RADIATION_PRESSURE.md) | physics | 1 | 1 | 0 | LAW_HELP_DB |
 | 86 | [MASS_INERTIA](../laws/physics/086_MASS_INERTIA.md) | physics | 1 | 1 | 0 | LAW_HELP_DB |
-| 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 2 | 5 | LAW_HELP_DB |
+| 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 2 | 7 | LAW_HELP_DB |
 | 88 | [SYMBIOSIS](../laws/biology/088_SYMBIOSIS.md) | biology | 1 | 4 | 1 | LAW_HELP_DB |
 | 89 | [PARASITE](../laws/biology/089_PARASITE.md) | biology | 1 | 4 | 1 | LAW_HELP_DB |
 | 90 | [HIBERNATION](../laws/biology/090_HIBERNATION.md) | biology | 1 | 1 | 1 | LAW_HELP_DB |

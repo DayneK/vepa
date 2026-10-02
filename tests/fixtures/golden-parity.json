@@ -52,6 +52,10 @@
     "category-quantum": {
       "sha256": "27a5eed83946232becd6a5646bc03333b65318e9e9a5e6bb6e4dad87f10d7504",
       "offspring": 0
+    },
+    "default-tidal-bloom-params": {
+      "sha256": "fafed453f83a75b1666a31bfa77c55a106681bc6a9b67766cf28987a75f158ac",
+      "offspring": 0
     }
   }
 }

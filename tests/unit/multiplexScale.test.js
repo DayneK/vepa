@@ -70,7 +70,7 @@ describe('multiplex at scale (MX-20)', () => {
     for (const sh of mx.shards) expect(sh.tick).toBe(3);
   });
 
-  it('fieldAdvanceOnce defaults to false (legacy behaviour until Gem decides)', () => {
-    expect(runtimeConfig.fieldAdvanceOnce).toBe(false);
+  it('fieldAdvanceOnce defaults to true (FIELD-ONCE, D-016)', () => {
+    expect(runtimeConfig.fieldAdvanceOnce).toBe(true);
   });
 });

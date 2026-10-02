@@ -51,6 +51,10 @@ const { createDNABuffer, loadDefaults, setDNAFloat, getDNAFloat } = await import
 const { solve, drainOffspring, resetOffspringRing, resetSolverClock } = await import('../src/physics/solver.js');
 const { TIDAL_BLOOM } = await import('../src/state/defaultPresets.js');
 const { runtimeConfig } = await import('../src/state/runtimeConfig.js');
+const { createWorldParams } = await import('../src/state/worldParams.js');
+// GOLDEN_FIELD_LEGACY=1 reproduces the pre-D-016 per-particle field advance
+// (used once to record the old hashes in docs/GOLDEN-REBASELINE.md).
+if (process.env.GOLDEN_FIELD_LEGACY === '1') runtimeConfig.fieldAdvanceOnce = false;
 
 function makeWorld(seed) {
   const rng = splitmix(seed);
@@ -98,10 +102,14 @@ const scenarios = [
   ['default-tidal-bloom', TIDAL_BLOOM.laws],
   ['all-laws', Object.keys(LAW_INDEXES)],
   ...Object.entries(LAW_CATEGORIES).map(([cat, c]) => [`category-${cat}`, c.laws.map((i) => NAME_BY_INDEX[i])]),
+  // Added with D-016 (appended so earlier scenario seeds are unchanged): the
+  // boot world's params turn the field medium on, covering FIELD-ONCE.
+  ['default-tidal-bloom-params', TIDAL_BLOOM.laws, TIDAL_BLOOM.worldParams],
 ];
 
-function run(names, idx) {
+function run(names, idx, params = null) {
   runtimeConfig.gravEngine = 'reference';
+  runtimeConfig.worldParams = params ? { ...createWorldParams(), ...params } : createWorldParams();
   resetOffspringRing();
   resetSolverClock();
   clockMs = 0;
@@ -120,7 +128,7 @@ function run(names, idx) {
 }
 
 const result = { schema: 'golden-parity/v1', seed: SEED, count: COUNT, ticks: TICKS, worldSize: WORLD, scenarios: {} };
-scenarios.forEach(([name, laws], i) => { result.scenarios[name] = run(laws, i); });
+scenarios.forEach(([name, laws, params], i) => { result.scenarios[name] = run(laws, i, params); });
 // Self-check: the default scenario must reproduce inside one process too.
 const again = run(scenarios[1][1], 1);
 if (again.sha256 !== result.scenarios[scenarios[1][0]].sha256) {

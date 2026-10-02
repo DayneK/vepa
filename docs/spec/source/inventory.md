@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `292` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `293` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `292` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 221 | 366 |
 | State | 31 | 280 | 232 |
-| Testing | 156 | 22 | 622 |
+| Testing | 157 | 22 | 626 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -85,7 +85,7 @@ The generator scanned `292` files from active repository inputs. Individual modu
 | [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 304 | 8 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
-| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2017 | 11 | 22 | 134 |
+| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2016 | 11 | 22 | 134 |
 | [src/physics/spatialGrid.js](../../../src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
 | [src/react-entry.js](../../../src/react-entry.js) | application | 20 | 0 | 2 | 0 |
@@ -207,7 +207,7 @@ The generator scanned `292` files from active repository inputs. Individual modu
 | [tests/bench/renderer-benchmark.spec.js](../../../tests/bench/renderer-benchmark.spec.js) | testing | 77 | 0 | 4 | 0 |
 | [tests/e2e/physics-worker.spec.js](../../../tests/e2e/physics-worker.spec.js) | testing | 67 | 0 | 1 | 0 |
 | [tests/e2e/runtime-acceptance.spec.js](../../../tests/e2e/runtime-acceptance.spec.js) | testing | 59 | 0 | 1 | 1 |
-| [tests/fixtures/golden-parity.json](../../../tests/fixtures/golden-parity.json) | testing | 58 | 0 | 0 | 0 |
+| [tests/fixtures/golden-parity.json](../../../tests/fixtures/golden-parity.json) | testing | 62 | 0 | 0 | 0 |
 | [tests/fixtures/lawHelpMerged.snapshot.json](../../../tests/fixtures/lawHelpMerged.snapshot.json) | testing | 745 | 0 | 0 | 136 |
 | [tests/helpers/cssSources.js](../../../tests/helpers/cssSources.js) | testing | 137 | 6 | 3 | 0 |
 | [tests/helpers/domStub.js](../../../tests/helpers/domStub.js) | testing | 341 | 5 | 0 | 1 |
@@ -240,6 +240,7 @@ The generator scanned `292` files from active repository inputs. Individual modu
 | [tests/unit/engines.test.js](../../../tests/unit/engines.test.js) | testing | 113 | 0 | 7 | 0 |
 | [tests/unit/exoticMatter.test.js](../../../tests/unit/exoticMatter.test.js) | testing | 366 | 0 | 5 | 3 |
 | [tests/unit/experimentalBackends.test.js](../../../tests/unit/experimentalBackends.test.js) | testing | 60 | 0 | 5 | 0 |
+| [tests/unit/fieldAdvanceOnce.test.js](../../../tests/unit/fieldAdvanceOnce.test.js) | testing | 47 | 0 | 8 | 3 |
 | [tests/unit/fields.test.js](../../../tests/unit/fields.test.js) | testing | 274 | 0 | 8 | 5 |
 | [tests/unit/fmmParity.test.js](../../../tests/unit/fmmParity.test.js) | testing | 84 | 0 | 5 | 0 |
 | [tests/unit/governance.test.js](../../../tests/unit/governance.test.js) | testing | 208 | 0 | 6 | 0 |
@@ -275,7 +276,7 @@ The generator scanned `292` files from active repository inputs. Individual modu
 | [tests/unit/memoryCulture.test.js](../../../tests/unit/memoryCulture.test.js) | testing | 86 | 0 | 2 | 1 |
 | [tests/unit/multiplex.test.js](../../../tests/unit/multiplex.test.js) | testing | 969 | 0 | 9 | 5 |
 | [tests/unit/multiplexPenta.test.js](../../../tests/unit/multiplexPenta.test.js) | testing | 91 | 0 | 6 | 1 |
-| [tests/unit/multiplexScale.test.js](../../../tests/unit/multiplexScale.test.js) | testing | 77 | 0 | 6 | 1 |
+| [tests/unit/multiplexScale.test.js](../../../tests/unit/multiplexScale.test.js) | testing | 77 | 0 | 6 | 2 |
 | [tests/unit/octree.test.js](../../../tests/unit/octree.test.js) | testing | 151 | 0 | 7 | 1 |
 | [tests/unit/perfKnobs.test.js](../../../tests/unit/perfKnobs.test.js) | testing | 84 | 0 | 3 | 0 |
 | [tests/unit/physics.test.js](../../../tests/unit/physics.test.js) | testing | 60 | 0 | 5 | 4 |

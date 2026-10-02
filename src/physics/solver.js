@@ -1546,11 +1546,10 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     // along the local memory-field gradient (archaeology as a force).
     // ── Field system — advance the medium once per solve ──
   // Ambient seeding toward the FIELD_* sliders + diffusion/decay + advection.
-  // FIELD-ONCE: this call sits inside the per-particle loop, so the medium
-  // advances once per PARTICLE (N× per tick) — the cost behind most multiplex
-  // lag. Kept as the default so behaviour is unchanged until Gem approves the
-  // fix; runtimeConfig.fieldAdvanceOnce = true advances once per solve instead
-  // (after the loop, see below).
+  // FIELD-ONCE (D-016): legacy path only. This call sits inside the
+  // per-particle loop, so with runtimeConfig.fieldAdvanceOnce = false the
+  // medium advances once per PARTICLE (N× per tick). The default (true)
+  // advances once per solve after the loop; see docs/GOLDEN-REBASELINE.md.
   if (fieldsOn && !fieldAdvanceOnce) {
     advanceFields(fieldSystem, dt, WP);
   }
@@ -1949,7 +1948,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
   }
 
-  // FIELD-ONCE (opt-in): advance the medium exactly once per solve.
+  // FIELD-ONCE (default, D-016): advance the medium exactly once per solve.
   if (fieldsOn && fieldAdvanceOnce) {
     advanceFields(fieldSystem, dt, WP);
   }
