@@ -135,7 +135,7 @@
 | 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 5 | 6 | MECHANICS_HELP |
 | 129 | [MOMENTUM](../laws/mechanics/129_MOMENTUM.md) | mechanics | 1 | 3 | 4 | MECHANICS_HELP |
 | 130 | [INERTIA](../laws/mechanics/130_INERTIA.md) | mechanics | 1 | 3 | 3 | MECHANICS_HELP |
-| 131 | [TORQUE](../laws/mechanics/131_TORQUE.md) | mechanics | 1 | 3 | 4 | MECHANICS_HELP |
+| 131 | [TORQUE](../laws/mechanics/131_TORQUE.md) | mechanics | 1 | 3 | 5 | MECHANICS_HELP |
 | 132 | [CONSTRAINT](../laws/mechanics/132_CONSTRAINT.md) | mechanics | 1 | 3 | 1 | MECHANICS_HELP |
 | 133 | [FRAGMENTATION](../laws/mechanics/133_FRAGMENTATION.md) | mechanics | 1 | 2 | 2 | MECHANICS_HELP |
 | 134 | [TOPOLOGY](../laws/mechanics/134_TOPOLOGY.md) | mechanics | 1 | 3 | 2 | MECHANICS_HELP |

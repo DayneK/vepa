@@ -11,7 +11,7 @@ The generator scanned `275` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 29 | 213 | 363 |
 | State | 32 | 278 | 245 |
-| Testing | 141 | 22 | 471 |
+| Testing | 141 | 22 | 472 |
 | Ui | 27 | 93 | 378 |
 
 ## Module list
@@ -119,7 +119,7 @@ The generator scanned `275` files from active repository inputs. Individual modu
 | [src/state/systemLifecycle.js](src/state/systemLifecycle.js) | state | 465 | 23 | 3 | 1 |
 | [src/state/systemVariants.js](src/state/systemVariants.js) | state | 119 | 7 | 1 | 1 |
 | [src/state/worldParams.js](src/state/worldParams.js) | state | 257 | 6 | 1 | 65 |
-| [src/state/worldSave.js](src/state/worldSave.js) | state | 578 | 19 | 5 | 2 |
+| [src/state/worldSave.js](src/state/worldSave.js) | state | 582 | 19 | 5 | 2 |
 | [src/ui/analyticsPanel.js](src/ui/analyticsPanel.js) | ui | 105 | 3 | 1 | 1 |
 | [src/ui/camera.js](src/ui/camera.js) | ui | 300 | 6 | 0 | 0 |
 | [src/ui/civilizationPanel.js](src/ui/civilizationPanel.js) | ui | 138 | 3 | 3 | 2 |
@@ -289,7 +289,7 @@ The generator scanned `275` files from active repository inputs. Individual modu
 | [tests/unit/typeScale.test.js](tests/unit/typeScale.test.js) | testing | 206 | 0 | 3 | 1 |
 | [tests/unit/webgpuContract.test.js](tests/unit/webgpuContract.test.js) | testing | 95 | 0 | 4 | 0 |
 | [tests/unit/worldSave.test.js](tests/unit/worldSave.test.js) | testing | 322 | 0 | 7 | 4 |
-| [tests/unit/worldSaveCompat.test.js](tests/unit/worldSaveCompat.test.js) | testing | 79 | 0 | 5 | 0 |
+| [tests/unit/worldSaveCompat.test.js](tests/unit/worldSaveCompat.test.js) | testing | 98 | 0 | 6 | 1 |
 | [vercel.json](vercel.json) | repository | 35 | 0 | 0 | 0 |
 | [vite.config.js](vite.config.js) | repository | 28 | 1 | 1 | 0 |
 | [vitest.config.js](vitest.config.js) | repository | 14 | 1 | 1 | 0 |

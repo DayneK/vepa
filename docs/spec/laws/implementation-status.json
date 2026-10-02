@@ -3078,7 +3078,8 @@
         "tests/audit/batch_06.test.js",
         "tests/audit/batch_22.test.js",
         "tests/audit/params_batch_09.test.js",
-        "tests/unit/backendArchitecture.test.js"
+        "tests/unit/backendArchitecture.test.js",
+        "tests/unit/worldSaveCompat.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
