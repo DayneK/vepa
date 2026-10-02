@@ -14,3 +14,10 @@ bun.lock
 # Pre-release changelog snapshots (§10.4 step 3). Never committed: they are
 # 200KB+ copies of the ledger and have no history value in the tree.
 CHANGELOG.md.bak-*
+
+# Codey 3.1 control plane (local state, never committed)
+.codey/checkpoint.json
+.codey/lock
+# Agent planning notes are ephemeral (Codey 3.1 §3.2) — kept out of git and out of the verifier's view
+.codey/PLAN-*.md
+.codey/QUESTIONS-*.md
