@@ -5,8 +5,9 @@
 // are NaN-guarded and clamped before being written back to the buffer.
 // ============================================================================
 
-import { PARTICLE_STRIDE, STRIDE_INDEXES as S, DNA_INDEXES as D } from '../../constants.js';
+import { PARTICLE_STRIDE, STRIDE_INDEXES as S } from '../../constants.js';
 import { clamp, nanGuard } from '../../core/numeric.js';
+import { cipherKey } from '../cipherKey.js';
 
 /**
  * Navigation — memory gradient steering.
@@ -38,20 +39,11 @@ function applyNavigation(view, iBase, jBase, dx, dy, dz, dist, k) {
 function applyEncryption(view, iBase, k) {
   const signal = view[iBase + S.SIGNAL];
   if (!(signal > 0.01)) return null;
-  const key = cipherKeyFromStride(view, iBase);
+  const key = cipherKey(view, iBase);
   view[iBase + S.PHASE_2] = nanGuard((view[iBase + S.PHASE_2] || 0) + (key / 8) * k);
   const enc = signal * (0.6 + 0.4 * Math.sin((key / 8) * Math.PI * 2));
   view[iBase + S.SIGNAL] = clamp(nanGuard(enc), 0, 10);
   return null;
 }
 
-/** Fold TUNING_CH1-4 into a 0..7 cipher key (shared with laws.js). */
-function cipherKeyFromStride(view, base) {
-  const d = S.DNA_CACHE_START;
-  const sum = (view[base + d + D.TUNING_CH1] || 0)
-    + (view[base + d + D.TUNING_CH2] || 0)
-    + (view[base + d + D.TUNING_CH3] || 0)
-    + (view[base + d + D.TUNING_CH4] || 0);
-  return Math.floor(Math.max(0, Math.min(1, sum / 4)) * 7);
-}
 export { applyNavigation, applyEncryption };

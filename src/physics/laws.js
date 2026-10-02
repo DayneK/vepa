@@ -15,6 +15,9 @@ import { isSet } from '../state/lawState.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
 import { getDNAFloat } from '../dna/dnaBuffer.js';
 import { clamp } from '../core/numeric.js';
+// CA-DUP1: the single accretion-pair predicate lives in mergePhysics.js.
+import { isAccretionPair } from './mergePhysics.js';
+import { cipherKey } from './cipherKey.js';
 import { readDNAParam as readSpeciesDNAParam, writeDNAParam as writeSpeciesDNAParam } from '../dna/codec.js';
 
 /** Live world-param state (WORLD panel sliders). */
@@ -33,22 +36,6 @@ const BOND_SLOTS = [
   S.BOND_PARTNER_1, S.BOND_PARTNER_2, S.BOND_PARTNER_3,
   S.BOND_PARTNER_4, S.BOND_PARTNER_5, S.BOND_PARTNER_6,
 ];
-
-function isAccretionLink(view, iBase, jBase, stride) {
-  const iIdx = iBase / stride;
-  const jIdx = jBase / stride;
-  for (let iSlot = 0; iSlot < BOND_SLOTS.length; iSlot++) {
-    const iBit = 1 << iSlot;
-    if (view[iBase + BOND_SLOTS[iSlot]] !== jIdx
-      || !(view[iBase + S.ACCR_LINK_MASK] & iBit)) continue;
-    for (let jSlot = 0; jSlot < BOND_SLOTS.length; jSlot++) {
-      const jBit = 1 << jSlot;
-      if (view[jBase + BOND_SLOTS[jSlot]] === iIdx
-        && (view[jBase + S.ACCR_LINK_MASK] & jBit)) return true;
-    }
-  }
-  return false;
-}
 
 /** HSL → RGB (0-1 channels) — used by PHENOTYPE gene expression. */
 function hslToRgb(h, s, l) {
@@ -621,15 +608,8 @@ function channelMatch(receiverDna, senderDna) {
  * delivered signal into attraction force + energy, filtered by TUNING_CH*.
  * @returns {{ax:number,ay:number,az:number}|null} response force (or null)
  */
-/** ENCRYPTION key (v4.6.29) — folded from the TUNING_CH1-4 channels. */
-export function cipherKey(view, base) {
-  const d = S.DNA_CACHE_START;
-  const sum = (view[base + d + D.TUNING_CH1] || 0)
-    + (view[base + d + D.TUNING_CH2] || 0)
-    + (view[base + d + D.TUNING_CH3] || 0)
-    + (view[base + d + D.TUNING_CH4] || 0);
-  return Math.floor(Math.max(0, Math.min(1, sum / 4)) * 7);
-}
+/** ENCRYPTION key: see ./cipherKey.js (re-exported here for API compatibility). */
+export { cipherKey };
 
 export function applySignalExchange(lawState, view, iBase, jBase, dx, dy, dz, dist, dnaI, dnaJ, dt) {
   if (!isSet(lawState, LAW_INDEXES.COMMS)) return null; // COMMS=52
@@ -940,7 +920,7 @@ export function applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, syn
   const jBondCount = view[jBase + S.BOND_COUNT];
 
   let alreadyBonded = false;
-  const accretionLink = isAccretionLink(view, iBase, jBase, stride);
+  const accretionLink = isAccretionPair(view, iBase, jBase, stride);
   for (const slot of BOND_SLOTS) {
     if (view[iBase + slot] === jIdx || view[jBase + slot] === iIdx) {
       alreadyBonded = true;
