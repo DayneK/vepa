@@ -8,8 +8,8 @@ import { isSet, toggle as toggleLaw } from '../state/lawState.js';
 import { MECHANICS_HELP } from '../physics/lawgroups/mechanicsHelp.js';
 import { MECHANICS_ICONS } from './mechanicsIcons.js';
 
-// LAW_HELP_PATCHES + MECHANICS_HELP are merged into LAW_HELP_DB canonically in
-// constants.js ("Canonical help merge"), so every consumer sees the full table.
+// LAW_HELP_DB (src/constants/help.js) is the single canonical help table; the
+// former patch and Mechanics overlays were folded into it (CG-1).
 
 let infoEl = null;
 let currentLawIdx = -1;

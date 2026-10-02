@@ -10,7 +10,7 @@ This document defines ownership boundaries for generated artifacts and historica
 | --- | --- | --- |
 | Runtime behavior | `src/` | Edit source modules and tests; generated documents must not become a runtime dependency. |
 | Technical specification | `scripts/generate-spec.mjs` plus live source inputs | `docs/spec/` is generated. Run `npm run spec:generate`; never hand-edit individual generated records. `npm run spec:check` compares expected paths and bytes without writing. |
-| Law metadata | `src/constants.js`, `src/state/lawHelpPatches.js`, and Mechanics help metadata | Canonical runtime metadata remains authoritative; supplemental help is reported as supplemental until ownership is consolidated. |
+| Law metadata | `src/constants.js` (help in `src/constants/help.js`, the single canonical LAW_HELP_DB) and Mechanics help metadata | Canonical runtime metadata remains authoritative; supplemental help is reported as supplemental until ownership is consolidated. |
 | Audit evidence | `docs/audit/` | Retain until each duplicate corpus has a documented producer, input set, and historical purpose. Audit prose is evidence, not proof of runtime behavior. |
 | Export snapshots | `exports/` | Derived review artifacts only. Regenerate with the documented scripts; do not use concatenations as an alternate source tree. |
 

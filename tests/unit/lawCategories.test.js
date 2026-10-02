@@ -16,7 +16,6 @@ import { createParticleBuffer } from '../../src/state/particleBuffer.js';
 import { createLawState, set, isSet } from '../../src/state/lawState.js';
 import { createDNABuffer, loadDefaults, setDNAFloat, getDNAFloat } from '../../src/dna/dnaBuffer.js';
 import { solve } from '../../src/physics/solver.js';
-import { LAW_HELP_PATCHES } from '../../src/state/lawHelpPatches.js';
 
 const S = STRIDE_INDEXES;
 const WORLD = 2000;
@@ -90,7 +89,6 @@ describe('New law categories', () => {
         const name = NAME_BY_IDX[idx];
         const help = {
           ...(LAW_HELP_DB[name] || {}),
-          ...(LAW_HELP_PATCHES[name] || {}),
           ...(catName === 'mechanics' ? (MECHANICS_HELP[name] || {}) : {}),
         };
         expect(Object.keys(help).length ? help : undefined, name).toBeDefined();

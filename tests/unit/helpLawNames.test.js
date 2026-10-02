@@ -3,7 +3,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { LAW_INDEXES, LAW_PARAMETERS } from '../../src/constants/laws.js';
-import { LAW_HELP_DB, LAW_HELP_PATCHES, MECHANICS_HELP, MECHANICS_PARAMETERS } from '../../src/constants/help.js';
+import { LAW_HELP_DB, MECHANICS_HELP, MECHANICS_PARAMETERS } from '../../src/constants/help.js';
 import { MECHANICS_ICONS } from '../../src/ui/mechanicsIcons.js';
 
 const KNOWN = new Set(Object.keys(LAW_INDEXES));
@@ -18,7 +18,7 @@ function iconKeys(file, objName) {
 }
 
 describe('help / icon / tooltip law names (LC-1)', () => {
-  const tables = { LAW_HELP_DB, LAW_HELP_PATCHES, MECHANICS_HELP, MECHANICS_PARAMETERS, MECHANICS_ICONS };
+  const tables = { LAW_HELP_DB, MECHANICS_HELP, MECHANICS_PARAMETERS, MECHANICS_ICONS };
   for (const [name, table] of Object.entries(tables)) {
     it(`${name} only names laws in LAW_INDEXES`, () => {
       expect(Object.keys(table).filter((k) => !KNOWN.has(k))).toEqual([]);
@@ -37,7 +37,7 @@ describe('help / icon / tooltip law names (LC-1)', () => {
   });
   it('retired laws are absent from LAW_INDEXES and not cited in help prose', () => {
     for (const r of RETIRED) expect(KNOWN.has(r)).toBe(false);
-    const prose = JSON.stringify([LAW_HELP_DB, LAW_HELP_PATCHES, MECHANICS_HELP]);
+    const prose = JSON.stringify([LAW_HELP_DB, MECHANICS_HELP]);
     for (const r of RETIRED) expect(prose).not.toMatch(new RegExp(`\\b${r}\\b`));
   });
 });
