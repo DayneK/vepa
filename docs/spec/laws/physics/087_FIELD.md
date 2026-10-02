@@ -19,18 +19,18 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | Uniform electric field drift along the particle's polarity. |
-| EXPLANATION | Confirmed batch-14: every polarized particle receives a constant uniform acceleration (same on all three axes) along its POLARITY sign — positive drifts one way, negative the other. Stored CHARGE scales the drift strength, so a charged particle feels the field harder. |
-| SYSTEM | POLARITY ≠ 0: acceleration = POLARITY × k × (1 + \|CHARGE\| × 0.5) on each axis. Combined with CHARGE_LAW it separates species by polarity into opposing drift lanes. |
-| ADVANCED | FIELD is the central simulation-field gradient; ELECTRIC_FIELD is the separate electromagnetic polarity drift. |
+| HINT | Central field: a gentle pull toward the centre of the dish. |
+| EXPLANATION | Every particle is pulled toward the world centre; the pull grows with distance up to 100 units. It does not depend on POLARITY or CHARGE. The polarity-directed electric drift is the separate ELECTRIC_FIELD law. |
+| SYSTEM | Acceleration toward the world centre = k × min(dist, 100) / 100 (k = 0.02 × synergy, capped at 50). It is applied in the neighbour pass, so its strength also scales with the local neighbour count. |
+| ADVANCED | FIELD is the central simulation-field gradient only; ELECTRIC_FIELD is the separate electromagnetic polarity drift (decision D-005, 2026-10-03). |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/physicsLaws.js](../../../../src/physics/lawgroups/physicsLaws.js), [src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js)
+[src/physics/lawgroups/physicsLaws.js](../../../../src/physics/lawgroups/physicsLaws.js), [src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_14.test.js](../../../../tests/audit/batch_14.test.js), [tests/unit/fields.test.js](../../../../tests/unit/fields.test.js), [tests/unit/launchModal.test.js](../../../../tests/unit/launchModal.test.js), [tests/unit/lawCategories.test.js](../../../../tests/unit/lawCategories.test.js)
+- Tests: [tests/audit/batch_14.test.js](../../../../tests/audit/batch_14.test.js), [tests/unit/electricFieldSplit.test.js](../../../../tests/unit/electricFieldSplit.test.js), [tests/unit/fields.test.js](../../../../tests/unit/fields.test.js), [tests/unit/launchModal.test.js](../../../../tests/unit/launchModal.test.js), [tests/unit/lawCategories.test.js](../../../../tests/unit/lawCategories.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](../../../audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/54_FIELD.md](../../../audit/laws/a3/stage-1/54_FIELD.md), [docs/audit/laws/a3/stage-2/54_FIELD.md](../../../audit/laws/a3/stage-2/54_FIELD.md), [docs/audit/laws/a3/stage-3/54_FIELD.md](../../../audit/laws/a3/stage-3/54_FIELD.md)
 
 ## Interpretation boundary

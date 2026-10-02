@@ -9,7 +9,7 @@
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
 | 53 | [CHARGE_LAW](../../electromagnetism/053_CHARGE_LAW.md) | wired | LAW_HELP_DB | src/physics/laws.js |
-| 54 | [ELECTRIC_FIELD](../../electromagnetism/054_ELECTRIC_FIELD.md) | metadata-only | LAW_HELP_DB | not found |
+| 54 | [ELECTRIC_FIELD](../../electromagnetism/054_ELECTRIC_FIELD.md) | wired | LAW_HELP_DB | src/physics/laws.js |
 | 55 | [CURRENT](../../electromagnetism/055_CURRENT.md) | wired | LAW_HELP_DB | src/physics/laws.js |
 | 56 | [RESISTANCE](../../electromagnetism/056_RESISTANCE.md) | wired | LAW_HELP_DB | src/physics/laws.js |
 | 57 | [CAPACITANCE](../../electromagnetism/057_CAPACITANCE.md) | wired | LAW_HELP_DB | src/physics/laws.js |

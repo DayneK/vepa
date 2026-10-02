@@ -14,7 +14,7 @@ The law catalog is generated from LAW_INDEXES, LAW_CATEGORIES and associated met
 | Chemistry | YELLOW | 16 | 16 | 16 |
 | Thermodynamics | GREEN | 16 | 16 | 16 |
 | Metaphysics | TEAL | 16 | 16 | 16 |
-| Electromagnetism | BLUE | 16 | 15 | 16 |
+| Electromagnetism | BLUE | 16 | 16 | 16 |
 | Information | VIOLET | 16 | 16 | 16 |
 | Quantum | PURPLE | 16 | 16 | 16 |
 

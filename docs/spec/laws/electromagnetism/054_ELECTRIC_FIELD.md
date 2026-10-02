@@ -7,8 +7,8 @@
 | Index | 54 |
 | Category | electromagnetism |
 | Color | BLUE |
-| Status | metadata-only |
-| Solver gate references | 0 |
+| Status | wired |
+| Solver gate references | 1 |
 | Help source | LAW_HELP_DB |
 
 ## Parameters
@@ -26,11 +26,11 @@
 
 ## Implementation evidence
 
-No implementation file found.
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: No test file mentions this law name.
+- Tests: [tests/audit/batch_14.test.js](../../../../tests/audit/batch_14.test.js), [tests/unit/electricFieldSplit.test.js](../../../../tests/unit/electricFieldSplit.test.js), [tests/unit/lawCategories.test.js](../../../../tests/unit/lawCategories.test.js)
 - Audits: No filename-matched audit record found.
 
 ## Interpretation boundary
