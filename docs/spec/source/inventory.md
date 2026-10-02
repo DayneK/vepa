@@ -229,7 +229,7 @@ The generator scanned `286` files from active repository inputs. Individual modu
 | [tests/unit/continuity.test.js](../../../tests/unit/continuity.test.js) | testing | 308 | 0 | 3 | 1 |
 | [tests/unit/createEngine.test.js](../../../tests/unit/createEngine.test.js) | testing | 31 | 0 | 7 | 0 |
 | [tests/unit/cultureTransmission.test.js](../../../tests/unit/cultureTransmission.test.js) | testing | 228 | 0 | 2 | 0 |
-| [tests/unit/dataPanels.test.js](../../../tests/unit/dataPanels.test.js) | testing | 327 | 0 | 8 | 0 |
+| [tests/unit/dataPanels.test.js](../../../tests/unit/dataPanels.test.js) | testing | 328 | 0 | 8 | 0 |
 | [tests/unit/deepTime.test.js](../../../tests/unit/deepTime.test.js) | testing | 129 | 0 | 4 | 0 |
 | [tests/unit/dna.test.js](../../../tests/unit/dna.test.js) | testing | 79 | 0 | 3 | 0 |
 | [tests/unit/dnaCacheCodec.test.js](../../../tests/unit/dnaCacheCodec.test.js) | testing | 53 | 0 | 6 | 0 |
