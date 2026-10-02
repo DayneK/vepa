@@ -27,6 +27,7 @@
         "tests/unit/auditSignoff.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/computeEngines.test.js",
+        "tests/unit/gravEngineAlias.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/multiplex.test.js",
@@ -87,6 +88,7 @@
         "tests/audit/params_batch_03.test.js",
         "tests/audit/params_batch_04.test.js",
         "tests/audit/params_batch_09.test.js",
+        "tests/unit/helpLawNames.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [],

@@ -22,7 +22,7 @@
 | HINT | Torque turns relative motion around a contact vector. |
 | EXPLANATION | Tangential relative motion becomes a bounded rotational impulse. |
 | SYSTEM | The cross product of separation and relative velocity supplies the impulse. |
-| ADVANCED | It complements the world-centre ROTATION law. |
+| ADVANCED | Its impulse is bounded so contact spin cannot run away. |
 
 ## Implementation evidence
 

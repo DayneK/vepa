@@ -4,9 +4,9 @@
 
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 17 | NONE |
+| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 18 | NONE |
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 7 | NONE |
-| 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 6 | NONE |
+| 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 7 | NONE |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | NONE |
 | 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 8 | 14 | NONE |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 4 | NONE |
