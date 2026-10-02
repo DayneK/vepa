@@ -334,7 +334,7 @@ async function handleTick(msg) {
     }
   }
 
-  // Run the exact CPU solver, optionally consuming the completed GPU force
+  // Run the reference CPU solver, optionally consuming the completed GPU force
   // pre-pass. A null result is the normal CPU fallback.
   solve(
     particleView,

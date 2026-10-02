@@ -11,7 +11,7 @@
 // The interaction list for a cell = children of the parent's 26 neighbours,
 // minus the cell's own 26 neighbours → at most 189 well-separated cells.
 //
-// Approximations vs. the exact pair wise solver:
+// Approximations vs. the reference pairwise solver:
 //  - Far-field forces use the quadrupole series truncated at order 2.
 //  - Per-pair DNA modifiers (FORCE, TIDAL, HIDDEN_MASS) are NOT applied
 //    to far-field contributions — only the near-field direct sum sees them.

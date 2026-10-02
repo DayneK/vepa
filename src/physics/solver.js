@@ -469,7 +469,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   // one Barnes–Hut octree query per particle (O(N log N)); the tree is built
   // once per tick over all alive, positive-mass particles. Far-field
   // aggregates drop per-pair DNA modifiers (FORCE/TIDAL/HIDDEN_MASS) and the
-  // star-collapse boost — documented approximation; 'exact' stays the default.
+  // star-collapse boost — documented approximation; 'reference' stays the default.
   _bhActive = false;
   let _fmmActive = false;
   if (active[LAW_INDEXES.GRAV] && runtimeConfig.gravEngine === 'fmm' && particleCount > 0) {
@@ -522,7 +522,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   let _gpuFx = null, _gpuFy = null, _gpuFz = null;
   // The GPU force kernel is a separate opt-in backend. The synchronous solver
   // must retain the complete law semantics (DNA modifiers and non-GRAV laws),
-  // so do not silently replace its exact pairwise dispatch based on the UI
+  // so do not silently replace its reference pairwise dispatch based on the UI
   // compute preference.
   const _useGPU = !!gpuForces;
   if (_useGPU && !bhSoloGravity) {
@@ -669,7 +669,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       // ── Gravity ──
       // 'bh' engine: gravity was already applied above from the octree
-      // far-field query; skip the per-pair exact term to avoid double counting.
+      // far-field query; skip the per-pair reference term to avoid double counting.
       if (active[LAW_INDEXES.GRAV] && !_bhActive && !_fmmActive && !_useGPU) {
         const gravSynergy = syn[LAW_INDEXES.GRAV];
         const gravForce = applyGravity(iBase, jBase, dx, dy, dz, dist, effG * gravSynergy, _gravOut);

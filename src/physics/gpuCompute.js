@@ -4,7 +4,7 @@
 // Offloads the pairwise force hot loop to the GPU. Architecture:
 //
 //   1. CPU builds neighbour pairs (flattened list of (particle_i, particle_j))
-//      from the spatial grid — same data the exact solver iterates.
+//      from the spatial grid — same data the reference solver iterates.
 //   2. CPU uploads: particle buffer (pos, mass), neighbour pairs, law state.
 //   3. GPU compute shader: one invocation per pair, computing gravity + collision
 //      forces and atomically accumulating into per-particle force buffers.
@@ -13,7 +13,7 @@
 // The CPU still handles: collision/contact semantics, per-particle laws (PLANETARY, CHAOS, etc.), lifecycle,
 // integration, DNA-dependent laws — everything that is not embarrassingly parallel.
 //
-// Fallback: if WebGPU is unavailable, the exact grid solver is used unchanged.
+// Fallback: if WebGPU is unavailable, the reference CPU grid solver is used unchanged.
 // ============================================================================
 
 const OX = 0, OY = 1, OZ = 2, MASS = 6, RADIUS = 56;
@@ -22,7 +22,7 @@ const PARTICLE_STRIDE = 100;
 // ── WGSL compute shader ──
 // One workgroup per grid cell, one invocation per neighbour pair.
 // Each invocation loads particle_i and particle_j from storage buffers,
-// computes gravity (collision remains on the exact CPU path), and atomically
+// computes gravity (collision remains on the reference CPU path), and atomically
 // accumulates into force_i.
 const COMPUTE_SHADER = /* wgsl */ `
 struct Particle {
@@ -96,7 +96,7 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
   let gfz = -gf * rz;
 
   // Optional collision force (normally disabled by the worker because the
-  // exact CPU solver owns CONTACT/COLL semantics).
+  // reference CPU solver owns CONTACT/COLL semantics).
   let dist = d2 * inv_d; // d2 / sqrt(d2) = sqrt(d2) ≈ dist
   let combined_radius = particles[pi].radius + particles[pj].radius;
   let overlap = combined_radius - dist;

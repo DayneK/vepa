@@ -116,7 +116,7 @@ function wrapCoord(v, ws) {
 
 /**
  * Build (rebuild) the octree from the flat particle buffer.
- * Skips dead and zero-mass particles, matching the exact solver's filters.
+ * Skips dead and zero-mass particles, matching the reference solver's filters.
  * Returns the tree for chaining.
  */
 export function buildOctree(tree, view, stride, count, worldSize) {
