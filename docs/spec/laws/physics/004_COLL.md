@@ -9,7 +9,7 @@
 | Color | RED |
 | Status | wired |
 | Solver gate references | 2 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
+| HINT | Physical collisions with momentum exchange. |
+| EXPLANATION | Particles bounce off each other based on ELASTICITY DNA. Overlapping particles are pushed apart. Standalone from ACCR — turn ACCR off to get pure elastic bouncing without mass fusion. |
+| SYSTEM | Impulse-based collision response with mass-weighted velocity exchange. ELASTICITY controls bounciness. Pairs that are fusing under ACCR coalesce instead of bouncing. |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/fields.js](src/physics/fields.js), [src/physics/gpuCompute.js](src/physics/gpuCompute.js), [src/physics/interactionSpace.js](src/physics/interactionSpace.js), [src/physics/lawgroups/mechanicsHelp.js](src/physics/lawgroups/mechanicsHelp.js), [src/physics/lawgroups/mechanicsLaws.js](src/physics/lawgroups/mechanicsLaws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js), [src/worker/physics.worker.js](src/worker/physics.worker.js)
+[src/physics/fields.js](../../../../src/physics/fields.js), [src/physics/gpuCompute.js](../../../../src/physics/gpuCompute.js), [src/physics/interactionSpace.js](../../../../src/physics/interactionSpace.js), [src/physics/lawgroups/mechanicsHelp.js](../../../../src/physics/lawgroups/mechanicsHelp.js), [src/physics/lawgroups/mechanicsLaws.js](../../../../src/physics/lawgroups/mechanicsLaws.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/synergy.js](../../../../src/physics/synergy.js), [src/worker/physics.worker.js](../../../../src/worker/physics.worker.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_02.test.js](tests/audit/batch_02.test.js), [tests/audit/params_batch_12.test.js](tests/audit/params_batch_12.test.js), [tests/unit/auditSignoff.test.js](tests/unit/auditSignoff.test.js), [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js), [tests/unit/codex.test.js](tests/unit/codex.test.js), [tests/unit/continuity.test.js](tests/unit/continuity.test.js), [tests/unit/fields.test.js](tests/unit/fields.test.js), [tests/unit/lawGating.test.js](tests/unit/lawGating.test.js), [tests/unit/mechanics.test.js](tests/unit/mechanics.test.js), [tests/unit/provenance.test.js](tests/unit/provenance.test.js), [tests/unit/quantumMacro.test.js](tests/unit/quantumMacro.test.js), [tests/unit/structures.test.js](tests/unit/structures.test.js), [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js), [tests/unit/tidalBloom.test.js](tests/unit/tidalBloom.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/04_COLL.md](docs/audit/laws/a3/stage-1/04_COLL.md), [docs/audit/laws/a3/stage-2/04_COLL.md](docs/audit/laws/a3/stage-2/04_COLL.md), [docs/audit/laws/a3/stage-3/04_COLL.md](docs/audit/laws/a3/stage-3/04_COLL.md)
+- Tests: [tests/audit/batch_02.test.js](../../../../tests/audit/batch_02.test.js), [tests/audit/params_batch_12.test.js](../../../../tests/audit/params_batch_12.test.js), [tests/unit/auditSignoff.test.js](../../../../tests/unit/auditSignoff.test.js), [tests/unit/backendArchitecture.test.js](../../../../tests/unit/backendArchitecture.test.js), [tests/unit/codex.test.js](../../../../tests/unit/codex.test.js), [tests/unit/continuity.test.js](../../../../tests/unit/continuity.test.js), [tests/unit/fields.test.js](../../../../tests/unit/fields.test.js), [tests/unit/lawGating.test.js](../../../../tests/unit/lawGating.test.js), [tests/unit/mechanics.test.js](../../../../tests/unit/mechanics.test.js), [tests/unit/provenance.test.js](../../../../tests/unit/provenance.test.js), [tests/unit/quantumMacro.test.js](../../../../tests/unit/quantumMacro.test.js), [tests/unit/structures.test.js](../../../../tests/unit/structures.test.js), [tests/unit/synergyCache.test.js](../../../../tests/unit/synergyCache.test.js), [tests/unit/tidalBloom.test.js](../../../../tests/unit/tidalBloom.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](../../../audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/04_COLL.md](../../../audit/laws/a3/stage-1/04_COLL.md), [docs/audit/laws/a3/stage-2/04_COLL.md](../../../audit/laws/a3/stage-2/04_COLL.md), [docs/audit/laws/a3/stage-3/04_COLL.md](../../../audit/laws/a3/stage-3/04_COLL.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

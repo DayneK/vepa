@@ -9,7 +9,7 @@
 | Color | RED |
 | Status | wired |
 | Solver gate references | 2 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
+| HINT | Velocity-dependent motion damping. |
+| EXPLANATION | Slows particles proportional to their VISCOSITY DNA parameter. Higher viscosity = more damping. |
+| SYSTEM | Prevents runaway velocities. Combined with friction (always active) stabilizes the simulation. |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_01.test.js](tests/audit/batch_01.test.js), [tests/audit/params_batch_04.test.js](tests/audit/params_batch_04.test.js), [tests/audit/params_batch_08.test.js](tests/audit/params_batch_08.test.js), [tests/audit/params_batch_10.test.js](tests/audit/params_batch_10.test.js), [tests/unit/lawGating.test.js](tests/unit/lawGating.test.js), [tests/unit/lawGraph.test.js](tests/unit/lawGraph.test.js), [tests/unit/tidalBloom.test.js](tests/unit/tidalBloom.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](docs/audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/01_DRAG.md](docs/audit/laws/a3/stage-1/01_DRAG.md), [docs/audit/laws/a3/stage-2/01_DRAG.md](docs/audit/laws/a3/stage-2/01_DRAG.md), [docs/audit/laws/a3/stage-3/01_DRAG.md](docs/audit/laws/a3/stage-3/01_DRAG.md)
+- Tests: [tests/audit/batch_01.test.js](../../../../tests/audit/batch_01.test.js), [tests/audit/params_batch_04.test.js](../../../../tests/audit/params_batch_04.test.js), [tests/audit/params_batch_08.test.js](../../../../tests/audit/params_batch_08.test.js), [tests/audit/params_batch_10.test.js](../../../../tests/audit/params_batch_10.test.js), [tests/unit/lawGating.test.js](../../../../tests/unit/lawGating.test.js), [tests/unit/lawGraph.test.js](../../../../tests/unit/lawGraph.test.js), [tests/unit/tidalBloom.test.js](../../../../tests/unit/tidalBloom.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/physics.md](../../../audit/laws/a3/physics.md), [docs/audit/laws/a3/stage-1/01_DRAG.md](../../../audit/laws/a3/stage-1/01_DRAG.md), [docs/audit/laws/a3/stage-2/01_DRAG.md](../../../audit/laws/a3/stage-2/01_DRAG.md), [docs/audit/laws/a3/stage-3/01_DRAG.md](../../../audit/laws/a3/stage-3/01_DRAG.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

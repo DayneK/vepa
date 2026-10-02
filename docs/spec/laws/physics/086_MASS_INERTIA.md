@@ -9,7 +9,7 @@
 | Color | RED |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,14 +19,14 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
-| ADVANCED | MISSING |
+| HINT | Mass resists changes in motion. |
+| EXPLANATION | The mass-inertia primitive attenuates accumulated acceleration according to particle MASS, so heavier particles respond less to the same force. |
+| SYSTEM | Acceleration is scaled by 1 / (1 + MASS x inertia coefficient), with finite-value and force bounds preserved. |
+| ADVANCED | The primitive is exported from the Physics lawgroup; the solver audit records whether its law gate is wired separately. |
 
 ## Implementation evidence
 
-[src/physics/solver.js](src/physics/solver.js)
+[src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
@@ -35,4 +35,4 @@
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

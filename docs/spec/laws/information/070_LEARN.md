@@ -9,7 +9,7 @@
 | Color | VIOLET |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
+| HINT | Learning: particles match the velocity of their neighbors. |
+| EXPLANATION | Confirmed batch-18: velocity alignment (boids-style) — each particle steers toward the average motion of nearby particles; both converge via the pair loop. |
+| SYSTEM | v1 += (v2 − v1)·k·0.1. +STIGMERGY ×1.3 learned trail-following, +SYMBOL ×1.4 species schooling. Creates schooling/flocking. |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/synergy.js](../../../../src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_18.test.js](tests/audit/batch_18.test.js), [tests/unit/lawGraph.test.js](tests/unit/lawGraph.test.js), [tests/unit/tidalBloom.test.js](tests/unit/tidalBloom.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/70_LEARN.md](docs/audit/laws/a3/stage-1/70_LEARN.md), [docs/audit/laws/a3/stage-1/73_PREDICT.md](docs/audit/laws/a3/stage-1/73_PREDICT.md), [docs/audit/laws/a3/stage-2/70_LEARN.md](docs/audit/laws/a3/stage-2/70_LEARN.md), [docs/audit/laws/a3/stage-2/73_PREDICT.md](docs/audit/laws/a3/stage-2/73_PREDICT.md), [docs/audit/laws/a3/stage-3/70_LEARN.md](docs/audit/laws/a3/stage-3/70_LEARN.md), [docs/audit/laws/a3/stage-3/73_PREDICT.md](docs/audit/laws/a3/stage-3/73_PREDICT.md)
+- Tests: [tests/audit/batch_18.test.js](../../../../tests/audit/batch_18.test.js), [tests/unit/lawGraph.test.js](../../../../tests/unit/lawGraph.test.js), [tests/unit/tidalBloom.test.js](../../../../tests/unit/tidalBloom.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](../../../audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/70_LEARN.md](../../../audit/laws/a3/stage-1/70_LEARN.md), [docs/audit/laws/a3/stage-1/73_PREDICT.md](../../../audit/laws/a3/stage-1/73_PREDICT.md), [docs/audit/laws/a3/stage-2/70_LEARN.md](../../../audit/laws/a3/stage-2/70_LEARN.md), [docs/audit/laws/a3/stage-2/73_PREDICT.md](../../../audit/laws/a3/stage-2/73_PREDICT.md), [docs/audit/laws/a3/stage-3/70_LEARN.md](../../../audit/laws/a3/stage-3/70_LEARN.md), [docs/audit/laws/a3/stage-3/73_PREDICT.md](../../../audit/laws/a3/stage-3/73_PREDICT.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

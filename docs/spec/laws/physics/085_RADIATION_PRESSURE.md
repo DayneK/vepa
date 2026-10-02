@@ -9,7 +9,7 @@
 | Color | RED |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,14 +19,14 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
-| ADVANCED | MISSING |
+| HINT | Radiant energy pushes matter outward. |
+| EXPLANATION | Energetic bodies transfer outward momentum to nearby particles, with pressure decreasing as distance increases. |
+| SYSTEM | ENERGY, ELECTRIC_ENERGY, and STORED_ENERGY contribute to a bounded inverse-square outward force. |
+| ADVANCED | PHASE_RADIATION emits energy; RADIATION_PRESSURE converts available energy into momentum transfer. |
 
 ## Implementation evidence
 
-[src/physics/solver.js](src/physics/solver.js)
+[src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
@@ -35,4 +35,4 @@
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

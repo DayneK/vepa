@@ -2,7 +2,7 @@
 
 # Simulation: Solver
 
-The solver ([src/physics/solver.js](src/physics/solver.js)) runs the per-tick physics loop:
+The solver ([src/physics/solver.js](../../../src/physics/solver.js)) runs the per-tick physics loop:
 
 1. Build or reuse the neighbor list via the spatial grid.
 2. Apply active pairwise law families (gravity, drag, collision, bonds, EM, etc.).

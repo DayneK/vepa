@@ -8,21 +8,21 @@
 
 | Index | Law | Status | Help | Implementation |
 | --- | --- | --- | --- | --- |
-| 66 | [MEMORY](../../information/066_MEMORY.md) | wired | NONE | src/physics/lawgroups/infoLaws.js |
-| 67 | [PATTERN](../../information/067_PATTERN.md) | wired | NONE | src/physics/laws.js |
-| 68 | [STIGMERGY](../../information/068_STIGMERGY.md) | wired | NONE | src/physics/laws.js |
-| 69 | [SIGNAL_BOOST](../../information/069_SIGNAL_BOOST.md) | wired | NONE | src/physics/laws.js |
-| 70 | [LEARN](../../information/070_LEARN.md) | wired | NONE | src/physics/laws.js |
-| 71 | [SYMBOL](../../information/071_SYMBOL.md) | wired | NONE | src/physics/laws.js |
-| 72 | [METRIC](../../information/072_METRIC.md) | wired | NONE | src/physics/laws.js |
-| 73 | [PREDICT](../../information/073_PREDICT.md) | wired | NONE | src/physics/laws.js |
-| 74 | [CODE](../../information/074_CODE.md) | wired | NONE | src/physics/laws.js |
-| 75 | [PROTOCOL](../../information/075_PROTOCOL.md) | wired | NONE | src/physics/laws.js |
-| 76 | [FEEDBACK](../../information/076_FEEDBACK.md) | wired | NONE | src/physics/laws.js |
-| 77 | [LANGUAGE](../../information/077_LANGUAGE.md) | wired | NONE | src/physics/laws.js |
-| 78 | [CULTURE](../../information/078_CULTURE.md) | wired | NONE | src/physics/laws.js |
-| 81 | [HISTORY](../../information/081_HISTORY.md) | wired | NONE | src/physics/laws.js |
-| 110 | [NAVIGATION](../../information/110_NAVIGATION.md) | wired | NONE | src/physics/solver.js |
-| 111 | [ENCRYPTION](../../information/111_ENCRYPTION.md) | wired | NONE | src/physics/laws.js |
+| 66 | [MEMORY](../../information/066_MEMORY.md) | wired | LAW_HELP_DB | src/physics/lawgroups/infoLaws.js |
+| 67 | [PATTERN](../../information/067_PATTERN.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 68 | [STIGMERGY](../../information/068_STIGMERGY.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 69 | [SIGNAL_BOOST](../../information/069_SIGNAL_BOOST.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 70 | [LEARN](../../information/070_LEARN.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 71 | [SYMBOL](../../information/071_SYMBOL.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 72 | [METRIC](../../information/072_METRIC.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 73 | [PREDICT](../../information/073_PREDICT.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 74 | [CODE](../../information/074_CODE.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 75 | [PROTOCOL](../../information/075_PROTOCOL.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 76 | [FEEDBACK](../../information/076_FEEDBACK.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 77 | [LANGUAGE](../../information/077_LANGUAGE.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 78 | [CULTURE](../../information/078_CULTURE.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 81 | [HISTORY](../../information/081_HISTORY.md) | wired | LAW_HELP_DB | src/physics/laws.js |
+| 110 | [NAVIGATION](../../information/110_NAVIGATION.md) | wired | LAW_HELP_DB | src/physics/solver.js |
+| 111 | [ENCRYPTION](../../information/111_ENCRYPTION.md) | wired | LAW_HELP_DB | src/physics/laws.js |
 
 The category roster is a classification contract. Behavior evidence is in individual records and [traceability/laws.md](../../../traceability/laws.md).

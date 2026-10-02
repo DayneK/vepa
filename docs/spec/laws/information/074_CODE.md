@@ -9,7 +9,7 @@
 | Color | VIOLET |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
+| HINT | Code: close contact blends DNA between particles. |
+| EXPLANATION | Confirmed batch-19: on close contact (≤ 4 units) particles exchange DNA cache values at sampled loci — horizontal information transfer. |
+| SYSTEM | Blends 7 sampled loci (every 6th) toward the average at rate k·0.01. +LANGUAGE ×1.5 words spread genes. Moves traits through the population. |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/synergy.js](../../../../src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_19.test.js](tests/audit/batch_19.test.js), [tests/unit/codex.test.js](tests/unit/codex.test.js), [tests/unit/synergyCache.test.js](tests/unit/synergyCache.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/74_CODE.md](docs/audit/laws/a3/stage-1/74_CODE.md), [docs/audit/laws/a3/stage-2/74_CODE.md](docs/audit/laws/a3/stage-2/74_CODE.md), [docs/audit/laws/a3/stage-3/74_CODE.md](docs/audit/laws/a3/stage-3/74_CODE.md)
+- Tests: [tests/audit/batch_19.test.js](../../../../tests/audit/batch_19.test.js), [tests/unit/codex.test.js](../../../../tests/unit/codex.test.js), [tests/unit/synergyCache.test.js](../../../../tests/unit/synergyCache.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](../../../audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/74_CODE.md](../../../audit/laws/a3/stage-1/74_CODE.md), [docs/audit/laws/a3/stage-2/74_CODE.md](../../../audit/laws/a3/stage-2/74_CODE.md), [docs/audit/laws/a3/stage-3/74_CODE.md](../../../audit/laws/a3/stage-3/74_CODE.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

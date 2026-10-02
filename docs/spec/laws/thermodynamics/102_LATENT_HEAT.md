@@ -9,7 +9,7 @@
 | Color | GREEN |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
-| ADVANCED | MISSING |
+| HINT | Latent heat: phase changes absorb or release energy. |
+| EXPLANATION | Mass changes absorb or release TEMPERATURE in bursts, buffering phase transitions. |
+| SYSTEM | Phase-change buffer. With MELT/BOIL it smooths transitions; with SUBLIMATION it feeds the vapour. |
+| ADVANCED | The buffer uses the pair's combined mass as its capacity. |
 
 ## Implementation evidence
 
-[src/physics/lawgroups/thermoLaws.js](src/physics/lawgroups/thermoLaws.js), [src/physics/solver.js](src/physics/solver.js)
+[src/physics/lawgroups/thermoLaws.js](../../../../src/physics/lawgroups/thermoLaws.js), [src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_26.test.js](tests/audit/batch_26.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/102_LATENT_HEAT.md](docs/audit/laws/a3/stage-1/102_LATENT_HEAT.md), [docs/audit/laws/a3/stage-2/102_LATENT_HEAT.md](docs/audit/laws/a3/stage-2/102_LATENT_HEAT.md), [docs/audit/laws/a3/stage-3/102_LATENT_HEAT.md](docs/audit/laws/a3/stage-3/102_LATENT_HEAT.md), [docs/audit/laws/a3/thermodynamics.md](docs/audit/laws/a3/thermodynamics.md)
+- Tests: [tests/audit/batch_26.test.js](../../../../tests/audit/batch_26.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/102_LATENT_HEAT.md](../../../audit/laws/a3/stage-1/102_LATENT_HEAT.md), [docs/audit/laws/a3/stage-2/102_LATENT_HEAT.md](../../../audit/laws/a3/stage-2/102_LATENT_HEAT.md), [docs/audit/laws/a3/stage-3/102_LATENT_HEAT.md](../../../audit/laws/a3/stage-3/102_LATENT_HEAT.md), [docs/audit/laws/a3/thermodynamics.md](../../../audit/laws/a3/thermodynamics.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

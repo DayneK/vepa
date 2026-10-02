@@ -4,4 +4,4 @@
 
 The law state uses a bitmask of multiple words to track which of the 136 laws are active. Each word covers a contiguous range of law indexes. Toggle operations are atomic per word.
 
-Evidence: [src/state/lawState.js](src/state/lawState.js).
+Evidence: [src/state/lawState.js](../../../src/state/lawState.js).

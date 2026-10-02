@@ -2,4 +2,4 @@
 
 # Simulation: Fields and Medium
 
-The field system ([src/physics/fields.js](src/physics/fields.js)) provides vector fields, scalar fields, walls, gravity wells, and portals. Fields are read by the solver as external forces on particles within their spatial extent.
+The field system ([src/physics/fields.js](../../../src/physics/fields.js)) provides vector fields, scalar fields, walls, gravity wells, and portals. Fields are read by the solver as external forces on particles within their spatial extent.

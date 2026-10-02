@@ -9,7 +9,7 @@
 | Color | BLUE |
 | Status | metadata-only |
 | Solver gate references | 0 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,10 +19,10 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
-| ADVANCED | MISSING |
+| HINT | Electric field drift follows particle polarity. |
+| EXPLANATION | The electromagnetic field applies a uniform polarity-directed drift, with stored CHARGE increasing the response magnitude. |
+| SYSTEM | For non-zero POLARITY, acceleration follows the polarity sign and is scaled by the electric-field coefficient and charge magnitude. |
+| ADVANCED | This is the electromagnetic drift primitive; FIELD is the central simulation-field gradient. |
 
 ## Implementation evidence
 
@@ -35,4 +35,4 @@ No implementation file found.
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

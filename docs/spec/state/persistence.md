@@ -2,4 +2,4 @@
 
 # State: Persistence
 
-World states are captured, restored, compared, and undone via [src/state/worldSave.js](src/state/worldSave.js). Presets are managed by [src/state/presetManager.js](src/state/presetManager.js). Persistence includes particle buffers, DNA, law state, and runtime configuration.
+World states are captured, restored, compared, and undone via [src/state/worldSave.js](../../../src/state/worldSave.js). Presets are managed by [src/state/presetManager.js](../../../src/state/presetManager.js). Persistence includes particle buffers, DNA, law state, and runtime configuration.

@@ -9,7 +9,7 @@
 | Color | YELLOW |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
+| HINT | Acid/base exchange: charge equalization between particles. |
+| EXPLANATION | Documented behavior (confirmed batch-05): particles exchange CHARGE when close, equalizing their electrical potential. CONDUCTIVITY DNA controls the transfer rate and the CHARGE field is altered. ENERGY is untouched. |
+| SYSTEM | When \|Δcharge\| ≥ 0.3, transfer = Δcharge × max(CONDUCTIVITY_i, CONDUCTIVITY_j) × 0.1 × dt × synergy from the higher-charge particle to the lower. Charge is conserved per pair. |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/synergy.js](../../../../src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_05.test.js](tests/audit/batch_05.test.js), [tests/unit/worldSave.test.js](tests/unit/worldSave.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/19_ACIDITY.md](docs/audit/laws/a3/stage-1/19_ACIDITY.md), [docs/audit/laws/a3/stage-1/95_NEUTRALIZATION.md](docs/audit/laws/a3/stage-1/95_NEUTRALIZATION.md), [docs/audit/laws/a3/stage-2/19_ACIDITY.md](docs/audit/laws/a3/stage-2/19_ACIDITY.md), [docs/audit/laws/a3/stage-2/95_NEUTRALIZATION.md](docs/audit/laws/a3/stage-2/95_NEUTRALIZATION.md), [docs/audit/laws/a3/stage-3/19_ACIDITY.md](docs/audit/laws/a3/stage-3/19_ACIDITY.md), [docs/audit/laws/a3/stage-3/95_NEUTRALIZATION.md](docs/audit/laws/a3/stage-3/95_NEUTRALIZATION.md)
+- Tests: [tests/audit/batch_05.test.js](../../../../tests/audit/batch_05.test.js), [tests/unit/worldSave.test.js](../../../../tests/unit/worldSave.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](../../../audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/19_ACIDITY.md](../../../audit/laws/a3/stage-1/19_ACIDITY.md), [docs/audit/laws/a3/stage-1/95_NEUTRALIZATION.md](../../../audit/laws/a3/stage-1/95_NEUTRALIZATION.md), [docs/audit/laws/a3/stage-2/19_ACIDITY.md](../../../audit/laws/a3/stage-2/19_ACIDITY.md), [docs/audit/laws/a3/stage-2/95_NEUTRALIZATION.md](../../../audit/laws/a3/stage-2/95_NEUTRALIZATION.md), [docs/audit/laws/a3/stage-3/19_ACIDITY.md](../../../audit/laws/a3/stage-3/19_ACIDITY.md), [docs/audit/laws/a3/stage-3/95_NEUTRALIZATION.md](../../../audit/laws/a3/stage-3/95_NEUTRALIZATION.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

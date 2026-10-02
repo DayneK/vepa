@@ -9,7 +9,7 @@
 | Color | PURPLE |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
-| ADVANCED | MISSING |
+| HINT | Tunneling: particles occasionally pass straight through barriers. |
+| EXPLANATION | A small chance each tick lets a particle ignore its interactions and phase-shift a short distance. |
+| SYSTEM | Barrier penetration. With BOND it can escape stable links; with FERMIONIC it breaks exclusion stacking. |
+| ADVANCED | Chance scales with energy and speed. |
 
 ## Implementation evidence
 
-[src/physics/solver.js](src/physics/solver.js)
+[src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_29.test.js](tests/audit/batch_29.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](docs/audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/113_TUNNELING.md](docs/audit/laws/a3/stage-1/113_TUNNELING.md), [docs/audit/laws/a3/stage-1/117_TELEPORT.md](docs/audit/laws/a3/stage-1/117_TELEPORT.md), [docs/audit/laws/a3/stage-2/113_TUNNELING.md](docs/audit/laws/a3/stage-2/113_TUNNELING.md), [docs/audit/laws/a3/stage-2/117_TELEPORT.md](docs/audit/laws/a3/stage-2/117_TELEPORT.md), [docs/audit/laws/a3/stage-3/113_TUNNELING.md](docs/audit/laws/a3/stage-3/113_TUNNELING.md), [docs/audit/laws/a3/stage-3/117_TELEPORT.md](docs/audit/laws/a3/stage-3/117_TELEPORT.md)
+- Tests: [tests/audit/batch_29.test.js](../../../../tests/audit/batch_29.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](../../../audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/113_TUNNELING.md](../../../audit/laws/a3/stage-1/113_TUNNELING.md), [docs/audit/laws/a3/stage-1/117_TELEPORT.md](../../../audit/laws/a3/stage-1/117_TELEPORT.md), [docs/audit/laws/a3/stage-2/113_TUNNELING.md](../../../audit/laws/a3/stage-2/113_TUNNELING.md), [docs/audit/laws/a3/stage-2/117_TELEPORT.md](../../../audit/laws/a3/stage-2/117_TELEPORT.md), [docs/audit/laws/a3/stage-3/113_TUNNELING.md](../../../audit/laws/a3/stage-3/113_TUNNELING.md), [docs/audit/laws/a3/stage-3/117_TELEPORT.md](../../../audit/laws/a3/stage-3/117_TELEPORT.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

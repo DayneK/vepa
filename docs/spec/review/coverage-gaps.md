@@ -6,8 +6,8 @@ This generated review aid separates observed facts from recommendations.
 
 ## Observed findings
 
-- Canonical LAW_HELP_DB entries: 0/136.
-- Merged help entries after supplemental sources: 8/136.
+- Canonical LAW_HELP_DB entries: 136/136.
+- Merged help entries after supplemental sources: 136/136.
 - Law records with solver gate references: 133/136.
 - Law records with implementation candidates: 135/136.
 - Law records with test evidence: 133/136.

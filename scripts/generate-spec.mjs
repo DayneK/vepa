@@ -12,19 +12,12 @@ import {
   LAW_COUNT as REAL_LAW_COUNT,
   LAW_INDEXES as REAL_LAW_INDEXES,
   LAW_CATEGORIES as REAL_LAW_CATEGORIES,
+  LAW_PARAMETERS as REAL_LAW_PARAMETERS,
+  PARTICLE_STRIDE as REAL_PARTICLE_STRIDE,
+  DNA_COUNT as REAL_DNA_COUNT,
 } from '../src/constants.js';
+import { LAW_HELP_DB as REAL_LAW_HELP_DB, MECHANICS_HELP as REAL_MECHANICS_HELP } from '../src/constants/help.js';
 
-// The live constants modules are split (src/constants.js is a barrel
-// re-export). Regex extraction must read the defining modules, not the barrel
-// — otherwise every match misses and the generator silently falls back to
-// hardcoded defaults while producing empty law catalogs.
-const CONSTANTS_SOURCE_FILES = [
-  'src/constants/stride.js',
-  'src/constants/dna.js',
-  'src/constants/laws.js',
-  'src/constants/help.js',
-  'src/constants/world.js',
-];
 
 const ROOT = dirname(fileURLToPath(import.meta.url)) + '/..';
 const SPEC_DIR = join(ROOT, 'docs', 'spec');
@@ -53,9 +46,28 @@ function readLines(rel) {
   return read(rel).split('\n');
 }
 
+// Generated pages often name repository files by their repo-root path. A
+// Markdown link resolves relative to the page, so rewrite any link target that
+// does not exist relative to the page but does exist from the repo root.
+function relinkMarkdown(full, content) {
+  const dir = dirname(full);
+  return content.replace(/\]\(([^)\s]+)\)/g, (match, target) => {
+    if (/^(?:[a-z]+:|#|\/)/i.test(target)) return match;
+    const [path, anchor] = target.split('#');
+    if (!path) return match;
+    let decoded = path;
+    try { decoded = decodeURIComponent(path); } catch { /* keep raw */ }
+    if (existsSync(join(dir, decoded))) return match;
+    if (!existsSync(join(ROOT, decoded))) return match;
+    const fixed = relative(dir, join(ROOT, decoded)).split(sep).join('/');
+    return `](${fixed}${anchor !== undefined ? '#' + anchor : ''})`;
+  });
+}
+
 function writeSpec(rel, content) {
   const normalized = rel.split(sep).join('/');
   const full = outputPath(rel);
+  if (normalized.endsWith('.md')) content = relinkMarkdown(full, content);
   GENERATED_FILES.add(normalized);
   EXPECTED_CONTENT.set(normalized, content);
   if (CHECK_MODE) return;
@@ -109,193 +121,51 @@ function esc(s) {
   return String(s).replace(/\|/g, '\\|');
 }
 
-// ── Parse constants.js ───────────────────────────────────────────────────────
+// ── Load constants (live modules, no regex) ─────────────────────────────────
+// CA-H8: the generator imports the canonical runtime modules instead of
+// regex-scraping their source text, so formatting changes can never silently
+// empty the catalogue (the old regex expected `[idx]: { tier: '…' }`, but
+// help.js uses `NAME: { tier: "…" }`, so canonical help coverage read 0).
+
+function byIndex(table, LAW_INDEXES) {
+  const out = {};
+  for (const [name, value] of Object.entries(table || {})) {
+    const idx = LAW_INDEXES[name];
+    if (idx === undefined) continue;
+    if (Array.isArray(value)) { out[idx] = value.slice(); continue; }
+    const fields = {};
+    for (const [k, v] of Object.entries(value || {})) {
+      if (typeof v === 'string') fields[k.toLowerCase()] = v;
+    }
+    out[idx] = fields;
+  }
+  return out;
+}
 
 function parseConstants() {
-  const src = CONSTANTS_SOURCE_FILES.map(read).join('\n');
-  const fullSrc = src + '\n' + read('src/physics/lawgroups/mechanicsHelp.js');
-
-  // Extract PARTICLE_STRIDE
-  const strideMatch = src.match(/PARTICLE_STRIDE\s*=\s*(\d+)/);
-  const PARTICLE_STRIDE = strideMatch ? Number(strideMatch[1]) : 100;
-
-  // Extract DNA_COUNT
-  const dnaCountMatch = src.match(/DNA_COUNT\s*=\s*(\d+)/);
-  const DNA_COUNT = dnaCountMatch ? Number(dnaCountMatch[1]) : 64;
-
-  // Extract LAW_COUNT
-  const lawCountMatch = src.match(/LAW_COUNT\s*=\s*(\d+)/);
-  const LAW_COUNT = lawCountMatch ? Number(lawCountMatch[1]) : 136;
-
-  // Extract LAW_INDEXES name→value pairs
-  const LAW_INDEXES = {};
-  const lawIdxRe = /(\w+):\s*(\d+)/g;
-  const lawIdxBlock = src.match(/export const LAW_INDEXES\s*=\s*\{([\s\S]*?)\};/);
-  if (lawIdxBlock) {
-    let m;
-    while ((m = lawIdxRe.exec(lawIdxBlock[1]))) {
-      LAW_INDEXES[m[1]] = Number(m[2]);
-    }
-  }
+  const LAW_INDEXES = { ...REAL_LAW_INDEXES };
   const INDEX_TO_NAME = {};
   for (const [name, idx] of Object.entries(LAW_INDEXES)) INDEX_TO_NAME[idx] = name;
-
-  // Extract LAW_CATEGORIES — we need to resolve LAW_INDEXES.X references
   const LAW_CATEGORIES = {};
-  const catBlock = src.match(/export const LAW_CATEGORIES\s*=\s*\{([\s\S]*?)\n\};/);
-  if (catBlock) {
-    const catRe = /(\w+):\s*\{\s*color:\s*'(\w+)',\s*laws:\s*\[([\s\S]*?)\]/g;
-    let cm;
-    while ((cm = catRe.exec(catBlock[1]))) {
-      const catName = cm[1];
-      const color = cm[2];
-      const lawRefs = cm[3];
-      const lawNums = [];
-      const refRe = /LAW_INDEXES\.(\w+)/g;
-      let rm;
-      while ((rm = refRe.exec(lawRefs))) {
-        if (LAW_INDEXES[rm[1]] !== undefined) lawNums.push(LAW_INDEXES[rm[1]]);
-      }
-      LAW_CATEGORIES[catName] = { color, laws: lawNums };
-    }
+  for (const [catName, cat] of Object.entries(REAL_LAW_CATEGORIES)) {
+    LAW_CATEGORIES[catName] = { color: cat.color, laws: cat.laws.slice() };
   }
-
-  // ── Parse integrity guard ──────────────────────────────────────────────
-  // Regex extraction over source text is inherently fragile. If it ever stops
-  // matching (constants split / renamed / moved), the fallbacks above would
-  // emit an empty law catalog while still printing plausible numbers. Compare
-  // the parsed result against the live modules and fail loudly on any drift.
-  const parsedLawCount = Object.keys(LAW_INDEXES).length;
-  const realLawCount = Object.keys(REAL_LAW_INDEXES).length;
-  const problems = [];
-  if (parsedLawCount === 0) {
-    problems.push('LAW_INDEXES parsed as empty — the constants modules were not read');
-  } else if (parsedLawCount !== realLawCount) {
-    problems.push(`LAW_INDEXES count mismatch: parsed ${parsedLawCount}, live ${realLawCount}`);
-  } else {
-    for (const [name, idx] of Object.entries(REAL_LAW_INDEXES)) {
-      if (LAW_INDEXES[name] !== idx) {
-        problems.push(`LAW_INDEXES.${name}: parsed ${LAW_INDEXES[name]}, live ${idx}`);
-        break;
-      }
-    }
-  }
-  if (Object.keys(LAW_CATEGORIES).length === 0) {
-    problems.push('LAW_CATEGORIES parsed as empty — category coverage would report 0');
-  } else if (Object.keys(LAW_CATEGORIES).length !== Object.keys(REAL_LAW_CATEGORIES).length) {
-    problems.push(`LAW_CATEGORIES count mismatch: parsed ${Object.keys(LAW_CATEGORIES).length}, live ${Object.keys(REAL_LAW_CATEGORIES).length}`);
-  }
-  if (LAW_COUNT !== REAL_LAW_COUNT) {
-    problems.push(`LAW_COUNT mismatch: parsed ${LAW_COUNT}, live ${REAL_LAW_COUNT}`);
-  }
-  if (problems.length) {
-    throw new Error(
-      'generate-spec: constants parse integrity check failed:\n  - '
-      + problems.join('\n  - ')
-      + '\n\nThe generator reads the constants modules with regex. If they were '
-      + 'split, renamed, or reformatted, update CONSTANTS_SOURCE_FILES in '
-      + 'scripts/generate-spec.mjs. Refusing to generate a spec tree from an '
-      + 'empty law catalog.'
-    );
-  }
-
-  // Extract LAW_PARAMETERS
+  // LAW_PARAMETERS is keyed by numeric law index already.
   const LAW_PARAMETERS = {};
-  const paramBlock = src.match(/export const LAW_PARAMETERS\s*=\s*\{([\s\S]*?)\n\};/);
-  if (paramBlock) {
-    const paramRe = /\[LAW_INDEXES\.(\w+)\]:\s*\[([^\]]*)\]/g;
-    let pm;
-    while ((pm = paramRe.exec(paramBlock[1]))) {
-      const idx = LAW_INDEXES[pm[1]];
-      if (idx !== undefined) {
-        LAW_PARAMETERS[idx] = pm[2].split(',').map(s => s.trim().replace(/^['"]|['"]$/g, ''));
-      }
-    }
-  }
-
-  // Extract LAW_HELP_DB
-  const LAW_HELP_DB = {};
-  const helpBlock = src.match(/export const LAW_HELP_DB\s*=\s*\{([\s\S]*?)\n\};/);
-  if (helpBlock) {
-    const helpRe = /\[(\d+)\]:\s*\{([^}]*)\}/g;
-    let hm;
-    while ((hm = helpRe.exec(helpBlock[1]))) {
-      const idx = Number(hm[1]);
-      const fields = {};
-      const tierRe = /(\w+):\s*'([^']*)'/g;
-      let tm;
-      while ((tm = tierRe.exec(hm[2]))) {
-        fields[tm[1].toLowerCase()] = tm[2];
-      }
-      LAW_HELP_DB[idx] = fields;
-    }
-  }
-
-  // Extract LAW_HELP_PATCHES (supplemental help)
+  for (const [idx, params] of Object.entries(REAL_LAW_PARAMETERS)) LAW_PARAMETERS[Number(idx)] = params.slice();
+  const LAW_HELP_DB = byIndex(REAL_LAW_HELP_DB, LAW_INDEXES);
+  const MECHANICS_HELP = byIndex(REAL_MECHANICS_HELP, LAW_INDEXES);
+  // CG-1 folded the former supplemental patches into LAW_HELP_DB.
   const LAW_HELP_PATCHES = {};
-  const patchSrc = existsSync(join(ROOT, 'src/state/lawHelpPatches.js')) ? read('src/state/lawHelpPatches.js') : '';
-  if (patchSrc) {
-    const patchBlock = patchSrc.match(/export const LAW_HELP_PATCHES\s*=\s*\{([\s\S]*?)\n\};/);
-    if (patchBlock) {
-      const patchRe = /\[(\d+)\]:\s*\{([^}]*)\}/g;
-      let pm2;
-      while ((pm2 = patchRe.exec(patchBlock[1]))) {
-        const idx = Number(pm2[1]);
-        const fields = {};
-        const tierRe = /(\w+):\s*'([^']*)'/g;
-        let tm;
-        while ((tm = tierRe.exec(pm2[2]))) {
-          fields[tm[1].toLowerCase()] = tm[2];
-        }
-        LAW_HELP_PATCHES[idx] = fields;
-      }
-    }
-  }
-
-  // Merge help: canonical + patches
   const MERGED_HELP = {};
-  for (const idx of Object.keys(LAW_HELP_DB).map(Number)) {
-    MERGED_HELP[idx] = { ...LAW_HELP_DB[idx] };
-  }
-  for (const idx of Object.keys(LAW_HELP_PATCHES).map(Number)) {
-    if (!MERGED_HELP[idx]) MERGED_HELP[idx] = {};
-    for (const [k, v] of Object.entries(LAW_HELP_PATCHES[idx])) {
-      if (!MERGED_HELP[idx][k] || MERGED_HELP[idx][k] === 'MISSING') MERGED_HELP[idx][k] = v;
-    }
-  }
+  for (const [idx, fields] of Object.entries(LAW_HELP_DB)) MERGED_HELP[idx] = { ...fields };
 
-  // MECHANICS_HELP from mechanicsHelp.js
-  const MECHANICS_HELP = {};
-  const mechHelpBlock = fullSrc.match(/export const MECHANICS_HELP\s*=\s*\{([\s\S]*?)\n\};/);
-  if (mechHelpBlock) {
-    const mhRe = /(\w+):\s*\{([^}]*)\}/g;
-    let mhm;
-    while ((mhm = mhRe.exec(mechHelpBlock[1]))) {
-      const name = mhm[1];
-      const idx = LAW_INDEXES[name];
-      if (idx !== undefined) {
-        const fields = {};
-        const fRe = /(\w+):\s*'([^']*)'/g;
-        let fm;
-        while ((fm = fRe.exec(mhm[2]))) {
-          fields[fm[1].toLowerCase()] = fm[2];
-        }
-        MECHANICS_HELP[idx] = fields;
-      }
-    }
-  }
-
-  // Merge MECHANICS_HELP into MERGED_HELP
-  for (const [idxStr, fields] of Object.entries(MECHANICS_HELP)) {
-    const idx = Number(idxStr);
-    if (!MERGED_HELP[idx]) MERGED_HELP[idx] = {};
-    for (const [k, v] of Object.entries(fields)) {
-      if (!MERGED_HELP[idx][k] || MERGED_HELP[idx][k] === 'MISSING') MERGED_HELP[idx][k] = v;
-    }
+  if (Object.keys(LAW_INDEXES).length === 0 || Object.keys(LAW_CATEGORIES).length === 0) {
+    throw new Error('generate-spec: live constants modules exported an empty law catalogue');
   }
 
   return {
-    PARTICLE_STRIDE, DNA_COUNT, LAW_COUNT,
+    PARTICLE_STRIDE: REAL_PARTICLE_STRIDE, DNA_COUNT: REAL_DNA_COUNT, LAW_COUNT: REAL_LAW_COUNT,
     LAW_INDEXES, INDEX_TO_NAME,
     LAW_CATEGORIES, LAW_PARAMETERS, LAW_HELP_DB, LAW_HELP_PATCHES,
     MERGED_HELP, MECHANICS_HELP,
@@ -1285,6 +1155,9 @@ function main() {
   console.log(`${CHECK_MODE ? 'Checking' : 'Generating'} docs/spec/…`);
   const constants = parseConstants();
   console.log(`  Constants: ${constants.LAW_COUNT} laws, ${Object.keys(constants.LAW_CATEGORIES).length} categories, stride ${constants.PARTICLE_STRIDE}`);
+  const helpCoverage = Object.keys(constants.LAW_HELP_DB).length;
+  console.log(`  Canonical LAW_HELP_DB coverage: ${helpCoverage}/${Object.keys(constants.LAW_INDEXES).length}`);
+  if (helpCoverage === 0) throw new Error('generate-spec: canonical LAW_HELP_DB coverage is 0 (help catalogue not loaded)');
 
   const modules = scanSourceFiles(constants.LAW_INDEXES);
   console.log(`  Source files scanned: ${modules.length}`);

@@ -9,7 +9,7 @@
 | Color | BLUE |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
+| HINT | Charge transport: charge diffuses between conductive particles. |
+| EXPLANATION | Confirmed batch-14: neighboring particles exchange stored charge proportionally to CONDUCTIVITY DNA, smoothing charge gradients like electric current through a conductor — but both particles must be conductive for current to flow (real materials). |
+| SYSTEM | Within 17 units: dq = (CHARGE_j − CHARGE_i) × min(CONDUCTIVITY_i, CONDUCTIVITY_j) × k; charge flows from high to low. Pairs with CAPACITANCE and IONIZATION. |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/synergy.js](../../../../src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_14.test.js](tests/audit/batch_14.test.js), [tests/audit/params_batch_13.test.js](tests/audit/params_batch_13.test.js), [tests/unit/lawsSingleton.test.js](tests/unit/lawsSingleton.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](docs/audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/55_CURRENT.md](docs/audit/laws/a3/stage-1/55_CURRENT.md), [docs/audit/laws/a3/stage-2/55_CURRENT.md](docs/audit/laws/a3/stage-2/55_CURRENT.md), [docs/audit/laws/a3/stage-3/55_CURRENT.md](docs/audit/laws/a3/stage-3/55_CURRENT.md)
+- Tests: [tests/audit/batch_14.test.js](../../../../tests/audit/batch_14.test.js), [tests/audit/params_batch_13.test.js](../../../../tests/audit/params_batch_13.test.js), [tests/unit/lawsSingleton.test.js](../../../../tests/unit/lawsSingleton.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](../../../audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/55_CURRENT.md](../../../audit/laws/a3/stage-1/55_CURRENT.md), [docs/audit/laws/a3/stage-2/55_CURRENT.md](../../../audit/laws/a3/stage-2/55_CURRENT.md), [docs/audit/laws/a3/stage-3/55_CURRENT.md](../../../audit/laws/a3/stage-3/55_CURRENT.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

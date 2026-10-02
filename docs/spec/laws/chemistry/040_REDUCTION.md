@@ -9,7 +9,7 @@
 | Color | YELLOW |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
+| HINT | Reduction: charge is neutralized between particles. |
+| EXPLANATION | Confirmed batch-11 (real-life behavior): opposite charges attract and cancel out when they interact — each magnitude shrinks toward zero. Same-sign charges repel, so nothing is neutralized. The mirror of OXIDATION. |
+| SYSTEM | For opposite-sign pairs: CHARGE −= CHARGE x 0.05 x synergy on both (snap to 0 when the step exceeds the magnitude). Same-sign pairs are untouched. |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js)
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_11.test.js](tests/audit/batch_11.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](docs/audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/40_REDUCTION.md](docs/audit/laws/a3/stage-1/40_REDUCTION.md), [docs/audit/laws/a3/stage-2/40_REDUCTION.md](docs/audit/laws/a3/stage-2/40_REDUCTION.md), [docs/audit/laws/a3/stage-3/40_REDUCTION.md](docs/audit/laws/a3/stage-3/40_REDUCTION.md)
+- Tests: [tests/audit/batch_11.test.js](../../../../tests/audit/batch_11.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](../../../audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/40_REDUCTION.md](../../../audit/laws/a3/stage-1/40_REDUCTION.md), [docs/audit/laws/a3/stage-2/40_REDUCTION.md](../../../audit/laws/a3/stage-2/40_REDUCTION.md), [docs/audit/laws/a3/stage-3/40_REDUCTION.md](../../../audit/laws/a3/stage-3/40_REDUCTION.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

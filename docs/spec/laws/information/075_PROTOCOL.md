@@ -9,7 +9,7 @@
 | Color | VIOLET |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
+| HINT | Protocol: neighbors entrain their signal phase. |
+| EXPLANATION | Confirmed batch-19: signals of nearby particles converge toward the average (s1/s2 swap equal deltas) — synchronization like metronomes coupling on a table. |
+| SYSTEM | d = (s2 − s1)·k·0.1, both clamped 0..1. +SIGNAL_BOOST ×1.5 relayed synchronization. With RESONANCE creates global pulse waves. |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/synergy.js](../../../../src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_19.test.js](tests/audit/batch_19.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/75_PROTOCOL.md](docs/audit/laws/a3/stage-1/75_PROTOCOL.md), [docs/audit/laws/a3/stage-2/75_PROTOCOL.md](docs/audit/laws/a3/stage-2/75_PROTOCOL.md), [docs/audit/laws/a3/stage-3/75_PROTOCOL.md](docs/audit/laws/a3/stage-3/75_PROTOCOL.md)
+- Tests: [tests/audit/batch_19.test.js](../../../../tests/audit/batch_19.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](../../../audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/75_PROTOCOL.md](../../../audit/laws/a3/stage-1/75_PROTOCOL.md), [docs/audit/laws/a3/stage-2/75_PROTOCOL.md](../../../audit/laws/a3/stage-2/75_PROTOCOL.md), [docs/audit/laws/a3/stage-3/75_PROTOCOL.md](../../../audit/laws/a3/stage-3/75_PROTOCOL.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

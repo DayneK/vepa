@@ -2,4 +2,4 @@
 
 # Architecture: Runtime: Worker
 
-The physics worker ([src/worker/physics.worker.js](src/worker/physics.worker.js)) receives serialized configuration messages and runs the solver in an isolated thread. The main thread reads the shared particle buffer for rendering.
+The physics worker ([src/worker/physics.worker.js](../../../../src/worker/physics.worker.js)) receives serialized configuration messages and runs the solver in an isolated thread. The main thread reads the shared particle buffer for rendering.

@@ -9,7 +9,7 @@
 | Color | SLATE |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | MECHANICS_HELP |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -26,13 +26,13 @@
 
 ## Implementation evidence
 
-[src/physics/interactionSpace.js](src/physics/interactionSpace.js), [src/physics/lawgroups/mechanicsHelp.js](src/physics/lawgroups/mechanicsHelp.js), [src/physics/solver.js](src/physics/solver.js)
+[src/physics/interactionSpace.js](../../../../src/physics/interactionSpace.js), [src/physics/lawgroups/mechanicsHelp.js](../../../../src/physics/lawgroups/mechanicsHelp.js), [src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_22.test.js](tests/audit/batch_22.test.js), [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js)
+- Tests: [tests/audit/batch_22.test.js](../../../../tests/audit/batch_22.test.js), [tests/unit/backendArchitecture.test.js](../../../../tests/unit/backendArchitecture.test.js)
 - Audits: No filename-matched audit record found.
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).

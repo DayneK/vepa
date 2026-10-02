@@ -2,26 +2,26 @@
 
 # Laws: Index
 
-The law catalog is generated from LAW_INDEXES, LAW_CATEGORIES and associated metadata in [src/constants.js](src/constants.js). There are `136` mapped records across `9` categories.
+The law catalog is generated from LAW_INDEXES, LAW_CATEGORIES and associated metadata in [src/constants.js](../../../src/constants.js). There are `136` mapped records across `9` categories.
 
 ## Category coverage
 
 | Category | Color | Count | Solver-wired records | Merged help records |
 | --- | --- | --- | --- | --- |
-| Physics | RED | 16 | 15 | 0 |
+| Physics | RED | 16 | 15 | 16 |
 | Mechanics | SLATE | 8 | 8 | 8 |
-| Biology | ORANGE | 16 | 15 | 0 |
-| Chemistry | YELLOW | 16 | 16 | 0 |
-| Thermodynamics | GREEN | 16 | 16 | 0 |
-| Metaphysics | TEAL | 16 | 16 | 0 |
-| Electromagnetism | BLUE | 16 | 15 | 0 |
-| Information | VIOLET | 16 | 16 | 0 |
-| Quantum | PURPLE | 16 | 16 | 0 |
+| Biology | ORANGE | 16 | 15 | 16 |
+| Chemistry | YELLOW | 16 | 16 | 16 |
+| Thermodynamics | GREEN | 16 | 16 | 16 |
+| Metaphysics | TEAL | 16 | 16 | 16 |
+| Electromagnetism | BLUE | 16 | 15 | 16 |
+| Information | VIOLET | 16 | 16 | 16 |
+| Quantum | PURPLE | 16 | 16 | 16 |
 
 ## Contract findings
 
-- Canonical LAW_HELP_DB entries: 0/136.
-- Merged help entries after supplemental sources: 8/136.
+- Canonical LAW_HELP_DB entries: 136/136.
+- Merged help entries after supplemental sources: 136/136.
 - Every mapped law has merged help evidence.
 - Every category overview links to one generated record per law index.
 

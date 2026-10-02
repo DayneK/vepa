@@ -9,7 +9,7 @@
 | Color | VIOLET |
 | Status | wired |
 | Solver gate references | 1 |
-| Help source | NONE |
+| Help source | LAW_HELP_DB |
 
 ## Parameters
 
@@ -19,20 +19,20 @@
 
 | Tier | Content |
 | --- | --- |
-| HINT | MISSING |
-| EXPLANATION | MISSING |
-| SYSTEM | MISSING |
+| HINT | Signal boost: contact amplifies and relays signals. |
+| EXPLANATION | Confirmed batch-17: a signaling particle relays its SIGNAL to neighbors on contact, scaled by its SIGNAL_STRENGTH DNA (0.5–1.5×) — stronger emitters relay more. Propagates pulses beyond normal communication range. |
+| SYSTEM | s1 > 0.01 → s2 += s1·k·(0.5 + SIGNAL_STRENGTH·0.5). +PROTOCOL ×1.5 relayed synchronization. Extends the COMMS layer like a relay chain. |
 | ADVANCED | MISSING |
 
 ## Implementation evidence
 
-[src/physics/laws.js](src/physics/laws.js), [src/physics/solver.js](src/physics/solver.js), [src/physics/synergy.js](src/physics/synergy.js)
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/synergy.js](../../../../src/physics/synergy.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_18.test.js](tests/audit/batch_18.test.js)
-- Audits: [docs/audit/laws/a3/all_category_docs.md](docs/audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](docs/audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](docs/audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](docs/audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](docs/audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](docs/audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](docs/audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/69_SIGNAL_BOOST.md](docs/audit/laws/a3/stage-1/69_SIGNAL_BOOST.md), [docs/audit/laws/a3/stage-2/69_SIGNAL_BOOST.md](docs/audit/laws/a3/stage-2/69_SIGNAL_BOOST.md), [docs/audit/laws/a3/stage-3/69_SIGNAL_BOOST.md](docs/audit/laws/a3/stage-3/69_SIGNAL_BOOST.md)
+- Tests: [tests/audit/batch_18.test.js](../../../../tests/audit/batch_18.test.js)
+- Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/information.md](../../../audit/laws/a3/information.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/69_SIGNAL_BOOST.md](../../../audit/laws/a3/stage-1/69_SIGNAL_BOOST.md), [docs/audit/laws/a3/stage-2/69_SIGNAL_BOOST.md](../../../audit/laws/a3/stage-2/69_SIGNAL_BOOST.md), [docs/audit/laws/a3/stage-3/69_SIGNAL_BOOST.md](../../../audit/laws/a3/stage-3/69_SIGNAL_BOOST.md)
 
 ## Interpretation boundary
 
-This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](src/physics/lawgroups/SPEC.md).
+This record confirms classification, metadata and text-level source evidence. It does not assert physical fidelity, conservation, balance, or non-redundancy. Those claims require targeted tests and review against [src/physics/lawgroups/SPEC.md](../../../../src/physics/lawgroups/SPEC.md).
