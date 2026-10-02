@@ -52,7 +52,7 @@ export function createIntelPanel(bus) {
     bus.emit('timeline:record', { enabled: recording });
     recordBtn.classList.toggle('recording', recording);
     recordBtn.textContent = recording ? '■ STOP' : '● REC';
-    setValue('intel-rec', recording ? 'ON' : 'OFF');
+    setCellValue(host, 'intel-rec', recording ? 'ON' : 'OFF');
   });
 
   clearBtn.addEventListener('click', () => {
@@ -78,46 +78,42 @@ export function createIntelPanel(bus) {
     }
     largestCluster = biggest;
     clusterEnergy = energy;
-    setValue('intel-clusters', clusterCount);
-    setValue('intel-largest', largestCluster);
-    setValue('intel-cluster-energy', Math.round(clusterEnergy));
+    setCellValue(host, 'intel-clusters', clusterCount);
+    setCellValue(host, 'intel-largest', largestCluster);
+    setCellValue(host, 'intel-cluster-energy', Math.round(clusterEnergy));
   });
   bus.on('lineage:branch', (data) => {
     births++;
     if (data.generation > longestGen) longestGen = data.generation;
-    setValue('intel-births', births);
-    setValue('intel-lineage', longestGen);
-    setValue('intel-net', births - deaths);
+    setCellValue(host, 'intel-births', births);
+    setCellValue(host, 'intel-lineage', longestGen);
+    setCellValue(host, 'intel-net', births - deaths);
   });
   bus.on('lineage:death', () => {
     deaths++;
-    setValue('intel-deaths', deaths);
+    setCellValue(host, 'intel-deaths', deaths);
     // Signed so the direction of the population is readable at a glance;
     // BIRTHS and DEATHS side by side makes you subtract them yourself.
-    setValue('intel-net', births - deaths);
+    setCellValue(host, 'intel-net', births - deaths);
   });
   bus.on('goal:applied', (adj) => {
     pushGoalLog(`${adj.parameter} ${Number(adj.oldValue).toFixed(2)} → ${Number(adj.newValue).toFixed(2)}`);
   });
   bus.on('timeline:snapshot', (data) => {
     timelineCount = data.count || timelineCount + 1;
-    setValue('intel-snapshots', timelineCount);
+    setCellValue(host, 'intel-snapshots', timelineCount);
     scrub.max = String(Math.max(0, timelineCount - 1));
     scrub.disabled = timelineCount === 0;
   });
   bus.on('timeline:cleared', () => {
     timelineCount = 0;
-    setValue('intel-snapshots', 0);
+    setCellValue(host, 'intel-snapshots', 0);
     scrub.max = '0';
     scrub.disabled = true;
   });
   bus.on('timeline:restored', () => {
     pushGoalLog('timeline scrubbed');
   });
-}
-
-function setValue(id, text) {
-  setCellValue(host, id, text);
 }
 
 function pushGoalLog(text) {
