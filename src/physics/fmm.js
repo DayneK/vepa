@@ -8,8 +8,10 @@
 // Each particle's force is then evaluated from its leaf's local expansion
 // (far field) plus direct summation over neighbour leaves (near field).
 //
-// The interaction list for a cell = children of the parent's 26 neighbours,
-// minus the cell's own 26 neighbours → at most 189 well-separated cells.
+// Far field (since the 2026-10-03 FMM hunt, docs/FMM-INVESTIGATION.md): every
+// occupied cell outside the 3×3×3 near stencil, evaluated from its COM
+// monopole + quadrupole. The old "children of the parent's neighbours" list
+// skipped all farther cells because there is no coarse level / L2L pass.
 //
 // Approximations vs. the reference pairwise solver:
 //  - Far-field forces use the quadrupole series truncated at order 2.
@@ -68,7 +70,9 @@ function cellNeighbours(cellIndex, grid, cellMap) {
         const ny = (cy + dy + grid) % grid;
         const nz = (cz + dz + grid) % grid;
         const occupiedIndex = cellMap[nx + ny * grid + nz * grid * grid];
-        if (occupiedIndex >= 0) neighbours.push(occupiedIndex);
+        // FMM-HUNT fix A: on grids smaller than 3 the wrapped stencil revisits
+        // cells; count each neighbour once.
+        if (occupiedIndex >= 0 && !neighbours.includes(occupiedIndex)) neighbours.push(occupiedIndex);
       }
     }
   }
@@ -161,6 +165,11 @@ export function buildFMMCells(tree, view, stride, count, worldSize, targetDepth)
     }
 
     interStart[oi] = interList.length;
+    // FMM-HUNT fix F: this evaluator has no coarser levels and no L2L, so cells
+    // outside the parent's neighbourhood were never counted at all. The far
+    // field is now every occupied cell outside the near stencil (O(cells²)).
+    for (let o2 = 0; o2 < occupied.length; o2++) if (!neighbourSet.has(o2)) interList.push(o2);
+    continue;
     for (let pdz = -1; pdz <= 1; pdz++) {
       for (let pdy = -1; pdy <= 1; pdy++) {
         for (let pdx = -1; pdx <= 1; pdx++) {
@@ -190,6 +199,9 @@ export function buildFMMCells(tree, view, stride, count, worldSize, targetDepth)
   }
 
   interStart[occupied.length] = interList.length;
+  // FMM-HUNT fix G: the sentinel was missing, so the last occupied cell got no
+  // near-field force at all.
+  neighStart[occupied.length] = neighbourList.length;
 
   return {
     depth: targetDepth,
@@ -256,6 +268,7 @@ export function fmmGravity(view, stride, count, worldSize, G, outFx, outFy, outF
   const cellQxy = new Float64Array(nCells);
   const cellQxz = new Float64Array(nCells);
   const cellQyz = new Float64Array(nCells);
+  const comX = new Float64Array(nCells), comY = new Float64Array(nCells), comZ = new Float64Array(nCells);
 
   for (let oi = 0; oi < nCells; oi++) {
     const parts = cellToParts[occupied[oi]];
@@ -273,6 +286,7 @@ export function fmmGravity(view, stride, count, worldSize, G, outFx, outFy, outF
     const cy = tm > 0 ? my / tm : cellCy[oi];
     const cz = tm > 0 ? mz / tm : cellCz[oi];
     cellM[oi] = tm;
+    comX[oi] = cx; comY[oi] = cy; comZ[oi] = cz;
 
     // Quadrupole about COM (not geometric centre — simpler M2L)
     let qxx = 0, qyy = 0, qzz = 0, qxy = 0, qxz = 0, qyz = 0;
@@ -314,7 +328,9 @@ export function fmmGravity(view, stride, count, worldSize, G, outFx, outFy, outF
       const sj = interList[j];
       const Mj = cellM[sj];
       if (!(Mj > 0)) continue;
-      const sCx = cellCx[sj], sCy = cellCy[sj], sCz = cellCz[sj];
+      // FMM-HUNT fix E: the expansion is about the source COM (the quadrupole
+      // is computed there), not the geometric cell centre.
+      const sCx = comX[sj], sCy = comY[sj], sCz = comZ[sj];
 
       // Min-image displacement from target to source
       let dx = sCx - tCx, dy = sCy - tCy, dz = sCz - tCz;
@@ -331,9 +347,11 @@ export function fmmGravity(view, stride, count, worldSize, G, outFx, outFy, outF
       // ∂_j F_i = G M (3 d_i d_j / d^5 - δ_ij / d^3)
       const G_M = G * Mj;
       const Gd3 = G_M / d3;
-      lx -= Gd3 * dx;
-      ly -= Gd3 * dy;
-      lz -= Gd3 * dz;
+      // FMM-HUNT fix C: d points target→source, so attraction is +d (the old
+      // code subtracted, making the far-field monopole repulsive).
+      lx += Gd3 * dx;
+      ly += Gd3 * dy;
+      lz += Gd3 * dz;
 
       const Gd5 = G_M / d5;
       lxx += Gd5 * (3 * dx * dx - d2);
@@ -359,7 +377,8 @@ export function fmmGravity(view, stride, count, worldSize, G, outFx, outFy, outF
       const rQr = dx * Qrx + dy * Qry + dz * Qrz;
       const d7 = d5 * d * d;
 
-      const scale1 = G * 1.5 / d5;
+      // FMM-HUNT fix D: F = -3G·Q̃d/d⁵ + 7.5G(dQ̃d)d/d⁷ (coefficient was 1.5).
+      const scale1 = G * 3 / d5;
       const scale2 = G * 7.5 * rQr / d7;
       lx += scale2 * dx - scale1 * Qrx;
       ly += scale2 * dy - scale1 * Qry;

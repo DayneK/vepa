@@ -56,7 +56,20 @@ describe('FMM backend boundaries', () => {
         expect(octree.withinTolerance).toBe(true);
       }
       expect(fmm.finite).toBe(true);
-      expect(fmm.withinTolerance).toBe(false);
+      // FMM-HUNT (2026-10-03): at 32 particles the grid is one level deep, the
+      // near stencil covers every cell and FMM is exact direct summation. From
+      // 128 up the far-field expansion is used and FMM is still outside the
+      // envelope, so it stays experimental (D-008).
+      if (count <= 32) expect(result.candidates.fmm.error.rmsRelative).toBeLessThan(1e-9);
+      else expect(fmm.withinTolerance).toBe(false);
+    }
+  });
+
+  it('FMM-HUNT regressions: far field attracts, no cell is dropped, error well below the old 1.15-2.02', () => {
+    for (const count of [128, 512, 2048]) {
+      const { candidates } = compareBackends({ count, seed: 0x12345678 });
+      expect(candidates.fmm.error.rmsRelative).toBeLessThan(0.5);
+      expect(candidates.fmm.error.rmsRelative).toBeGreaterThan(0); // still approximate
     }
   });
 

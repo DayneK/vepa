@@ -43,10 +43,12 @@ Reading:
 - **Barnes–Hut** stays within the envelope through 512 particles and is
   marginal at 2048 (theta error grows with scale). It is a supported opt-in
   backend with a documented envelope; the regression tests pin the ≤512 band.
-- **FMM** is outside the `rmsRelative` envelope at **every** measured scale
-  (its absolute error is tiny because softened far-field forces are tiny, but
-  the error is comparable to the signal itself). This is the measurement behind
-  the FMM decision below.
+- **FMM** (table above is the pre-2026-10-03 measurement) was outside the
+  `rmsRelative` envelope at every scale. The 2026-10-03 bug hunt
+  (`docs/FMM-INVESTIGATION.md`) fixed seven defects. Now: exact at 32 (single
+  level, all near field); 2.5e-1 / 3.0e-1 / 3.0e-1 at 128 / 512 / 2048
+  (seed 0x12345678), so FMM is still outside the 0.1 envelope from 128 up. The
+  remaining error is a documented truncation hypothesis.
 
 ## 3. FMM decision (remediation plan §5.1)
 
@@ -54,7 +56,7 @@ Reading:
 
 | Path | Verdict | Rationale |
 |------|---------|-----------|
-| Complete | rejected | Envelope parity is not demonstrated: rmsRelative 1.15–2.02 across 32–2048 fixtures. |
+| Complete | rejected | Envelope parity is not demonstrated: rmsRelative was 1.15–2.02; after the 2026-10-03 fixes it is 0.25–0.30 from 128 up (still > 0.1). Re-confirmed by D-008 (FMM-PROMO Won't do). |
 | Retire to historical | rejected | The cell builder and evaluator are real (the former `cellNeighbours` placeholder is now an implemented toroidal minimum-image stencil with parity tests), are useful as a research path, and cost nothing on the default path. |
 | **Retain experimental** | **chosen** | Opt-in via `runtimeConfig.gravEngine === 'fmm'`, never default, misleading completion language replaced, explicit unsupported-case tests pin the out-of-envelope status. |
 
@@ -62,8 +64,9 @@ Consequences:
 
 - `docs/FEATURE_STATUS_MATRIX.md` §3/§6 records the experimental status and the
   measured evidence.
-- `tests/unit/fmmParity.test.js` pins: octree within envelope (≤512), FMM
-  finite but **outside** the envelope — if FMM accuracy improves, that test
+- `tests/unit/fmmParity.test.js` pins: octree within envelope (≤128), FMM exact
+  at 32 and finite but **outside** the envelope from 128 up, plus regression
+  bounds for the hunt's fixes. If FMM accuracy improves further, that test
   fails and the status docs must be updated in the same change.
 - Known FMM limitations remain as documented in `src/physics/fmm.js` header:
   quadrupole truncation, DNA modifiers absent from far-field contributions,
