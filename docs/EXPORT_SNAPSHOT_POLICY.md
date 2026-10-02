@@ -9,7 +9,7 @@
 |---|---|---|
 | `vepa-full-codebase-concat.md` | Current hierarchical source snapshot | Produced by `generate-vepa-all.mjs` and `generate-full-concat.mjs`; retained derived artifact |
 | `vepa-docs-concat.md` | Documentation snapshot | Produced by `generate-docs-concat.mjs`; retained derived artifact |
-| `vepa-codebase-full-concat.md` | Existing parallel/legacy full snapshot | Producer provenance is not uniquely established; retain pending review |
+| `vepa-codebase-full-concat.md` | Former parallel/legacy full snapshot | **Retired 2026-09-30** (H3 reconciliation: producer never uniquely established, consumer unmapped); removed from the tree and recorded under `retired` in `exports/provenance.json` and `exports/publication-plan.json` |
 
 The runtime source of truth remains `src/`. Export files are review and handoff artifacts and must never be imported by the application or treated as a second source tree.
 
