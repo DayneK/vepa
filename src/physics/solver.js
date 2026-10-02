@@ -116,7 +116,8 @@ import {
   setLawClockMs,
 } from './laws.js';
 import { createSynergyCache } from './synergy.js';
-import { compatibilityForViews, meetsCompatibility } from './relationshipCompatibility.js';
+import { compatibilityForViewsInto, createCompatibilityScratch, meetsCompatibility } from './relationshipCompatibility.js';
+const _pairCompatScratch = createCompatibilityScratch();
 import { applyAlloy, adjoinParticles, maintainAdjoinedPair, isBondedPair, isAccretionPair } from './mergePhysics.js';
 import { applyTide, applyFriction, applyHorizon, applyRadiationPressure, applyMassInertia, applyField } from './lawgroups/physicsLaws.js';
 import { applyContactCorrection, applyCollisionImpulse, applyMomentum, applyInertia, applyTorque, applyConstraint, applyFragmentation, applyTopology, applyAdhesion } from './lawgroups/mechanicsLaws.js';
@@ -372,6 +373,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   const fieldsOn = fieldsEnabled(WP);
   let fieldSystem = null;
   if (fieldsOn) fieldSystem = ensureFields(worldSize, WP);
+  const fieldAdvanceOnce = runtimeConfig.fieldAdvanceOnce === true;
 
   // Fate clock — advances once per tick so species destiny points wander.
   advanceFateClock(dt);
@@ -667,7 +669,8 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       let pairCompatibility = null;
       const getPairCompatibility = () => {
         if (!pairCompatibility) {
-          pairCompatibility = compatibilityForViews(view, iBase, jBase, runtimeConfig.worldParams || {});
+          // MX-20: allocation-free, bit-identical; the scratch is reused per pair.
+          pairCompatibility = compatibilityForViewsInto(view, iBase, jBase, runtimeConfig.worldParams || {}, _pairCompatScratch);
         }
         return pairCompatibility;
       };
@@ -1543,7 +1546,12 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     // along the local memory-field gradient (archaeology as a force).
     // ── Field system — advance the medium once per solve ──
   // Ambient seeding toward the FIELD_* sliders + diffusion/decay + advection.
-  if (fieldsOn) {
+  // FIELD-ONCE: this call sits inside the per-particle loop, so the medium
+  // advances once per PARTICLE (N× per tick) — the cost behind most multiplex
+  // lag. Kept as the default so behaviour is unchanged until Gem approves the
+  // fix; runtimeConfig.fieldAdvanceOnce = true advances once per solve instead
+  // (after the loop, see below).
+  if (fieldsOn && !fieldAdvanceOnce) {
     advanceFields(fieldSystem, dt, WP);
   }
 
@@ -1939,6 +1947,11 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     applyExothermic(lawState, view, iBase,
       localTimeStep, syn[LAW_INDEXES.EXOTHERMIC]);
 
+  }
+
+  // FIELD-ONCE (opt-in): advance the medium exactly once per solve.
+  if (fieldsOn && fieldAdvanceOnce) {
+    advanceFields(fieldSystem, dt, WP);
   }
 
   // ── History — advance the memory-field clock once per solve ──

@@ -29,6 +29,9 @@ export const runtimeConfig = {
   // (0 = exact traversal; 0.4–0.7 typical). See src/physics/octree.js.
   gravEngine: 'reference', // legacy alias 'exact' behaves identically
   gravTheta: 0.5,
+  // FIELD-ONCE (needs Gem): false = legacy behaviour, the field medium advances
+  // once per particle per tick; true = once per tick. See docs/MULTIPLEX-PERF.md.
+  fieldAdvanceOnce: false,
   // v9.0 — compute engine: GPU is the user-facing default. The worker probes
   // WebGPU once and falls back to the validated CPU path when unavailable;
   // explicit CPU selection remains available in SETTINGS > COMPUTE.

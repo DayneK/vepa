@@ -196,11 +196,108 @@ export function compatibilityForViews(view, iBase, jBase, world = {}) {
 export function meetsCompatibility(compatibility, requirements = {}) {
   if (!compatibility) return false;
   if (compatibility.overall < (requirements.overall ?? 0)) return false;
-  for (const [dimension, threshold] of Object.entries(requirements)) {
-    if (dimension === 'overall') continue;
-    if ((compatibility.dimensions[dimension] ?? 0) < threshold) return false;
+  // for…in over a plain requirements literal visits the same keys in the
+  // same order as Object.entries, without allocating entry arrays (MX-20).
+  for (const dimension in requirements) {
+    if (dimension === 'overall' || !Object.prototype.hasOwnProperty.call(requirements, dimension)) continue;
+    if ((compatibility.dimensions[dimension] ?? 0) < requirements[dimension]) return false;
   }
   return true;
 }
 
 export { LOCUS_TO_INDEX };
+
+// ── Allocation-free hot path (MX-20) ──────────────────────────────────────
+// The solver evaluates compatibility for many neighbour pairs per tick. The
+// object-based path above allocates two 42-value arrays, two trait objects
+// and three frozen objects per pair, which made it ~30% of multiplex tick
+// time. This path reads the particle rows directly and writes into a caller-
+// owned scratch object. Every arithmetic step mirrors evaluateCompatibility()
+// in the same order, so results are bit-identical (tests/unit/
+// compatibilityFastPath.test.js and the golden-parity fixture check this).
+const DC = S.DNA_CACHE_START;
+// The object path copies only the 42-value particle cache, so loci at or
+// beyond 42 (DOMINANCE, CROSSOVER_RATE, GENE_FLOW: genome-only) read as
+// undefined there. Mirror that exactly.
+const CACHE_LEN = 42;
+const cacheAt = (view, base, index) => (index < CACHE_LEN ? view[base + index] : undefined);
+
+/** Create a reusable scratch result for compatibilityForViewsInto(). */
+export function createCompatibilityScratch() {
+  return {
+    sameSpecies: false, speciesAffinity: 0, interaction: 0, overall: 0,
+    dimensions: { physical: 0, energetic: 0, genetic: 0, geometric: 0, resource: 0, behavioral: 0, reproductive: 0 },
+  };
+}
+
+/**
+ * Same result as compatibilityForViews(), written into `out` (reused; valid
+ * until the next call with the same scratch). Not frozen.
+ */
+export function compatibilityForViewsInto(view, iBase, jBase, world, out) {
+  const aSpecies = view[iBase + S.SPECIES_ID], bSpecies = view[jBase + S.SPECIES_ID];
+  const aEnergy = view[iBase + S.ENERGY], bEnergy = view[jBase + S.ENERGY];
+  const aRadius = view[iBase + S.RADIUS], bRadius = view[jBase + S.RADIUS];
+  const ad = iBase + DC, bd = jBase + DC;
+  const sameSpecies = aSpecies === bSpecies;
+  const speciesAffinity = clamp01(0.5 + average(cacheAt(view, ad, D.SPECIES_AFFINITY), cacheAt(view, bd, D.SPECIES_AFFINITY)) * 0.5);
+  const interaction = clamp01(Number.isFinite(world.SPECIES_INTERACTION) ? (world.SPECIES_INTERACTION + 2) / 4 : 0.5);
+  const radiusScale = Math.max(aRadius || 1, bRadius || 1, 1);
+
+  const physical = clamp01(
+    similarity(cacheAt(view, ad, D.STIFFNESS), cacheAt(view, bd, D.STIFFNESS), 5) * 0.45 +
+    similarity(cacheAt(view, ad, D.ELASTICITY), cacheAt(view, bd, D.ELASTICITY), 1) * 0.25 +
+    similarity(aRadius, bRadius, radiusScale) * 0.2 +
+    (sameSpecies ? 0.1 : 0),
+  );
+  const energetic = clamp01(
+    similarity(aEnergy, bEnergy, 200) * 0.55 +
+    similarity(cacheAt(view, ad, D.ENERGY_EFFICIENCY), cacheAt(view, bd, D.ENERGY_EFFICIENCY), 10) * 0.45,
+  );
+  const genetic = clamp01(
+    speciesAffinity * 0.45 +
+    similarity(cacheAt(view, ad, D.DOMINANCE), cacheAt(view, bd, D.DOMINANCE), 1) * 0.2 +
+    similarity(cacheAt(view, ad, D.CROSSOVER_RATE), cacheAt(view, bd, D.CROSSOVER_RATE), 0.5) * 0.2 +
+    similarity(cacheAt(view, ad, D.GENE_FLOW), cacheAt(view, bd, D.GENE_FLOW), 1) * 0.15,
+  );
+  const geometric = clamp01(
+    similarity(cacheAt(view, ad, D.SYMMETRY), cacheAt(view, bd, D.SYMMETRY), 2) * 0.35 +
+    circularSimilarity(cacheAt(view, ad, D.BOND_ANGLE), cacheAt(view, bd, D.BOND_ANGLE)) * 0.35 +
+    similarity(aRadius, bRadius, radiusScale) * 0.3,
+  );
+  const resource = clamp01(
+    similarity(cacheAt(view, ad, D.ENERGY_EFFICIENCY), cacheAt(view, bd, D.ENERGY_EFFICIENCY), 10) * 0.45 +
+    similarity(cacheAt(view, ad, D.CONDUCTIVITY), cacheAt(view, bd, D.CONDUCTIVITY), 1) * 0.25 +
+    similarity(cacheAt(view, ad, D.HEAT_OUTPUT), cacheAt(view, bd, D.HEAT_OUTPUT), 1) * 0.3,
+  );
+  const behavioral = clamp01(
+    similarity(cacheAt(view, ad, D.SIGNAL_RESP), cacheAt(view, bd, D.SIGNAL_RESP), 2) * 0.35 +
+    similarity(cacheAt(view, ad, D.MEMORY_DECAY), cacheAt(view, bd, D.MEMORY_DECAY), 0.1) * 0.25 +
+    similarity(cacheAt(view, ad, D.PREDATION_BIAS), cacheAt(view, bd, D.PREDATION_BIAS), 20) * 0.2 +
+    speciesAffinity * 0.2,
+  );
+  const reproductive = clamp01(
+    speciesAffinity * 0.35 +
+    similarity(cacheAt(view, ad, D.SEX_CHANCE), cacheAt(view, bd, D.SEX_CHANCE), 10) * 0.3 +
+    similarity(cacheAt(view, ad, D.BIRTH_RATE), cacheAt(view, bd, D.BIRTH_RATE), 10) * 0.2 +
+    genetic * 0.15,
+  );
+  // Same left-to-right product as Object.values(dimensions).reduce(...).
+  let product = 1;
+  product = product * Math.max(physical, 0.001);
+  product = product * Math.max(energetic, 0.001);
+  product = product * Math.max(genetic, 0.001);
+  product = product * Math.max(geometric, 0.001);
+  product = product * Math.max(resource, 0.001);
+  product = product * Math.max(behavioral, 0.001);
+  product = product * Math.max(reproductive, 0.001);
+  const weighted = product ** (1 / 7);
+  const dims = out.dimensions;
+  dims.physical = physical; dims.energetic = energetic; dims.genetic = genetic; dims.geometric = geometric;
+  dims.resource = resource; dims.behavioral = behavioral; dims.reproductive = reproductive;
+  out.sameSpecies = sameSpecies;
+  out.speciesAffinity = speciesAffinity;
+  out.interaction = interaction;
+  out.overall = clamp01(weighted * (sameSpecies ? 1 : interaction));
+  return out;
+}

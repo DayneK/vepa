@@ -17,7 +17,7 @@
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 9 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | LAW_HELP_DB |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 63 | LAW_HELP_DB |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 64 | LAW_HELP_DB |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 3 | LAW_HELP_DB |
 | 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | LAW_HELP_DB |
