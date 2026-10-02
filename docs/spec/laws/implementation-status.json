@@ -2651,6 +2651,7 @@
       "category": "information",
       "status": "wired",
       "implementationFiles": [
+        "src/physics/cipherKey.js",
         "src/physics/laws.js",
         "src/physics/solver.js"
       ],

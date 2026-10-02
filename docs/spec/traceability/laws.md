@@ -115,7 +115,7 @@
 | 108 | [SHIELDING](../laws/electromagnetism/108_SHIELDING.md) | electromagnetism | 1 | 1 | 1 | LAW_HELP_DB |
 | 109 | [POLARIZATION](../laws/electromagnetism/109_POLARIZATION.md) | electromagnetism | 1 | 1 | 1 | LAW_HELP_DB |
 | 110 | [NAVIGATION](../laws/information/110_NAVIGATION.md) | information | 1 | 1 | 2 | LAW_HELP_DB |
-| 111 | [ENCRYPTION](../laws/information/111_ENCRYPTION.md) | information | 1 | 2 | 1 | LAW_HELP_DB |
+| 111 | [ENCRYPTION](../laws/information/111_ENCRYPTION.md) | information | 1 | 3 | 1 | LAW_HELP_DB |
 | 112 | [SUPERPOSITION](../laws/quantum/112_SUPERPOSITION.md) | quantum | 1 | 2 | 2 | LAW_HELP_DB |
 | 113 | [TUNNELING](../laws/quantum/113_TUNNELING.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 114 | [DECOHERENCE](../laws/quantum/114_DECOHERENCE.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
