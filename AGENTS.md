@@ -206,7 +206,7 @@ Source of truth: `STRIDE_INDEXES` in `src/constants.js` and `src/physics/lawgrou
 
 ### 3.5 Law State (Bitmask) System — VERIFIED v4 ARCHITECTURE
 
-Laws are bit flags in a **128-bit state: four `Uint32Array(1)` words — `lowFlags` (0-31), `highFlags` (32-63), `extFlags` (64-95), `quadFlags` (96-127)** (`src/state/lawState.js`). This covers `LAW_COUNT = 128`. Never hardcode law indices — always use `LAW_INDEXES` from `src/constants.js` (128 keys).
+Laws are bit flags in a **160-bit state: five `Uint32Array(1)` words — `lowFlags` (0-31), `highFlags` (32-63), `extFlags` (64-95), `quadFlags` (96-127), `pentaFlags` (128-135, slate Mechanics)** (`src/state/lawState.js`). This covers `LAW_COUNT = 136`. Never hardcode law indices — always use `LAW_INDEXES` from `src/constants.js` (136 keys). Any code that copies law words by hand (saves, multiplex shards) must include `pentaFlags`.
 
 - **Helpers:** `createLawState()`, `set()`, `clear()`, `toggle()`, `isSet()`, `getActiveCount()` (popcount), `getStateVector()`, `fromVector()`, `serialize()` (`{low,high,ext,quad}`), `deserialize()` (accepts legacy 3-word objects, quad defaults 0).
 - **Worker consumption:** `src/worker/physics.worker.js` imports the lawState helpers, keeps its own `lawState`, and passes it to `solve(particleView, particleCount, stride, lawState, dnaBuffer, worldSize, dt, rng)`.
@@ -277,7 +277,7 @@ Laws are multi-state toggles in the 128-bit `lawState` bitmask (§3.5), each wit
 | Quantum | PURPLE | `quantumLaws.js` |
 | Mechanics | SLATE | `mechanicsLaws.js` (CONTACT, MOMENTUM, INERTIA, TORQUE, CONSTRAINT, FRAGMENTATION, TOPOLOGY, ADHESION) |
 
-The law grid renders the eight rainbow categories in the established order, with Mechanics as a visually separated slate-grey category. The current 128-bit map contains 12 Physics laws, 4 implemented Mechanics laws, and six remaining category slots reserved for future implemented Mechanics laws; it does not fabricate inert toggles. `LAW_CATEGORIES` (category → color + 16 indices) and `LAW_SPECTRUM` + `LAW_HUE_BY_INDEX` (128 hues, hue = spectrum position × 3.6) hold the mapping. Since v4.6.14 each category band is **4 spectrum points wide** (center ± 2; RED wraps 98%→102% through 0 — was 10 points before); all 128 laws keep distinct hues. An earlier EM-spectrum draft mapping (physics=BLUE, etc.) was superseded — the verified current mapping is the table above.
+The law grid renders the eight rainbow categories in the established order, with Mechanics as a visually separated slate-grey category. The rainbow 128-bit portion of the 160-bit map contains 12 Physics laws, 4 implemented Mechanics laws, and six remaining category slots reserved for future implemented Mechanics laws; it does not fabricate inert toggles. `LAW_CATEGORIES` (category → color + 16 indices) and `LAW_SPECTRUM` + `LAW_HUE_BY_INDEX` (128 hues, hue = spectrum position × 3.6) hold the mapping. Since v4.6.14 each category band is **4 spectrum points wide** (center ± 2; RED wraps 98%→102% through 0 — was 10 points before); all 128 laws keep distinct hues. An earlier EM-spectrum draft mapping (physics=BLUE, etc.) was superseded — the verified current mapping is the table above.
 
 ---
 
