@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { exportProvenance, headerLines } from './export-header.mjs';
 
 // Define the list of documentation/specification files to concatenate
 const docFiles = [
@@ -12,7 +13,7 @@ const outputFile = 'exports/vepa-docs-concat.md';
 
 console.log('Generating documentation summary...');
 
-let combinedContent = `# VEPA4 Documentation Summary\n\nGenerated on: ${new Date().toISOString()}\n\n`;
+let combinedContent = `# VEPA4 Documentation Summary\n\n${headerLines(exportProvenance('npm run concat (exports/generate-docs-concat.mjs)'))}\n\n`;
 
 let foundCount = 0;
 for (const file of docFiles) {

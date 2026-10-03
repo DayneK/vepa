@@ -6,6 +6,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { exportProvenance, headerLines } from './export-header.mjs';
 
 const [snap, outFile] = process.argv.slice(2);
 const ROOT = path.resolve(snap);
@@ -40,7 +42,15 @@ function walk(dir, base = '') {
   return out;
 }
 
-const all = walk(ROOT);
+// ARP-10: snapshot the git-tracked tree when the snapshot dir is a checkout, so
+// untracked build output (dist/, test-results/) never leaks into the export.
+function tracked() {
+  try {
+    const list = execFileSync('git', ['ls-files'], { cwd: ROOT, encoding: 'utf8' }).split('\n').filter(Boolean);
+    return list.filter((rel) => !rel.split('/').some((seg) => EXCLUDE_DIRS.has(seg)) && !EXCLUDE_FILES.has(rel) && !rel.endsWith(MD_SUFFIX) && fs.existsSync(path.join(ROOT, rel))).sort();
+  } catch { return null; }
+}
+const all = tracked() || walk(ROOT);
 const linesOf = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8').split('\n').length;
 
 // ── per-file analysis ────────────────────────────────────────────────────────
@@ -210,7 +220,8 @@ function describeAuto(rel) {
 
 parts.push(`# VEPA4 — Full Hierarchical Codebase Concatenation
 
-**Generated:** ${new Date().toISOString().slice(0, 10)} · **Source snapshot:** \`backup/pre-master-switch-20260811\` (v4 root layout, 7.0.0 draft) · **Files:** ${textFiles.length} text + ${binaries.length} binary assets · **Total lines:** ${totalLines.toLocaleString()}
+${headerLines(exportProvenance('npm run concat (exports/generate-full-concat.mjs)'))}
+**Files:** ${textFiles.length} text + ${binaries.length} binary assets · **Total lines:** ${totalLines.toLocaleString()}
 **Scope:** every non-documentation file of the VEPA4 codebase. Markdown docs were moved to \`exports/vepa-docs-concat.md\` per the docs-consolidation decision; binary assets are listed in the TOC with descriptions (not embedded).
 
 ## Table of Contents
