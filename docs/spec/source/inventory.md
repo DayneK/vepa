@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `303` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `304` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `303` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 228 | 366 |
 | State | 31 | 280 | 232 |
-| Testing | 159 | 22 | 640 |
+| Testing | 160 | 22 | 645 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -93,7 +93,7 @@ The generator scanned `303` files from active repository inputs. Individual modu
 | [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 304 | 8 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
-| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2054 | 14 | 22 | 134 |
+| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2058 | 14 | 22 | 134 |
 | [src/physics/spatialGrid.js](../../../src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
 | [src/react-entry.js](../../../src/react-entry.js) | application | 20 | 0 | 2 | 0 |
@@ -121,7 +121,7 @@ The generator scanned `303` files from active repository inputs. Individual modu
 | [src/state/presetManager.js](../../../src/state/presetManager.js) | state | 86 | 6 | 0 | 0 |
 | [src/state/quantumMacro.js](../../../src/state/quantumMacro.js) | state | 494 | 4 | 3 | 8 |
 | [src/state/relativity.js](../../../src/state/relativity.js) | state | 209 | 7 | 2 | 3 |
-| [src/state/runtimeConfig.js](../../../src/state/runtimeConfig.js) | state | 58 | 3 | 1 | 4 |
+| [src/state/runtimeConfig.js](../../../src/state/runtimeConfig.js) | state | 60 | 3 | 1 | 4 |
 | [src/state/stellar.js](../../../src/state/stellar.js) | state | 348 | 6 | 3 | 2 |
 | [src/state/structures.js](../../../src/state/structures.js) | state | 253 | 15 | 2 | 1 |
 | [src/state/synthetic.js](../../../src/state/synthetic.js) | state | 297 | 11 | 3 | 3 |
@@ -288,6 +288,7 @@ The generator scanned `303` files from active repository inputs. Individual modu
 | [tests/unit/multiplexScale.test.js](../../../tests/unit/multiplexScale.test.js) | testing | 77 | 0 | 6 | 2 |
 | [tests/unit/multiplexScheduler.test.js](../../../tests/unit/multiplexScheduler.test.js) | testing | 109 | 0 | 7 | 11 |
 | [tests/unit/octree.test.js](../../../tests/unit/octree.test.js) | testing | 151 | 0 | 7 | 1 |
+| [tests/unit/pairScalarParity.test.js](../../../tests/unit/pairScalarParity.test.js) | testing | 85 | 0 | 7 | 5 |
 | [tests/unit/perfKnobs.test.js](../../../tests/unit/perfKnobs.test.js) | testing | 84 | 0 | 3 | 0 |
 | [tests/unit/physics.test.js](../../../tests/unit/physics.test.js) | testing | 60 | 0 | 5 | 4 |
 | [tests/unit/prng.test.js](../../../tests/unit/prng.test.js) | testing | 49 | 0 | 2 | 0 |

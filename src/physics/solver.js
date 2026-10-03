@@ -319,6 +319,8 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   const view = particleBuffer; // Float32Array or SharedArrayBuffer view
   const S = STRIDE_INDEXES;
   const halfWorld = worldSize * 0.5;
+  // ARP-5 test probe (null in production): observes the hot-loop pair scalars.
+  const pairProbe = typeof runtimeConfig.pairProbe === 'function' ? runtimeConfig.pairProbe : null;
   dt = dt || DEFAULT_DT;
 
   // Zero laws active → hard freeze. Nothing moves, decays, reproduces, or
@@ -700,6 +702,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       const distSq = dx * dx + dy * dy + dz * dz;
       const dist = Math.sqrt(distSq);
+      if (pairProbe !== null) pairProbe('pair', view, iBase, jBase, worldSize, { dx, dy, dz, distSq, dist });
 
       // Relationship laws share one multidimensional eligibility vector. It
       // is computed lazily so worlds without joining/biological laws retain
@@ -795,6 +798,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
           const dvz = view[iBase + S.VEL_Z] - view[jBase + S.VEL_Z];
           const relVelN = dvx * nx + dvy * ny + dvz * nz;
           const relSpeed = Math.sqrt(dvx * dvx + dvy * dvy + dvz * dvz);
+          if (pairProbe !== null) pairProbe('contact', view, iBase, jBase, worldSize, { nx, ny, nz, relVelN, relSpeed, overlap, invDist });
 
           // ── ACCR fusion gating (confirmed batch-02 semantics) ──
           // FUSION_MOMENTUM (DNA 16): minimum relative momentum to fuse on

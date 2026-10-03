@@ -32,6 +32,8 @@ export const runtimeConfig = {
   // FIELD-ONCE (D-016): true (default) = the field medium advances once per tick;
   // false = legacy, once per particle per tick. See docs/GOLDEN-REBASELINE.md.
   fieldAdvanceOnce: true,
+  // ARP-5: test-only hook observing solver pair scalars; must stay null in production.
+  pairProbe: null,
   // v9.0 — compute engine: GPU is the user-facing default. The worker probes
   // WebGPU once and falls back to the validated CPU path when unavailable;
   // explicit CPU selection remains available in SETTINGS > COMPUTE.
