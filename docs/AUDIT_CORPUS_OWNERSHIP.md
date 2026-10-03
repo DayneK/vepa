@@ -40,11 +40,19 @@ The report records file paths, byte sizes, SHA-256 hashes, family classification
 4. Preserve all current records while provenance is unresolved.
 5. Any future consolidation must first produce a path-level mapping from each removed record to its retained canonical record, with a reversible archive or commit boundary.
 
+## Retention decision (D-009, 2026-10-03)
+
+Gem decided (D-009, source human): the historical a3 reports **stay in the repository under `docs/audit`**, marked as
+retained historical records in `docs/audit/provenance.json` (`status: retained-historical`, `retentionDecision`). Each
+record now carries a provenance header: `stage`, `producer`, `date`, `sourceRevision` (ARP-9). The original generator is
+not in this tree; the corpus entered the repository in `ac9f717` ("Initial import from gemquota/vepa", 2026-09-10), and
+that is what the headers record. `npm run provenance:check` fails if any header is missing.
+
 ## Deferred decisions
 
 - Identify the generator or manual process that produced each stage family.
 - Compare roll-up claims against the generated law implementation and ontology manifests.
-- Decide whether historical reports belong in the main repository, a versioned archive, or release artifacts.
+- ~~Decide whether historical reports belong in the main repository, a versioned archive, or release artifacts.~~ Decided: main repository (D-009).
 - Add a provenance header to future audit outputs rather than retroactively rewriting historical reports.
 
 This document authorizes classification only. It does not authorize deletion, relocation, or rewriting of the corpus.

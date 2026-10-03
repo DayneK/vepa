@@ -27,14 +27,16 @@ function pathCovered(file, records) {
   return records.some((record) => file === record.path || file.startsWith(`${record.path}/`));
 }
 
-function validateManifest(path) {
+export function validateManifest(path, override = null) {
   const errors = [];
-  if (!existsSync(path)) return [`${path}: manifest is missing`];
-  let manifest;
-  try {
-    manifest = readJson(path);
-  } catch (error) {
-    return [`${path}: invalid JSON (${error.message})`];
+  let manifest = override;
+  if (!manifest) {
+    if (!existsSync(path)) return [`${path}: manifest is missing`];
+    try {
+      manifest = readJson(path);
+    } catch (error) {
+      return [`${path}: invalid JSON (${error.message})`];
+    }
   }
 
   for (const key of ['schema', 'generatedBy', 'authority', 'records']) {
@@ -54,6 +56,12 @@ function validateManifest(path) {
       if (paths.has(record.path)) errors.push(`${path}: duplicate record path ${record.path}`);
       paths.add(record.path);
       if (!existsSync(record.path)) errors.push(`${path}: referenced path is missing: ${record.path}`);
+    }
+    // ARP-9: audit-corpus records carry per-stage provenance headers.
+    if (path === 'docs/audit/provenance.json') {
+      for (const key of ['stage', 'producer', 'date', 'sourceRevision']) {
+        if (!record[key]) errors.push(`${path}: record ${record.path || '?'} missing provenance header ${key}`);
+      }
     }
     if (record.status === 'current-authority') {
       errors.push(`${path}: derived record cannot be current-authority: ${record.path}`);
@@ -78,7 +86,7 @@ function validateManifest(path) {
 }
 
 export function validateProvenance() {
-  return manifests.flatMap(validateManifest);
+  return manifests.flatMap((p) => validateManifest(p));
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

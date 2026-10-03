@@ -9,7 +9,7 @@
     "bench",
     "public"
   ],
-  "sourceFileCount": 313,
+  "sourceFileCount": 314,
   "sourceAreas": {
     "benchmark": 8,
     "repository": 7,
@@ -17,7 +17,7 @@
     "state": 31,
     "simulation": 30,
     "ui": 27,
-    "testing": 169
+    "testing": 170
   },
   "laws": {
     "declared": 136,
