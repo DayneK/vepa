@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `320` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `322` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -10,8 +10,8 @@ The generator scanned `320` files from active repository inputs. Individual modu
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 230 | 369 |
-| State | 33 | 286 | 377 |
-| Testing | 174 | 23 | 666 |
+| State | 34 | 288 | 462 |
+| Testing | 175 | 23 | 668 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -125,6 +125,7 @@ The generator scanned `320` files from active repository inputs. Individual modu
 | [src/state/runtimeConfig.js](../../../src/state/runtimeConfig.js) | state | 60 | 3 | 1 | 4 |
 | [src/state/stateBudgets.js](../../../src/state/stateBudgets.js) | state | 66 | 4 | 0 | 9 |
 | [src/state/stellar.js](../../../src/state/stellar.js) | state | 348 | 6 | 3 | 2 |
+| [src/state/strideWriteContract.js](../../../src/state/strideWriteContract.js) | state | 77 | 2 | 1 | 85 |
 | [src/state/structures.js](../../../src/state/structures.js) | state | 253 | 15 | 2 | 1 |
 | [src/state/synthetic.js](../../../src/state/synthetic.js) | state | 297 | 11 | 3 | 3 |
 | [src/state/systemFoundation.js](../../../src/state/systemFoundation.js) | state | 71 | 4 | 0 | 1 |
@@ -320,6 +321,7 @@ The generator scanned `320` files from active repository inputs. Individual modu
 | [tests/unit/specHelpCoverage.test.js](../../../tests/unit/specHelpCoverage.test.js) | testing | 30 | 0 | 5 | 0 |
 | [tests/unit/stateBudgets.test.js](../../../tests/unit/stateBudgets.test.js) | testing | 33 | 0 | 4 | 5 |
 | [tests/unit/stellar.test.js](../../../tests/unit/stellar.test.js) | testing | 281 | 0 | 5 | 2 |
+| [tests/unit/strideWriteContract.test.js](../../../tests/unit/strideWriteContract.test.js) | testing | 22 | 0 | 3 | 2 |
 | [tests/unit/structures.test.js](../../../tests/unit/structures.test.js) | testing | 451 | 0 | 3 | 1 |
 | [tests/unit/synergyCache.test.js](../../../tests/unit/synergyCache.test.js) | testing | 62 | 0 | 4 | 28 |
 | [tests/unit/synthetic.test.js](../../../tests/unit/synthetic.test.js) | testing | 420 | 0 | 6 | 1 |

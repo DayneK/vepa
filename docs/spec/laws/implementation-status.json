@@ -37,6 +37,7 @@
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/physics.test.js",
         "tests/unit/stateBudgets.test.js",
+        "tests/unit/strideWriteContract.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js",
         "tests/unit/worldSave.test.js",
@@ -2548,7 +2549,8 @@
         "tests/unit/launchModal.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/multiplexScale.test.js",
-        "tests/unit/stateBudgets.test.js"
+        "tests/unit/stateBudgets.test.js",
+        "tests/unit/strideWriteContract.test.js"
       ],
       "relationshipTypes": [
         "reads",
