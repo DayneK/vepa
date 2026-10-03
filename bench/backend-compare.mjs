@@ -4,7 +4,7 @@
 
 import { performance } from 'node:perf_hooks';
 import { PARTICLE_STRIDE, WORLD_SIZE, STRIDE_INDEXES } from '../src/constants.js';
-import { createOctree, buildOctree, octreeGravity } from '../src/physics/octree.js';
+import { createOctree, buildOctree, octreeGravity, bhThetaForPopulation } from '../src/physics/octree.js';
 import { fmmGravity } from '../src/physics/fmm.js';
 
 const S = STRIDE_INDEXES;
@@ -101,7 +101,7 @@ function timed(fn) {
   return +(performance.now() - start).toFixed(3);
 }
 
-export function compareBackends({ count = DEFAULT_COUNT, seed = DEFAULT_SEED, theta = 0.7 } = {}) {
+export function compareBackends({ count = DEFAULT_COUNT, seed = DEFAULT_SEED, theta = bhThetaForPopulation(count) } = {}) {
   const view = createFixture(count, seed);
   const exactX = new Float64Array(count), exactY = new Float64Array(count), exactZ = new Float64Array(count);
   const treeX = new Float64Array(count), treeY = new Float64Array(count), treeZ = new Float64Array(count);
@@ -149,5 +149,15 @@ export function compareBackends({ count = DEFAULT_COUNT, seed = DEFAULT_SEED, th
 if (import.meta.url === `file://${process.argv[1]}`) {
   const countArg = process.argv.indexOf('--count');
   const count = countArg >= 0 ? Number(process.argv[countArg + 1]) : DEFAULT_COUNT;
-  console.log(JSON.stringify(compareBackends({ count }), null, 2));
+  const thetaArg = process.argv.indexOf('--theta');
+  const opts = { count };
+  if (thetaArg >= 0) opts.theta = Number(process.argv[thetaArg + 1]);
+  if (process.argv.includes('--scales')) {
+    // BH-ENV: the population-scaled θ envelope at every scale 32–2048.
+    const rows = [32, 64, 128, 256, 512, 1024, 2048].map((n) => {
+      const r = compareBackends({ count: n });
+      return { count: n, theta: +r.fixture.theta.toFixed(3), octreeRms: +r.candidates.octree.error.rmsRelative.toFixed(4), withinEnvelope: r.candidates.octree.error.rmsRelative <= 0.1 };
+    });
+    console.log(JSON.stringify(rows, null, 2));
+  } else console.log(JSON.stringify(compareBackends(opts), null, 2));
 }

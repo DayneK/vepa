@@ -2,23 +2,23 @@
 
 # Source: Inventory
 
-The generator scanned `305` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `307` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 41 | 179 | 480 |
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
-| Simulation | 30 | 228 | 369 |
+| Simulation | 30 | 229 | 369 |
 | State | 31 | 280 | 232 |
-| Testing | 161 | 22 | 649 |
+| Testing | 163 | 22 | 649 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
 
 | Path | Area | Lines | Exports | Imports | Law refs |
 | --- | --- | --- | --- | --- | --- |
-| [bench/backend-compare.mjs](../../../bench/backend-compare.mjs) | benchmark | 154 | 5 | 4 | 0 |
+| [bench/backend-compare.mjs](../../../bench/backend-compare.mjs) | benchmark | 164 | 5 | 4 | 0 |
 | [bench/multiplex-bench.mjs](../../../bench/multiplex-bench.mjs) | benchmark | 148 | 0 | 2 | 3 |
 | [bench/multiplex-node-pool.mjs](../../../bench/multiplex-node-pool.mjs) | benchmark | 13 | 1 | 1 | 0 |
 | [bench/multiplex-render.mjs](../../../bench/multiplex-render.mjs) | benchmark | 70 | 0 | 1 | 0 |
@@ -88,12 +88,12 @@ The generator scanned `305` files from active repository inputs. Individual modu
 | [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2762 | 106 | 8 | 85 |
 | [src/physics/mechanicsDiagnostics.js](../../../src/physics/mechanicsDiagnostics.js) | simulation | 67 | 1 | 3 | 3 |
 | [src/physics/mergePhysics.js](../../../src/physics/mergePhysics.js) | simulation | 344 | 6 | 2 | 8 |
-| [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 383 | 4 | 0 | 0 |
+| [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 397 | 5 | 0 | 0 |
 | [src/physics/pairGeometry.js](../../../src/physics/pairGeometry.js) | simulation | 41 | 1 | 1 | 0 |
 | [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 304 | 8 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
-| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2058 | 14 | 22 | 134 |
+| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2059 | 14 | 22 | 134 |
 | [src/physics/spatialGrid.js](../../../src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
 | [src/react-entry.js](../../../src/react-entry.js) | application | 20 | 0 | 2 | 0 |
@@ -227,6 +227,7 @@ The generator scanned `305` files from active repository inputs. Individual modu
 | [tests/unit/backendArchitecture.test.js](../../../tests/unit/backendArchitecture.test.js) | testing | 30 | 0 | 2 | 9 |
 | [tests/unit/batch4Reports.test.js](../../../tests/unit/batch4Reports.test.js) | testing | 34 | 0 | 3 | 0 |
 | [tests/unit/batch5Reports.test.js](../../../tests/unit/batch5Reports.test.js) | testing | 34 | 0 | 2 | 0 |
+| [tests/unit/bhThetaEnvelope.test.js](../../../tests/unit/bhThetaEnvelope.test.js) | testing | 32 | 0 | 4 | 0 |
 | [tests/unit/buffer.test.js](../../../tests/unit/buffer.test.js) | testing | 55 | 0 | 3 | 0 |
 | [tests/unit/civilization.test.js](../../../tests/unit/civilization.test.js) | testing | 257 | 0 | 2 | 1 |
 | [tests/unit/civilizationPanel.test.js](../../../tests/unit/civilizationPanel.test.js) | testing | 262 | 0 | 7 | 0 |
@@ -289,6 +290,7 @@ The generator scanned `305` files from active repository inputs. Individual modu
 | [tests/unit/multiplexScale.test.js](../../../tests/unit/multiplexScale.test.js) | testing | 77 | 0 | 6 | 2 |
 | [tests/unit/multiplexScheduler.test.js](../../../tests/unit/multiplexScheduler.test.js) | testing | 109 | 0 | 7 | 11 |
 | [tests/unit/octree.test.js](../../../tests/unit/octree.test.js) | testing | 151 | 0 | 7 | 1 |
+| [tests/unit/octreeQuadrupole.test.js](../../../tests/unit/octreeQuadrupole.test.js) | testing | 64 | 0 | 2 | 0 |
 | [tests/unit/pairScalarParity.test.js](../../../tests/unit/pairScalarParity.test.js) | testing | 85 | 0 | 7 | 5 |
 | [tests/unit/perfKnobs.test.js](../../../tests/unit/perfKnobs.test.js) | testing | 84 | 0 | 3 | 0 |
 | [tests/unit/physics.test.js](../../../tests/unit/physics.test.js) | testing | 60 | 0 | 5 | 4 |

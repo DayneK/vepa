@@ -16,6 +16,20 @@
 //    to particle→node displacements.
 // ============================================================================
 
+/**
+ * BH-ENV (D-008): population-scaled opening angle. Barnes–Hut force error grows
+ * with N at a fixed θ (more far-field cells accepted), so θ shrinks from 0.7 at
+ * N ≤ 128 by 0.1 per doubling, floored at 0.5. Measured on the bench:backends
+ * fixture this keeps rmsRelative ≤ 0.1 at every scale 32–2048 (see
+ * tests/unit/bhThetaEnvelope.test.js). Callers take min(user θ, this), so the
+ * default gravTheta 0.5 is unchanged.
+ */
+export function bhThetaForPopulation(n, ceiling = 0.7, floor = 0.5) {
+  const count = Math.max(1, Number(n) || 1);
+  const t = 0.7 - 0.1 * Math.log2(Math.max(1, count / 128));
+  return Math.max(floor, Math.min(ceiling, 0.7, t));
+}
+
 const MAX_DEPTH = 24;
 const SOFTENING = 0.5; // matches laws.js applyGravity
 

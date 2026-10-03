@@ -17,7 +17,7 @@ import { isAlive } from '../state/particleBuffer.js';
 import { isSet } from '../state/lawState.js';
 import { createGrid, clear, insert, getNeighbors } from './spatialGrid.js';
 // v8.17 — Barnes–Hut long-range gravity engine (opt-in via runtimeConfig.gravEngine)
-import { createOctree, buildOctree, octreeGravity } from './octree.js';
+import { createOctree, buildOctree, bhThetaForPopulation, octreeGravity } from './octree.js';
 import { fmmGravity } from './fmm.js';
 import { gpuComputeForcesSync } from './gpuCompute.js';
 import {
@@ -541,7 +541,8 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     particleCount > 0
   ) {
     const theta = Number(runtimeConfig.gravTheta);
-    _bhTheta = Number.isFinite(theta) ? Math.max(0, theta) : 0.5;
+    // BH-ENV (D-008): never coarser than the population-scaled θ envelope.
+    _bhTheta = Math.min(Number.isFinite(theta) ? Math.max(0, theta) : 0.5, bhThetaForPopulation(particleCount));
     if (!_bhTree) _bhTree = createOctree(Math.max(1024, particleCount));
     buildOctree(_bhTree, view, stride, particleCount, worldSize);
     _bhTree.useQuadrupole = runtimeConfig.gravEngine === 'fmm';

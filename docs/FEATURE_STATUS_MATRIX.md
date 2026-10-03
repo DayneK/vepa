@@ -78,7 +78,7 @@ The following claims should not be presented as fully complete without additiona
 
 1. FMM is retained as an **experimental** opt-in backend by recorded decision: the former `cellNeighbours` placeholder is now an implemented and tested toroidal minimum-image stencil, but measured error exceeds the shared envelope at every fixture scale (`docs/BACKEND_ENVELOPES.md` §2–3).
 2. WebGPU acceleration is opt-in and operational only when a browser device is granted; committed tests cover contracts/fallbacks plus a browser GPU-vs-CPU fixture, while routine hardware execution remains an external-environment gate.
-3. Barnes–Hut is approximate by design and must retain the exact solver as its parity reference; its envelope holds through 512 particles and is marginal at 2048 (measured 0.109 vs 0.1).
+3. Barnes–Hut is approximate by design and must retain the exact solver as its parity reference; with the population-scaled θ (BH-ENV) its envelope holds at 32–2048 on the bench fixture (0.043 at 2048); other seeds exceed it at ≥ 2048 because of the periodic-image approximation (docs/BACKEND_ENVELOPES.md §2a).
 4. The 136-law registry is complete as a catalogue, but behavioral and relationship metadata coverage varies by law (35 laws carry relationship metadata after the risk-prioritized expansion; coverage is reported honestly in `docs/spec/laws/ontology-coverage.json`).
 5. Mechanics consolidation is architecturally established but not yet a universal hot-path abstraction; the equivalent hot-loop scalars are explicitly documented as performance-specialized (`MECHANICS_CONSUMER_MATRIX.md` boundary rule 3).
 6. Audit prose can confirm intended implementation claims but cannot replace executable behavior tests.

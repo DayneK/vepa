@@ -40,15 +40,42 @@ Promotion rules (remediation plan §4.3):
 
 Reading:
 
-- **Barnes–Hut** stays within the envelope through 512 particles and is
-  marginal at 2048 (theta error grows with scale). It is a supported opt-in
-  backend with a documented envelope; the regression tests pin the ≤512 band.
+- **Barnes–Hut** (fixed θ 0.7, table above) stays within the envelope through 512 particles and is
+  marginal at 2048. With the population-scaled θ (§2a) it is within the envelope at every scale
+  32–2048 on the CLI seed; see §2a for the periodic-image finding on other seeds.
 - **FMM** (table above is the pre-2026-10-03 measurement) was outside the
   `rmsRelative` envelope at every scale. The 2026-10-03 bug hunt
   (`docs/FMM-INVESTIGATION.md`) fixed seven defects. Now: exact at 32 (single
   level, all near field); 2.5e-1 / 3.0e-1 / 3.0e-1 at 128 / 512 / 2048
   (seed 0x12345678), so FMM is still outside the 0.1 envelope from 128 up. The
   remaining error is a documented truncation hypothesis.
+
+## 2a. Population-scaled θ (BH-ENV, D-008, 2026-10-03)
+
+`bhThetaForPopulation(n)` (src/physics/octree.js): θ = 0.7 for n ≤ 128, −0.1 per doubling, floored at 0.5. The solver
+uses min(gravTheta, scaled θ), so the default gravTheta 0.5 is unchanged. `bench:backends` now defaults to the scaled θ;
+`node bench/backend-compare.mjs --scales` prints the envelope. CLI seed 0x9e3779b9:
+
+| Count | θ | Barnes–Hut rmsRelative | within 0.1 |
+|------:|---:|---:|:---:|
+| 32 | 0.7 | 0.071 | yes |
+| 64 | 0.7 | 0.051 | yes |
+| 128 | 0.7 | 0.072 | yes |
+| 256 | 0.6 | 0.055 | yes |
+| 512 | 0.5 | 0.022 | yes |
+| 1024 | 0.5 | 0.051 | yes |
+| 2048 | 0.5 | 0.043 | yes |
+
+Pinned by tests/unit/bhThetaEnvelope.test.js (7 scales plus seeds 12345 and 0xabcdef at 2048).
+
+**Finding: θ is not the root cause at large N (decision for Gem).** On other seeds the error at 2048 stays at 0.12–0.14
+(seed 0x12345678: 0.135 at θ 0.5, 0.138 at θ 0.3) and reaches 0.15–0.20 at 4,096–8,192, almost independent of θ until
+θ ≤ 0.2. The cause is the periodic (minimum-image) approximation. A cell whose extent crosses the half-world cut has
+members on both periodic images, so its centre of mass is a wrong far-field proxy. Opening such cells makes Barnes–Hut
+accurate at every scale and seed tried (rms 0.002–0.011 at 32–8,192). But it is then barely faster than exact summation
+(2048: 160 ms vs 122 ms; 8192: 1.4 s vs 2.1 s). Options: (a) ship the straddle-opening fix (accurate, slow);
+(b) keep the fast approximation with the θ envelope above (seed-dependent at ≥ 2048); (c) a proper periodic tree
+(replica cells / Ewald far field), which is a larger piece of work. Not changed without a decision.
 
 ## 3. FMM decision (remediation plan §5.1)
 
