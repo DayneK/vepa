@@ -88,7 +88,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2762 | 106 | 8 | 85 |
 | [src/physics/mechanicsDiagnostics.js](../../../src/physics/mechanicsDiagnostics.js) | simulation | 67 | 1 | 3 | 3 |
 | [src/physics/mergePhysics.js](../../../src/physics/mergePhysics.js) | simulation | 344 | 6 | 2 | 8 |
-| [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 397 | 5 | 0 | 0 |
+| [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 399 | 5 | 0 | 0 |
 | [src/physics/pairGeometry.js](../../../src/physics/pairGeometry.js) | simulation | 41 | 1 | 1 | 0 |
 | [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 304 | 8 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |

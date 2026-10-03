@@ -24,8 +24,8 @@ export const runtimeConfig = {
   signalScale: 1.0,    // global communication DNA multiplier
   // v8.17 — gravity engine: 'reference' (default, per-pair DNA-aware reference
   // CPU solver; 'exact' is a permanent legacy alias), 'bh'
-  // (Barnes–Hut monopole, O(N log N)), or 'fmm' (BH + quadrupole correction,
-  // ~10× more accurate at the same theta). gravTheta is the opening angle
+  // (Barnes–Hut monopole, O(N log N)), or 'fmm' (experimental FMM with
+  // quadrupole terms; not more accurate than 'bh' today, see BACKEND_ENVELOPES). gravTheta is the opening angle
   // (0 = exact traversal; 0.4–0.7 typical). See src/physics/octree.js.
   gravEngine: 'reference', // legacy alias 'exact' behaves identically
   gravTheta: 0.5,

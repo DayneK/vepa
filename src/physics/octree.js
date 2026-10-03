@@ -4,8 +4,10 @@
 // Monopole Barnes–Hut (θ=0.5 → ~2% RMS force error) with optional quadrupole
 // correction (FMM order-2 Cartesian expansion). The quadrupole moments Q_ij
 // are propagated up the tree during the build pass; during traversal the
-// quadrupole-corrected force kernel replaces the monopole for accepted cells,
-// reducing RMS error ~10× at the same θ (or allowing coarser θ for speed).
+// quadrupole-corrected force kernel replaces the monopole for accepted cells.
+// Measured (tests/unit/octreeQuadrupole.test.js, D-021): no accuracy gain over
+// the monopole at the same θ (rms ≈ 0.032 at N=256 and N=1024), so this mode is
+// kept opt-in for research only; it is not more accurate than plain Barnes–Hut.
 //
 // Semantics vs the exact law (documented approximation):
 //  - Bodies are aggregated into cell centres of mass (opening angle theta ≈
