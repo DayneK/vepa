@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `314` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `315` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `314` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 230 | 369 |
 | State | 31 | 280 | 232 |
-| Testing | 170 | 23 | 655 |
+| Testing | 171 | 23 | 656 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -28,7 +28,7 @@ The generator scanned `314` files from active repository inputs. Individual modu
 | [bench/worker-bench-worker.mjs](../../../bench/worker-bench-worker.mjs) | benchmark | 79 | 0 | 7 | 0 |
 | [index.html](../../../index.html) | repository | 204 | 0 | 0 | 1 |
 | [package-lock.json](../../../package-lock.json) | repository | 2618 | 0 | 0 | 0 |
-| [package.json](../../../package.json) | repository | 44 | 0 | 0 | 0 |
+| [package.json](../../../package.json) | repository | 46 | 0 | 0 | 0 |
 | [playwright.config.js](../../../playwright.config.js) | application | 25 | 1 | 1 | 0 |
 | [public/bench-report/data.js](../../../public/bench-report/data.js) | application | 20740 | 0 | 0 | 123 |
 | [public/bench-report/index.html](../../../public/bench-report/index.html) | application | 928 | 0 | 0 | 10 |
@@ -224,6 +224,7 @@ The generator scanned `314` files from active repository inputs. Individual modu
 | [tests/helpers/cssSources.js](../../../tests/helpers/cssSources.js) | testing | 137 | 6 | 3 | 0 |
 | [tests/helpers/domStub.js](../../../tests/helpers/domStub.js) | testing | 341 | 5 | 0 | 1 |
 | [tests/run.mjs](../../../tests/run.mjs) | testing | 236 | 0 | 4 | 2 |
+| [tests/unit/a3Reconciliation.test.js](../../../tests/unit/a3Reconciliation.test.js) | testing | 18 | 0 | 3 | 1 |
 | [tests/unit/agencyNarrative.test.js](../../../tests/unit/agencyNarrative.test.js) | testing | 111 | 0 | 5 | 0 |
 | [tests/unit/analyticsPanels.test.js](../../../tests/unit/analyticsPanels.test.js) | testing | 33 | 0 | 3 | 0 |
 | [tests/unit/artifacts.test.js](../../../tests/unit/artifacts.test.js) | testing | 160 | 0 | 5 | 0 |

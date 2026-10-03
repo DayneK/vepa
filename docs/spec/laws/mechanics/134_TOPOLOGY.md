@@ -31,7 +31,7 @@
 ## Verification evidence
 
 - Tests: [tests/unit/backendArchitecture.test.js](../../../../tests/unit/backendArchitecture.test.js), [tests/unit/mechanics.test.js](../../../../tests/unit/mechanics.test.js), [tests/unit/mechanicsDiagnosticsFields.test.js](../../../../tests/unit/mechanicsDiagnosticsFields.test.js)
-- Audits: No filename-matched audit record found.
+- Audits: [docs/audit/A3-RECONCILIATION.md](../../../audit/A3-RECONCILIATION.md)
 
 ## Interpretation boundary
 

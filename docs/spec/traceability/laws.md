@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 21 | LAW_HELP_DB |
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 10 | LAW_HELP_DB |
-| 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 8 | LAW_HELP_DB |
+| 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 9 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
 | 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 18 | LAW_HELP_DB |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 5 | LAW_HELP_DB |

@@ -31,7 +31,7 @@
 ## Verification evidence
 
 - Tests: No test file mentions this law name.
-- Audits: No filename-matched audit record found.
+- Audits: [docs/audit/A3-RECONCILIATION.md](../../../audit/A3-RECONCILIATION.md)
 
 ## Interpretation boundary
 
