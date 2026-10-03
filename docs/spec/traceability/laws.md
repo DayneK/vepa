@@ -8,7 +8,7 @@
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 10 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 8 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
-| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 8 | 16 | LAW_HELP_DB |
+| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 17 | LAW_HELP_DB |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 4 | LAW_HELP_DB |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 4 | 5 | LAW_HELP_DB |
 | 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 14 | LAW_HELP_DB |
@@ -43,7 +43,7 @@
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 2 | LAW_HELP_DB |
 | 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 3 | LAW_HELP_DB |
 | 38 | [VOID](../laws/physics/038_VOID.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
-| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 28 | LAW_HELP_DB |
+| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 29 | LAW_HELP_DB |
 | 40 | [REDUCTION](../laws/chemistry/040_REDUCTION.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 41 | [ALLOY](../laws/chemistry/041_ALLOY.md) | chemistry | 1 | 4 | 2 | LAW_HELP_DB |
 | 42 | [MELT](../laws/thermodynamics/042_MELT.md) | thermodynamics | 1 | 2 | 2 | LAW_HELP_DB |
@@ -134,11 +134,11 @@
 | 127 | [ANTIMATTER](../laws/quantum/127_ANTIMATTER.md) | quantum | 1 | 2 | 2 | LAW_HELP_DB |
 | 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 5 | 6 | LAW_HELP_DB |
 | 129 | [MOMENTUM](../laws/mechanics/129_MOMENTUM.md) | mechanics | 1 | 3 | 4 | LAW_HELP_DB |
-| 130 | [INERTIA](../laws/mechanics/130_INERTIA.md) | mechanics | 1 | 3 | 3 | LAW_HELP_DB |
+| 130 | [INERTIA](../laws/mechanics/130_INERTIA.md) | mechanics | 1 | 4 | 4 | LAW_HELP_DB |
 | 131 | [TORQUE](../laws/mechanics/131_TORQUE.md) | mechanics | 1 | 3 | 5 | LAW_HELP_DB |
 | 132 | [CONSTRAINT](../laws/mechanics/132_CONSTRAINT.md) | mechanics | 1 | 3 | 1 | LAW_HELP_DB |
 | 133 | [FRAGMENTATION](../laws/mechanics/133_FRAGMENTATION.md) | mechanics | 1 | 2 | 2 | LAW_HELP_DB |
-| 134 | [TOPOLOGY](../laws/mechanics/134_TOPOLOGY.md) | mechanics | 1 | 3 | 2 | LAW_HELP_DB |
+| 134 | [TOPOLOGY](../laws/mechanics/134_TOPOLOGY.md) | mechanics | 1 | 4 | 3 | LAW_HELP_DB |
 | 135 | [ADHESION](../laws/mechanics/135_ADHESION.md) | mechanics | 1 | 3 | 2 | LAW_HELP_DB |
 
 A complete row means the generator found the corresponding evidence fields. It is not semantic approval.

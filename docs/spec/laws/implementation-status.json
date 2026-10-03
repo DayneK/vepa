@@ -154,6 +154,7 @@
         "src/physics/interactionSpace.js",
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/lawgroups/mechanicsLaws.js",
+        "src/physics/mechanicsDiagnostics.js",
         "src/physics/solver.js",
         "src/physics/synergy.js",
         "src/worker/physics.worker.js"
@@ -171,6 +172,7 @@
         "tests/unit/fields.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/mechanics.test.js",
+        "tests/unit/mechanicsDiagnosticsFields.test.js",
         "tests/unit/multiplexScheduler.test.js",
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/provenance.test.js",
@@ -1118,6 +1120,7 @@
         "tests/unit/interactionSpace.test.js",
         "tests/unit/lawClock.test.js",
         "tests/unit/mechanics.test.js",
+        "tests/unit/mechanicsDiagnosticsFields.test.js",
         "tests/unit/multiplexIsolation.test.js",
         "tests/unit/multiplexScheduler.test.js",
         "tests/unit/pairScalarParity.test.js",
@@ -3084,6 +3087,7 @@
       "implementationFiles": [
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/lawgroups/mechanicsLaws.js",
+        "src/physics/mechanicsDiagnostics.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
@@ -3092,7 +3096,8 @@
       "testFiles": [
         "tests/audit/params_batch_09.test.js",
         "tests/unit/backendArchitecture.test.js",
-        "tests/unit/mechanics.test.js"
+        "tests/unit/mechanics.test.js",
+        "tests/unit/mechanicsDiagnosticsFields.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -3181,6 +3186,7 @@
       "implementationFiles": [
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/lawgroups/mechanicsLaws.js",
+        "src/physics/mechanicsDiagnostics.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
@@ -3188,7 +3194,8 @@
       ],
       "testFiles": [
         "tests/unit/backendArchitecture.test.js",
-        "tests/unit/mechanics.test.js"
+        "tests/unit/mechanics.test.js",
+        "tests/unit/mechanicsDiagnosticsFields.test.js"
       ],
       "relationshipTypes": [
         "dependsOn",

@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `304` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `305` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 41 | 179 | 480 |
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
-| Simulation | 30 | 228 | 366 |
+| Simulation | 30 | 228 | 369 |
 | State | 31 | 280 | 232 |
-| Testing | 160 | 22 | 645 |
+| Testing | 161 | 22 | 649 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -86,7 +86,7 @@ The generator scanned `304` files from active repository inputs. Individual modu
 | [src/physics/lawgroups/quantumLaws.js](../../../src/physics/lawgroups/quantumLaws.js) | simulation | 326 | 1 | 3 | 7 |
 | [src/physics/lawgroups/thermoLaws.js](../../../src/physics/lawgroups/thermoLaws.js) | simulation | 113 | 1 | 3 | 8 |
 | [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2762 | 106 | 8 | 85 |
-| [src/physics/mechanicsDiagnostics.js](../../../src/physics/mechanicsDiagnostics.js) | simulation | 35 | 1 | 3 | 0 |
+| [src/physics/mechanicsDiagnostics.js](../../../src/physics/mechanicsDiagnostics.js) | simulation | 67 | 1 | 3 | 3 |
 | [src/physics/mergePhysics.js](../../../src/physics/mergePhysics.js) | simulation | 344 | 6 | 2 | 8 |
 | [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 383 | 4 | 0 | 0 |
 | [src/physics/pairGeometry.js](../../../src/physics/pairGeometry.js) | simulation | 41 | 1 | 1 | 0 |
@@ -281,6 +281,7 @@ The generator scanned `304` files from active repository inputs. Individual modu
 | [tests/unit/livingWorld.test.js](../../../tests/unit/livingWorld.test.js) | testing | 248 | 0 | 9 | 1 |
 | [tests/unit/mechanics.test.js](../../../tests/unit/mechanics.test.js) | testing | 73 | 0 | 3 | 4 |
 | [tests/unit/mechanicsArchitecture.test.js](../../../tests/unit/mechanicsArchitecture.test.js) | testing | 105 | 0 | 5 | 1 |
+| [tests/unit/mechanicsDiagnosticsFields.test.js](../../../tests/unit/mechanicsDiagnosticsFields.test.js) | testing | 41 | 0 | 3 | 4 |
 | [tests/unit/memoryCulture.test.js](../../../tests/unit/memoryCulture.test.js) | testing | 86 | 0 | 2 | 1 |
 | [tests/unit/multiplex.test.js](../../../tests/unit/multiplex.test.js) | testing | 969 | 0 | 9 | 5 |
 | [tests/unit/multiplexIsolation.test.js](../../../tests/unit/multiplexIsolation.test.js) | testing | 111 | 0 | 13 | 3 |
