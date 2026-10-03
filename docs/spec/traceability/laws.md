@@ -4,11 +4,11 @@
 
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 22 | LAW_HELP_DB |
+| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 23 | LAW_HELP_DB |
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 10 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 9 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
-| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 19 | LAW_HELP_DB |
+| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 20 | LAW_HELP_DB |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 5 | LAW_HELP_DB |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 4 | 5 | LAW_HELP_DB |
 | 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 15 | LAW_HELP_DB |
@@ -17,7 +17,7 @@
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 9 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | LAW_HELP_DB |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 2 | 13 | 69 | LAW_HELP_DB |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 2 | 13 | 70 | LAW_HELP_DB |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 3 | LAW_HELP_DB |
 | 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | LAW_HELP_DB |
@@ -91,7 +91,7 @@
 | 84 | [HORIZON](../laws/physics/084_HORIZON.md) | physics | 1 | 3 | 2 | LAW_HELP_DB |
 | 85 | [RADIATION_PRESSURE](../laws/physics/085_RADIATION_PRESSURE.md) | physics | 1 | 1 | 0 | LAW_HELP_DB |
 | 86 | [MASS_INERTIA](../laws/physics/086_MASS_INERTIA.md) | physics | 1 | 1 | 0 | LAW_HELP_DB |
-| 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 2 | 7 | LAW_HELP_DB |
+| 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 2 | 8 | LAW_HELP_DB |
 | 88 | [SYMBIOSIS](../laws/biology/088_SYMBIOSIS.md) | biology | 1 | 4 | 2 | LAW_HELP_DB |
 | 89 | [PARASITE](../laws/biology/089_PARASITE.md) | biology | 1 | 4 | 1 | LAW_HELP_DB |
 | 90 | [HIBERNATION](../laws/biology/090_HIBERNATION.md) | biology | 1 | 1 | 1 | LAW_HELP_DB |
@@ -121,7 +121,7 @@
 | 114 | [DECOHERENCE](../laws/quantum/114_DECOHERENCE.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 115 | [WAVE_PARTICLE](../laws/quantum/115_WAVE_PARTICLE.md) | quantum | 1 | 2 | 1 | LAW_HELP_DB |
 | 116 | [UNCERTAINTY](../laws/quantum/116_UNCERTAINTY.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
-| 117 | [TELEPORT](../laws/quantum/117_TELEPORT.md) | quantum | 1 | 2 | 2 | LAW_HELP_DB |
+| 117 | [TELEPORT](../laws/quantum/117_TELEPORT.md) | quantum | 1 | 2 | 3 | LAW_HELP_DB |
 | 118 | [OBSERVER](../laws/quantum/118_OBSERVER.md) | quantum | 1 | 2 | 4 | LAW_HELP_DB |
 | 119 | [PLANCK](../laws/quantum/119_PLANCK.md) | quantum | 1 | 2 | 1 | LAW_HELP_DB |
 | 120 | [COHERENCE](../laws/quantum/120_COHERENCE.md) | quantum | 1 | 1 | 2 | LAW_HELP_DB |

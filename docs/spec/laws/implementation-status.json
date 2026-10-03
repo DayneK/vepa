@@ -36,6 +36,7 @@
         "tests/unit/octree.test.js",
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/physics.test.js",
+        "tests/unit/stateBudgets.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js",
         "tests/unit/worldSave.test.js",
@@ -192,6 +193,7 @@
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/provenance.test.js",
         "tests/unit/quantumMacro.test.js",
+        "tests/unit/stateBudgets.test.js",
         "tests/unit/structures.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js"
@@ -545,6 +547,7 @@
         "tests/unit/relativity.test.js",
         "tests/unit/signal.test.js",
         "tests/unit/solverReset.test.js",
+        "tests/unit/stateBudgets.test.js",
         "tests/unit/stellar.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/synthetic.test.js",
@@ -2544,7 +2547,8 @@
         "tests/unit/fields.test.js",
         "tests/unit/launchModal.test.js",
         "tests/unit/lawCategories.test.js",
-        "tests/unit/multiplexScale.test.js"
+        "tests/unit/multiplexScale.test.js",
+        "tests/unit/stateBudgets.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -2789,6 +2793,7 @@
       "relationshipTypes": [
         "synergizesWith",
         "transforms",
+        "writes",
         "consumes",
         "produces",
         "feedback",
@@ -3263,7 +3268,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_30.test.js",
-        "tests/unit/lawGraph.test.js"
+        "tests/unit/lawGraph.test.js",
+        "tests/unit/stateBudgets.test.js"
       ],
       "relationshipTypes": [
         "dependsOn",

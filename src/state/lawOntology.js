@@ -123,6 +123,7 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
     produces: ['HEAT'],
     feedback: 'POSITIVE',
     transforms: ['REACTION_RATE -> CATALYST_ACTIVITY'],
+    writes: ['ENERGY'],
   }),
   HEAT: freezeRecord({
     synergizesWith: ['COLD', 'EQUILIBRIUM', 'CONVECTION', 'OXIDATION'],
@@ -157,7 +158,7 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
     dependsOn: ['MEMORY'],
     synergizesWith: ['DECOHERENCE', 'WAVE_PARTICLE'],
     reads: ['MEMORY', 'QUANTUM_STATE', 'PHASE'],
-    writes: ['QUANTUM_STATE', 'PHASE'],
+    writes: ['QUANTUM_STATE', 'PHASE', 'MEMORY'],
   }),
   NAVIGATION: freezeRecord({
     dependsOn: ['MEMORY'],
@@ -202,7 +203,7 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
     consumes: ['ENTANGLE_PHASE'],
     transforms: ['CORRELATION -> POSITION_TRANSFER'],
     reads: ['ENTANGLE_ID', 'ENTANGLE_PHASE', 'POS_X', 'POS_Y', 'POS_Z'],
-    writes: ['POS_X', 'POS_Y', 'POS_Z'],
+    writes: ['POS_X', 'POS_Y', 'POS_Z', 'ENERGY', 'ENTANGLE_ID', 'ENTANGLE_PHASE'],
   }),
   // ── Risk-prioritized expansion (remediation §6.1): lifecycle ──
   LIFE: freezeRecord({
@@ -210,7 +211,7 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
     antagonizes: ['SENESCENCE'],
     transforms: ['AGE_AND_ENERGY -> VIABILITY'],
     reads: ['AGE', 'ENERGY', 'BIRTH_RATE', 'DEATH_RATE'],
-    writes: ['ENERGY', 'DEAD'],
+    writes: ['ENERGY', 'DEAD', 'MASS'],
     notes: ['Behavioral evidence lives in audit batches 02/04 and lawGating; viability thresholds are proxy-level.'],
   }),
   REPRO: freezeRecord({
