@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `315` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `316` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `315` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 230 | 369 |
 | State | 31 | 280 | 232 |
-| Testing | 171 | 23 | 656 |
+| Testing | 172 | 23 | 656 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -254,6 +254,7 @@ The generator scanned `315` files from active repository inputs. Individual modu
 | [tests/unit/engines.test.js](../../../tests/unit/engines.test.js) | testing | 113 | 0 | 7 | 0 |
 | [tests/unit/exoticMatter.test.js](../../../tests/unit/exoticMatter.test.js) | testing | 366 | 0 | 5 | 3 |
 | [tests/unit/experimentalBackends.test.js](../../../tests/unit/experimentalBackends.test.js) | testing | 60 | 0 | 5 | 0 |
+| [tests/unit/exportHeaders.test.js](../../../tests/unit/exportHeaders.test.js) | testing | 21 | 0 | 4 | 0 |
 | [tests/unit/fieldAdvanceOnce.test.js](../../../tests/unit/fieldAdvanceOnce.test.js) | testing | 47 | 0 | 8 | 3 |
 | [tests/unit/fields.test.js](../../../tests/unit/fields.test.js) | testing | 274 | 0 | 8 | 5 |
 | [tests/unit/fmmParity.test.js](../../../tests/unit/fmmParity.test.js) | testing | 84 | 0 | 5 | 0 |

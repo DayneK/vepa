@@ -19,7 +19,12 @@ let foundCount = 0;
 for (const file of docFiles) {
     if (fs.existsSync(file)) {
         console.log(`Including: ${file}`);
-        const content = fs.readFileSync(file, 'utf8');
+        // Rebase relative Markdown links from the source file's folder to exports/.
+        const dir = path.posix.dirname(file);
+        const content = fs.readFileSync(file, 'utf8').replace(/\]\(([^)\s]+)\)/g, (m, href) => {
+            if (/^(?:[a-z]+:|#|\/)/i.test(href)) return m;
+            return `](${path.posix.relative('exports', path.posix.join(dir, href))})`;
+        });
         combinedContent += `\n\n---\n\n## File: ${file}\n\n${content}`;
         foundCount++;
     } else {
