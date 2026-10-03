@@ -2,6 +2,15 @@
 // Update lawCategories tests for the 9-category layout (WRAP retired → BUOYANCY + TOROIDAL EDGES param).
 import { readFileSync, writeFileSync } from 'node:fs';
 
+// Guard (2026-10-03): the patterns below target the retired 8-category / WRAP
+// layout (128 laws). The live tree has 136 laws in 9 categories and no WRAP, so
+// this script must never run by accident: it requires an explicit flag, and it
+// writes only if every pattern matches (all-or-nothing).
+if (!process.argv.includes('--archive-recovery')) {
+  console.error('patch-lawcat-test: historical migration for the retired WRAP/128-law layout; not applicable to the current tree. Pass --archive-recovery to run it against an archived checkout.');
+  process.exit(2);
+}
+
 const f = new URL('../tests/unit/lawCategories.test.js', import.meta.url);
 let s = readFileSync(f, 'utf8');
 let miss = 0;

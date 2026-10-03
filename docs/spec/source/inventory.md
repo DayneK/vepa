@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `312` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `313` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `312` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 230 | 369 |
 | State | 31 | 280 | 232 |
-| Testing | 168 | 23 | 655 |
+| Testing | 169 | 23 | 655 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -296,6 +296,7 @@ The generator scanned `312` files from active repository inputs. Individual modu
 | [tests/unit/octree.test.js](../../../tests/unit/octree.test.js) | testing | 151 | 0 | 7 | 1 |
 | [tests/unit/octreeQuadrupole.test.js](../../../tests/unit/octreeQuadrupole.test.js) | testing | 64 | 0 | 2 | 0 |
 | [tests/unit/pairScalarParity.test.js](../../../tests/unit/pairScalarParity.test.js) | testing | 85 | 0 | 7 | 5 |
+| [tests/unit/patchLawcatGuard.test.js](../../../tests/unit/patchLawcatGuard.test.js) | testing | 24 | 0 | 3 | 0 |
 | [tests/unit/perfKnobs.test.js](../../../tests/unit/perfKnobs.test.js) | testing | 84 | 0 | 3 | 0 |
 | [tests/unit/physics.test.js](../../../tests/unit/physics.test.js) | testing | 60 | 0 | 5 | 4 |
 | [tests/unit/prng.test.js](../../../tests/unit/prng.test.js) | testing | 49 | 0 | 2 | 0 |

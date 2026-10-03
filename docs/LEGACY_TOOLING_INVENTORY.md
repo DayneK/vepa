@@ -5,7 +5,7 @@
 | Path | Status | Safe current replacement | Caution |
 |---|---|---|---|
 | `tests/run.mjs` | Archived VEPA v3-era runner | `npm test` / Vitest | Do not use as current-suite evidence |
-| `scripts/patch-lawcat-test.mjs` | Historical migration utility | Edit the current test only through normal review | Mutates `tests/unit/lawCategories.test.js`; run only for archive recovery |
+| `scripts/patch-lawcat-test.mjs` | Historical migration utility | Edit the current test only through normal review | Mutates `tests/unit/lawCategories.test.js`; targets the retired WRAP/128-law layout, so it refuses to run without `--archive-recovery` and writes only if every pattern matches (guard test: tests/unit/patchLawcatGuard.test.js) |
 | `exports/generate-vepa-all.mjs` | Active maintenance orchestrator | `npm run concat` | Writes large derived artifacts |
 | `exports/generate-full-concat.mjs` | Active snapshot generator | Invoked by the orchestrator | Requires explicit output path |
 | `exports/generate-docs-concat.mjs` | Active documentation snapshot generator | Invoked by the orchestrator | Snapshot content is derived, not SSOT |
