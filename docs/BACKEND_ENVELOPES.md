@@ -75,7 +75,11 @@ members on both periodic images, so its centre of mass is a wrong far-field prox
 accurate at every scale and seed tried (rms 0.002–0.011 at 32–8,192). But it is then barely faster than exact summation
 (2048: 160 ms vs 122 ms; 8192: 1.4 s vs 2.1 s). Options: (a) ship the straddle-opening fix (accurate, slow);
 (b) keep the fast approximation with the θ envelope above (seed-dependent at ≥ 2048); (c) a proper periodic tree
-(replica cells / Ewald far field), which is a larger piece of work. Not changed without a decision.
+(replica cells / Ewald far field), which is a larger piece of work.
+
+**Decision D-020 (Gem, 2026-10-04 09:57 AEST): option (b).** The θ envelope above stays as shipped; the straddle
+fix is not applied. A proper periodic, wrap-aware tree (option c) is tracked as a separate Not started item
+(BH-PERIODIC). Users who need tighter accuracy at ≥ 2,048 particles on arbitrary seeds should use the reference engine.
 
 ## 3. FMM decision (remediation plan §5.1)
 
