@@ -309,6 +309,15 @@ export function enterSolverContext(ctx) {
 }
 /** Reset the solver tick clock (world restart / restore / tests). */
 export function resetSolverClock(tick = 0) { _solveTick = Math.max(0, Math.floor(tick) || 0); }
+/**
+ * Reset the active world's solver state (field medium, HISTORY/law clocks and
+ * the tick clock) to a fresh context's. World restart uses this so the
+ * main-thread fallback starts as clean as a restarted physics worker does.
+ */
+export function resetSolverState(tick = 0) {
+  applyContextState(null);
+  _solveTick = Math.max(0, Math.floor(tick) || 0);
+}
 /** Current solver tick clock (number of solve() calls since the last reset). */
 export function getSolverClock() { return _solveTick; }
 

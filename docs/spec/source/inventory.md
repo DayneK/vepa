@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `311` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `312` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
-| Application | 41 | 179 | 480 |
+| Application | 41 | 179 | 481 |
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
-| Simulation | 30 | 229 | 369 |
+| Simulation | 30 | 230 | 369 |
 | State | 31 | 280 | 232 |
-| Testing | 167 | 23 | 652 |
+| Testing | 168 | 23 | 655 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -59,7 +59,7 @@ The generator scanned `311` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 1872 | 0 | 50 | 11 |
+| [src/main.js](../../../src/main.js) | application | 1874 | 0 | 50 | 12 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1751 | 37 | 12 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 514 | 7 | 0 | 5 |
 | [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
@@ -93,7 +93,7 @@ The generator scanned `311` files from active repository inputs. Individual modu
 | [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 304 | 8 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
-| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2059 | 14 | 22 | 134 |
+| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2068 | 15 | 22 | 134 |
 | [src/physics/spatialGrid.js](../../../src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
 | [src/react-entry.js](../../../src/react-entry.js) | application | 20 | 0 | 2 | 0 |
@@ -308,6 +308,7 @@ The generator scanned `311` files from active repository inputs. Individual modu
 | [tests/unit/signal.test.js](../../../tests/unit/signal.test.js) | testing | 105 | 0 | 4 | 3 |
 | [tests/unit/singleImplementations.test.js](../../../tests/unit/singleImplementations.test.js) | testing | 30 | 0 | 6 | 0 |
 | [tests/unit/sliderControl.test.js](../../../tests/unit/sliderControl.test.js) | testing | 149 | 0 | 2 | 0 |
+| [tests/unit/solverReset.test.js](../../../tests/unit/solverReset.test.js) | testing | 48 | 0 | 6 | 3 |
 | [tests/unit/spawnDistribution.test.js](../../../tests/unit/spawnDistribution.test.js) | testing | 13 | 0 | 3 | 0 |
 | [tests/unit/specHelpCoverage.test.js](../../../tests/unit/specHelpCoverage.test.js) | testing | 30 | 0 | 5 | 0 |
 | [tests/unit/stellar.test.js](../../../tests/unit/stellar.test.js) | testing | 281 | 0 | 5 | 2 |

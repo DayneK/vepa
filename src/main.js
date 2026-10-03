@@ -17,7 +17,7 @@ import { createRendererAsync, resize as resizeRenderer, paintBackground } from '
 import { syncSprites } from './render/spriteSync.js';
 import { initUI } from './ui/ui.js';
 import { initCamera, resetCamera, setWorldSize } from './ui/camera.js';
-import { solve as solveMain, resetOffspringRing, resetSolverClock, drainOffspring as drainSolverOffspring } from './physics/solver.js';
+import { solve as solveMain, resetOffspringRing, resetSolverClock, resetSolverState, drainOffspring as drainSolverOffspring } from './physics/solver.js';
 import { createInsightEngine, updateInsight } from './engines/insightEngine.js';
 import { createSpeciationEngine, updateSpeciation } from './engines/speciation.js';
 import { createEcoEngine } from './engines/ecoEngine.js';
@@ -1043,7 +1043,9 @@ function setDNAFromProfile(species, profile) {
         prng = new PRNG(Date.now());
         particleView.fill(0);
         resetOffspringRing();
-        resetSolverClock(); // DET-1: law clock restarts with the world
+        // DET-1 + HIDDEN-STATE: the law clock, field medium and HISTORY state
+        // restart with the world (as a restarted physics worker already does).
+        resetSolverState();
         spawnDefaultPopulation(true, true);
         if (restartWorker) startPhysicsWorker();
         tick = 0;

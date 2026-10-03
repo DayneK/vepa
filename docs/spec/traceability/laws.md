@@ -17,7 +17,7 @@
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 9 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | LAW_HELP_DB |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 1 | 13 | 68 | LAW_HELP_DB |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 2 | 13 | 69 | LAW_HELP_DB |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 3 | LAW_HELP_DB |
 | 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | LAW_HELP_DB |
@@ -43,7 +43,7 @@
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 2 | LAW_HELP_DB |
 | 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 3 | LAW_HELP_DB |
 | 38 | [VOID](../laws/physics/038_VOID.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
-| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 29 | LAW_HELP_DB |
+| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 30 | LAW_HELP_DB |
 | 40 | [REDUCTION](../laws/chemistry/040_REDUCTION.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 41 | [ALLOY](../laws/chemistry/041_ALLOY.md) | chemistry | 1 | 4 | 2 | LAW_HELP_DB |
 | 42 | [MELT](../laws/thermodynamics/042_MELT.md) | thermodynamics | 1 | 2 | 2 | LAW_HELP_DB |
@@ -85,7 +85,7 @@
 | 78 | [CULTURE](../laws/information/078_CULTURE.md) | information | 1 | 3 | 6 | LAW_HELP_DB |
 | 79 | [SINGULARITY](../laws/physics/079_SINGULARITY.md) | physics | 1 | 4 | 4 | LAW_HELP_DB |
 | 80 | [ENTANGLEMENT](../laws/metaphysics/080_ENTANGLEMENT.md) | metaphysics | 1 | 5 | 5 | LAW_HELP_DB |
-| 81 | [HISTORY](../laws/information/081_HISTORY.md) | information | 1 | 3 | 4 | LAW_HELP_DB |
+| 81 | [HISTORY](../laws/information/081_HISTORY.md) | information | 2 | 3 | 5 | LAW_HELP_DB |
 | 82 | [TIDE](../laws/physics/082_TIDE.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
 | 83 | [FRICTION](../laws/physics/083_FRICTION.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
 | 84 | [HORIZON](../laws/physics/084_HORIZON.md) | physics | 1 | 3 | 2 | LAW_HELP_DB |
