@@ -165,6 +165,7 @@
       "testFiles": [
         "tests/audit/batch_02.test.js",
         "tests/audit/params_batch_12.test.js",
+        "tests/e2e/mechanics-worker.spec.js",
         "tests/unit/auditSignoff.test.js",
         "tests/unit/backendArchitecture.test.js",
         "tests/unit/codex.test.js",
@@ -210,6 +211,7 @@
       "testFiles": [
         "tests/audit/batch_02.test.js",
         "tests/audit/params_batch_11.test.js",
+        "tests/e2e/mechanics-worker.spec.js",
         "tests/unit/interactionSpace.test.js",
         "tests/unit/synergyCache.test.js"
       ],
@@ -3036,6 +3038,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_22.test.js",
+        "tests/e2e/mechanics-worker.spec.js",
         "tests/e2e/runtime-acceptance.spec.js",
         "tests/unit/auditSignoff.test.js",
         "tests/unit/backendArchitecture.test.js",

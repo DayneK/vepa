@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `307` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `311` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `307` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 229 | 369 |
 | State | 31 | 280 | 232 |
-| Testing | 163 | 22 | 649 |
+| Testing | 167 | 23 | 652 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -29,7 +29,7 @@ The generator scanned `307` files from active repository inputs. Individual modu
 | [index.html](../../../index.html) | repository | 204 | 0 | 0 | 1 |
 | [package-lock.json](../../../package-lock.json) | repository | 2618 | 0 | 0 | 0 |
 | [package.json](../../../package.json) | repository | 44 | 0 | 0 | 0 |
-| [playwright.config.js](../../../playwright.config.js) | application | 22 | 1 | 1 | 0 |
+| [playwright.config.js](../../../playwright.config.js) | application | 25 | 1 | 1 | 0 |
 | [public/bench-report/data.js](../../../public/bench-report/data.js) | application | 20740 | 0 | 0 | 123 |
 | [public/bench-report/index.html](../../../public/bench-report/index.html) | application | 928 | 0 | 0 | 10 |
 | [public/src/react-entry.js](../../../public/src/react-entry.js) | application | 35 | 0 | 0 | 0 |
@@ -59,7 +59,7 @@ The generator scanned `307` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 1825 | 0 | 50 | 11 |
+| [src/main.js](../../../src/main.js) | application | 1872 | 0 | 50 | 11 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1751 | 37 | 12 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 514 | 7 | 0 | 5 |
 | [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
@@ -213,8 +213,12 @@ The generator scanned `307` files from active repository inputs. Individual modu
 | [tests/bench/harness.html](../../../tests/bench/harness.html) | testing | 16 | 0 | 0 | 0 |
 | [tests/bench/harness.js](../../../tests/bench/harness.js) | testing | 198 | 0 | 6 | 2 |
 | [tests/bench/renderer-benchmark.spec.js](../../../tests/bench/renderer-benchmark.spec.js) | testing | 77 | 0 | 4 | 0 |
-| [tests/e2e/physics-worker.spec.js](../../../tests/e2e/physics-worker.spec.js) | testing | 67 | 0 | 1 | 0 |
-| [tests/e2e/runtime-acceptance.spec.js](../../../tests/e2e/runtime-acceptance.spec.js) | testing | 59 | 0 | 1 | 1 |
+| [tests/e2e/boot-render-worker.spec.js](../../../tests/e2e/boot-render-worker.spec.js) | testing | 25 | 0 | 2 | 0 |
+| [tests/e2e/boot.js](../../../tests/e2e/boot.js) | testing | 13 | 1 | 1 | 0 |
+| [tests/e2e/mechanics-worker.spec.js](../../../tests/e2e/mechanics-worker.spec.js) | testing | 35 | 0 | 2 | 3 |
+| [tests/e2e/physics-worker.spec.js](../../../tests/e2e/physics-worker.spec.js) | testing | 66 | 0 | 2 | 0 |
+| [tests/e2e/runtime-acceptance.spec.js](../../../tests/e2e/runtime-acceptance.spec.js) | testing | 58 | 0 | 2 | 1 |
+| [tests/e2e/timeline-dashboard.spec.js](../../../tests/e2e/timeline-dashboard.spec.js) | testing | 34 | 0 | 2 | 0 |
 | [tests/fixtures/golden-parity.json](../../../tests/fixtures/golden-parity.json) | testing | 62 | 0 | 0 | 0 |
 | [tests/fixtures/lawHelpMerged.snapshot.json](../../../tests/fixtures/lawHelpMerged.snapshot.json) | testing | 745 | 0 | 0 | 136 |
 | [tests/helpers/cssSources.js](../../../tests/helpers/cssSources.js) | testing | 137 | 6 | 3 | 0 |

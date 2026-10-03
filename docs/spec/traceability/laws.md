@@ -8,8 +8,8 @@
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 10 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 8 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
-| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 17 | LAW_HELP_DB |
-| 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 4 | LAW_HELP_DB |
+| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 18 | LAW_HELP_DB |
+| 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 5 | LAW_HELP_DB |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 4 | 5 | LAW_HELP_DB |
 | 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 14 | LAW_HELP_DB |
 | 8 | [GLOW](../laws/biology/008_GLOW.md) | biology | 2 | 3 | 2 | LAW_HELP_DB |
@@ -132,7 +132,7 @@
 | 125 | [WAVEFUNCTION](../laws/quantum/125_WAVEFUNCTION.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 126 | [HYPERPLANE](../laws/quantum/126_HYPERPLANE.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 127 | [ANTIMATTER](../laws/quantum/127_ANTIMATTER.md) | quantum | 1 | 2 | 2 | LAW_HELP_DB |
-| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 5 | 6 | LAW_HELP_DB |
+| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 5 | 7 | LAW_HELP_DB |
 | 129 | [MOMENTUM](../laws/mechanics/129_MOMENTUM.md) | mechanics | 1 | 3 | 4 | LAW_HELP_DB |
 | 130 | [INERTIA](../laws/mechanics/130_INERTIA.md) | mechanics | 1 | 4 | 4 | LAW_HELP_DB |
 | 131 | [TORQUE](../laws/mechanics/131_TORQUE.md) | mechanics | 1 | 3 | 5 | LAW_HELP_DB |

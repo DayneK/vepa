@@ -36,6 +36,23 @@ jobs:
       - name: Verify spec + repository contracts
         run: npm run repository:check
 
+      # ARP-CC: the five repository controls (syntax, gravity-backend envelope,
+      # audit + artifact inventories) and a no-drift check on generated files.
+      - name: Repository controls
+        run: |
+          npm run syntax-check
+          npm run bench:backends
+          npm run audit:inventory
+          npm run artifact:inventory
+          git diff --exit-code
+
+      # FSM-1: browser e2e (boot, law toggle, render frame, worker tick,
+      # mechanics worker state, timeline dashboard) in headless Chromium.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser e2e
+        run: npm run test:e2e
+
       # Build the v4 app (repo root) for the /vepa/ project page.
       - run: npm run build
         env:
