@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `316` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `318` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -10,8 +10,8 @@ The generator scanned `316` files from active repository inputs. Individual modu
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 230 | 369 |
-| State | 31 | 280 | 232 |
-| Testing | 172 | 23 | 656 |
+| State | 32 | 282 | 368 |
+| Testing | 173 | 23 | 661 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -28,7 +28,7 @@ The generator scanned `316` files from active repository inputs. Individual modu
 | [bench/worker-bench-worker.mjs](../../../bench/worker-bench-worker.mjs) | benchmark | 79 | 0 | 7 | 0 |
 | [index.html](../../../index.html) | repository | 204 | 0 | 0 | 1 |
 | [package-lock.json](../../../package-lock.json) | repository | 2618 | 0 | 0 | 0 |
-| [package.json](../../../package.json) | repository | 46 | 0 | 0 | 0 |
+| [package.json](../../../package.json) | repository | 48 | 0 | 0 | 0 |
 | [playwright.config.js](../../../playwright.config.js) | application | 25 | 1 | 1 | 0 |
 | [public/bench-report/data.js](../../../public/bench-report/data.js) | application | 20740 | 0 | 0 | 123 |
 | [public/bench-report/index.html](../../../public/bench-report/index.html) | application | 928 | 0 | 0 | 10 |
@@ -114,7 +114,8 @@ The generator scanned `316` files from active repository inputs. Individual modu
 | [src/state/groupRegistry.js](../../../src/state/groupRegistry.js) | state | 416 | 10 | 1 | 6 |
 | [src/state/infrastructure.js](../../../src/state/infrastructure.js) | state | 224 | 2 | 3 | 1 |
 | [src/state/launchSettings.js](../../../src/state/launchSettings.js) | state | 181 | 10 | 1 | 2 |
-| [src/state/lawOntology.js](../../../src/state/lawOntology.js) | state | 344 | 5 | 1 | 57 |
+| [src/state/lawImplementations.generated.js](../../../src/state/lawImplementations.generated.js) | state | 1704 | 1 | 0 | 136 |
+| [src/state/lawOntology.js](../../../src/state/lawOntology.js) | state | 366 | 6 | 2 | 57 |
 | [src/state/lawState.js](../../../src/state/lawState.js) | state | 223 | 12 | 1 | 0 |
 | [src/state/memoryBuffers.js](../../../src/state/memoryBuffers.js) | state | 102 | 11 | 1 | 1 |
 | [src/state/particleBuffer.js](../../../src/state/particleBuffer.js) | state | 173 | 21 | 1 | 6 |
@@ -274,13 +275,14 @@ The generator scanned `316` files from active repository inputs. Individual modu
 | [tests/unit/lawCategories.test.js](../../../tests/unit/lawCategories.test.js) | testing | 292 | 0 | 6 | 16 |
 | [tests/unit/lawClock.test.js](../../../tests/unit/lawClock.test.js) | testing | 88 | 0 | 9 | 3 |
 | [tests/unit/lawGating.test.js](../../../tests/unit/lawGating.test.js) | testing | 186 | 0 | 6 | 8 |
-| [tests/unit/lawGraph.test.js](../../../tests/unit/lawGraph.test.js) | testing | 55 | 0 | 4 | 10 |
+| [tests/unit/lawGraph.test.js](../../../tests/unit/lawGraph.test.js) | testing | 59 | 0 | 4 | 10 |
 | [tests/unit/lawgroupsBiologyChemistry.test.js](../../../tests/unit/lawgroupsBiologyChemistry.test.js) | testing | 166 | 0 | 4 | 1 |
 | [tests/unit/lawgroupsEmInfoMeta.test.js](../../../tests/unit/lawgroupsEmInfoMeta.test.js) | testing | 179 | 0 | 5 | 2 |
 | [tests/unit/lawgroupsPhysicsThermo.test.js](../../../tests/unit/lawgroupsPhysicsThermo.test.js) | testing | 188 | 0 | 4 | 1 |
 | [tests/unit/lawgroupsQuantum.test.js](../../../tests/unit/lawgroupsQuantum.test.js) | testing | 343 | 0 | 18 | 2 |
 | [tests/unit/lawHelpFold.test.js](../../../tests/unit/lawHelpFold.test.js) | testing | 26 | 0 | 4 | 0 |
 | [tests/unit/lawImplementationManifest.test.js](../../../tests/unit/lawImplementationManifest.test.js) | testing | 28 | 0 | 2 | 0 |
+| [tests/unit/lawImplementedBy.test.js](../../../tests/unit/lawImplementedBy.test.js) | testing | 44 | 0 | 7 | 5 |
 | [tests/unit/lawOntologyCoverage.test.js](../../../tests/unit/lawOntologyCoverage.test.js) | testing | 25 | 0 | 4 | 0 |
 | [tests/unit/laws.test.js](../../../tests/unit/laws.test.js) | testing | 93 | 0 | 2 | 0 |
 | [tests/unit/lawsets.test.js](../../../tests/unit/lawsets.test.js) | testing | 29 | 0 | 3 | 0 |

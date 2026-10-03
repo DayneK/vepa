@@ -20,7 +20,11 @@ describe('law relationship ontology', () => {
   it('represents every registered law without inventing missing relationships', () => {
     expect(Object.keys(LAW_RELATIONSHIPS)).toHaveLength(LAW_COUNT);
     expect(validateLawOntology()).toEqual([]);
-    expect(getLawRelationships('DRAG')).toEqual({});
+    // ARP-7: undeclared laws carry only scanned implementedBy/reads/writes + a note;
+    // no semantic edges are invented.
+    const drag = getLawRelationships('DRAG');
+    expect(drag.implementedBy).toBe('src/physics/solver.js#solve');
+    for (const type of ['dependsOn', 'synergizesWith', 'antagonizes', 'transforms', 'feedback']) expect(drag[type]).toBeUndefined();
     expect(getLawRelationships('GRAV').synergizesWith).toContain('PLANETARY');
     expect(getLawRelationships('TELEPORT').dependsOn).toEqual(['ENTANGLEMENT']);
   });

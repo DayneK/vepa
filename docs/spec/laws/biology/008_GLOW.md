@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_01.test.js](../../../../tests/audit/batch_01.test.js), [tests/audit/batch_03.test.js](../../../../tests/audit/batch_03.test.js)
+- Tests: [tests/audit/batch_01.test.js](../../../../tests/audit/batch_01.test.js), [tests/audit/batch_03.test.js](../../../../tests/audit/batch_03.test.js), [tests/unit/lawImplementedBy.test.js](../../../../tests/unit/lawImplementedBy.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](../../../audit/laws/a3/biology.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/08_GLOW.md](../../../audit/laws/a3/stage-1/08_GLOW.md), [docs/audit/laws/a3/stage-2/08_GLOW.md](../../../audit/laws/a3/stage-2/08_GLOW.md), [docs/audit/laws/a3/stage-3/08_GLOW.md](../../../audit/laws/a3/stage-3/08_GLOW.md)
 
 ## Interpretation boundary

@@ -4,15 +4,15 @@
 
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 21 | LAW_HELP_DB |
+| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 22 | LAW_HELP_DB |
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 10 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 9 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
-| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 18 | LAW_HELP_DB |
+| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 19 | LAW_HELP_DB |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 5 | LAW_HELP_DB |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 4 | 5 | LAW_HELP_DB |
-| 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 14 | LAW_HELP_DB |
-| 8 | [GLOW](../laws/biology/008_GLOW.md) | biology | 2 | 3 | 2 | LAW_HELP_DB |
+| 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 15 | LAW_HELP_DB |
+| 8 | [GLOW](../laws/biology/008_GLOW.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 9 | [AFFINITY](../laws/biology/009_AFFINITY.md) | biology | 1 | 2 | 7 | LAW_HELP_DB |
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 9 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
@@ -31,7 +31,7 @@
 | 24 | [CRYSTALLIZATION](../laws/chemistry/024_CRYSTALLIZATION.md) | chemistry | 1 | 3 | 1 | LAW_HELP_DB |
 | 25 | [HEAT](../laws/thermodynamics/025_HEAT.md) | thermodynamics | 1 | 4 | 9 | LAW_HELP_DB |
 | 26 | [COLD](../laws/thermodynamics/026_COLD.md) | thermodynamics | 1 | 3 | 2 | LAW_HELP_DB |
-| 27 | [CONVECTION](../laws/thermodynamics/027_CONVECTION.md) | thermodynamics | 1 | 2 | 2 | LAW_HELP_DB |
+| 27 | [CONVECTION](../laws/thermodynamics/027_CONVECTION.md) | thermodynamics | 1 | 2 | 3 | LAW_HELP_DB |
 | 28 | [PHASE_RADIATION](../laws/thermodynamics/028_PHASE_RADIATION.md) | thermodynamics | 1 | 2 | 1 | LAW_HELP_DB |
 | 29 | [SUBLIMATION](../laws/thermodynamics/029_SUBLIMATION.md) | thermodynamics | 1 | 2 | 1 | LAW_HELP_DB |
 | 30 | [TIME_DILATION](../laws/metaphysics/030_TIME_DILATION.md) | metaphysics | 1 | 2 | 3 | LAW_HELP_DB |

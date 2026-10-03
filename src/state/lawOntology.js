@@ -1,4 +1,5 @@
 import { LAW_INDEXES } from '../constants.js';
+import { LAW_IMPLEMENTATIONS } from './lawImplementations.generated.js';
 
 /**
  * Relationship vocabulary for the law ontology.
@@ -17,6 +18,7 @@ export const LAW_RELATIONSHIP_TYPES = Object.freeze([
   'consumes',
   'produces',
   'feedback',
+  'implementedBy',
   'notes',
 ]);
 
@@ -32,7 +34,7 @@ function freezeRecord(record) {
   const result = {};
   for (const type of LAW_RELATIONSHIP_TYPES) {
     const value = record[type];
-    if (type === 'feedback') {
+    if (type === 'feedback' || type === 'implementedBy') {
       if (value !== undefined) result[type] = value;
     } else if (value !== undefined) {
       result[type] = Object.freeze([...value]);
@@ -292,14 +294,31 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
   }),
 });
 
-// Every registered law is represented. Empty records are intentional: this
-// prevents the ontology from inventing semantics while keeping the graph
-// total and queryable for all 136 registry entries.
+// Every registered law is represented. Semantic edges (dependsOn, synergizesWith,
+// antagonizes, transforms, feedback) are only ever hand-declared; the ontology
+// never invents them, keeping the graph total and queryable for all 136 entries.
+//
+// ARP-7 (AC-30): every law also carries `implementedBy` ("file#function") from
+// the generated static scan. Laws without hand-declared metadata additionally
+// receive the scanned stride `reads`/`writes`; hand-declared records keep their
+// reviewed reads/writes. All of this is descriptive and never consumed by the
+// solver.
+export const DERIVED_ONTOLOGY_NOTE =
+  'reads/writes derived by scripts/derive-law-implementations.mjs (static stride-field scan; evidence candidate, not semantic proof).';
+
+function buildRecord(lawName) {
+  const declared = DECLARED_LAW_RELATIONSHIPS[lawName];
+  const impl = LAW_IMPLEMENTATIONS[lawName];
+  if (declared) return freezeRecord({ ...declared, implementedBy: impl?.implementedBy });
+  if (!impl) return Object.freeze({});
+  const record = { implementedBy: impl.implementedBy, notes: [DERIVED_ONTOLOGY_NOTE] };
+  if (impl.reads.length) record.reads = impl.reads;
+  if (impl.writes.length) record.writes = impl.writes;
+  return freezeRecord(record);
+}
+
 export const LAW_RELATIONSHIPS = Object.freeze(
-  Object.fromEntries(Object.keys(LAW_INDEXES).map((lawName) => [
-    lawName,
-    DECLARED_LAW_RELATIONSHIPS[lawName] || Object.freeze({}),
-  ])),
+  Object.fromEntries(Object.keys(LAW_INDEXES).map((lawName) => [lawName, buildRecord(lawName)])),
 );
 
 /** Return a defensive empty relationship record for laws without metadata. */
@@ -323,6 +342,9 @@ export function validateLawOntology() {
       if (!allowed.has(key) && key !== 'notes') errors.push(`${lawName}: unknown relationship type ${key}`);
       if (key === 'feedback' && !['POSITIVE', 'NEGATIVE', 'MIXED'].includes(record[key])) {
         errors.push(`${lawName}: invalid feedback polarity ${record[key]}`);
+      }
+      if (key === 'implementedBy' && !/^src\/[\w/.-]+\.js#[\w$()]+/.test(record[key])) {
+        errors.push(`${lawName}: implementedBy must be "src/<file>.js#<function>", got ${record[key]}`);
       }
       if (resourceTypes.has(key) && !Array.isArray(record[key])) {
         errors.push(`${lawName}.${key} must be an array`);

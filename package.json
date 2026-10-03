@@ -1,7 +1,7 @@
 {
   "name": "vepa-v4",
   "version": "9.1.27",
-  "description": "VEPA4 — Vector Emergent Physics Automata (Integrated Intelligence release)",
+  "description": "VEPA4 \u2014 Vector Emergent Physics Automata (Integrated Intelligence release)",
   "type": "module",
   "scripts": {
     "concat": "node exports/generate-vepa-all.mjs",
@@ -30,7 +30,9 @@
     "bench:backends:json": "node bench/backend-compare.mjs --json",
     "golden:check": "node scripts/golden-parity.mjs --check",
     "audit:reconcile": "node scripts/a3-reconciliation.mjs",
-    "audit:reconcile:check": "node scripts/a3-reconciliation.mjs --check"
+    "audit:reconcile:check": "node scripts/a3-reconciliation.mjs --check",
+    "laws:derive": "node scripts/derive-law-implementations.mjs",
+    "laws:derive:check": "node scripts/derive-law-implementations.mjs --check"
   },
   "dependencies": {
     "pixi.js": "^8.18.1",
