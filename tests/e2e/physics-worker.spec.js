@@ -1,16 +1,15 @@
 import { test, expect } from '@playwright/test';
+import { bootApp } from './boot.js';
 
 test('boots the simulation shell without a module error', async ({ page }) => {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/');
-  await expect(page.locator('#sim-canvas')).toBeVisible();
-  await expect.poll(() => page.evaluate(() => Boolean(window.__VEPA_DEBUG__?._active))).toBe(true);
+  await bootApp(page, '/');
   expect(errors).toEqual([]);
 });
 
 test('runs worker ticks asynchronously when SharedArrayBuffer is available', async ({ page }) => {
-  await page.goto('/');
+  await bootApp(page, '/');
   await expect.poll(() => page.evaluate(() => document.querySelector('#hud-tick')?.textContent || '')).toMatch(/\d[\d,]*\n\d+\.\d/);
   const result = await page.evaluate(async () => {
     const started = performance.now();

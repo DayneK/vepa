@@ -11,6 +11,9 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     ...devices['Desktop Chrome'],
+    // Local runs may point at an installed Chrome (e.g. PLAYWRIGHT_CHROME=/usr/bin/google-chrome)
+    // instead of a Playwright-downloaded browser; CI uses `npx playwright install chromium`.
+    ...(process.env.PLAYWRIGHT_CHROME ? { launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROME } } : {}),
   },
   webServer: {
     command: 'npm run dev -- --host 0.0.0.0 --port 4173',

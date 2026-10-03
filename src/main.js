@@ -140,7 +140,7 @@ let speciesGoals = new Map(); // Set H.2 — per-species goal nudges
 let seenMilestones = new Set(); // Set H.3 — once-only world milestones
 let prevDead = new Uint8Array(0);
 let timelineRecording = false;
-const TIMELINE_SNAPSHOT_INTERVAL = 150;
+let TIMELINE_SNAPSHOT_INTERVAL = 150; // e2e may shorten it via the dev-only hook
 const METRICS_CADENCE = 8;   // full particle metric scan (computeMetrics)
 const SOCIAL_CADENCE = 4;    // economy/governance/infrastructure/artifacts
 // Civilization ontology bounds — the lifecycle substrate caps records at 2048
@@ -510,6 +510,53 @@ async function boot() {
     });
     window.openChaosMultiplex = () => { if (multiplexController) multiplexController.openModal(); };
     // Read-only diagnostics hook for bench/multiplex-render.mjs (sim/render ms, ticks).
+    // Dev-server-only e2e hooks (tests/e2e): read world state and stage a
+    // mechanics fixture in the shared particle buffer. Stripped from builds.
+    if (import.meta.env && import.meta.env.DEV) {
+        const R = STRIDE_INDEXES;
+        window.__VEPA_TEST__ = {
+            state: () => ({ tick, particleCount, paused, workerReady: !!workerReady, workerFailed: !!workerFailed }),
+            setTimelineInterval: (n) => { TIMELINE_SNAPSHOT_INTERVAL = Math.max(1, n | 0); return TIMELINE_SNAPSHOT_INTERVAL; },
+            pause: () => { paused = true; bus.emit('sim:paused', { paused }); },
+            resume: () => { paused = false; bus.emit('sim:paused', { paused }); },
+            setLaw: (name, on) => {
+                const idx = LAW_INDEXES[name];
+                if (idx === undefined) return false;
+                if (on) lawSet(lawState, idx); else lawClear(lawState, idx);
+                bus.emit('law:sync');
+                return true;
+            },
+            // Stage n overlapping pairs (particle 2k+1 placed 0.05 from 2k, both at rest).
+            stagePairs: (n) => {
+                const pairs = Math.min(n, Math.floor(particleCount / 2));
+                for (let k = 0; k < pairs; k++) {
+                    const a = 2 * k * PARTICLE_STRIDE, b = (2 * k + 1) * PARTICLE_STRIDE;
+                    if (particleView[a + R.DEAD] >= 0.5 || particleView[b + R.DEAD] >= 0.5) continue;
+                    particleView[b + R.POS_X] = particleView[a + R.POS_X] + 0.05;
+                    particleView[b + R.POS_Y] = particleView[a + R.POS_Y];
+                    particleView[b + R.POS_Z] = particleView[a + R.POS_Z];
+                    for (const o of [a, b]) { particleView[o + R.VEL_X] = 0; particleView[o + R.VEL_Y] = 0; particleView[o + R.VEL_Z] = 0; }
+                }
+                return pairs;
+            },
+            // Mean separation of the staged pairs (minimum image).
+            pairSeparation: (n) => {
+                let sum = 0, m = 0;
+                const pairs = Math.min(n, Math.floor(particleCount / 2));
+                for (let k = 0; k < pairs; k++) {
+                    const a = 2 * k * PARTICLE_STRIDE, b = (2 * k + 1) * PARTICLE_STRIDE;
+                    let d2 = 0;
+                    for (const ax of [R.POS_X, R.POS_Y, R.POS_Z]) {
+                        let d = particleView[b + ax] - particleView[a + ax];
+                        if (d > worldSize / 2) d -= worldSize; else if (d < -worldSize / 2) d += worldSize;
+                        d2 += d * d;
+                    }
+                    sum += Math.sqrt(d2); m++;
+                }
+                return m ? sum / m : 0;
+            },
+        };
+    }
     window.__VEPA_MX_PERF__ = () => (multiplexController && multiplexController.mx.active ? multiplexController.perfSummary() : null);
     bus.on('multiplex:started', () => {
         paused = true;
