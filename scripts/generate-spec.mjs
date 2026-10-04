@@ -16,6 +16,7 @@ import {
   PARTICLE_STRIDE as REAL_PARTICLE_STRIDE,
   DNA_COUNT as REAL_DNA_COUNT,
 } from '../src/constants.js';
+import { computeLawAuditMatrices, CONSERVED_QUANTITIES } from './lib/lawAuditMatrices.mjs';
 import { PRIORITY_LAWS, PRIORITY_LAW_TEST_FILE } from '../src/state/priorityLaws.js';
 import { LAW_HELP_DB as REAL_LAW_HELP_DB, MECHANICS_HELP as REAL_MECHANICS_HELP } from '../src/constants/help.js';
 
@@ -1095,6 +1096,55 @@ ${rows.join('\n')}
 `);
 }
 
+// AUD-CONS (AC-40): measured conservation + non-redundancy matrices, 136/136 laws.
+function genLawAuditMatrices(constants) {
+  const { fixture, conservation, redundancy } = computeLawAuditMatrices();
+  const lawCount = Object.keys(constants.LAW_INDEXES).length;
+  if (conservation.length !== lawCount || redundancy.length !== lawCount) {
+    throw new Error(`generate-spec: audit matrices cover ${conservation.length}/${lawCount} laws`);
+  }
+  const nonFinite = conservation.filter(r => !r.finite).map(r => r.law);
+  if (nonFinite.length) throw new Error(`generate-spec: laws produced non-finite state on the audit fixture: ${nonFinite.join(', ')}`);
+  const fx = `${fixture.particles} particles, ${fixture.ticks} ticks at dt=${fixture.dt.toFixed(4)}, seed ${fixture.seed}`;
+  writeSpec('audit/conservation-matrix.json', JSON.stringify({ schema: 'vepa-law-conservation/v1', generator: 'scripts/lib/lawAuditMatrices.mjs', fixture, quantities: CONSERVED_QUANTITIES, laws: conservation }, null, 2) + '\n');
+  writeSpec('audit/non-redundancy-matrix.json', JSON.stringify({ schema: 'vepa-law-non-redundancy/v1', generator: 'scripts/lib/lawAuditMatrices.mjs', fixture, laws: redundancy }, null, 2) + '\n');
+  const count = (rows, pred) => rows.filter(pred).length;
+  const changed = Object.fromEntries(CONSERVED_QUANTITIES.map(q => [q, count(conservation, r => r.cells[q] === 'changed')]));
+  const undeclared = conservation.filter(r => r.undeclared.length);
+  writeSpec('audit/conservation-matrix.md', HEADER + `# Audit: Law conservation matrix
+
+Measured, not declared: every law runs **alone** on one deterministic fixture (${fx}) and its
+totals are compared with the solver-core baseline (the state reached by laws with no solo effect).
+\`kept\` = relative change < 1e-4; \`changed\` = the law alone moves that total. Changing a total is
+not a defect — HEAT adds energy, REPRO adds particles — but every change must be a declared write.
+spec:check regenerates this file, so a physics change that alters what a law conserves fails the check.
+
+Coverage: **${conservation.length}/${lawCount} laws**. Laws that change each total: ${CONSERVED_QUANTITIES.map(q => `${q} ${changed[q]}`).join(', ')}.
+
+Undeclared changes (law changes a total whose stride field its ontology record does not list in \`writes\`): ${undeclared.length ? undeclared.map(r => `**${r.law}** (${r.undeclared.join(', ')})`).join('; ') : 'none'}.
+
+| Law | Category | ${CONSERVED_QUANTITIES.join(' | ')} |
+|---|---|${CONSERVED_QUANTITIES.map(() => '---').join('|')}|
+${conservation.map(r => `| ${r.law} | ${r.category} | ${CONSERVED_QUANTITIES.map(q => r.cells[q] === 'kept' ? 'kept' : `**changed** (${r.deltas[q]})`).join(' | ')} |`).join('\n')}
+`);
+  const status = (st) => count(redundancy, r => r.status === st);
+  writeSpec('audit/non-redundancy-matrix.md', HEADER + `# Audit: Law non-redundancy matrix
+
+Every law's solo final state on the audit fixture (${fx}) is compared with the solver-core
+baseline and with every other law (L1 distance over the whole particle buffer).
+
+- \`distinct\` — the law has a solo effect no other law reproduces.
+- \`no-solo-effect\` — bit-identical to the core baseline: the law needs partner laws or conditions the fixture lacks. Not proof of redundancy; see the cross-category and coupling-chain tests.
+- \`indistinguishable\` — has an effect, but another law produces the identical state on this fixture. Candidates for review.
+
+Coverage: **${redundancy.length}/${lawCount} laws** — distinct ${status('distinct')}, no-solo-effect ${status('no-solo-effect')}, indistinguishable ${status('indistinguishable')}.
+
+| Law | Category | Status | Effect vs core (L1) | Nearest law | Distance |
+|---|---|---|---|---|---|
+${redundancy.map(r => `| ${r.law} | ${r.category} | ${r.status === 'distinct' ? 'distinct' : `**${r.status}**`} | ${r.effect} | ${r.nearest} | ${r.nearestDistance} |`).join('\n')}
+`);
+}
+
 function genManifest(constants, modules) {
   const pkg = JSON.parse(read('package.json'));
   const sourceAreas = {};
@@ -1217,6 +1267,7 @@ function main() {
   genOntologyCoverage(constants);
   genProcedure();
   genPriorityLawMatrix();
+  genLawAuditMatrices(constants);
   genReadme(constants, modules);
   genManifest(constants, modules);
 

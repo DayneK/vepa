@@ -1,0 +1,2747 @@
+{
+  "schema": "vepa-law-conservation/v1",
+  "generator": "scripts/lib/lawAuditMatrices.mjs",
+  "fixture": {
+    "particles": 36,
+    "ticks": 24,
+    "seed": 11,
+    "spread": 14,
+    "worldSize": 2000,
+    "dt": 0.016666666666666666
+  },
+  "quantities": [
+    "energy",
+    "mass",
+    "charge",
+    "momentum",
+    "population"
+  ],
+  "laws": [
+    {
+      "law": "GRAV",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.008968,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "DRAG",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00009762,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ENTR",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.000001725,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "BUOYANCY",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.2814,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "COLL",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0001417,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ACCR",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00003929,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PLANETARY",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.008,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "LIFE",
+      "category": "biology",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.0001567,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "GLOW",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "AFFINITY",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 2.295e-8,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "REPRO",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "TRACK",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SENESCENCE",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ENERGY",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 3.926e-8,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "RADIATION",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "GENOTYPE",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00001356,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PHENOTYPE",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CATALYSIS_LAW",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SOLVATION",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 2.281,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ACIDITY",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0.000002681,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "OXIDATION",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "changed",
+        "charge": "changed",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.0000176,
+        "mass": 0.0002176,
+        "charge": 0.0001727,
+        "momentum": 0.000008911,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "POLYMER",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ISOMERIZATION",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CHIRALITY",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.000003946,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CRYSTALLIZATION",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 2.248,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "HEAT",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.008163,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "COLD",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CONVECTION",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.02422,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PHASE_RADIATION",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 1,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SUBLIMATION",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "changed",
+        "mass": "changed",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.02694,
+        "mass": 0.08354,
+        "charge": 0,
+        "momentum": 0.005996,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "TIME_DILATION",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "DIMENSIONALITY",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.000117,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CHAOS",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.1485,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ORDER",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.01399,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "FATE",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.002369,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "WILL",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0003316,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SOUL_LAW",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "MIND",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "VOID",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0001676,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "BOND",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.004191,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "REDUCTION",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "changed",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0.1887,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ALLOY",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "MELT",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "BOIL",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "changed",
+        "mass": "changed",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.1077,
+        "mass": 0.334,
+        "charge": 0,
+        "momentum": 0.03215,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CONDENSE",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "DEPOSIT",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "EXOTHERMIC",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.0003147,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "TELEPATHY",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.001388,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CLAIRVOYANCE",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.004417,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.003019,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PRECOGNITION",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.00197,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00007353,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ASTRAL",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PREDATION",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0004526,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "COMMS",
+      "category": "biology",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.04873,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.000007305,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": [
+        "energy"
+      ]
+    },
+    {
+      "law": "CHARGE_LAW",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00005856,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ELECTRIC_FIELD",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.000003995,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CURRENT",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0.000002505,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "RESISTANCE",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.003272,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CAPACITANCE",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "changed",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 24.81,
+        "momentum": 0.0004097,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "INDUCTANCE",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.005946,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "MAGNETISM",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 4.595e-7,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "RESONANCE",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0001642,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "FLUX",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.01897,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "IONIZATION",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "DISCHARGE",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "changed",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0.4307,
+        "momentum": 0.001115,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PLASMA",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "changed",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 72.19,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SUPERCONDUCTIVITY",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "MEMORY",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.004772,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PATTERN",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.000009716,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "STIGMERGY",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.1507,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SIGNAL_BOOST",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "LEARN",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.004559,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SYMBOL",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.000002851,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "METRIC",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.9562,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PREDICT",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0001505,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CODE",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PROTOCOL",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "FEEDBACK",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0006465,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "LANGUAGE",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CULTURE",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SINGULARITY",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ENTANGLEMENT",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "HISTORY",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.02242,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "TIDE",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.01431,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "FRICTION",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0003552,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "HORIZON",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0001692,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "RADIATION_PRESSURE",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.05357,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "MASS_INERTIA",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "FIELD",
+      "category": "physics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00638,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SYMBIOSIS",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 7.518e-9,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PARASITE",
+      "category": "biology",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.01931,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "HIBERNATION",
+      "category": "biology",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "IMMUNITY",
+      "category": "biology",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.001891,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ELECTROLYSIS",
+      "category": "chemistry",
+      "cells": {
+        "energy": "changed",
+        "mass": "changed",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.07393,
+        "mass": 0.2292,
+        "charge": 0,
+        "momentum": 0.00443,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PHOTOLYSIS",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PRECIPITATION",
+      "category": "chemistry",
+      "cells": {
+        "energy": "changed",
+        "mass": "changed",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.02229,
+        "mass": 0.06912,
+        "charge": 0,
+        "momentum": 0.01141,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "NEUTRALIZATION",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 4.768e-7,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "STOICHIOMETRY",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 6.314e-8,
+        "charge": 0,
+        "momentum": 0.0116,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "AUTOCATALYSIS",
+      "category": "chemistry",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ADIABATIC",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0007173,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "COMPRESSION",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "EXPANSION",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "EQUILIBRIUM",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "LATENT_HEAT",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.8625,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "RUNAWAY",
+      "category": "thermodynamics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CONSCIOUSNESS",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.000172,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PERCEPTION",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.000008718,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SYNCHRONICITY",
+      "category": "metaphysics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00003346,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ANTENNA",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SHIELDING",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "changed",
+        "mass": "kept",
+        "charge": "changed",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0.009066,
+        "mass": 0,
+        "charge": 0.1005,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "POLARIZATION",
+      "category": "electromagnetism",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "NAVIGATION",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.05904,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ENCRYPTION",
+      "category": "information",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SUPERPOSITION",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0009754,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "TUNNELING",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "DECOHERENCE",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.000007335,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "WAVE_PARTICLE",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00007703,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "UNCERTAINTY",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00002311,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "TELEPORT",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "OBSERVER",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.1037,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "PLANCK",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.001461,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "COHERENCE",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00002468,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "BOSONIC",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0002413,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "FERMIONIC",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00009591,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SPIN",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00005084,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "SPECTRAL",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "WAVEFUNCTION",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "HYPERPLANE",
+      "category": "quantum",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.0004442,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ANTIMATTER",
+      "category": "quantum",
+      "cells": {
+        "energy": "changed",
+        "mass": "changed",
+        "charge": "changed",
+        "momentum": "changed",
+        "population": "changed"
+      },
+      "deltas": {
+        "energy": 0.4722,
+        "mass": 0.4078,
+        "charge": 10.27,
+        "momentum": 0.03142,
+        "population": 17
+      },
+      "finite": true,
+      "undeclared": [
+        "energy",
+        "mass",
+        "charge"
+      ]
+    },
+    {
+      "law": "CONTACT",
+      "category": "mechanics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "MOMENTUM",
+      "category": "mechanics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.003031,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "INERTIA",
+      "category": "mechanics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "TORQUE",
+      "category": "mechanics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "changed",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.1212,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "CONSTRAINT",
+      "category": "mechanics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "FRAGMENTATION",
+      "category": "mechanics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "TOPOLOGY",
+      "category": "mechanics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    },
+    {
+      "law": "ADHESION",
+      "category": "mechanics",
+      "cells": {
+        "energy": "kept",
+        "mass": "kept",
+        "charge": "kept",
+        "momentum": "kept",
+        "population": "kept"
+      },
+      "deltas": {
+        "energy": 0,
+        "mass": 0,
+        "charge": 0,
+        "momentum": 0.00001367,
+        "population": 0
+      },
+      "finite": true,
+      "undeclared": []
+    }
+  ]
+}

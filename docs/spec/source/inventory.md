@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `339` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `340` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `339` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 33 | 241 | 379 |
 | State | 37 | 296 | 493 |
-| Testing | 185 | 32 | 760 |
+| Testing | 186 | 32 | 762 |
 | Ui | 28 | 98 | 379 |
 
 ## Module list
@@ -284,6 +284,7 @@ The generator scanned `339` files from active repository inputs. Individual modu
 | [tests/unit/infrastructure.test.js](../../../tests/unit/infrastructure.test.js) | testing | 201 | 0 | 5 | 1 |
 | [tests/unit/interactionSpace.test.js](../../../tests/unit/interactionSpace.test.js) | testing | 52 | 0 | 3 | 5 |
 | [tests/unit/launchModal.test.js](../../../tests/unit/launchModal.test.js) | testing | 332 | 0 | 4 | 1 |
+| [tests/unit/lawAuditMatrices.test.js](../../../tests/unit/lawAuditMatrices.test.js) | testing | 30 | 0 | 3 | 2 |
 | [tests/unit/lawCategories.test.js](../../../tests/unit/lawCategories.test.js) | testing | 292 | 0 | 6 | 16 |
 | [tests/unit/lawClock.test.js](../../../tests/unit/lawClock.test.js) | testing | 88 | 0 | 9 | 3 |
 | [tests/unit/lawCouplingChains.test.js](../../../tests/unit/lawCouplingChains.test.js) | testing | 33 | 0 | 3 | 2 |

@@ -1,0 +1,1102 @@
+{
+  "schema": "vepa-law-non-redundancy/v1",
+  "generator": "scripts/lib/lawAuditMatrices.mjs",
+  "fixture": {
+    "particles": 36,
+    "ticks": 24,
+    "seed": 11,
+    "spread": 14,
+    "worldSize": 2000,
+    "dt": 0.016666666666666666
+  },
+  "laws": [
+    {
+      "law": "GRAV",
+      "category": "physics",
+      "effect": 214.5,
+      "nearest": "NAVIGATION",
+      "nearestDistance": 172.8,
+      "status": "distinct"
+    },
+    {
+      "law": "DRAG",
+      "category": "physics",
+      "effect": 0.1858,
+      "nearest": "ENTR",
+      "nearestDistance": 0.1856,
+      "status": "distinct"
+    },
+    {
+      "law": "ENTR",
+      "category": "physics",
+      "effect": 0.001487,
+      "nearest": "AFFINITY",
+      "nearestDistance": 0.001469,
+      "status": "distinct"
+    },
+    {
+      "law": "BUOYANCY",
+      "category": "physics",
+      "effect": 13.1,
+      "nearest": "PLANETARY",
+      "nearestDistance": 12.75,
+      "status": "distinct"
+    },
+    {
+      "law": "COLL",
+      "category": "physics",
+      "effect": 0.5282,
+      "nearest": "CONTACT",
+      "nearestDistance": 0.2631,
+      "status": "distinct"
+    },
+    {
+      "law": "ACCR",
+      "category": "physics",
+      "effect": 23.67,
+      "nearest": "FERMIONIC",
+      "nearestDistance": 23.5,
+      "status": "distinct"
+    },
+    {
+      "law": "PLANETARY",
+      "category": "physics",
+      "effect": 0.3478,
+      "nearest": "AFFINITY",
+      "nearestDistance": 0.348,
+      "status": "distinct"
+    },
+    {
+      "law": "LIFE",
+      "category": "biology",
+      "effect": 1962,
+      "nearest": "OXIDATION",
+      "nearestDistance": 1962,
+      "status": "distinct"
+    },
+    {
+      "law": "GLOW",
+      "category": "biology",
+      "effect": 0.05486,
+      "nearest": "DECOHERENCE",
+      "nearestDistance": 0.04599,
+      "status": "distinct"
+    },
+    {
+      "law": "AFFINITY",
+      "category": "biology",
+      "effect": 0.0002719,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0003315,
+      "status": "distinct"
+    },
+    {
+      "law": "REPRO",
+      "category": "biology",
+      "effect": 0.7201,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.7203,
+      "status": "distinct"
+    },
+    {
+      "law": "TRACK",
+      "category": "biology",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "SENESCENCE",
+      "category": "biology",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "ENERGY",
+      "category": "biology",
+      "effect": 592.5,
+      "nearest": "SYMBIOSIS",
+      "nearestDistance": 1.212,
+      "status": "distinct"
+    },
+    {
+      "law": "RADIATION",
+      "category": "biology",
+      "effect": 0.144,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.1443,
+      "status": "distinct"
+    },
+    {
+      "law": "GENOTYPE",
+      "category": "biology",
+      "effect": 32.6,
+      "nearest": "AFFINITY",
+      "nearestDistance": 32.6,
+      "status": "distinct"
+    },
+    {
+      "law": "PHENOTYPE",
+      "category": "biology",
+      "effect": 11480,
+      "nearest": "LIFE",
+      "nearestDistance": 9516,
+      "status": "distinct"
+    },
+    {
+      "law": "CATALYSIS_LAW",
+      "category": "chemistry",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "SOLVATION",
+      "category": "chemistry",
+      "effect": 404.4,
+      "nearest": "RADIATION_PRESSURE",
+      "nearestDistance": 395.2,
+      "status": "distinct"
+    },
+    {
+      "law": "ACIDITY",
+      "category": "chemistry",
+      "effect": 5.313,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 5.314,
+      "status": "distinct"
+    },
+    {
+      "law": "OXIDATION",
+      "category": "chemistry",
+      "effect": 0.05729,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.05756,
+      "status": "distinct"
+    },
+    {
+      "law": "POLYMER",
+      "category": "chemistry",
+      "effect": 2858,
+      "nearest": "COLL",
+      "nearestDistance": 2857,
+      "status": "distinct"
+    },
+    {
+      "law": "ISOMERIZATION",
+      "category": "chemistry",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "CHIRALITY",
+      "category": "chemistry",
+      "effect": 4.463,
+      "nearest": "SPIN",
+      "nearestDistance": 4.459,
+      "status": "distinct"
+    },
+    {
+      "law": "CRYSTALLIZATION",
+      "category": "chemistry",
+      "effect": 522.6,
+      "nearest": "TORQUE",
+      "nearestDistance": 519.4,
+      "status": "distinct"
+    },
+    {
+      "law": "HEAT",
+      "category": "thermodynamics",
+      "effect": 166.5,
+      "nearest": "COLD",
+      "nearestDistance": 99.62,
+      "status": "distinct"
+    },
+    {
+      "law": "COLD",
+      "category": "thermodynamics",
+      "effect": 66.84,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 66.84,
+      "status": "distinct"
+    },
+    {
+      "law": "CONVECTION",
+      "category": "thermodynamics",
+      "effect": 1.029,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 1.029,
+      "status": "distinct"
+    },
+    {
+      "law": "PHASE_RADIATION",
+      "category": "thermodynamics",
+      "effect": 4488,
+      "nearest": "RUNAWAY",
+      "nearestDistance": 2312,
+      "status": "distinct"
+    },
+    {
+      "law": "SUBLIMATION",
+      "category": "thermodynamics",
+      "effect": 68.54,
+      "nearest": "CLAIRVOYANCE",
+      "nearestDistance": 64.74,
+      "status": "distinct"
+    },
+    {
+      "law": "TIME_DILATION",
+      "category": "metaphysics",
+      "effect": 0.07681,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.07708,
+      "status": "distinct"
+    },
+    {
+      "law": "DIMENSIONALITY",
+      "category": "metaphysics",
+      "effect": 0.2637,
+      "nearest": "AFFINITY",
+      "nearestDistance": 0.2639,
+      "status": "distinct"
+    },
+    {
+      "law": "CHAOS",
+      "category": "metaphysics",
+      "effect": 2887,
+      "nearest": "FRICTION",
+      "nearestDistance": 747.1,
+      "status": "distinct"
+    },
+    {
+      "law": "ORDER",
+      "category": "metaphysics",
+      "effect": 1.074,
+      "nearest": "DRAG",
+      "nearestDistance": 1.031,
+      "status": "distinct"
+    },
+    {
+      "law": "FATE",
+      "category": "metaphysics",
+      "effect": 0.5196,
+      "nearest": "ENTR",
+      "nearestDistance": 0.5194,
+      "status": "distinct"
+    },
+    {
+      "law": "WILL",
+      "category": "metaphysics",
+      "effect": 0.2735,
+      "nearest": "VOID",
+      "nearestDistance": 0.2694,
+      "status": "distinct"
+    },
+    {
+      "law": "SOUL_LAW",
+      "category": "metaphysics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "MIND",
+      "category": "metaphysics",
+      "effect": 13.95,
+      "nearest": "ANTENNA",
+      "nearestDistance": 12.17,
+      "status": "distinct"
+    },
+    {
+      "law": "VOID",
+      "category": "physics",
+      "effect": 0.03142,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.03146,
+      "status": "distinct"
+    },
+    {
+      "law": "BOND",
+      "category": "physics",
+      "effect": 4475,
+      "nearest": "POLYMER",
+      "nearestDistance": 2942,
+      "status": "distinct"
+    },
+    {
+      "law": "REDUCTION",
+      "category": "chemistry",
+      "effect": 21.34,
+      "nearest": "CURRENT",
+      "nearestDistance": 0.1887,
+      "status": "distinct"
+    },
+    {
+      "law": "ALLOY",
+      "category": "chemistry",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "MELT",
+      "category": "thermodynamics",
+      "effect": 17.21,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 17.21,
+      "status": "distinct"
+    },
+    {
+      "law": "BOIL",
+      "category": "thermodynamics",
+      "effect": 282,
+      "nearest": "SUBLIMATION",
+      "nearestDistance": 224,
+      "status": "distinct"
+    },
+    {
+      "law": "CONDENSE",
+      "category": "thermodynamics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "DEPOSIT",
+      "category": "thermodynamics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "EXOTHERMIC",
+      "category": "thermodynamics",
+      "effect": 2145,
+      "nearest": "FRICTION",
+      "nearestDistance": 4.996,
+      "status": "distinct"
+    },
+    {
+      "law": "TELEPATHY",
+      "category": "metaphysics",
+      "effect": 3840000,
+      "nearest": "ANTIMATTER",
+      "nearestDistance": 3840000,
+      "status": "distinct"
+    },
+    {
+      "law": "CLAIRVOYANCE",
+      "category": "metaphysics",
+      "effect": 10.43,
+      "nearest": "VOID",
+      "nearestDistance": 10.43,
+      "status": "distinct"
+    },
+    {
+      "law": "PRECOGNITION",
+      "category": "metaphysics",
+      "effect": 14.09,
+      "nearest": "CHIRALITY",
+      "nearestDistance": 11.28,
+      "status": "distinct"
+    },
+    {
+      "law": "ASTRAL",
+      "category": "metaphysics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "PREDATION",
+      "category": "biology",
+      "effect": 0.1178,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.1179,
+      "status": "distinct"
+    },
+    {
+      "law": "COMMS",
+      "category": "biology",
+      "effect": 362.1,
+      "nearest": "SUBLIMATION",
+      "nearestDistance": 312.3,
+      "status": "distinct"
+    },
+    {
+      "law": "CHARGE_LAW",
+      "category": "electromagnetism",
+      "effect": 2.625,
+      "nearest": "HORIZON",
+      "nearestDistance": 2.535,
+      "status": "distinct"
+    },
+    {
+      "law": "ELECTRIC_FIELD",
+      "category": "electromagnetism",
+      "effect": 0.0002709,
+      "nearest": "AFFINITY",
+      "nearestDistance": 0.0003315,
+      "status": "distinct"
+    },
+    {
+      "law": "CURRENT",
+      "category": "electromagnetism",
+      "effect": 21.34,
+      "nearest": "REDUCTION",
+      "nearestDistance": 0.1887,
+      "status": "distinct"
+    },
+    {
+      "law": "RESISTANCE",
+      "category": "electromagnetism",
+      "effect": 2142,
+      "nearest": "FRICTION",
+      "nearestDistance": 1.073,
+      "status": "distinct"
+    },
+    {
+      "law": "CAPACITANCE",
+      "category": "electromagnetism",
+      "effect": 31.86,
+      "nearest": "PREDATION",
+      "nearestDistance": 31.76,
+      "status": "distinct"
+    },
+    {
+      "law": "INDUCTANCE",
+      "category": "electromagnetism",
+      "effect": 16.54,
+      "nearest": "MOMENTUM",
+      "nearestDistance": 7.624,
+      "status": "distinct"
+    },
+    {
+      "law": "MAGNETISM",
+      "category": "electromagnetism",
+      "effect": 0.05974,
+      "nearest": "ENTR",
+      "nearestDistance": 0.05936,
+      "status": "distinct"
+    },
+    {
+      "law": "RESONANCE",
+      "category": "electromagnetism",
+      "effect": 39.6,
+      "nearest": "SIGNAL_BOOST",
+      "nearestDistance": 12.91,
+      "status": "distinct"
+    },
+    {
+      "law": "FLUX",
+      "category": "electromagnetism",
+      "effect": 20.23,
+      "nearest": "PATTERN",
+      "nearestDistance": 10.92,
+      "status": "distinct"
+    },
+    {
+      "law": "IONIZATION",
+      "category": "electromagnetism",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "DISCHARGE",
+      "category": "electromagnetism",
+      "effect": 1264,
+      "nearest": "FRICTION",
+      "nearestDistance": 912.8,
+      "status": "distinct"
+    },
+    {
+      "law": "PLASMA",
+      "category": "electromagnetism",
+      "effect": 534,
+      "nearest": "CAPACITANCE",
+      "nearestDistance": 510.8,
+      "status": "distinct"
+    },
+    {
+      "law": "SUPERCONDUCTIVITY",
+      "category": "electromagnetism",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "MEMORY",
+      "category": "information",
+      "effect": 27.56,
+      "nearest": "FEEDBACK",
+      "nearestDistance": 23.29,
+      "status": "distinct"
+    },
+    {
+      "law": "PATTERN",
+      "category": "information",
+      "effect": 14.51,
+      "nearest": "PREDICT",
+      "nearestDistance": 9.513,
+      "status": "distinct"
+    },
+    {
+      "law": "STIGMERGY",
+      "category": "information",
+      "effect": 105500,
+      "nearest": "TIDE",
+      "nearestDistance": 105500,
+      "status": "distinct"
+    },
+    {
+      "law": "SIGNAL_BOOST",
+      "category": "information",
+      "effect": 28.69,
+      "nearest": "LANGUAGE",
+      "nearestDistance": 8.411,
+      "status": "distinct"
+    },
+    {
+      "law": "LEARN",
+      "category": "information",
+      "effect": 34.96,
+      "nearest": "OBSERVER",
+      "nearestDistance": 9.248,
+      "status": "distinct"
+    },
+    {
+      "law": "SYMBOL",
+      "category": "information",
+      "effect": 3.264,
+      "nearest": "FIELD",
+      "nearestDistance": 2.182,
+      "status": "distinct"
+    },
+    {
+      "law": "METRIC",
+      "category": "information",
+      "effect": 252.5,
+      "nearest": "CONTACT",
+      "nearestDistance": 252.2,
+      "status": "distinct"
+    },
+    {
+      "law": "PREDICT",
+      "category": "information",
+      "effect": 21.77,
+      "nearest": "TIDE",
+      "nearestDistance": 8.787,
+      "status": "distinct"
+    },
+    {
+      "law": "CODE",
+      "category": "information",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "PROTOCOL",
+      "category": "information",
+      "effect": 4.828,
+      "nearest": "POLARIZATION",
+      "nearestDistance": 5.364e-7,
+      "status": "indistinguishable"
+    },
+    {
+      "law": "FEEDBACK",
+      "category": "information",
+      "effect": 4.271,
+      "nearest": "WILL",
+      "nearestDistance": 4.111,
+      "status": "distinct"
+    },
+    {
+      "law": "LANGUAGE",
+      "category": "information",
+      "effect": 37.1,
+      "nearest": "SIGNAL_BOOST",
+      "nearestDistance": 8.411,
+      "status": "distinct"
+    },
+    {
+      "law": "CULTURE",
+      "category": "information",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "SINGULARITY",
+      "category": "physics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "ENTANGLEMENT",
+      "category": "metaphysics",
+      "effect": 56.81,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 56.81,
+      "status": "distinct"
+    },
+    {
+      "law": "HISTORY",
+      "category": "information",
+      "effect": 22.69,
+      "nearest": "PATTERN",
+      "nearestDistance": 11.96,
+      "status": "distinct"
+    },
+    {
+      "law": "TIDE",
+      "category": "physics",
+      "effect": 26.64,
+      "nearest": "PREDICT",
+      "nearestDistance": 8.787,
+      "status": "distinct"
+    },
+    {
+      "law": "FRICTION",
+      "category": "physics",
+      "effect": 2141,
+      "nearest": "RESISTANCE",
+      "nearestDistance": 1.073,
+      "status": "distinct"
+    },
+    {
+      "law": "HORIZON",
+      "category": "physics",
+      "effect": 0.2143,
+      "nearest": "ADHESION",
+      "nearestDistance": 0.1032,
+      "status": "distinct"
+    },
+    {
+      "law": "RADIATION_PRESSURE",
+      "category": "physics",
+      "effect": 104,
+      "nearest": "CONTACT",
+      "nearestDistance": 103.7,
+      "status": "distinct"
+    },
+    {
+      "law": "MASS_INERTIA",
+      "category": "physics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "FIELD",
+      "category": "physics",
+      "effect": 1.263,
+      "nearest": "FATE",
+      "nearestDistance": 1.185,
+      "status": "distinct"
+    },
+    {
+      "law": "SYMBIOSIS",
+      "category": "biology",
+      "effect": 593.7,
+      "nearest": "ENERGY",
+      "nearestDistance": 1.212,
+      "status": "distinct"
+    },
+    {
+      "law": "PARASITE",
+      "category": "biology",
+      "effect": 458,
+      "nearest": "BOIL",
+      "nearestDistance": 455.9,
+      "status": "distinct"
+    },
+    {
+      "law": "HIBERNATION",
+      "category": "biology",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "IMMUNITY",
+      "category": "biology",
+      "effect": 12.96,
+      "nearest": "OXIDATION",
+      "nearestDistance": 12.94,
+      "status": "distinct"
+    },
+    {
+      "law": "ELECTROLYSIS",
+      "category": "chemistry",
+      "effect": 222.8,
+      "nearest": "SIGNAL_BOOST",
+      "nearestDistance": 196.2,
+      "status": "distinct"
+    },
+    {
+      "law": "PHOTOLYSIS",
+      "category": "chemistry",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "PRECIPITATION",
+      "category": "chemistry",
+      "effect": 53.76,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 53.76,
+      "status": "distinct"
+    },
+    {
+      "law": "NEUTRALIZATION",
+      "category": "chemistry",
+      "effect": 21.22,
+      "nearest": "CURRENT",
+      "nearestDistance": 6.059,
+      "status": "distinct"
+    },
+    {
+      "law": "STOICHIOMETRY",
+      "category": "chemistry",
+      "effect": 8.794,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 8.794,
+      "status": "distinct"
+    },
+    {
+      "law": "AUTOCATALYSIS",
+      "category": "chemistry",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "ADIABATIC",
+      "category": "thermodynamics",
+      "effect": 21.27,
+      "nearest": "PERCEPTION",
+      "nearestDistance": 20.96,
+      "status": "distinct"
+    },
+    {
+      "law": "COMPRESSION",
+      "category": "thermodynamics",
+      "effect": 61.09,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 61.09,
+      "status": "distinct"
+    },
+    {
+      "law": "EXPANSION",
+      "category": "thermodynamics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "EQUILIBRIUM",
+      "category": "thermodynamics",
+      "effect": 652.8,
+      "nearest": "HEAT",
+      "nearestDistance": 492.5,
+      "status": "distinct"
+    },
+    {
+      "law": "LATENT_HEAT",
+      "category": "thermodynamics",
+      "effect": 3939,
+      "nearest": "FRICTION",
+      "nearestDistance": 2141,
+      "status": "distinct"
+    },
+    {
+      "law": "RUNAWAY",
+      "category": "thermodynamics",
+      "effect": 2176,
+      "nearest": "EXOTHERMIC",
+      "nearestDistance": 33.12,
+      "status": "distinct"
+    },
+    {
+      "law": "CONSCIOUSNESS",
+      "category": "metaphysics",
+      "effect": 16.63,
+      "nearest": "SPECTRAL",
+      "nearestDistance": 16.53,
+      "status": "distinct"
+    },
+    {
+      "law": "PERCEPTION",
+      "category": "metaphysics",
+      "effect": 2.422,
+      "nearest": "COHERENCE",
+      "nearestDistance": 1.505,
+      "status": "distinct"
+    },
+    {
+      "law": "SYNCHRONICITY",
+      "category": "metaphysics",
+      "effect": 4.669,
+      "nearest": "COHERENCE",
+      "nearestDistance": 0.7649,
+      "status": "distinct"
+    },
+    {
+      "law": "ANTENNA",
+      "category": "electromagnetism",
+      "effect": 1.782,
+      "nearest": "SPECTRAL",
+      "nearestDistance": 1.221,
+      "status": "distinct"
+    },
+    {
+      "law": "SHIELDING",
+      "category": "electromagnetism",
+      "effect": 24.83,
+      "nearest": "CLAIRVOYANCE",
+      "nearestDistance": 15.55,
+      "status": "distinct"
+    },
+    {
+      "law": "POLARIZATION",
+      "category": "electromagnetism",
+      "effect": 4.828,
+      "nearest": "PROTOCOL",
+      "nearestDistance": 5.364e-7,
+      "status": "indistinguishable"
+    },
+    {
+      "law": "NAVIGATION",
+      "category": "information",
+      "effect": 49.56,
+      "nearest": "TIDE",
+      "nearestDistance": 36.17,
+      "status": "distinct"
+    },
+    {
+      "law": "ENCRYPTION",
+      "category": "information",
+      "effect": 52.63,
+      "nearest": "POLARIZATION",
+      "nearestDistance": 52.63,
+      "status": "distinct"
+    },
+    {
+      "law": "SUPERPOSITION",
+      "category": "quantum",
+      "effect": 38.21,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 38.21,
+      "status": "distinct"
+    },
+    {
+      "law": "TUNNELING",
+      "category": "quantum",
+      "effect": 35.01,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 35.01,
+      "status": "distinct"
+    },
+    {
+      "law": "DECOHERENCE",
+      "category": "quantum",
+      "effect": 0.1008,
+      "nearest": "GLOW",
+      "nearestDistance": 0.04599,
+      "status": "distinct"
+    },
+    {
+      "law": "WAVE_PARTICLE",
+      "category": "quantum",
+      "effect": 0.03594,
+      "nearest": "AFFINITY",
+      "nearestDistance": 0.03599,
+      "status": "distinct"
+    },
+    {
+      "law": "UNCERTAINTY",
+      "category": "quantum",
+      "effect": 0.1455,
+      "nearest": "ENTR",
+      "nearestDistance": 0.1457,
+      "status": "distinct"
+    },
+    {
+      "law": "TELEPORT",
+      "category": "quantum",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "OBSERVER",
+      "category": "quantum",
+      "effect": 29.32,
+      "nearest": "LEARN",
+      "nearestDistance": 9.248,
+      "status": "distinct"
+    },
+    {
+      "law": "PLANCK",
+      "category": "quantum",
+      "effect": 1.953,
+      "nearest": "WAVE_PARTICLE",
+      "nearestDistance": 1.947,
+      "status": "distinct"
+    },
+    {
+      "law": "COHERENCE",
+      "category": "quantum",
+      "effect": 3.921,
+      "nearest": "SYNCHRONICITY",
+      "nearestDistance": 0.7649,
+      "status": "distinct"
+    },
+    {
+      "law": "BOSONIC",
+      "category": "quantum",
+      "effect": 7.521,
+      "nearest": "CHARGE_LAW",
+      "nearestDistance": 6.969,
+      "status": "distinct"
+    },
+    {
+      "law": "FERMIONIC",
+      "category": "quantum",
+      "effect": 0.1684,
+      "nearest": "AFFINITY",
+      "nearestDistance": 0.1686,
+      "status": "distinct"
+    },
+    {
+      "law": "SPIN",
+      "category": "quantum",
+      "effect": 0.1034,
+      "nearest": "WAVE_PARTICLE",
+      "nearestDistance": 0.1034,
+      "status": "distinct"
+    },
+    {
+      "law": "SPECTRAL",
+      "category": "quantum",
+      "effect": 0.864,
+      "nearest": "DECOHERENCE",
+      "nearestDistance": 0.7921,
+      "status": "distinct"
+    },
+    {
+      "law": "WAVEFUNCTION",
+      "category": "quantum",
+      "effect": 12.6,
+      "nearest": "UNCERTAINTY",
+      "nearestDistance": 12.58,
+      "status": "distinct"
+    },
+    {
+      "law": "HYPERPLANE",
+      "category": "quantum",
+      "effect": 0.03271,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.03244,
+      "status": "distinct"
+    },
+    {
+      "law": "ANTIMATTER",
+      "category": "quantum",
+      "effect": 124.1,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 124.1,
+      "status": "distinct"
+    },
+    {
+      "law": "CONTACT",
+      "category": "mechanics",
+      "effect": 0.7693,
+      "nearest": "COLL",
+      "nearestDistance": 0.2631,
+      "status": "distinct"
+    },
+    {
+      "law": "MOMENTUM",
+      "category": "mechanics",
+      "effect": 8.934,
+      "nearest": "SYNCHRONICITY",
+      "nearestDistance": 4.268,
+      "status": "distinct"
+    },
+    {
+      "law": "INERTIA",
+      "category": "mechanics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "TORQUE",
+      "category": "mechanics",
+      "effect": 23.33,
+      "nearest": "MOMENTUM",
+      "nearestDistance": 22.03,
+      "status": "distinct"
+    },
+    {
+      "law": "CONSTRAINT",
+      "category": "mechanics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "FRAGMENTATION",
+      "category": "mechanics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "TOPOLOGY",
+      "category": "mechanics",
+      "effect": 0,
+      "nearest": "ELECTRIC_FIELD",
+      "nearestDistance": 0.0002709,
+      "status": "no-solo-effect"
+    },
+    {
+      "law": "ADHESION",
+      "category": "mechanics",
+      "effect": 0.1756,
+      "nearest": "HORIZON",
+      "nearestDistance": 0.1032,
+      "status": "distinct"
+    }
+  ]
+}

@@ -9,7 +9,7 @@
     "bench",
     "public"
   ],
-  "sourceFileCount": 339,
+  "sourceFileCount": 340,
   "sourceAreas": {
     "benchmark": 8,
     "repository": 7,
@@ -17,7 +17,7 @@
     "state": 37,
     "simulation": 33,
     "ui": 28,
-    "testing": 185
+    "testing": 186
   },
   "laws": {
     "declared": 136,
@@ -45,5 +45,5 @@
     "packageLockVersionMismatch": false,
     "supplementalHelpCount": 0
   },
-  "generatedArtifactCount": 181
+  "generatedArtifactCount": 185
 }
