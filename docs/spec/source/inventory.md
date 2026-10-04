@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `325` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `326` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `325` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 31 | 233 | 370 |
 | State | 34 | 288 | 460 |
-| Testing | 177 | 32 | 687 |
+| Testing | 178 | 32 | 690 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -59,7 +59,7 @@ The generator scanned `325` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 1875 | 0 | 50 | 12 |
+| [src/main.js](../../../src/main.js) | application | 1897 | 0 | 50 | 12 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1751 | 37 | 12 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 514 | 7 | 0 | 5 |
 | [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
@@ -161,7 +161,7 @@ The generator scanned `325` files from active repository inputs. Individual modu
 | [src/ui/tooltipDismiss.js](../../../src/ui/tooltipDismiss.js) | ui | 106 | 5 | 0 | 0 |
 | [src/ui/ui.js](../../../src/ui/ui.js) | ui | 551 | 5 | 17 | 1 |
 | [src/ui/worldPanel.js](../../../src/ui/worldPanel.js) | ui | 554 | 3 | 6 | 128 |
-| [src/worker/physics.worker.js](../../../src/worker/physics.worker.js) | simulation | 438 | 0 | 5 | 3 |
+| [src/worker/physics.worker.js](../../../src/worker/physics.worker.js) | simulation | 452 | 0 | 5 | 3 |
 | [style.css](../../../style.css) | repository | 3839 | 0 | 0 | 1 |
 | [tests/audit/batch_01.test.js](../../../tests/audit/batch_01.test.js) | testing | 224 | 0 | 7 | 8 |
 | [tests/audit/batch_02.test.js](../../../tests/audit/batch_02.test.js) | testing | 323 | 0 | 8 | 8 |
@@ -337,6 +337,7 @@ The generator scanned `325` files from active repository inputs. Individual modu
 | [tests/unit/touchSupport.test.js](../../../tests/unit/touchSupport.test.js) | testing | 259 | 0 | 3 | 0 |
 | [tests/unit/typeScale.test.js](../../../tests/unit/typeScale.test.js) | testing | 206 | 0 | 3 | 1 |
 | [tests/unit/webgpuContract.test.js](../../../tests/unit/webgpuContract.test.js) | testing | 95 | 0 | 4 | 0 |
+| [tests/unit/workerCopyMode.test.js](../../../tests/unit/workerCopyMode.test.js) | testing | 67 | 0 | 5 | 3 |
 | [tests/unit/worldSave.test.js](../../../tests/unit/worldSave.test.js) | testing | 322 | 0 | 7 | 4 |
 | [tests/unit/worldSaveCompat.test.js](../../../tests/unit/worldSaveCompat.test.js) | testing | 98 | 0 | 6 | 1 |
 | [tests/unit/worldSaveRng.test.js](../../../tests/unit/worldSaveRng.test.js) | testing | 84 | 0 | 7 | 4 |

@@ -41,6 +41,7 @@
         "tests/unit/strideWriteContract.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js",
+        "tests/unit/workerCopyMode.test.js",
         "tests/unit/worldSave.test.js",
         "tests/unit/worldSaveRng.test.js"
       ],
@@ -557,6 +558,7 @@
         "tests/unit/stellar.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/synthetic.test.js",
+        "tests/unit/workerCopyMode.test.js",
         "tests/unit/worldSave.test.js",
         "tests/unit/worldSaveRng.test.js"
       ],
@@ -1273,6 +1275,7 @@
         "tests/unit/relationshipCompatibility.test.js",
         "tests/unit/relationshipExplorer.test.js",
         "tests/unit/solverReset.test.js",
+        "tests/unit/workerCopyMode.test.js",
         "tests/unit/worldSave.test.js",
         "tests/unit/worldSaveRng.test.js"
       ],

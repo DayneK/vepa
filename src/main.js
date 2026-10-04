@@ -132,6 +132,7 @@ let workerReady = false;
 let workerPending = false;
 let workerBusy = false;
 let workerFailed = false;
+let workerCopyMode = false; // PERF-1: no SharedArrayBuffer → TICK carries a particle copy
 let workerTickSentAt = 0;
 let _workerTickInFlight = false;
 let _workerOffspring = [];
@@ -266,8 +267,18 @@ const LEGACY_WORLD_PARAM_KEYS = Object.freeze({
 function rng() { return prng.next(); }
 
 function canUsePhysicsWorker() {
-    return typeof Worker !== 'undefined' && typeof SharedArrayBuffer !== 'undefined'
-        && particleBuffer instanceof SharedArrayBuffer;
+    if (typeof Worker === 'undefined') return false;
+    if (typeof SharedArrayBuffer !== 'undefined' && particleBuffer instanceof SharedArrayBuffer) return true;
+    // PERF-1: without cross-origin isolation (GitHub Pages, plain static
+    // servers) there is no SharedArrayBuffer. Rather than solving on the main
+    // thread (which starves rendering and UI), the worker runs in copy mode:
+    // each TICK carries a copy of the live particle slice and returns it.
+    return particleBuffer instanceof ArrayBuffer;
+}
+
+/** Live particle slice for a copy-mode TICK/INIT (transferable). */
+function liveParticleSlice() {
+    return particleView.slice(0, Math.max(0, particleCount) * PARTICLE_STRIDE).buffer;
 }
 
 function stopPhysicsWorker() {
@@ -332,6 +343,11 @@ function handleWorkerTick(message) {
     workerBusy = false;
     _workerTickInFlight = false;
     const tickStart = workerTickSentAt || performance.now();
+    // PERF-1 copy mode: adopt the solved slice before population/intelligence run.
+    if (message.buffer instanceof ArrayBuffer && particleView) {
+        const solved = new Float32Array(message.buffer);
+        particleView.set(solved.length <= particleView.length ? solved : solved.subarray(0, particleView.length));
+    }
     const offspring = Array.isArray(message.offspring) ? message.offspring : [];
     // The worker owns the authoritative tick counter while it drives the
     // solver — adopt its tickCount so the HUD does not show a frozen TICK 0.
@@ -347,11 +363,16 @@ function solve(...args) {
             workerBusy = true;
             _workerTickInFlight = true;
             workerTickSentAt = performance.now();
-            physicsWorker.postMessage({
-                type: 'TICK',
-                particleCount: args[1],
-                dt: args[6] || DT,
-            });
+            if (workerCopyMode) {
+                const buffer = liveParticleSlice();
+                physicsWorker.postMessage({ type: 'TICK', particleCount: args[1], dt: args[6] || DT, buffer }, [buffer]);
+            } else {
+                physicsWorker.postMessage({
+                    type: 'TICK',
+                    particleCount: args[1],
+                    dt: args[6] || DT,
+                });
+            }
         }
         return false;
     }
@@ -411,9 +432,10 @@ function startPhysicsWorker() {
             workerFailed = true;
             stopPhysicsWorker();
         };
+        workerCopyMode = !(typeof SharedArrayBuffer !== 'undefined' && particleBuffer instanceof SharedArrayBuffer);
         physicsWorker.postMessage({
             type: 'INIT',
-            buffer: particleBuffer,
+            buffer: workerCopyMode ? liveParticleSlice() : particleBuffer,
             count: particleCount,
             dnaBuffer: dnaBuffer.buffer,
             config: workerConfig(),

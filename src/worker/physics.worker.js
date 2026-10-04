@@ -289,7 +289,7 @@ function handleToggleLaw(msg) {
 // ── TICK Handler ──
 
 async function handleTick(msg) {
-  if (!particleView) {
+  if (!particleView && !(msg.buffer instanceof ArrayBuffer)) {
     self.postMessage({
       type: 'ERROR',
       error: 'TICK: No particle buffer initialized. Send INIT first.',
@@ -299,6 +299,14 @@ async function handleTick(msg) {
 
   if (msg.particleCount !== undefined) particleCount = msg.particleCount;
   if (msg.dt !== undefined) dt = msg.dt;
+  // PERF-1 copy mode (no SharedArrayBuffer): the TICK carries the live slice.
+  const copyMode = !hasSharedArrayBuffer && msg.buffer instanceof ArrayBuffer;
+  if (copyMode) {
+    fallbackBuffer = msg.buffer;
+    fallbackView = new Float32Array(fallbackBuffer);
+    particleView = fallbackView;
+    particleCount = Math.min(particleCount, Math.floor(particleView.length / stride));
+  }
 
   const tickStart = performance.now();
 
@@ -368,6 +376,12 @@ async function handleTick(msg) {
     reply.offspring = offspring;
   }
 
+  if (copyMode) {
+    reply.buffer = fallbackBuffer;
+    self.postMessage(reply, [fallbackBuffer]);
+    particleView = null; fallbackView = null; fallbackBuffer = null; // transferred back
+    return;
+  }
   self.postMessage(reply);
 }
 

@@ -4,7 +4,7 @@
 
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 25 | LAW_HELP_DB |
+| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 26 | LAW_HELP_DB |
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 10 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 9 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
@@ -17,7 +17,7 @@
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 9 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 2 | LAW_HELP_DB |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 2 | 14 | 71 | LAW_HELP_DB |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 2 | 14 | 72 | LAW_HELP_DB |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 4 | LAW_HELP_DB |
 | 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | LAW_HELP_DB |
@@ -43,7 +43,7 @@
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 2 | LAW_HELP_DB |
 | 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 3 | LAW_HELP_DB |
 | 38 | [VOID](../laws/physics/038_VOID.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
-| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 30 | LAW_HELP_DB |
+| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 6 | 31 | LAW_HELP_DB |
 | 40 | [REDUCTION](../laws/chemistry/040_REDUCTION.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 41 | [ALLOY](../laws/chemistry/041_ALLOY.md) | chemistry | 1 | 4 | 2 | LAW_HELP_DB |
 | 42 | [MELT](../laws/thermodynamics/042_MELT.md) | thermodynamics | 1 | 2 | 2 | LAW_HELP_DB |
