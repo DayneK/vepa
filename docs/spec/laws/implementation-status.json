@@ -27,6 +27,7 @@
         "tests/unit/auditSignoff.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/computeEngines.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/gravEngineAlias.test.js",
         "tests/unit/informationTrace.test.js",
         "tests/unit/lawCouplingChains.test.js",
@@ -74,6 +75,7 @@
         "tests/audit/params_batch_04.test.js",
         "tests/audit/params_batch_08.test.js",
         "tests/audit/params_batch_10.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/fieldAdvanceOnce.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
@@ -189,6 +191,7 @@
         "tests/unit/backendArchitecture.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/continuity.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/fields.test.js",
         "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/lawGating.test.js",
@@ -306,6 +309,7 @@
         "tests/audit/params_batch_15.test.js",
         "tests/unit/auditSignoff.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/exoticMatter.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawImplementedBy.test.js",
@@ -401,6 +405,7 @@
         "tests/audit/params_batch_06.test.js",
         "tests/audit/params_batch_14.test.js",
         "tests/audit/params_batch_15.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/informationTrace.test.js",
         "tests/unit/multiplex.test.js",
         "tests/unit/relationshipExplorer.test.js",
@@ -533,6 +538,7 @@
         "tests/audit/params_batch_14.test.js",
         "tests/audit/params_batch_15.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/electricFieldSplit.test.js",
         "tests/unit/exoticMatter.test.js",
         "tests/unit/fieldAdvanceOnce.test.js",
@@ -729,6 +735,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_05.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/worldSave.test.js"
       ],
       "relationshipTypes": [
@@ -886,6 +893,7 @@
         "tests/audit/params_batch_04.test.js",
         "tests/audit/params_batch_14.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawCouplingChains.test.js",
         "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/multiplexScheduler.test.js",
@@ -943,6 +951,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_07.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawImplementedBy.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
@@ -1067,6 +1076,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_09.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/physics.test.js",
         "tests/unit/synergyCache.test.js"
@@ -1096,6 +1106,7 @@
       "testFiles": [
         "tests/audit/batch_09.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/physics.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/systemFoundation.test.js",
@@ -1272,6 +1283,7 @@
         "tests/audit/params_batch_11.test.js",
         "tests/audit/params_batch_12.test.js",
         "tests/audit/params_batch_15.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/groupRegistry.test.js",
         "tests/unit/interactionSpace.test.js",
         "tests/unit/lawClock.test.js",
@@ -1385,7 +1397,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_11.test.js"
+        "tests/audit/batch_11.test.js",
+        "tests/unit/crossCategoryScenarios.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -1458,6 +1471,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_12.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/multiplex.test.js"
       ],
@@ -1654,6 +1668,7 @@
         "tests/audit/batch_05.test.js",
         "tests/audit/batch_14.test.js",
         "tests/audit/params_batch_12.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/synergyCache.test.js"
       ],
@@ -1906,6 +1921,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_16.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/lawFeedbackStability.test.js"
       ],
@@ -1934,6 +1950,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_17.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/lawFeedbackStability.test.js"
       ],
@@ -2005,6 +2022,7 @@
         "tests/audit/batch_31.test.js",
         "tests/audit/batch_32.test.js",
         "tests/audit/params_batch_18.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/fields.test.js",
         "tests/unit/groupRegistry.test.js",
         "tests/unit/informationTrace.test.js",
@@ -2119,6 +2137,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_18.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
@@ -2336,6 +2355,7 @@
         "tests/audit/batch_20.test.js",
         "tests/unit/civilization.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/informationTrace.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/synergyCache.test.js",
@@ -2403,6 +2423,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_21.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/quantumMacro.test.js",
@@ -2929,7 +2950,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_26.test.js"
+        "tests/audit/batch_26.test.js",
+        "tests/unit/crossCategoryScenarios.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -3190,6 +3212,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_29.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/quantumStateMachine.test.js"
       ],
@@ -3347,6 +3370,7 @@
       "testFiles": [
         "tests/audit/batch_30.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/quantumStateMachine.test.js"
@@ -3587,6 +3611,7 @@
         "tests/e2e/runtime-acceptance.spec.js",
         "tests/unit/auditSignoff.test.js",
         "tests/unit/backendArchitecture.test.js",
+        "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/mechanicsArchitecture.test.js",
         "tests/unit/provenance.test.js",
@@ -3620,7 +3645,8 @@
         "tests/audit/batch_02.test.js",
         "tests/audit/batch_22.test.js",
         "tests/audit/params_batch_11.test.js",
-        "tests/unit/backendArchitecture.test.js"
+        "tests/unit/backendArchitecture.test.js",
+        "tests/unit/crossCategoryScenarios.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",

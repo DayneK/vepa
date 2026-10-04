@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_02.test.js](../../../../tests/audit/batch_02.test.js), [tests/audit/batch_22.test.js](../../../../tests/audit/batch_22.test.js), [tests/audit/params_batch_11.test.js](../../../../tests/audit/params_batch_11.test.js), [tests/unit/backendArchitecture.test.js](../../../../tests/unit/backendArchitecture.test.js)
+- Tests: [tests/audit/batch_02.test.js](../../../../tests/audit/batch_02.test.js), [tests/audit/batch_22.test.js](../../../../tests/audit/batch_22.test.js), [tests/audit/params_batch_11.test.js](../../../../tests/audit/params_batch_11.test.js), [tests/unit/backendArchitecture.test.js](../../../../tests/unit/backendArchitecture.test.js), [tests/unit/crossCategoryScenarios.test.js](../../../../tests/unit/crossCategoryScenarios.test.js)
 - Audits: [docs/audit/A3-RECONCILIATION.md](../../../audit/A3-RECONCILIATION.md)
 
 ## Interpretation boundary

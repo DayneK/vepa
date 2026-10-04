@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `334` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `335` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `334` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 33 | 241 | 379 |
 | State | 36 | 294 | 474 |
-| Testing | 182 | 32 | 713 |
+| Testing | 183 | 32 | 739 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -253,6 +253,7 @@ The generator scanned `334` files from active repository inputs. Individual modu
 | [tests/unit/constructionEconomy.test.js](../../../tests/unit/constructionEconomy.test.js) | testing | 128 | 0 | 6 | 0 |
 | [tests/unit/continuity.test.js](../../../tests/unit/continuity.test.js) | testing | 308 | 0 | 3 | 1 |
 | [tests/unit/createEngine.test.js](../../../tests/unit/createEngine.test.js) | testing | 31 | 0 | 7 | 0 |
+| [tests/unit/crossCategoryScenarios.test.js](../../../tests/unit/crossCategoryScenarios.test.js) | testing | 83 | 0 | 5 | 26 |
 | [tests/unit/cultureTransmission.test.js](../../../tests/unit/cultureTransmission.test.js) | testing | 228 | 0 | 2 | 0 |
 | [tests/unit/dataPanels.test.js](../../../tests/unit/dataPanels.test.js) | testing | 328 | 0 | 8 | 0 |
 | [tests/unit/deepTime.test.js](../../../tests/unit/deepTime.test.js) | testing | 129 | 0 | 4 | 0 |
