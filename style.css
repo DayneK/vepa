@@ -1556,6 +1556,39 @@ body {
 .chaos-btn-action:hover {
   background: rgba(255,74,74,0.25);
 }
+/* D-028: tabbed CHAOS CONTROL — fits a 390px phone, scrolls if needed. */
+#chaos-menu .chaos-menu-content {
+  width: 420px;
+  max-width: 94vw;
+  max-height: 90vh;
+  overflow: auto;
+  box-sizing: border-box;
+}
+#chaos-menu .settings-tabs { top: -16px; }
+#chaos-menu .chaos-menu-cats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 4px 8px;
+}
+.chaos-cat-count {
+  margin-left: auto;
+  color: rgba(255,255,255,0.45);
+  font-size: 11px;
+}
+.chaos-menu-bulk {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+#chaos-menu .chaos-menu-actions { margin-bottom: 8px; }
+#chaos-menu .chaos-menu-footer {
+  margin: 10px 0 0;
+  position: sticky;
+  bottom: -16px;
+  padding: 8px 0 4px;
+  background: rgba(8,8,16,0.97);
+}
+#chaos-menu .chaos-menu-cats { margin: 8px 0 12px; }
 
 /* ── View Mode Toggle ───────────────────────────────────────── */
 .view-mode-toggle {

@@ -177,7 +177,7 @@ The generator scanned `358` files from active repository inputs. Individual modu
 | [src/ui/ui.js](../../../src/ui/ui.js) | ui | 501 | 5 | 18 | 1 |
 | [src/ui/worldPanel.js](../../../src/ui/worldPanel.js) | ui | 554 | 3 | 6 | 128 |
 | [src/worker/physics.worker.js](../../../src/worker/physics.worker.js) | simulation | 452 | 0 | 5 | 3 |
-| [style.css](../../../style.css) | repository | 3927 | 0 | 0 | 2 |
+| [style.css](../../../style.css) | repository | 3960 | 0 | 0 | 2 |
 | [tests/audit/batch_01.test.js](../../../tests/audit/batch_01.test.js) | testing | 224 | 0 | 7 | 8 |
 | [tests/audit/batch_02.test.js](../../../tests/audit/batch_02.test.js) | testing | 323 | 0 | 8 | 8 |
 | [tests/audit/batch_03.test.js](../../../tests/audit/batch_03.test.js) | testing | 249 | 0 | 6 | 8 |

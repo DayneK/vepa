@@ -19,6 +19,7 @@ import { initTooltip } from './tooltip.js';
 import { initHelpLongPress } from './helpOverlay.js';
 import { initParamHelpDismiss } from './paramHelp.js';
 import { resetCamera } from './camera.js';
+import { showChaosMenu } from './chaosMenu.js';
 import './toolbarHelp.css';
 
 let helpDroneActive = false;
@@ -496,55 +497,4 @@ function setupKeyboardShortcuts(bus) {
 }
 
 
-function showChaosMenu(bus) {
-  var old = document.getElementById("chaos-menu");
-  if (old) old.remove();
-  var cats = [
-    { id: "physics", label: "PHYS" },
-    { id: "biology", label: "BIOL" },
-    { id: "chemistry", label: "CHEM" },
-    { id: "thermodynamics", label: "THERMO" },
-    { id: "metaphysics", label: "META" }
-  ];
-  var menu = document.createElement("div");
-  menu.id = "chaos-menu";
-  menu.className = "chaos-menu";
-  var html = "<div class=\"chaos-menu-content\">";
-  html += "<div class=\"chaos-menu-title\">CHAOS CONTROL</div>";
-  html += "<div class=\"chaos-menu-cats\">";
-  for (var i = 0; i < cats.length; i++) {
-    html += "<label class=\"chaos-cat-row\"><input type=\"checkbox\" data-cat=\"" + cats[i].id + "\" checked><span>" + cats[i].label + "</span></label>";
-  }
-  html += "</div>";
-  html += "<div class=\"chaos-menu-actions\">";
-  html += "<button class=\"chaos-btn-action chaos-multiplex-primary\" data-action=\"multiplex\">OPEN CHAOS MULTIPLEX SETTINGS</button>";
-  html += "<button class=\"chaos-btn-action\" data-action=\"randomize\">RANDOMIZE SELECTED</button>";
-  html += "<button class=\"chaos-btn-action\" data-action=\"clear\">CLEAR ALL</button>";
-  html += "<button class=\"chaos-btn-action\" data-action=\"close\">CLOSE</button>";
-  html += "</div></div>";
-  menu.innerHTML = html;
-  document.body.appendChild(menu);
-  menu.querySelectorAll(".chaos-btn-action").forEach(function(btn) {
-    btn.addEventListener("click", function() {
-      var action = btn.dataset.action;
-      if (action === "close") { menu.remove(); return; }
-      if (action === "multiplex") {
-        menu.remove();
-        if (typeof window.openChaosMultiplex === 'function') window.openChaosMultiplex();
-        return;
-      }
-      if (action === "clear") { bus.emit("sim:chaosClear"); menu.remove(); return; }
-      if (action === "randomize") {
-        var checked = [];
-        menu.querySelectorAll("input[type=\"checkbox\"]:checked").forEach(function(cb) {
-          checked.push(cb.dataset.cat);
-        });
-        bus.emit("sim:chaosSelective", { categories: checked });
-        menu.remove();
-      }
-    });
-  });
-  menu.addEventListener("click", function(e) {
-    if (e.target === menu) menu.remove();
-  });
-}
+// showChaosMenu moved to ./chaosMenu.js (D-028: tabbed CHAOS CONTROL).
