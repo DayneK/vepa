@@ -22,8 +22,6 @@ export const BUDGET_DECLARATION_EXCEPTIONS = Object.freeze({
   ENERGY: Object.freeze({ ENERGY: { reason: 'applyEnergyTransfer writes through ENERGY_CHANNELS (indirect index, includes S.ENERGY).' } }),
   HEAT: Object.freeze({ TEMPERATURE: { reason: 'Written by applyHeatTransfer (shared HEAT/COLD function, laws.js); the scan records one implementer (applyThermalJitter).' } }),
   ACCR: Object.freeze({ BOND_COUNT: { reason: 'ACCR link bookkeeping in solver/laws helpers outside the scanned inline block.' } }),
-  IONIZATION: Object.freeze({ TEMPERATURE: { reason: 'applyIonization only writes CHARGE; declared TEMPERATURE write not observed in code.', review: true } }),
-  LEARN: Object.freeze({ MEMORY: { reason: 'applyLearnAlign writes VEL_X/Y/Z via a slot loop; declared MEMORY write not observed in code.', review: true } }),
 });
 
 /**

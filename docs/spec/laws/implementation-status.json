@@ -1861,7 +1861,8 @@
         "transforms",
         "reads",
         "writes",
-        "implementedBy"
+        "implementedBy",
+        "notes"
       ],
       "relationshipMetadataComplete": true,
       "evidenceBoundary": "Text-level source references are evidence candidates, not semantic correctness proof."
@@ -2099,7 +2100,8 @@
         "transforms",
         "reads",
         "writes",
-        "implementedBy"
+        "implementedBy",
+        "notes"
       ],
       "relationshipMetadataComplete": true,
       "evidenceBoundary": "Text-level source references are evidence candidates, not semantic correctness proof."

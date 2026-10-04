@@ -10,7 +10,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 30 | 230 | 369 |
-| State | 34 | 288 | 462 |
+| State | 34 | 288 | 460 |
 | Testing | 175 | 23 | 668 |
 | Ui | 27 | 93 | 379 |
 
@@ -115,7 +115,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | [src/state/infrastructure.js](../../../src/state/infrastructure.js) | state | 224 | 2 | 3 | 1 |
 | [src/state/launchSettings.js](../../../src/state/launchSettings.js) | state | 181 | 10 | 1 | 2 |
 | [src/state/lawImplementations.generated.js](../../../src/state/lawImplementations.generated.js) | state | 1704 | 1 | 0 | 136 |
-| [src/state/lawOntology.js](../../../src/state/lawOntology.js) | state | 367 | 6 | 2 | 57 |
+| [src/state/lawOntology.js](../../../src/state/lawOntology.js) | state | 369 | 6 | 2 | 57 |
 | [src/state/lawState.js](../../../src/state/lawState.js) | state | 223 | 12 | 1 | 0 |
 | [src/state/memoryBuffers.js](../../../src/state/memoryBuffers.js) | state | 102 | 11 | 1 | 1 |
 | [src/state/particleBuffer.js](../../../src/state/particleBuffer.js) | state | 173 | 21 | 1 | 6 |
@@ -123,7 +123,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | [src/state/quantumMacro.js](../../../src/state/quantumMacro.js) | state | 494 | 4 | 3 | 8 |
 | [src/state/relativity.js](../../../src/state/relativity.js) | state | 209 | 7 | 2 | 3 |
 | [src/state/runtimeConfig.js](../../../src/state/runtimeConfig.js) | state | 60 | 3 | 1 | 4 |
-| [src/state/stateBudgets.js](../../../src/state/stateBudgets.js) | state | 66 | 4 | 0 | 9 |
+| [src/state/stateBudgets.js](../../../src/state/stateBudgets.js) | state | 64 | 4 | 0 | 7 |
 | [src/state/stellar.js](../../../src/state/stellar.js) | state | 348 | 6 | 3 | 2 |
 | [src/state/strideWriteContract.js](../../../src/state/strideWriteContract.js) | state | 77 | 2 | 1 | 85 |
 | [src/state/structures.js](../../../src/state/structures.js) | state | 253 | 15 | 2 | 1 |

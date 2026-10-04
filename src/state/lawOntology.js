@@ -140,9 +140,10 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
   }),
   IONIZATION: freezeRecord({
     synergizesWith: ['PLASMA', 'ELECTRIC_FIELD', 'CHARGE_LAW'],
-    transforms: ['ENERGY_AND_TEMPERATURE -> CHARGE'],
-    reads: ['TEMPERATURE', 'ENERGY', 'RADIATION_EXPOSURE'],
-    writes: ['CHARGE', 'TEMPERATURE'],
+    transforms: ['IMPACT_SPEED -> CHARGE'],
+    reads: ['VEL_X', 'VEL_Y', 'VEL_Z', 'CHARGE', 'POLARITY'],
+    writes: ['CHARGE'],
+    notes: ['D-022: corrected to match applyIonization (collision impact strips charge from neutral pairs; no TEMPERATURE read or write).'],
   }),
   DISCHARGE: freezeRecord({
     synergizesWith: ['CURRENT', 'PLASMA', 'HEAT'],
@@ -169,9 +170,10 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
   LEARN: freezeRecord({
     dependsOn: ['MEMORY'],
     synergizesWith: ['PREDICT', 'CULTURE'],
-    transforms: ['MEMORY_AND_ERROR -> BEHAVIOR_UPDATE'],
-    reads: ['MEMORY', 'SIGNAL'],
-    writes: ['MEMORY', 'DNA_CACHE'],
+    transforms: ['NEIGHBOUR_VELOCITY -> VELOCITY_ALIGNMENT'],
+    reads: ['VEL_X', 'VEL_Y', 'VEL_Z'],
+    writes: ['VEL_X', 'VEL_Y', 'VEL_Z'],
+    notes: ['D-022: corrected to match applyLearnAlign (velocity alignment toward a neighbour; no MEMORY or DNA_CACHE write).'],
   }),
   FEEDBACK: freezeRecord({
     dependsOn: ['MEMORY'],
