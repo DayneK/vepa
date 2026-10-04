@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_29.test.js](../../../../tests/audit/batch_29.test.js)
+- Tests: [tests/audit/batch_29.test.js](../../../../tests/audit/batch_29.test.js), [tests/unit/quantumStateMachine.test.js](../../../../tests/unit/quantumStateMachine.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](../../../audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/114_DECOHERENCE.md](../../../audit/laws/a3/stage-1/114_DECOHERENCE.md), [docs/audit/laws/a3/stage-1/118_OBSERVER.md](../../../audit/laws/a3/stage-1/118_OBSERVER.md), [docs/audit/laws/a3/stage-2/114_DECOHERENCE.md](../../../audit/laws/a3/stage-2/114_DECOHERENCE.md), [docs/audit/laws/a3/stage-2/118_OBSERVER.md](../../../audit/laws/a3/stage-2/118_OBSERVER.md), [docs/audit/laws/a3/stage-3/114_DECOHERENCE.md](../../../audit/laws/a3/stage-3/114_DECOHERENCE.md), [docs/audit/laws/a3/stage-3/118_OBSERVER.md](../../../audit/laws/a3/stage-3/118_OBSERVER.md)
 
 ## Interpretation boundary

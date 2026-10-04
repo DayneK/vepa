@@ -26,11 +26,11 @@
 
 ## Implementation evidence
 
-[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js)
+[src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/quantumStateMachine.js](../../../../src/physics/quantumStateMachine.js), [src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_30.test.js](../../../../tests/audit/batch_30.test.js), [tests/unit/lawGraph.test.js](../../../../tests/unit/lawGraph.test.js), [tests/unit/stateBudgets.test.js](../../../../tests/unit/stateBudgets.test.js)
+- Tests: [tests/audit/batch_30.test.js](../../../../tests/audit/batch_30.test.js), [tests/unit/lawGraph.test.js](../../../../tests/unit/lawGraph.test.js), [tests/unit/quantumStateMachine.test.js](../../../../tests/unit/quantumStateMachine.test.js), [tests/unit/stateBudgets.test.js](../../../../tests/unit/stateBudgets.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](../../../audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/117_TELEPORT.md](../../../audit/laws/a3/stage-1/117_TELEPORT.md), [docs/audit/laws/a3/stage-2/117_TELEPORT.md](../../../audit/laws/a3/stage-2/117_TELEPORT.md), [docs/audit/laws/a3/stage-3/117_TELEPORT.md](../../../audit/laws/a3/stage-3/117_TELEPORT.md)
 
 ## Interpretation boundary

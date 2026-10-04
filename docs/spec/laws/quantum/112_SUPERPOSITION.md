@@ -26,11 +26,11 @@
 
 ## Implementation evidence
 
-[src/physics/lawgroups/quantumLaws.js](../../../../src/physics/lawgroups/quantumLaws.js), [src/physics/solver.js](../../../../src/physics/solver.js)
+[src/physics/lawgroups/quantumLaws.js](../../../../src/physics/lawgroups/quantumLaws.js), [src/physics/quantumStateMachine.js](../../../../src/physics/quantumStateMachine.js), [src/physics/solver.js](../../../../src/physics/solver.js)
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_29.test.js](../../../../tests/audit/batch_29.test.js), [tests/unit/quantumMacro.test.js](../../../../tests/unit/quantumMacro.test.js)
+- Tests: [tests/audit/batch_29.test.js](../../../../tests/audit/batch_29.test.js), [tests/unit/quantumMacro.test.js](../../../../tests/unit/quantumMacro.test.js), [tests/unit/quantumStateMachine.test.js](../../../../tests/unit/quantumStateMachine.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/quantum.md](../../../audit/laws/a3/quantum.md), [docs/audit/laws/a3/stage-1/112_SUPERPOSITION.md](../../../audit/laws/a3/stage-1/112_SUPERPOSITION.md), [docs/audit/laws/a3/stage-1/115_WAVE_PARTICLE.md](../../../audit/laws/a3/stage-1/115_WAVE_PARTICLE.md), [docs/audit/laws/a3/stage-1/120_COHERENCE.md](../../../audit/laws/a3/stage-1/120_COHERENCE.md), [docs/audit/laws/a3/stage-1/125_WAVEFUNCTION.md](../../../audit/laws/a3/stage-1/125_WAVEFUNCTION.md), [docs/audit/laws/a3/stage-2/112_SUPERPOSITION.md](../../../audit/laws/a3/stage-2/112_SUPERPOSITION.md), [docs/audit/laws/a3/stage-2/115_WAVE_PARTICLE.md](../../../audit/laws/a3/stage-2/115_WAVE_PARTICLE.md), [docs/audit/laws/a3/stage-2/120_COHERENCE.md](../../../audit/laws/a3/stage-2/120_COHERENCE.md), [docs/audit/laws/a3/stage-2/125_WAVEFUNCTION.md](../../../audit/laws/a3/stage-2/125_WAVEFUNCTION.md), [docs/audit/laws/a3/stage-3/112_SUPERPOSITION.md](../../../audit/laws/a3/stage-3/112_SUPERPOSITION.md), [docs/audit/laws/a3/stage-3/115_WAVE_PARTICLE.md](../../../audit/laws/a3/stage-3/115_WAVE_PARTICLE.md), [docs/audit/laws/a3/stage-3/120_COHERENCE.md](../../../audit/laws/a3/stage-3/120_COHERENCE.md), [docs/audit/laws/a3/stage-3/125_WAVEFUNCTION.md](../../../audit/laws/a3/stage-3/125_WAVEFUNCTION.md)
 
 ## Interpretation boundary

@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `332` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `334` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 41 | 179 | 481 |
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
-| Simulation | 32 | 236 | 373 |
+| Simulation | 33 | 241 | 379 |
 | State | 36 | 294 | 474 |
-| Testing | 181 | 32 | 702 |
+| Testing | 182 | 32 | 713 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -91,6 +91,7 @@ The generator scanned `332` files from active repository inputs. Individual modu
 | [src/physics/mergePhysics.js](../../../src/physics/mergePhysics.js) | simulation | 344 | 6 | 2 | 8 |
 | [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 399 | 5 | 0 | 0 |
 | [src/physics/pairGeometry.js](../../../src/physics/pairGeometry.js) | simulation | 41 | 1 | 1 | 0 |
+| [src/physics/quantumStateMachine.js](../../../src/physics/quantumStateMachine.js) | simulation | 63 | 5 | 2 | 6 |
 | [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 304 | 8 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
@@ -317,6 +318,7 @@ The generator scanned `332` files from active repository inputs. Individual modu
 | [tests/unit/provenance.test.js](../../../tests/unit/provenance.test.js) | testing | 80 | 0 | 6 | 2 |
 | [tests/unit/provenanceHeaders.test.js](../../../tests/unit/provenanceHeaders.test.js) | testing | 31 | 0 | 3 | 0 |
 | [tests/unit/quantumMacro.test.js](../../../tests/unit/quantumMacro.test.js) | testing | 385 | 0 | 5 | 5 |
+| [tests/unit/quantumStateMachine.test.js](../../../tests/unit/quantumStateMachine.test.js) | testing | 46 | 0 | 3 | 11 |
 | [tests/unit/relationshipCompatibility.test.js](../../../tests/unit/relationshipCompatibility.test.js) | testing | 79 | 0 | 4 | 2 |
 | [tests/unit/relationshipExplorer.test.js](../../../tests/unit/relationshipExplorer.test.js) | testing | 56 | 0 | 2 | 3 |
 | [tests/unit/relativity.test.js](../../../tests/unit/relativity.test.js) | testing | 210 | 0 | 5 | 2 |

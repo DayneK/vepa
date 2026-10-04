@@ -199,6 +199,7 @@
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/provenance.test.js",
         "tests/unit/quantumMacro.test.js",
+        "tests/unit/quantumStateMachine.test.js",
         "tests/unit/stateBudgets.test.js",
         "tests/unit/structures.test.js",
         "tests/unit/synergyCache.test.js",
@@ -555,6 +556,7 @@
         "tests/unit/multiplexScheduler.test.js",
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/quantumMacro.test.js",
+        "tests/unit/quantumStateMachine.test.js",
         "tests/unit/relativity.test.js",
         "tests/unit/signal.test.js",
         "tests/unit/solverReset.test.js",
@@ -2013,6 +2015,7 @@
         "tests/unit/lawgroupsQuantum.test.js",
         "tests/unit/lawsSingleton.test.js",
         "tests/unit/memoryCulture.test.js",
+        "tests/unit/quantumStateMachine.test.js",
         "tests/unit/signal.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js"
@@ -2391,6 +2394,7 @@
         "src/physics/interactionSpace.js",
         "src/physics/laws.js",
         "src/physics/mergePhysics.js",
+        "src/physics/quantumStateMachine.js",
         "src/physics/solver.js",
         "src/physics/synergy.js"
       ],
@@ -2402,6 +2406,7 @@
         "tests/unit/lawCategories.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/quantumMacro.test.js",
+        "tests/unit/quantumStateMachine.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
@@ -3177,6 +3182,7 @@
       "status": "wired",
       "implementationFiles": [
         "src/physics/lawgroups/quantumLaws.js",
+        "src/physics/quantumStateMachine.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
@@ -3184,7 +3190,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_29.test.js",
-        "tests/unit/quantumMacro.test.js"
+        "tests/unit/quantumMacro.test.js",
+        "tests/unit/quantumStateMachine.test.js"
       ],
       "relationshipTypes": [
         "dependsOn",
@@ -3233,7 +3240,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_29.test.js"
+        "tests/audit/batch_29.test.js",
+        "tests/unit/quantumStateMachine.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -3251,13 +3259,15 @@
       "status": "wired",
       "implementationFiles": [
         "src/physics/lawgroups/quantumLaws.js",
+        "src/physics/quantumStateMachine.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_29.test.js"
+        "tests/audit/batch_29.test.js",
+        "tests/unit/quantumStateMachine.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -3298,6 +3308,7 @@
       "status": "wired",
       "implementationFiles": [
         "src/physics/laws.js",
+        "src/physics/quantumStateMachine.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
@@ -3306,6 +3317,7 @@
       "testFiles": [
         "tests/audit/batch_30.test.js",
         "tests/unit/lawGraph.test.js",
+        "tests/unit/quantumStateMachine.test.js",
         "tests/unit/stateBudgets.test.js"
       ],
       "relationshipTypes": [
@@ -3326,6 +3338,7 @@
       "status": "wired",
       "implementationFiles": [
         "src/physics/lawgroups/quantumLaws.js",
+        "src/physics/quantumStateMachine.js",
         "src/physics/solver.js"
       ],
       "solverGateFiles": [
@@ -3335,7 +3348,8 @@
         "tests/audit/batch_30.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/lawGraph.test.js",
-        "tests/unit/quantumMacro.test.js"
+        "tests/unit/quantumMacro.test.js",
+        "tests/unit/quantumStateMachine.test.js"
       ],
       "relationshipTypes": [
         "dependsOn",
@@ -3384,7 +3398,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_29.test.js",
-        "tests/audit/batch_31.test.js"
+        "tests/audit/batch_31.test.js",
+        "tests/unit/quantumStateMachine.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -3575,6 +3590,7 @@
         "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/mechanicsArchitecture.test.js",
         "tests/unit/provenance.test.js",
+        "tests/unit/quantumStateMachine.test.js",
         "tests/unit/structureFormation.test.js"
       ],
       "relationshipTypes": [
