@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { createRelationshipRecorder, recordRelationshipEvent, eventsInWindow, serializeRecorder, restoreRecorder } from '../../src/engines/relationshipRecorder.js';
 import { extractRelationshipFeatures } from '../../src/engines/relationshipFeatures.js';
 import { classifyRelationshipRegime, RELATIONSHIP_REGIMES } from '../../src/engines/relationshipRegimes.js';
+import { createCivWorld, runCivWorld } from '../helpers/civWorld.js';
 
 const ev = (type, a, b, tick = 1) => ({ type, a, b, tick });
 
@@ -42,4 +43,11 @@ describe('relationship laboratory (MD-REL)', () => {
     }
   });
 
+  it('consumes live relationship events from the runtime adapter', () => {
+    const w = runCivWorld(createCivWorld(), 200);
+    expect(w.rt.recorder.total).toBeGreaterThan(0);
+    expect(w.rt.regimes.length).toBeGreaterThan(0);
+    const rec = w.civ.lifecycle.records.get(w.rt.records['relationship-laboratory']);
+    expect(RELATIONSHIP_REGIMES).toContain(rec.attributes.regime);
+  });
 });

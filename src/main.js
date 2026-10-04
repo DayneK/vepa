@@ -56,6 +56,7 @@ import {
   serializeCivilization,
   restoreCivilization,
 } from './state/civilization.js';
+import { createCivRuntime, civRuntimeOnBirth, civRuntimeOnDeath, civRuntimeOnAlliance, civRuntimeOnConflict, stepCivRuntime, civRuntimeReport, serializeCivRuntime, restoreCivRuntime } from './engines/civRuntime.js';
 import {
   createStructureRegistry,
   foundStructure,
@@ -80,7 +81,7 @@ import { createExoticState, stepExoticMatter } from './state/exoticMatter.js';
 import { stepRelativity } from './state/relativity.js';
 import { createQuantumState, stepQuantumMacro } from './state/quantumMacro.js';
 import { createStellarState, stepStellar } from './state/stellar.js';
-import { createSyntheticState, stepSynthetic } from './state/synthetic.js';
+import { createSyntheticState, stepSynthetic, syntheticSummary } from './state/synthetic.js';
 import { getFields, writeField } from './physics/fields.js';
 import { createMultiplexController } from './multiplex/multiplexUI.js';
 import { copyShardToWorld, summarizeMultiplex } from './multiplex/multiplex.js';
@@ -116,6 +117,10 @@ let syntheticState = null;
 // first runtime consumer of src/state/systemLifecycle.js, which until now was
 // exercised only by tests and never ran inside the app.
 let civilization = null; // Set P.1 — synthetic organisms, uploaded consciousness, machine groups
+// B7 civilisation runtime adapter (src/engines/civRuntime.js). Always allocated
+// with the registry; only driven while runtimeConfig.civRuntime is true (default off).
+let civRuntime = null;
+const civRuntimeOn = () => !!(civRuntime && civilization && runtimeConfig.civRuntime);
 // Durable structures: each detected group founds a nest, which needs upkeep
 // out of the group treasury and can depend on another structure standing.
 let structures = null;
@@ -540,6 +545,15 @@ async function boot() {
         import('./ui/lawInspectorPanel.js').then((m) => m.mountLawInspector(document, { dev: true, search: location.search, hash: location.hash })).catch(() => {});
         window.__VEPA_TEST__ = {
             state: () => ({ tick, particleCount, paused, workerReady: !!workerReady, workerFailed: !!workerFailed }),
+            // B7: drive the civilisation runtime adapter (default off) and read it back.
+            civEnable: (on) => { runtimeConfig.civRuntime = !!on; return runtimeConfig.civRuntime; },
+            civReport: () => (civRuntimeOn() ? {
+                ...civRuntimeReport(civRuntime), polities: civilization.polities.size,
+                households: civilization.households.size, kinEdges: civilization.kinEdges.size,
+                records: civilization.lifecycle.records.size,
+            } : null),
+            // Save → .vepa.json export → import → restore through the real path.
+            saveRoundTrip: () => (window.__VEPA_SAVE_ROUNDTRIP__ ? window.__VEPA_SAVE_ROUNDTRIP__() : false),
             setTimelineInterval: (n) => { TIMELINE_SNAPSHOT_INTERVAL = Math.max(1, n | 0); return TIMELINE_SNAPSHOT_INTERVAL; },
             pause: () => { paused = true; bus.emit('sim:paused', { paused }); },
             resume: () => { paused = false; bus.emit('sim:paused', { paused }); },
@@ -607,6 +621,7 @@ async function boot() {
     stellarState = createStellarState();
     syntheticState = createSyntheticState();
     civilization = createCivilizationRegistry();
+    civRuntime = createCivRuntime();
     // Sequel Phases 4-6: structures are hosted by the civilization lifecycle,
     // and the continuity catalog + codex are the observer's per-world memory.
     structures = createStructureRegistry(civilization.lifecycle);
@@ -870,6 +885,9 @@ function spawnOffspring(offspring = null) {
         if (lineageEngine) {
             trackBirth(lineageEngine, off.parentId != null ? off.parentId : -1, particleCount - 1, off.speciesId, 0);
         }
+        if (civRuntimeOn()) {
+            civRuntimeOnBirth(civRuntime, civilization, { parent: off.parentId != null ? off.parentId : -1, child: particleCount - 1, species: off.speciesId || 0, tick });
+        }
     }
 }
 
@@ -913,10 +931,15 @@ function setDNAFromProfile(species, profile) {
         worldSize,
         tick,
         name,
-        civilization: civilization ? serializeCivilization(civilization) : null,
+        civilization: civilization
+            ? (civRuntimeOn() ? { ...serializeCivilization(civilization), runtime: serializeCivRuntime(civRuntime) } : serializeCivilization(civilization))
+            : null,
         codex: codex ? serializeCodex(codex) : null,
         rng: prng.snapshot(),
     });
+    if (import.meta.env && import.meta.env.DEV) {
+        window.__VEPA_SAVE_ROUNDTRIP__ = () => { applyWorldRestore(parseWorldSave(exportWorldSave(currentWorldState('e2e-roundtrip')))); return true; };
+    }
     const emitUndoState = () => {
         bus.emit('world:undoState', { canUndo: undoRing.canUndo(), canRedo: undoRing.canRedo(), enabled: undoEnabled });
     };
@@ -953,6 +976,7 @@ function setDNAFromProfile(species, profile) {
         // leave the fresh (empty) registry in place.
         if (out.civilization) {
             civilization = restoreCivilization(out.civilization);
+            civRuntime = out.civilization.runtime ? restoreCivRuntime(out.civilization.runtime) : createCivRuntime();
             // Structures live in the civilization lifecycle, so a restored
             // lifecycle must be re-hosted by a fresh structure registry.
             structures = createStructureRegistry(civilization.lifecycle);
@@ -1459,6 +1483,7 @@ function updateIntelligenceCore() {
                 if ((particleView[base + STRIDE_INDEXES.HUNGER] || 0) >= 100) cause = 'starvation';
                 else if ((particleView[base + STRIDE_INDEXES.ENERGY] || 0) <= 0) cause = 'energy-depletion';
                 trackDeath(lineageEngine, i, cause);
+                if (civRuntimeOn()) civRuntimeOnDeath(civRuntime, civilization, { index: i, species: particleView[base + STRIDE_INDEXES.SPECIES_ID] | 0 });
             }
             prevDead[i] = dead;
         }
@@ -1509,6 +1534,8 @@ function updateIntelligenceCore() {
                 // Phase 3: alliances move culture between the two groups. This
                 // is what makes the culture system react to the rest of the
                 // social stack instead of sitting inert beside it.
+                if (civRuntimeOn() && ev.type === 'governance:alliance') civRuntimeOnAlliance(civRuntime, civilization, { group: ev.group, other: ev.other, tick });
+                if (civRuntimeOn() && ev.type === 'governance:conflict') civRuntimeOnConflict(civRuntime, { group: ev.group, other: ev.other, tick });
                 if (civilization && ev.type === 'governance:alliance') {
                     const sent = transmitBetweenGroups(civilization, ev.group, ev.other, {
                         fidelity: CULTURE_ALLIANCE_FIDELITY,
@@ -1554,6 +1581,12 @@ function updateIntelligenceCore() {
                     for (const gid of ids) addFederationMember(civilization, fed.id, gid);
                 }
                 stepCivilization(civilization, { tick });
+                if (civRuntimeOn()) {
+                    stepCivRuntime(civRuntime, civilization, {
+                        view: particleView, stride: PARTICLE_STRIDE, groups: groupRegistry.groups, tick,
+                        synthetic: syntheticState ? syntheticSummary(syntheticState) : null, eco: ecoEngine,
+                    });
+                }
             }
             // Sequel Phase 4 — durable structures. Each group founds a nest
             // once, then upkeep is paid out of its treasury on a slower
@@ -1725,6 +1758,7 @@ function updateIntelligenceCore() {
             report.continuity = continuity ? regimeHistogram(continuity) : null;
             report.codex = codex ? codexReport(codex) : null;
             report.latestRegime = continuity ? latestRegime(continuity) : null;
+            if (civRuntimeOn()) report.runtime = civRuntimeReport(civRuntime);
             bus.emit('civilization:analytics', { report });
         }
     }
@@ -1748,6 +1782,7 @@ function resetIntelligence() {
     if (ecoEngine) { ecoEngine.ring.length = 0; ecoEngine.foodWeb.clear(); ecoEngine.niches.clear(); ecoEngine.splits.length = 0; ecoEngine.extinct.length = 0; }
     // Civilization ontology is per-world: nothing carries across a restart.
     civilization = createCivilizationRegistry();
+    civRuntime = createCivRuntime();
     // Structures and the observer's memory are scoped to that same world, so
     // a restart must not leave a nest standing in an empty registry.
     structures = createStructureRegistry(civilization.lifecycle);

@@ -338,7 +338,7 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | [tests/unit/relationshipCompatibility.test.js](../../../tests/unit/relationshipCompatibility.test.js) | testing | 79 | 0 | 4 | 2 |
 | [tests/unit/relationshipExplorer.test.js](../../../tests/unit/relationshipExplorer.test.js) | testing | 56 | 0 | 2 | 3 |
 | [tests/unit/relationshipGraph.test.js](../../../tests/unit/relationshipGraph.test.js) | testing | 58 | 0 | 2 | 0 |
-| [tests/unit/relationshipLab.test.js](../../../tests/unit/relationshipLab.test.js) | testing | 46 | 0 | 4 | 0 |
+| [tests/unit/relationshipLab.test.js](../../../tests/unit/relationshipLab.test.js) | testing | 54 | 0 | 5 | 0 |
 | [tests/unit/relativity.test.js](../../../tests/unit/relativity.test.js) | testing | 210 | 0 | 5 | 2 |
 | [tests/unit/renderer.test.js](../../../tests/unit/renderer.test.js) | testing | 27 | 0 | 2 | 0 |
 | [tests/unit/signal.test.js](../../../tests/unit/signal.test.js) | testing | 105 | 0 | 4 | 3 |

@@ -32,6 +32,10 @@ export const runtimeConfig = {
   // FIELD-ONCE (D-016): true (default) = the field medium advances once per tick;
   // false = legacy, once per particle per tick. See docs/GOLDEN-REBASELINE.md.
   fieldAdvanceOnce: true,
+  // B7 (D-006): civilisation runtime adapter (src/engines/civRuntime.js) —
+  // kinship, households, tribe, polity, culture selection, relationship lab.
+  // Default off: when false the live sim never calls into the adapter.
+  civRuntime: false,
   // ARP-5: test-only hook observing solver pair scalars; must stay null in production.
   pairProbe: null,
   // v9.0 — compute engine: GPU is the user-facing default. The worker probes
