@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | ui | [src/ui/analyticsPanel.js](../../../src/ui/analyticsPanel.js) | programmatic |
 | ui | [src/ui/camera.js](../../../src/ui/camera.js) | programmatic |
+| ui | [src/ui/chaosMenu.js](../../../src/ui/chaosMenu.js) | programmatic |
 | ui | [src/ui/civilizationPanel.js](../../../src/ui/civilizationPanel.js) | programmatic |
 | ui | [src/ui/dnaAnalytics.js](../../../src/ui/dnaAnalytics.js) | programmatic |
 | ui | [src/ui/dnaPanel.js](../../../src/ui/dnaPanel.js) | programmatic |
@@ -25,6 +26,7 @@
 | ui | [src/ui/presetPanel.js](../../../src/ui/presetPanel.js) | programmatic |
 | ui | [src/ui/savePanel.js](../../../src/ui/savePanel.js) | programmatic |
 | ui | [src/ui/settingsPanel.js](../../../src/ui/settingsPanel.js) | programmatic |
+| ui | [src/ui/settingsTabs.js](../../../src/ui/settingsTabs.js) | programmatic |
 | ui | [src/ui/sliderControl.js](../../../src/ui/sliderControl.js) | programmatic |
 | ui | [src/ui/speciesPanel.js](../../../src/ui/speciesPanel.js) | programmatic |
 | ui | [src/ui/toolbarHelp.css](../../../src/ui/toolbarHelp.css) | programmatic |

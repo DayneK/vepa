@@ -35,7 +35,8 @@ import { MAX_PARTICLES } from '../constants.js';
 import { DEFAULT_LIGHT_LAWS, sanitizeLawNames } from './previewLaws.js';
 import { createShardPool, browserSpawn, defaultPoolSize } from './shardPool.js';
 import { loadMultiplexSettings, saveMultiplexSettings, PARTICLES_PER_SIM_MIN, PARTICLES_PER_SIM_MAX } from './multiplexSettings.js';
-import { formatMetric } from './metricFormat.js';
+import { formatMetric, numberOr } from './metricFormat.js';
+import { wireSettingsTabs } from '../ui/settingsTabs.js';
 
 const MODAL_ID = 'chaos-modal';
 const OVERLAY_ID = 'multiplex-overlay';
@@ -208,208 +209,245 @@ export function createMultiplexController(bus, getSource, applyShard) {
         </div>
         <p class="chaos-modal-sub">Guided evolution — X×Y concurrent futures, one shared camera.</p>
 
-        <div class="chaos-modal-section">
-          <div class="chaos-modal-label" data-mpx-help="grid">GRID</div>
-          <div class="chaos-grid-row" data-mpx-help="grid">
-            <label>Columns <input id="mpx-cols" type="number" min="1" max="5" value="2"></label>
-            <label>Rows <input id="mpx-rows" type="number" min="1" max="5" value="2"></label>
-            <span class="chaos-grid-count" id="mpx-shard-count">4 SIMS</span>
+        <div class="settings-tabs" role="tablist" aria-label="Multiplex settings">
+          <button class="settings-tab active" role="tab" type="button" id="mpx-tab-grid" data-tab="grid" aria-selected="true" aria-controls="mpx-panel-grid">GRID &amp; PERF</button>
+          <button class="settings-tab" role="tab" type="button" id="mpx-tab-breed" data-tab="breed" aria-selected="false" aria-controls="mpx-panel-breed">BREEDING</button>
+          <button class="settings-tab" role="tab" type="button" id="mpx-tab-iterate" data-tab="iterate" aria-selected="false" aria-controls="mpx-panel-iterate">ITERATE &amp; SELECT</button>
+          <button class="settings-tab" role="tab" type="button" id="mpx-tab-fitness" data-tab="fitness" aria-selected="false" aria-controls="mpx-panel-fitness">FITNESS</button>
+          <button class="settings-tab" role="tab" type="button" id="mpx-tab-display" data-tab="display" aria-selected="false" aria-controls="mpx-panel-display">DISPLAY &amp; RUN</button>
+        </div>
+
+        <div class="settings-tabpanel" role="tabpanel" id="mpx-panel-grid" data-tab="grid" aria-labelledby="mpx-tab-grid">
+          <p class="settings-tab-intro">How many sims run side by side, how many particles each gets, and how hard the machine works. Long-press any label for details.</p>
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="grid">GRID</div>
+            <div class="chaos-grid-row" data-mpx-help="grid">
+              <label>Columns <input id="mpx-cols" type="number" min="1" max="5" value="2"></label>
+              <label>Rows <input id="mpx-rows" type="number" min="1" max="5" value="2"></label>
+              <span class="chaos-grid-count" id="mpx-shard-count">4 SIMS</span>
+            </div>
+          </div>
+
+          <div class="chaos-modal-section" id="mpx-perf-section">
+            <div class="chaos-modal-label" data-mpx-help="perfPreset">PERFORMANCE</div>
+            <div class="mpx-set-row" data-mpx-help="perfPreset">
+              <span class="mpx-set-label">PRESET</span>
+              <select id="mpx-preset">
+                <option value="custom">Custom</option>
+                ${Object.entries(MULTIPLEX_PRESETS).map(([id, p]) => `<option value="${id}">${p.label}</option>`).join('')}
+              </select>
+              <span class="mpx-set-value" id="mpx-preset-note"></span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="lawTier">
+              <span class="mpx-set-label">PREVIEW LAWS</span>
+              <select id="mpx-law-tier"><option value="full">Full</option><option value="light">Light</option></select>
+              <button id="mpx-light-reset" class="mpx-btn" type="button" title="Restore the default light set">RESET</button>
+            </div>
+            <div class="mpx-set-row settings-row-stack" data-mpx-help="lightLaws">
+              <span class="settings-hint">Light law set (used only when PREVIEW LAWS is Light)</span>
+              <textarea id="mpx-light-laws" rows="2" spellcheck="false" style="width:100%;font:inherit;font-size:10px" aria-label="Light law set"></textarea>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="tickMode">
+              <span class="mpx-set-label">SIM TICKS</span>
+              <select id="mpx-tick-mode">
+                <option value="frame">Every frame</option>
+                <option value="fixed">Fixed rate</option>
+                <option value="adaptive">Adaptive (keep 60 fps)</option>
+              </select>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="ticksPerSecond">
+              <span class="mpx-set-label">TICKS / SEC</span>
+              <input id="mpx-tps" type="number" min="0.5" max="240" step="1" value="30">
+              <span class="mpx-set-value">per sim · Fixed rate only</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="frameBudget">
+              <span class="mpx-set-label">FRAME BUDGET (MS)</span>
+              <input id="mpx-budget" type="number" min="1" max="14" step="0.5" value="8">
+              <span class="mpx-set-value">in-thread only (pool off)</span>
+            </div>
+            <label class="chaos-check" data-mpx-help="useWorkers"><input id="mpx-workers" type="checkbox" checked><span>Worker pool (sims off the UI thread)</span></label>
+          </div>
+
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="popScale">POPULATION</div>
+            <div class="mpx-set-row" data-mpx-help="particlesPerSim">
+              <span class="mpx-set-label">PARTICLES / SIM</span>
+              <input id="mpx-per-sim" type="number" min="0" max="${PARTICLES_PER_SIM_MAX}" step="25" value="0">
+              <span class="mpx-set-value">0 = use POP %</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="popPercent">
+              <span class="mpx-set-label">POP % / SIM</span>
+              <input id="mpx-pop-percent" type="number" min="0" max="100" step="0.5" value="0">
+              <span class="mpx-set-value">0 = auto split</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="popScale">
+              <span class="mpx-set-label">POP SCALE</span>
+              <input id="mpx-pop-scale" type="range" min="0.25" max="1" step="0.05" value="1">
+              <span class="mpx-set-value" id="mpx-pop-scale-value">100%</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="substeps">
+              <span class="mpx-set-label">SUBSTEPS</span>
+              <input id="mpx-substeps" type="range" min="1" max="8" step="1" value="1">
+              <span class="mpx-set-value" id="mpx-substeps-value">1</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="seed">
+              <span class="mpx-set-label">SEED</span>
+              <input id="mpx-seed" type="number" min="0" max="2147483647" step="1" value="0">
+              <span class="mpx-set-value" id="mpx-seed-value">RANDOM</span>
+            </div>
           </div>
         </div>
 
-        <div class="chaos-modal-section">
-          <div class="chaos-modal-label" data-mpx-help="randomize">RANDOMIZE ASPECTS</div>
-          <label class="chaos-check" data-mpx-help="randomize"><input id="mpx-rand-laws" type="checkbox" checked><span>Laws</span></label>
-          <label class="chaos-check" data-mpx-help="randomize"><input id="mpx-rand-dna" type="checkbox" checked><span>DNA</span></label>
-          <label class="chaos-check" data-mpx-help="randomize"><input id="mpx-rand-pop" type="checkbox" checked><span>Population</span></label>
-          <label class="chaos-check" data-mpx-help="randomize"><input id="mpx-rand-params" type="checkbox" checked><span>Params</span></label>
-        </div>
+        <div class="settings-tabpanel" role="tabpanel" id="mpx-panel-breed" data-tab="breed" aria-labelledby="mpx-tab-breed" hidden>
+          <p class="settings-tab-intro">How each new generation is made from the selected sim, and how different the sims are from each other.</p>
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="derive">DERIVED FROM THE SELECTED SIMULATION</div>
+            <label class="chaos-radio" data-mpx-help="derive"><input type="radio" name="mpx-derive" value="clone" checked><span>Clone — copy the current particles (survivors only), DNA &amp; laws, then vary</span></label>
+            <label class="chaos-radio" data-mpx-help="derive"><input type="radio" name="mpx-derive" value="spawn"><span>Spawn — fresh full population, keep DNA &amp; laws</span></label>
+            <div class="mpx-set-row" data-mpx-help="spawnSpecies">
+              <span class="mpx-set-label">SPAWN SPECIES</span>
+              <input id="mpx-spawn-species" type="range" min="1" max="5" step="1" value="5">
+              <span class="mpx-set-value" id="mpx-spawn-species-value">5</span>
+            </div>
+            <span class="settings-hint">Spawn species is used only by Spawn.</span>
+          </div>
 
-        <div class="chaos-modal-section">
-          <div class="chaos-modal-label" data-mpx-help="variation">VARIATION BETWEEN SHARDS</div>
-          <input id="mpx-variation" type="range" min="0" max="1" step="0.05" value="0.5" data-mpx-help="variation">
-          <div class="chaos-variation-row">
-            <span>IDENTICAL</span><span id="mpx-variation-value">50%</span><span>WILD</span>
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="randomize">ASPECTS TO VARY</div>
+            <label class="chaos-check" data-mpx-help="randomize"><input id="mpx-rand-laws" type="checkbox" checked><span>Laws</span></label>
+            <label class="chaos-check" data-mpx-help="randomize"><input id="mpx-rand-dna" type="checkbox" checked><span>DNA</span></label>
+            <label class="chaos-check" data-mpx-help="randomize"><input id="mpx-rand-pop" type="checkbox" checked><span>Population</span></label>
+            <label class="chaos-check" data-mpx-help="randomize"><input id="mpx-rand-params" type="checkbox" checked><span>World params</span></label>
           </div>
-          <div class="mpx-set-row" data-mpx-help="lawVar">
-            <span class="mpx-set-label">LAW VAR</span>
-            <input id="mpx-law-var" type="range" min="0" max="1" step="0.05" value="1">
-            <span class="mpx-set-value" id="mpx-law-var-value">100%</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="dnaVar">
-            <span class="mpx-set-label">DNA VAR</span>
-            <input id="mpx-dna-var" type="range" min="0" max="1" step="0.05" value="1">
-            <span class="mpx-set-value" id="mpx-dna-var-value">100%</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="popVar">
-            <span class="mpx-set-label">POP VAR</span>
-            <input id="mpx-pop-var" type="range" min="0" max="1" step="0.05" value="1">
-            <span class="mpx-set-value" id="mpx-pop-var-value">100%</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="paramVar">
-            <span class="mpx-set-label">PARAM VAR</span>
-            <input id="mpx-param-var" type="range" min="0" max="1" step="0.05" value="1">
-            <span class="mpx-set-value" id="mpx-param-var-value">100%</span>
-          </div>
-        </div>
 
-        <div class="chaos-modal-section">
-          <div class="chaos-modal-label" data-mpx-help="derive">DERIVED FROM THE SELECTED SIMULATION</div>
-          <label class="chaos-radio" data-mpx-help="derive"><input type="radio" name="mpx-derive" value="clone" checked><span>Clone — copy positions, DNA &amp; laws, then vary</span></label>
-          <label class="chaos-radio" data-mpx-help="derive"><input type="radio" name="mpx-derive" value="spawn"><span>Spawn — fresh population, keep DNA &amp; laws</span></label>
-        </div>
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="variation">VARIATION BETWEEN SIMS</div>
+            <input id="mpx-variation" type="range" min="0" max="1" step="0.05" value="0.5" data-mpx-help="variation" aria-label="Variation between sims">
+            <div class="chaos-variation-row">
+              <span>IDENTICAL</span><span id="mpx-variation-value">50%</span><span>WILD</span>
+            </div>
+            <span class="settings-hint">Per-aspect strength (scales the master knob above):</span>
+            <div class="mpx-set-row" data-mpx-help="lawVar">
+              <span class="mpx-set-label">LAWS</span>
+              <input id="mpx-law-var" type="range" min="0" max="1" step="0.05" value="1">
+              <span class="mpx-set-value" id="mpx-law-var-value">100%</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="dnaVar">
+              <span class="mpx-set-label">DNA</span>
+              <input id="mpx-dna-var" type="range" min="0" max="1" step="0.05" value="1">
+              <span class="mpx-set-value" id="mpx-dna-var-value">100%</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="popVar">
+              <span class="mpx-set-label">POPULATION</span>
+              <input id="mpx-pop-var" type="range" min="0" max="1" step="0.05" value="1">
+              <span class="mpx-set-value" id="mpx-pop-var-value">100%</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="paramVar">
+              <span class="mpx-set-label">WORLD PARAMS</span>
+              <input id="mpx-param-var" type="range" min="0" max="1" step="0.05" value="1">
+              <span class="mpx-set-value" id="mpx-param-var-value">100%</span>
+            </div>
+          </div>
 
-        <div class="chaos-modal-section" id="mpx-perf-section">
-          <div class="chaos-modal-label" data-mpx-help="perfPreset">PERFORMANCE</div>
-          <div class="mpx-set-row" data-mpx-help="perfPreset">
-            <span class="mpx-set-label">PRESET</span>
-            <select id="mpx-preset">
-              <option value="custom">Custom</option>
-              ${Object.entries(MULTIPLEX_PRESETS).map(([id, p]) => `<option value="${id}">${p.label}</option>`).join('')}
-            </select>
-            <span class="mpx-set-value" id="mpx-preset-note"></span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="particlesPerSim">
-            <span class="mpx-set-label">PARTICLES / SIM</span>
-            <input id="mpx-per-sim" type="number" min="0" max="${PARTICLES_PER_SIM_MAX}" step="25" value="0">
-            <span class="mpx-set-value">0 = POP %</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="lawTier">
-            <span class="mpx-set-label">PREVIEW LAWS</span>
-            <select id="mpx-law-tier"><option value="full">Full</option><option value="light">Light</option></select>
-            <button id="mpx-light-reset" class="mpx-btn" type="button" title="Restore the default light set">RESET</button>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="lightLaws">
-            <textarea id="mpx-light-laws" rows="2" spellcheck="false" style="width:100%;font:inherit;font-size:10px"></textarea>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="tickMode">
-            <span class="mpx-set-label">SIM TICKS</span>
-            <select id="mpx-tick-mode">
-              <option value="frame">Every frame</option>
-              <option value="fixed">Fixed rate</option>
-              <option value="adaptive">Adaptive (keep 60 fps)</option>
-            </select>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="ticksPerSecond">
-            <span class="mpx-set-label">TICKS / SEC</span>
-            <input id="mpx-tps" type="number" min="0.5" max="240" step="1" value="30">
-            <span class="mpx-set-value">per sim</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="frameBudget">
-            <span class="mpx-set-label">BUDGET MS</span>
-            <input id="mpx-budget" type="number" min="1" max="14" step="0.5" value="8">
-            <span class="mpx-set-value">in-thread</span>
-          </div>
-          <label class="chaos-check" data-mpx-help="useWorkers"><input id="mpx-workers" type="checkbox" checked><span>Worker pool (sims off the UI thread)</span></label>
-        </div>
-
-        <div class="chaos-modal-section">
-          <div class="chaos-modal-label" data-mpx-help="popScale">POPULATION</div>
-          <div class="mpx-set-row" data-mpx-help="popScale">
-            <span class="mpx-set-label">POP SCALE</span>
-            <input id="mpx-pop-scale" type="range" min="0.25" max="1" step="0.05" value="1">
-            <span class="mpx-set-value" id="mpx-pop-scale-value">100%</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="popPercent">
-            <span class="mpx-set-label">POP % / SIM</span>
-            <input id="mpx-pop-percent" type="number" min="0" max="100" step="0.5" value="0">
-            <span class="mpx-set-value">0 = auto</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="seed">
-            <span class="mpx-set-label">SEED</span>
-            <input id="mpx-seed" type="number" min="0" max="2147483647" step="1" value="0">
-            <span class="mpx-set-value" id="mpx-seed-value">RANDOM</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="substeps">
-            <span class="mpx-set-label">SUBSTEPS</span>
-            <input id="mpx-substeps" type="range" min="1" max="8" step="1" value="1">
-            <span class="mpx-set-value" id="mpx-substeps-value">1</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="spawnSpecies">
-            <span class="mpx-set-label">SPAWN SPECIES</span>
-            <input id="mpx-spawn-species" type="range" min="1" max="5" step="1" value="5">
-            <span class="mpx-set-value" id="mpx-spawn-species-value">5</span>
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="drift">VARIATION OVER GENERATIONS</div>
+            <div class="mpx-set-row" data-mpx-help="drift">
+              <span class="mpx-set-label">DRIFT (+/GEN)</span>
+              <input id="mpx-drift" type="range" min="0" max="0.05" step="0.005" value="0">
+              <span class="mpx-set-value" id="mpx-drift-value">0</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="cooling">
+              <span class="mpx-set-label">COOLING (−%/GEN)</span>
+              <input id="mpx-cooling" type="range" min="0" max="0.2" step="0.01" value="0">
+              <span class="mpx-set-value" id="mpx-cooling-value">0%</span>
+            </div>
           </div>
         </div>
 
-        <div class="chaos-modal-section">
-          <div class="chaos-modal-label" data-mpx-help="autoIterate">ITERATION</div>
-          <div class="mpx-set-row" data-mpx-help="autoIterate">
-            <label class="mpx-check"><input id="mpx-auto-iterate" type="checkbox"><span>AUTO-ITERATE</span></label>
-            <span class="mpx-set-value" id="mpx-auto-value">OFF</span>
+        <div class="settings-tabpanel" role="tabpanel" id="mpx-panel-iterate" data-tab="iterate" aria-labelledby="mpx-tab-iterate" hidden>
+          <p class="settings-tab-intro">When generations are rebuilt (⚡ or automatically) and which sim is kept or selected afterwards.</p>
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="autoIterate">AUTO-ITERATE</div>
+            <div class="mpx-set-row" data-mpx-help="autoIterate">
+              <label class="mpx-check"><input id="mpx-auto-iterate" type="checkbox"><span>AUTO-ITERATE</span></label>
+              <span class="mpx-set-value" id="mpx-auto-value">OFF</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="interval">
+              <span class="mpx-set-label">ITERATE EVERY</span>
+              <input id="mpx-interval" type="range" min="50" max="2000" step="50" value="400">
+              <span class="mpx-set-value" id="mpx-interval-value">400T</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="adaptInt">
+              <label class="mpx-check"><input id="mpx-adapt" type="checkbox"><span>ADAPTIVE INTERVAL</span></label>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="maxIters">
+              <span class="mpx-set-label">MAX ITERATIONS</span>
+              <input id="mpx-max-iters" type="number" min="0" max="999" value="0">
+              <span class="mpx-set-value" id="mpx-max-iters-value">∞</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="stagLimit">
+              <span class="mpx-set-label">STAGNATION LIMIT</span>
+              <input id="mpx-stag-limit" type="range" min="0" max="20" step="1" value="5">
+              <span class="mpx-set-value" id="mpx-stag-limit-value">5</span>
+            </div>
           </div>
-          <div class="mpx-set-row" data-mpx-help="interval">
-            <span class="mpx-set-label">EVERY</span>
-            <input id="mpx-interval" type="range" min="50" max="2000" step="50" value="400">
-            <span class="mpx-set-value" id="mpx-interval-value">400T</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="selectAfter">
-            <span class="mpx-set-label">AFTER ITERATE</span>
-            <select id="mpx-select-after">
-              <option value="none">NONE</option>
-              <option value="fittest">FITTEST</option>
-              <option value="follow">FOLLOW</option>
-            </select>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="keepSelected">
-            <label class="mpx-check"><input id="mpx-keep-selected" type="checkbox"><span>KEEP SELECTED</span></label>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="maxIters">
-            <span class="mpx-set-label">MAX ITERS</span>
-            <input id="mpx-max-iters" type="number" min="0" max="999" value="0">
-            <span class="mpx-set-value" id="mpx-max-iters-value">∞</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="drift">
-            <span class="mpx-set-label">DRIFT</span>
-            <input id="mpx-drift" type="range" min="0" max="0.05" step="0.005" value="0">
-            <span class="mpx-set-value" id="mpx-drift-value">0</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="stagLimit">
-            <span class="mpx-set-label">STAG LIMIT</span>
-            <input id="mpx-stag-limit" type="range" min="0" max="20" step="1" value="5">
-            <span class="mpx-set-value" id="mpx-stag-limit-value">5</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="elites">
-            <span class="mpx-set-label">ELITES</span>
-            <input id="mpx-elites" type="number" min="0" max="4" step="1" value="0">
-            <span class="mpx-set-value" id="mpx-elites-value">0</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="cooling">
-            <span class="mpx-set-label">COOLING</span>
-            <input id="mpx-cooling" type="range" min="0" max="0.2" step="0.01" value="0">
-            <span class="mpx-set-value" id="mpx-cooling-value">0%</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="adaptInt">
-            <label class="mpx-check"><input id="mpx-adapt" type="checkbox"><span>ADAPT INT</span></label>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="histDepth">
-            <span class="mpx-set-label">HIST DEPTH</span>
-            <input id="mpx-hist-depth" type="number" min="1" max="12" step="1" value="6">
-            <span class="mpx-set-value" id="mpx-hist-depth-value">6</span>
+
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="selectAfter">SELECTION</div>
+            <div class="mpx-set-row" data-mpx-help="selectAfter">
+              <span class="mpx-set-label">SELECT AFTER ITERATE</span>
+              <select id="mpx-select-after">
+                <option value="none">NONE (keep current)</option>
+                <option value="fittest">FITTEST</option>
+                <option value="follow">FOLLOW (most similar)</option>
+              </select>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="keepSelected">
+              <label class="mpx-check"><input id="mpx-keep-selected" type="checkbox"><span>KEEP SELECTED SIM UNCHANGED</span></label>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="elites">
+              <span class="mpx-set-label">ELITES KEPT</span>
+              <input id="mpx-elites" type="number" min="0" max="4" step="1" value="0">
+              <span class="mpx-set-value" id="mpx-elites-value">0</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="histDepth">
+              <span class="mpx-set-label">HISTORY DEPTH</span>
+              <input id="mpx-hist-depth" type="number" min="1" max="12" step="1" value="6">
+              <span class="mpx-set-value" id="mpx-hist-depth-value">6</span>
+            </div>
           </div>
         </div>
 
-        <div class="chaos-modal-section">
-          <div class="chaos-modal-label" data-mpx-help="simSpeed">RUNTIME</div>
-          <div class="mpx-set-row" data-mpx-help="simSpeed">
-            <span class="mpx-set-label">SIM SPEED</span>
-            <input id="mpx-sim-speed" type="range" min="0.25" max="3" step="0.25" value="1">
-            <span class="mpx-set-value" id="mpx-sim-speed-value">1.00×</span>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="paused">
-            <label class="mpx-check"><input id="mpx-paused" type="checkbox"><span>PAUSE GRID</span></label>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="eco">
-            <label class="mpx-check"><input id="mpx-eco" type="checkbox" checked><span>GPU ECO</span></label>
-          </div>
-          <div class="mpx-set-row" data-mpx-help="importOnExit">
-            <label class="mpx-check"><input id="mpx-import-on-exit" type="checkbox" checked><span>IMPORT ON EXIT</span></label>
+        <div class="settings-tabpanel" role="tabpanel" id="mpx-panel-fitness" data-tab="fitness" aria-labelledby="mpx-tab-fitness" hidden>
+          <p class="settings-tab-intro">What "fittest" means: weight each metric (0–100%) and choose whether high (MAX) or low (MIN) is good. All weights at 0 ranks by population.</p>
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="fitnessWeights">FITNESS WEIGHTS</div>
+            <div id="mpx-fit-metrics" class="mpx-modal-fit" data-mpx-help="fitnessWeights"></div>
           </div>
         </div>
 
-        <div class="chaos-modal-section">
-          <div class="chaos-modal-label" data-mpx-help="fitnessWeights">FITNESS WEIGHTS</div>
-          <div id="mpx-fit-metrics" class="mpx-modal-fit" data-mpx-help="fitnessWeights"></div>
+        <div class="settings-tabpanel" role="tabpanel" id="mpx-panel-display" data-tab="display" aria-labelledby="mpx-tab-display" hidden>
+          <p class="settings-tab-intro">Playback and rendering of the grid, and what happens when you leave.</p>
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="simSpeed">RUNTIME</div>
+            <div class="mpx-set-row" data-mpx-help="simSpeed">
+              <span class="mpx-set-label">SIM SPEED</span>
+              <input id="mpx-sim-speed" type="range" min="0.25" max="3" step="0.25" value="1">
+              <span class="mpx-set-value" id="mpx-sim-speed-value">1.00×</span>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="paused">
+              <label class="mpx-check"><input id="mpx-paused" type="checkbox"><span>START PAUSED (PAUSE GRID)</span></label>
+            </div>
+          </div>
+          <div class="chaos-modal-section">
+            <div class="chaos-modal-label" data-mpx-help="eco">DISPLAY &amp; EXIT</div>
+            <div class="mpx-set-row" data-mpx-help="eco">
+              <label class="mpx-check"><input id="mpx-eco" type="checkbox" checked><span>ECO PREVIEWS (flat glow, faster)</span></label>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="importOnExit">
+              <label class="mpx-check"><input id="mpx-import-on-exit" type="checkbox" checked><span>IMPORT SELECTED SIM ON EXIT</span></label>
+            </div>
+          </div>
         </div>
 
         <div class="chaos-modal-actions">
@@ -418,6 +456,9 @@ export function createMultiplexController(bus, getSource, applyShard) {
         </div>
       </div>`;
     document.body.appendChild(modal);
+    // D-028: tabbed setup screen (presentation only — every control keeps its
+    // id, default and wiring; tabs just show one group at a time).
+    wireSettingsTabs(modal.querySelector('.chaos-modal-panel'));
 
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
@@ -617,10 +658,10 @@ export function createMultiplexController(bus, getSource, applyShard) {
         randomizePopulation: modal.querySelector('#mpx-rand-pop').checked,
         randomizeParams: modal.querySelector('#mpx-rand-params').checked,
         variation: parseFloat(modal.querySelector('#mpx-variation').value) || 0,
-        lawVariation: parseFloat(modal.querySelector('#mpx-law-var').value) || 1,
-        dnaVariation: parseFloat(modal.querySelector('#mpx-dna-var').value) || 1,
-        popVariation: parseFloat(modal.querySelector('#mpx-pop-var').value) || 1,
-        paramVariation: parseFloat(modal.querySelector('#mpx-param-var').value) || 1,
+        lawVariation: numberOr(modal.querySelector('#mpx-law-var').value, 1),
+        dnaVariation: numberOr(modal.querySelector('#mpx-dna-var').value, 1),
+        popVariation: numberOr(modal.querySelector('#mpx-pop-var').value, 1),
+        paramVariation: numberOr(modal.querySelector('#mpx-param-var').value, 1),
         deriveMode: (modal.querySelector('input[name="mpx-derive"]:checked') || {}).value || 'clone',
         populationScale: parseFloat(modal.querySelector('#mpx-pop-scale').value) || 1,
         populationPercent: Math.max(0, Math.min(100, parseFloat((modal.querySelector('#mpx-pop-percent') || {}).value) || 0)),

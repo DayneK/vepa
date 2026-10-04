@@ -2,17 +2,17 @@
 
 # Source: Inventory
 
-The generator scanned `354` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `358` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
-| Application | 46 | 200 | 483 |
+| Application | 46 | 201 | 485 |
 | Benchmark | 8 | 6 | 12 |
-| Repository | 7 | 2 | 2 |
+| Repository | 7 | 2 | 3 |
 | Simulation | 33 | 241 | 379 |
 | State | 39 | 317 | 494 |
-| Testing | 193 | 36 | 772 |
-| Ui | 28 | 99 | 379 |
+| Testing | 195 | 36 | 773 |
+| Ui | 30 | 105 | 381 |
 
 ## Module list
 
@@ -64,11 +64,11 @@ The generator scanned `354` files from active repository inputs. Individual modu
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
 | [src/main.js](../../../src/main.js) | application | 1934 | 0 | 52 | 12 |
-| [src/multiplex/metricFormat.js](../../../src/multiplex/metricFormat.js) | application | 15 | 2 | 0 | 0 |
+| [src/multiplex/metricFormat.js](../../../src/multiplex/metricFormat.js) | application | 26 | 3 | 0 | 0 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1763 | 37 | 12 | 7 |
-| [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 514 | 7 | 0 | 5 |
+| [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 544 | 7 | 0 | 6 |
 | [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
-| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 993 | 1 | 7 | 2 |
+| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 1034 | 1 | 8 | 3 |
 | [src/multiplex/previewLaws.js](../../../src/multiplex/previewLaws.js) | application | 57 | 4 | 2 | 16 |
 | [src/multiplex/shardPool.js](../../../src/multiplex/shardPool.js) | application | 52 | 3 | 0 | 0 |
 | [src/multiplex/shardWorker.js](../../../src/multiplex/shardWorker.js) | application | 8 | 0 | 1 | 0 |
@@ -148,6 +148,7 @@ The generator scanned `354` files from active repository inputs. Individual modu
 | [src/state/worldSave.js](../../../src/state/worldSave.js) | state | 595 | 20 | 5 | 2 |
 | [src/ui/analyticsPanel.js](../../../src/ui/analyticsPanel.js) | ui | 105 | 3 | 1 | 1 |
 | [src/ui/camera.js](../../../src/ui/camera.js) | ui | 300 | 6 | 0 | 0 |
+| [src/ui/chaosMenu.js](../../../src/ui/chaosMenu.js) | ui | 124 | 4 | 2 | 1 |
 | [src/ui/civilizationPanel.js](../../../src/ui/civilizationPanel.js) | ui | 138 | 3 | 3 | 2 |
 | [src/ui/dnaAnalytics.js](../../../src/ui/dnaAnalytics.js) | ui | 549 | 1 | 1 | 3 |
 | [src/ui/dnaPanel.js](../../../src/ui/dnaPanel.js) | ui | 185 | 1 | 3 | 10 |
@@ -167,15 +168,16 @@ The generator scanned `354` files from active repository inputs. Individual modu
 | [src/ui/presetPanel.js](../../../src/ui/presetPanel.js) | ui | 148 | 1 | 4 | 0 |
 | [src/ui/savePanel.js](../../../src/ui/savePanel.js) | ui | 272 | 2 | 1 | 0 |
 | [src/ui/settingsPanel.js](../../../src/ui/settingsPanel.js) | ui | 195 | 1 | 6 | 1 |
+| [src/ui/settingsTabs.js](../../../src/ui/settingsTabs.js) | ui | 59 | 2 | 0 | 1 |
 | [src/ui/sliderControl.js](../../../src/ui/sliderControl.js) | ui | 426 | 14 | 2 | 0 |
 | [src/ui/speciesPanel.js](../../../src/ui/speciesPanel.js) | ui | 251 | 1 | 3 | 10 |
 | [src/ui/toolbarHelp.css](../../../src/ui/toolbarHelp.css) | ui | 502 | 0 | 0 | 0 |
 | [src/ui/tooltip.js](../../../src/ui/tooltip.js) | ui | 171 | 2 | 4 | 122 |
 | [src/ui/tooltipDismiss.js](../../../src/ui/tooltipDismiss.js) | ui | 106 | 5 | 0 | 0 |
-| [src/ui/ui.js](../../../src/ui/ui.js) | ui | 551 | 5 | 17 | 1 |
+| [src/ui/ui.js](../../../src/ui/ui.js) | ui | 501 | 5 | 18 | 1 |
 | [src/ui/worldPanel.js](../../../src/ui/worldPanel.js) | ui | 554 | 3 | 6 | 128 |
 | [src/worker/physics.worker.js](../../../src/worker/physics.worker.js) | simulation | 452 | 0 | 5 | 3 |
-| [style.css](../../../style.css) | repository | 3835 | 0 | 0 | 1 |
+| [style.css](../../../style.css) | repository | 3927 | 0 | 0 | 2 |
 | [tests/audit/batch_01.test.js](../../../tests/audit/batch_01.test.js) | testing | 224 | 0 | 7 | 8 |
 | [tests/audit/batch_02.test.js](../../../tests/audit/batch_02.test.js) | testing | 323 | 0 | 8 | 8 |
 | [tests/audit/batch_03.test.js](../../../tests/audit/batch_03.test.js) | testing | 249 | 0 | 6 | 8 |
@@ -254,6 +256,7 @@ The generator scanned `354` files from active repository inputs. Individual modu
 | [tests/unit/batch5Reports.test.js](../../../tests/unit/batch5Reports.test.js) | testing | 34 | 0 | 2 | 0 |
 | [tests/unit/bhThetaEnvelope.test.js](../../../tests/unit/bhThetaEnvelope.test.js) | testing | 32 | 0 | 4 | 0 |
 | [tests/unit/buffer.test.js](../../../tests/unit/buffer.test.js) | testing | 55 | 0 | 3 | 0 |
+| [tests/unit/chaosMenu.test.js](../../../tests/unit/chaosMenu.test.js) | testing | 25 | 0 | 3 | 1 |
 | [tests/unit/civilization.test.js](../../../tests/unit/civilization.test.js) | testing | 257 | 0 | 2 | 1 |
 | [tests/unit/civilizationPanel.test.js](../../../tests/unit/civilizationPanel.test.js) | testing | 262 | 0 | 7 | 0 |
 | [tests/unit/civilizationSequelWiring.test.js](../../../tests/unit/civilizationSequelWiring.test.js) | testing | 286 | 0 | 10 | 0 |
@@ -343,6 +346,7 @@ The generator scanned `354` files from active repository inputs. Individual modu
 | [tests/unit/relationshipLab.test.js](../../../tests/unit/relationshipLab.test.js) | testing | 54 | 0 | 5 | 0 |
 | [tests/unit/relativity.test.js](../../../tests/unit/relativity.test.js) | testing | 210 | 0 | 5 | 2 |
 | [tests/unit/renderer.test.js](../../../tests/unit/renderer.test.js) | testing | 27 | 0 | 2 | 0 |
+| [tests/unit/settingsTabs.test.js](../../../tests/unit/settingsTabs.test.js) | testing | 113 | 0 | 5 | 0 |
 | [tests/unit/signal.test.js](../../../tests/unit/signal.test.js) | testing | 105 | 0 | 4 | 3 |
 | [tests/unit/singleImplementations.test.js](../../../tests/unit/singleImplementations.test.js) | testing | 30 | 0 | 6 | 0 |
 | [tests/unit/sliderControl.test.js](../../../tests/unit/sliderControl.test.js) | testing | 149 | 0 | 2 | 0 |

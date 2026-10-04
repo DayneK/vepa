@@ -36,7 +36,7 @@
 | 29 | [SUBLIMATION](../laws/thermodynamics/029_SUBLIMATION.md) | thermodynamics | 1 | 2 | 1 | LAW_HELP_DB |
 | 30 | [TIME_DILATION](../laws/metaphysics/030_TIME_DILATION.md) | metaphysics | 1 | 2 | 3 | LAW_HELP_DB |
 | 31 | [DIMENSIONALITY](../laws/metaphysics/031_DIMENSIONALITY.md) | metaphysics | 1 | 2 | 1 | LAW_HELP_DB |
-| 32 | [CHAOS](../laws/metaphysics/032_CHAOS.md) | metaphysics | 1 | 4 | 5 | LAW_HELP_DB |
+| 32 | [CHAOS](../laws/metaphysics/032_CHAOS.md) | metaphysics | 1 | 4 | 6 | LAW_HELP_DB |
 | 33 | [ORDER](../laws/metaphysics/033_ORDER.md) | metaphysics | 1 | 3 | 9 | LAW_HELP_DB |
 | 34 | [FATE](../laws/metaphysics/034_FATE.md) | metaphysics | 1 | 3 | 2 | LAW_HELP_DB |
 | 35 | [WILL](../laws/metaphysics/035_WILL.md) | metaphysics | 1 | 3 | 2 | LAW_HELP_DB |

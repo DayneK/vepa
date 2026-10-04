@@ -21,7 +21,7 @@ export const MULTIPLEX_HELP_DB = {
     section: 'setup',
     title: 'GRID',
     hint: 'How many concurrent simulations to run.',
-    explanation: 'Columns × Rows (1×1 up to 4×4, max 16 shards). Each shard is an independent simulation derived from the selected one. More shards shrink the per-shard population cap on an inverse-square-root curve so the combined physics budget stays bounded.',
+    explanation: 'Columns × Rows (1×1 up to 5×5, max 25 shards). Each shard is an independent simulation derived from the selected one. More shards shrink the per-shard population cap on an inverse-square-root curve so the combined physics budget stays bounded.',
   },
   randomize: {
     section: 'setup',
@@ -63,7 +63,7 @@ export const MULTIPLEX_HELP_DB = {
     section: 'setup',
     title: 'DERIVE',
     hint: 'How each shard gets its starting population.',
-    explanation: 'CLONE copies positions, DNA and laws from the selected simulation, then applies variation. SPAWN builds a fresh, evenly distributed population grid while keeping the source DNA and laws.',
+    explanation: 'CLONE copies positions, DNA and laws from the selected simulation, then applies variation. SPAWN builds a fresh, evenly distributed population grid while keeping the source DNA and laws. Note: CLONE copies the selected shard as it is now — only its surviving particles; dead slots are not refilled up to CAP. If the selected world is shrinking, repeated iterates inherit the shrinkage; use SPAWN for a fresh, full population.',
   },
   popScale: {
     section: 'setup',
@@ -180,6 +180,36 @@ export const MULTIPLEX_HELP_DB = {
     hint: 'Evolutionary pressure per generation.',
     explanation: 'Each generation raises VARIATION by this amount (0–0.05, capped at 1), so later generations explore more broadly while early generations stay close to the source.',
   },
+  cooling: {
+    section: 'iteration',
+    title: 'COOLING',
+    hint: 'Shrink VARIATION each generation (annealing).',
+    explanation: 'Each generation multiplies VARIATION by (1 − cooling), down to a 5% floor, so evolution explores broadly early and refines late. When DRIFT and COOLING are both set, cooling wins at the floor.',
+  },
+  adaptInt: {
+    section: 'iteration',
+    title: 'ADAPTIVE INTERVAL',
+    hint: 'Slow auto-iterate down while fitness plateaus.',
+    explanation: 'When a generation does not beat the best fitness, the auto-iterate interval stretches ×1.5 (up to 4000 ticks); it snaps back to ITERATE EVERY as soon as the best improves.',
+  },
+  stagLimit: {
+    section: 'iteration',
+    title: 'STAGNATION LIMIT',
+    hint: 'Pause auto-iterate after N generations without improvement (0 = off).',
+    explanation: 'Counts generations whose best fitness does not improve (the STAG readout). At the limit auto-iterate pauses and the stats show ⏸ CONVERGED. A manual ⚡ iterate re-arms it.',
+  },
+  elites: {
+    section: 'iteration',
+    title: 'ELITES KEPT',
+    hint: 'Top-N fittest shards survive each iteration untouched (0–4).',
+    explanation: 'Before the rebuild the N fittest shards (by the stable fitness score) are snapshotted and restored into the new grid, so the best lineages are never lost to a bad generation.',
+  },
+  histDepth: {
+    section: 'iteration',
+    title: 'HISTORY DEPTH',
+    hint: 'Generations kept for COMPARE / HIST → REVERT (1–12).',
+    explanation: 'How many past generations the history keeps. Older generations drop off; REVERT can rebuild any generation still in the list.',
+  },
   // ── Runtime ──
   simSpeed: {
     section: 'runtime',
@@ -195,8 +225,8 @@ export const MULTIPLEX_HELP_DB = {
   },
   eco: {
     section: 'runtime',
-    title: 'GPU ECO',
-    hint: 'Cheap preview rendering for the shard grid.',
+    title: 'ECO PREVIEWS',
+    hint: 'Cheap preview rendering for the shard grid (was GPU ECO).',
     explanation: 'Skips the reference grid and soft-glow halos and renders at 1.25× device-pixel-ratio. Default on — the full-quality render is only worth the cost on the main sim, not 16 previews.',
   },
   importOnExit: {
@@ -325,7 +355,7 @@ export const MULTIPLEX_HELP_DB = {
     section: 'drawer',
     title: 'METRICS',
     hint: 'Per-shard fitness chips + live stats bar.',
-    explanation: 'Each chip shows a shard\u2019s weighted fitness (S01 0.74) — tap one to select it. The stats line shows ALIVE, CAP, ΔSEL, ΔAVG, ITER and MS (EMA-smoothed shard tick time).',
+    explanation: 'Each chip shows a shard\u2019s weighted fitness (S01 0.74) — tap one to select it. The stats line shows ALIVE, CAP, ΔSEL (selected shard\u2019s normalized divergence from the others), ΔAVG (mean raw divergence across shards), ITER, BEST (best fitness so far), STAG (generations without improvement / limit) and MS (EMA-smoothed shard tick time). A value that does not exist yet, or cannot be computed, shows as —. The selected shard has a red border.',
   },
 };
 

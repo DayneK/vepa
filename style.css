@@ -2423,7 +2423,7 @@ body {
 }
 #chaos-modal.open { display: flex; }
 .chaos-modal-panel {
-  width: 400px;
+  width: 540px; /* D-028: room for the five settings tabs on one row */
   max-width: 94vw;
   max-height: 92vh;
   overflow: auto;
@@ -2531,6 +2531,98 @@ body {
   margin-top: 14px;
 }
 .chaos-modal-actions .mpx-action { flex: 1; }
+
+/* ── D-028: tabbed settings (CHAOS MULTIPLEX setup + CHAOS CONTROL) ──────
+   Presentation only: each tab panel holds the same controls as before. The
+   strip sticks to the top of the scrolling panel and the START/CANCEL row to
+   the bottom, so on a phone the actions never scroll out of reach. */
+.settings-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 10px 0 8px;
+  position: sticky;
+  top: -18px;
+  z-index: 3;
+  padding: 6px 0;
+  background: rgba(8,8,16,0.98);
+  border-bottom: 1px solid rgba(255,74,74,0.25);
+}
+.settings-tab {
+  flex: 1 1 auto;
+  min-height: 32px;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px;
+  color: rgba(255,255,255,0.6);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+.settings-tab:hover { color: var(--accent-red); border-color: rgba(255,74,74,0.5); }
+.settings-tab.active {
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+  background: rgba(255,74,74,0.12);
+}
+.settings-tab:focus-visible { outline: 2px solid var(--accent-red); outline-offset: 1px; }
+.settings-tabpanel[hidden] { display: none; }
+.settings-tab-intro {
+  margin: 0 0 8px;
+  color: rgba(255,255,255,0.62);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.settings-hint {
+  display: block;
+  color: rgba(255,255,255,0.55);
+  font-size: 11px;
+  line-height: 1.4;
+  margin: 2px 0;
+}
+#chaos-modal .chaos-modal-actions {
+  position: sticky;
+  bottom: -18px;
+  z-index: 3;
+  padding: 10px 0 4px;
+  background: rgba(8,8,16,0.98);
+}
+@media (pointer: coarse) {
+  .settings-tab { min-height: 44px; }
+}
+@media (max-width: 480px) {
+  .settings-tabs { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .settings-tab { padding: 4px 3px; white-space: normal; line-height: 1.2; letter-spacing: 0.5px; }
+}
+.mpx-set-row.settings-row-stack { flex-direction: column; align-items: stretch; gap: 4px; }
+/* D-028: the setup-screen fitness rows have room for full metric names
+   (POPULATION, EXPLORATION…) instead of 52px ellipses. */
+.chaos-modal-panel .mpx-fit-label { flex: 0 0 96px; }
+@media (min-width: 481px) {
+  .settings-tabs { flex-wrap: nowrap; }
+  .settings-tab { flex: 1 1 0; padding: 6px 4px; letter-spacing: 0.5px; }
+}
+/* D-028: number fields and selects in the setup screen match the GRID inputs
+   (they rendered as bright white browser defaults) and never push past the
+   panel edge on a phone. */
+.chaos-modal-panel .mpx-set-row input[type="number"] {
+  width: 72px;
+  min-width: 0;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 5px 6px;
+}
+.chaos-modal-panel .mpx-set-row input[type="number"]:focus { border-color: var(--accent-red); }
+.chaos-modal-panel .mpx-set-row select { min-width: 0; max-width: 100%; flex: 1 1 auto; }
+.chaos-modal-panel .mpx-set-row .mpx-set-value { margin-left: auto; text-align: right; }
 
 /* ── Law category rows (one row per law type) ─────────────────── */
 .law-icon-grid,
