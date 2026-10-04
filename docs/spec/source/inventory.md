@@ -59,7 +59,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 1874 | 0 | 50 | 12 |
+| [src/main.js](../../../src/main.js) | application | 1875 | 0 | 50 | 12 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1751 | 37 | 12 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 514 | 7 | 0 | 5 |
 | [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
@@ -316,7 +316,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | [tests/unit/signal.test.js](../../../tests/unit/signal.test.js) | testing | 105 | 0 | 4 | 3 |
 | [tests/unit/singleImplementations.test.js](../../../tests/unit/singleImplementations.test.js) | testing | 30 | 0 | 6 | 0 |
 | [tests/unit/sliderControl.test.js](../../../tests/unit/sliderControl.test.js) | testing | 149 | 0 | 2 | 0 |
-| [tests/unit/solverReset.test.js](../../../tests/unit/solverReset.test.js) | testing | 48 | 0 | 6 | 3 |
+| [tests/unit/solverReset.test.js](../../../tests/unit/solverReset.test.js) | testing | 67 | 0 | 6 | 3 |
 | [tests/unit/spawnDistribution.test.js](../../../tests/unit/spawnDistribution.test.js) | testing | 13 | 0 | 3 | 0 |
 | [tests/unit/specHelpCoverage.test.js](../../../tests/unit/specHelpCoverage.test.js) | testing | 30 | 0 | 5 | 0 |
 | [tests/unit/stateBudgets.test.js](../../../tests/unit/stateBudgets.test.js) | testing | 33 | 0 | 4 | 5 |

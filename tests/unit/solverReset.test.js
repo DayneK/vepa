@@ -45,3 +45,22 @@ describe('resetSolverState (world restart)', () => {
     expect(stale).not.toBe(pristine);
   });
 });
+
+describe('resetSolverState(tick) (world-save restore, D-023)', () => {
+  it('restoring a save clears stale solver state and resumes the saved tick', () => {
+    prev = enterSolverContext(createSolverContext());
+    resetSolverState(42);
+    const fromSave = run(5);
+    run(9); // dirty the solver state after the save was taken
+    resetSolverState(42);
+    expect(getSolverClock()).toBe(42);
+    expect(run(5)).toBe(fromSave);
+  });
+
+  it('main.js restore path uses resetSolverState with the saved tick', async () => {
+    const { readFileSync } = await import('node:fs');
+    const src = readFileSync(new URL('../../src/main.js', import.meta.url), 'utf8');
+    const restore = src.slice(src.indexOf('const applyWorldRestore'), src.indexOf("bus.on('sim:chaos'"));
+    expect(restore).toContain('resetSolverState(state.tick || 0)');
+  });
+});
