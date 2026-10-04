@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_14.test.js](../../../../tests/audit/batch_14.test.js), [tests/unit/electricFieldSplit.test.js](../../../../tests/unit/electricFieldSplit.test.js), [tests/unit/lawCategories.test.js](../../../../tests/unit/lawCategories.test.js)
+- Tests: [tests/audit/batch_14.test.js](../../../../tests/audit/batch_14.test.js), [tests/unit/electricFieldSplit.test.js](../../../../tests/unit/electricFieldSplit.test.js), [tests/unit/lawCategories.test.js](../../../../tests/unit/lawCategories.test.js), [tests/unit/priorityLawSemantics.test.js](../../../../tests/unit/priorityLawSemantics.test.js)
 - Audits: [docs/audit/A3-RECONCILIATION.md](../../../audit/A3-RECONCILIATION.md)
 
 ## Interpretation boundary

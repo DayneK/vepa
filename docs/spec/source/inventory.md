@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `337` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `339` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -10,8 +10,8 @@ The generator scanned `337` files from active repository inputs. Individual modu
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 33 | 241 | 379 |
-| State | 36 | 294 | 474 |
-| Testing | 184 | 32 | 741 |
+| State | 37 | 296 | 493 |
+| Testing | 185 | 32 | 760 |
 | Ui | 28 | 98 | 379 |
 
 ## Module list
@@ -125,6 +125,7 @@ The generator scanned `337` files from active repository inputs. Individual modu
 | [src/state/memoryBuffers.js](../../../src/state/memoryBuffers.js) | state | 102 | 11 | 1 | 1 |
 | [src/state/particleBuffer.js](../../../src/state/particleBuffer.js) | state | 173 | 21 | 1 | 6 |
 | [src/state/presetManager.js](../../../src/state/presetManager.js) | state | 86 | 6 | 0 | 0 |
+| [src/state/priorityLaws.js](../../../src/state/priorityLaws.js) | state | 33 | 2 | 0 | 19 |
 | [src/state/quantumMacro.js](../../../src/state/quantumMacro.js) | state | 494 | 4 | 3 | 8 |
 | [src/state/relativity.js](../../../src/state/relativity.js) | state | 209 | 7 | 2 | 3 |
 | [src/state/runtimeConfig.js](../../../src/state/runtimeConfig.js) | state | 60 | 3 | 1 | 4 |
@@ -317,6 +318,7 @@ The generator scanned `337` files from active repository inputs. Individual modu
 | [tests/unit/patchLawcatGuard.test.js](../../../tests/unit/patchLawcatGuard.test.js) | testing | 24 | 0 | 3 | 0 |
 | [tests/unit/perfKnobs.test.js](../../../tests/unit/perfKnobs.test.js) | testing | 84 | 0 | 3 | 0 |
 | [tests/unit/physics.test.js](../../../tests/unit/physics.test.js) | testing | 60 | 0 | 5 | 4 |
+| [tests/unit/priorityLawSemantics.test.js](../../../tests/unit/priorityLawSemantics.test.js) | testing | 148 | 0 | 5 | 19 |
 | [tests/unit/prng.test.js](../../../tests/unit/prng.test.js) | testing | 49 | 0 | 2 | 0 |
 | [tests/unit/provenance.test.js](../../../tests/unit/provenance.test.js) | testing | 80 | 0 | 6 | 2 |
 | [tests/unit/provenanceHeaders.test.js](../../../tests/unit/provenanceHeaders.test.js) | testing | 31 | 0 | 3 | 0 |

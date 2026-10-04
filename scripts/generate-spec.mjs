@@ -16,6 +16,7 @@ import {
   PARTICLE_STRIDE as REAL_PARTICLE_STRIDE,
   DNA_COUNT as REAL_DNA_COUNT,
 } from '../src/constants.js';
+import { PRIORITY_LAWS, PRIORITY_LAW_TEST_FILE } from '../src/state/priorityLaws.js';
 import { LAW_HELP_DB as REAL_LAW_HELP_DB, MECHANICS_HELP as REAL_MECHANICS_HELP } from '../src/constants/help.js';
 
 
@@ -1062,6 +1063,38 @@ function genOntologyCoverage(constants) {
   }, null, 2) + '\n');
 }
 
+// ARP-8 (AC-39): priority-law behaviour/boundary matrix, cross-checked against
+// the sign-off manifest so a priority law can never lose its record or tests.
+function genPriorityLawMatrix() {
+  const manifest = JSON.parse(read('docs/spec/audit/signoff-manifest.json'));
+  const byLaw = new Map(manifest.records.filter(r => r.law).map(r => [r.law, r]));
+  const testSrc = existsSync(join(ROOT, PRIORITY_LAW_TEST_FILE)) ? read(PRIORITY_LAW_TEST_FILE) : '';
+  if (!testSrc.includes('behaviour: ${p.behaviour}') || !testSrc.includes('boundary: ${p.boundary}')) {
+    throw new Error(`generate-spec: ${PRIORITY_LAW_TEST_FILE} must run one behaviour and one boundary test per PRIORITY_LAWS entry`);
+  }
+  const rows = PRIORITY_LAWS.map(p => {
+    const rec = byLaw.get(p.law);
+    if (!rec || !(rec.tests || []).includes(PRIORITY_LAW_TEST_FILE)) {
+      throw new Error(`generate-spec: priority law ${p.law} has no sign-off record linking ${PRIORITY_LAW_TEST_FILE}`);
+    }
+    return `| ${p.law} | ${p.family} | ${p.behaviour} | ${p.boundary} | \`${rec.id}\` (${rec.status}) |`;
+  });
+  writeSpec('audit/priority-law-matrix.md', HEADER + `# Audit: Priority-law semantic matrix
+
+Generated from \`src/state/priorityLaws.js\` and \`docs/spec/audit/signoff-manifest.json\`.
+Each priority law has one behaviour test (law on vs. law off on the same fixture, so a gated
+law is distinguished from a broken one) and one boundary test, both in
+[\`${PRIORITY_LAW_TEST_FILE}\`](../../../${PRIORITY_LAW_TEST_FILE}) under the names
+\`<LAW> (<family>) > behaviour: …\` and \`<LAW> (<family>) > boundary: …\`.
+
+Priority laws: **${PRIORITY_LAWS.length}**, all with a sign-off record.
+
+| Law | Family | Behaviour test | Boundary test | Sign-off |
+|---|---|---|---|---|
+${rows.join('\n')}
+`);
+}
+
 function genManifest(constants, modules) {
   const pkg = JSON.parse(read('package.json'));
   const sourceAreas = {};
@@ -1183,6 +1216,7 @@ function main() {
   genImplementationManifest(constants, modules, testFiles);
   genOntologyCoverage(constants);
   genProcedure();
+  genPriorityLawMatrix();
   genReadme(constants, modules);
   genManifest(constants, modules);
 

@@ -175,6 +175,208 @@
       "implementation": "scripts/patch-lawcat-test.mjs",
       "evidence": "not-tested",
       "notes": "Artifact inventory (npm run artifact:inventory) classifies scripts/patch-lawcat-test.mjs and tests/run.mjs as historical; they must never be invoked by CI or release gates."
+    },
+    {
+      "id": "priority-law-grav",
+      "law": "GRAV",
+      "claim": "GRAV (force): pulls a two-body pair together; gated off it does nothing; boundary: stays finite for coincident particles.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.GRAV] / isSet(lawState, LAW_INDEXES.GRAV) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-charge-law",
+      "law": "CHARGE_LAW",
+      "claim": "CHARGE_LAW (force): opposite charges approach, like charges separate; boundary: neutral particles feel no force.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.CHARGE_LAW] / isSet(lawState, LAW_INDEXES.CHARGE_LAW) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-drag",
+      "law": "DRAG",
+      "claim": "DRAG (force): reduces speed monotonically; boundary: never reverses velocity direction.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.DRAG] / isSet(lawState, LAW_INDEXES.DRAG) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-electric-field",
+      "law": "ELECTRIC_FIELD",
+      "claim": "ELECTRIC_FIELD (force): accelerates charged particles; boundary: leaves neutral particles unaccelerated.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.ELECTRIC_FIELD] / isSet(lawState, LAW_INDEXES.ELECTRIC_FIELD) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-life",
+      "law": "LIFE",
+      "claim": "LIFE (lifecycle): metabolism advances hunger and a starving particle dies; boundary: never touches a dead particle.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.LIFE] / isSet(lawState, LAW_INDEXES.LIFE) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-repro",
+      "law": "REPRO",
+      "claim": "REPRO (lifecycle): mature, driven particles produce offspring; boundary: immature particles (age < 100) never reproduce.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.REPRO] / isSet(lawState, LAW_INDEXES.REPRO) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-senescence",
+      "law": "SENESCENCE",
+      "claim": "SENESCENCE (lifecycle): old particles die over time; boundary: young particles (age ≤ 500) never die of age.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.SENESCENCE] / isSet(lawState, LAW_INDEXES.SENESCENCE) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-energy",
+      "law": "ENERGY",
+      "claim": "ENERGY (lifecycle): equalises energy between neighbours and conserves the total; boundary: equal-energy neighbours exchange nothing.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.ENERGY] / isSet(lawState, LAW_INDEXES.ENERGY) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-coll",
+      "law": "COLL",
+      "claim": "COLL (structural): separates overlapping particles; boundary: keeps speeds finite and bounded.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.COLL] / isSet(lawState, LAW_INDEXES.COLL) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-contact",
+      "law": "CONTACT",
+      "claim": "CONTACT (structural): pushes overlapping particles apart; boundary: leaves well-separated particles untouched.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.CONTACT] / isSet(lawState, LAW_INDEXES.CONTACT) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-bond",
+      "law": "BOND",
+      "claim": "BOND (structural): forms reciprocal bonds between near neighbours; boundary: never bonds a particle to itself or duplicates a partner.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.BOND] / isSet(lawState, LAW_INDEXES.BOND) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-memory",
+      "law": "MEMORY",
+      "claim": "MEMORY (information): accumulates memory in particles; boundary: keeps memory finite and non-negative.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.MEMORY] / isSet(lawState, LAW_INDEXES.MEMORY) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-signal-boost",
+      "law": "SIGNAL_BOOST",
+      "claim": "SIGNAL_BOOST (information): relays signal from a signalling particle to a neighbour; boundary: silent particles (signal ≤ 0.01) relay nothing and signal stays ≤ 1.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.SIGNAL_BOOST] / isSet(lawState, LAW_INDEXES.SIGNAL_BOOST) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-learn",
+      "law": "LEARN",
+      "claim": "LEARN (information): aligns neighbour velocities; boundary: leaves already-aligned particles aligned.",
+      "status": "operational",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.LEARN] / isSet(lawState, LAW_INDEXES.LEARN) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ]
+    },
+    {
+      "id": "priority-law-superposition",
+      "law": "SUPERPOSITION",
+      "claim": "SUPERPOSITION (quantum): prepares superposed amplitudes; boundary: amplitudes stay finite and within [0, 1].",
+      "status": "proxy",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.SUPERPOSITION] / isSet(lawState, LAW_INDEXES.SUPERPOSITION) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ],
+      "notes": "Quantum laws are bounded proxies over stride flags, not quantum mechanics; see src/physics/quantumStateMachine.js."
+    },
+    {
+      "id": "priority-law-wave-particle",
+      "law": "WAVE_PARTICLE",
+      "claim": "WAVE_PARTICLE (quantum): a measured particle decays back to wave mode; boundary: an unmeasured isolated particle stays in wave mode.",
+      "status": "proxy",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.WAVE_PARTICLE] / isSet(lawState, LAW_INDEXES.WAVE_PARTICLE) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ],
+      "notes": "Quantum laws are bounded proxies over stride flags, not quantum mechanics; see src/physics/quantumStateMachine.js."
+    },
+    {
+      "id": "priority-law-entanglement",
+      "law": "ENTANGLEMENT",
+      "claim": "ENTANGLEMENT (quantum): entangles neighbours with reciprocal links; boundary: isolated particles stay free.",
+      "status": "proxy",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.ENTANGLEMENT] / isSet(lawState, LAW_INDEXES.ENTANGLEMENT) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ],
+      "notes": "Quantum laws are bounded proxies over stride flags, not quantum mechanics; see src/physics/quantumStateMachine.js."
+    },
+    {
+      "id": "priority-law-observer",
+      "law": "OBSERVER",
+      "claim": "OBSERVER (quantum): with WAVE_PARTICLE, high-memory observers measure neighbours; boundary: low-memory observers measure nothing.",
+      "status": "proxy",
+      "implementation": "src/physics/laws.js",
+      "dispatch": "Gated by active[LAW_INDEXES.OBSERVER] / isSet(lawState, LAW_INDEXES.OBSERVER) in src/physics/solver.js and src/physics/laws.js.",
+      "tests": [
+        "tests/unit/priorityLawSemantics.test.js"
+      ],
+      "notes": "Quantum laws are bounded proxies over stride flags, not quantum mechanics; see src/physics/quantumStateMachine.js."
     }
   ]
 }
