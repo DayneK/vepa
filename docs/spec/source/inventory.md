@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `340` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `352` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
-| Application | 41 | 179 | 481 |
+| Application | 45 | 198 | 483 |
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 33 | 241 | 379 |
-| State | 37 | 296 | 493 |
-| Testing | 186 | 32 | 762 |
+| State | 39 | 317 | 494 |
+| Testing | 192 | 36 | 771 |
 | Ui | 28 | 98 | 379 |
 
 ## Module list
@@ -48,6 +48,7 @@ The generator scanned `340` files from active repository inputs. Individual modu
 | [src/dna/dnaBuffer.js](../../../src/dna/dnaBuffer.js) | state | 153 | 10 | 1 | 0 |
 | [src/dna/expression.js](../../../src/dna/expression.js) | state | 257 | 4 | 3 | 1 |
 | [src/engines/agencyEngine.js](../../../src/engines/agencyEngine.js) | application | 127 | 7 | 0 | 0 |
+| [src/engines/civRuntime.js](../../../src/engines/civRuntime.js) | application | 322 | 10 | 8 | 1 |
 | [src/engines/createEngine.js](../../../src/engines/createEngine.js) | application | 20 | 1 | 0 | 0 |
 | [src/engines/ecoEngine.js](../../../src/engines/ecoEngine.js) | application | 126 | 3 | 0 | 0 |
 | [src/engines/epochEngine.js](../../../src/engines/epochEngine.js) | application | 184 | 9 | 1 | 0 |
@@ -56,10 +57,13 @@ The generator scanned `340` files from active repository inputs. Individual modu
 | [src/engines/insightEngine.js](../../../src/engines/insightEngine.js) | application | 262 | 3 | 2 | 1 |
 | [src/engines/lineageTracker.js](../../../src/engines/lineageTracker.js) | application | 205 | 6 | 0 | 0 |
 | [src/engines/narrativeEngine.js](../../../src/engines/narrativeEngine.js) | application | 227 | 2 | 1 | 0 |
+| [src/engines/relationshipFeatures.js](../../../src/engines/relationshipFeatures.js) | application | 40 | 1 | 0 | 0 |
+| [src/engines/relationshipRecorder.js](../../../src/engines/relationshipRecorder.js) | application | 35 | 6 | 0 | 1 |
+| [src/engines/relationshipRegimes.js](../../../src/engines/relationshipRegimes.js) | application | 17 | 2 | 0 | 0 |
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 1899 | 0 | 50 | 12 |
+| [src/main.js](../../../src/main.js) | application | 1934 | 0 | 52 | 12 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1751 | 37 | 12 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 514 | 7 | 0 | 5 |
 | [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
@@ -110,6 +114,7 @@ The generator scanned `340` files from active repository inputs. Individual modu
 | [src/state/codex.js](../../../src/state/codex.js) | state | 324 | 16 | 3 | 15 |
 | [src/state/construction.js](../../../src/state/construction.js) | state | 139 | 2 | 2 | 0 |
 | [src/state/continuity.js](../../../src/state/continuity.js) | state | 246 | 8 | 1 | 1 |
+| [src/state/culturalSelection.js](../../../src/state/culturalSelection.js) | state | 84 | 6 | 2 | 0 |
 | [src/state/defaultPresets.js](../../../src/state/defaultPresets.js) | state | 240 | 3 | 0 | 44 |
 | [src/state/economy.js](../../../src/state/economy.js) | state | 105 | 2 | 2 | 0 |
 | [src/state/exoticMatter.js](../../../src/state/exoticMatter.js) | state | 332 | 8 | 3 | 3 |
@@ -127,8 +132,9 @@ The generator scanned `340` files from active repository inputs. Individual modu
 | [src/state/presetManager.js](../../../src/state/presetManager.js) | state | 86 | 6 | 0 | 0 |
 | [src/state/priorityLaws.js](../../../src/state/priorityLaws.js) | state | 33 | 2 | 0 | 19 |
 | [src/state/quantumMacro.js](../../../src/state/quantumMacro.js) | state | 494 | 4 | 3 | 8 |
+| [src/state/relationshipGraph.js](../../../src/state/relationshipGraph.js) | state | 120 | 15 | 0 | 1 |
 | [src/state/relativity.js](../../../src/state/relativity.js) | state | 209 | 7 | 2 | 3 |
-| [src/state/runtimeConfig.js](../../../src/state/runtimeConfig.js) | state | 60 | 3 | 1 | 4 |
+| [src/state/runtimeConfig.js](../../../src/state/runtimeConfig.js) | state | 64 | 3 | 1 | 4 |
 | [src/state/stateBudgets.js](../../../src/state/stateBudgets.js) | state | 64 | 4 | 0 | 7 |
 | [src/state/stellar.js](../../../src/state/stellar.js) | state | 348 | 6 | 3 | 2 |
 | [src/state/strideWriteContract.js](../../../src/state/strideWriteContract.js) | state | 77 | 2 | 1 | 85 |
@@ -225,12 +231,14 @@ The generator scanned `340` files from active repository inputs. Individual modu
 | [tests/bench/renderer-benchmark.spec.js](../../../tests/bench/renderer-benchmark.spec.js) | testing | 77 | 0 | 4 | 0 |
 | [tests/e2e/boot-render-worker.spec.js](../../../tests/e2e/boot-render-worker.spec.js) | testing | 25 | 0 | 2 | 0 |
 | [tests/e2e/boot.js](../../../tests/e2e/boot.js) | testing | 13 | 1 | 1 | 0 |
+| [tests/e2e/civ-runtime.spec.js](../../../tests/e2e/civ-runtime.spec.js) | testing | 27 | 0 | 3 | 2 |
 | [tests/e2e/mechanics-worker.spec.js](../../../tests/e2e/mechanics-worker.spec.js) | testing | 35 | 0 | 2 | 3 |
 | [tests/e2e/physics-worker.spec.js](../../../tests/e2e/physics-worker.spec.js) | testing | 66 | 0 | 2 | 0 |
 | [tests/e2e/runtime-acceptance.spec.js](../../../tests/e2e/runtime-acceptance.spec.js) | testing | 58 | 0 | 2 | 1 |
 | [tests/e2e/timeline-dashboard.spec.js](../../../tests/e2e/timeline-dashboard.spec.js) | testing | 34 | 0 | 2 | 0 |
 | [tests/fixtures/golden-parity.json](../../../tests/fixtures/golden-parity.json) | testing | 62 | 0 | 0 | 0 |
 | [tests/fixtures/lawHelpMerged.snapshot.json](../../../tests/fixtures/lawHelpMerged.snapshot.json) | testing | 745 | 0 | 0 | 136 |
+| [tests/helpers/civWorld.js](../../../tests/helpers/civWorld.js) | testing | 111 | 4 | 11 | 5 |
 | [tests/helpers/cssSources.js](../../../tests/helpers/cssSources.js) | testing | 137 | 6 | 3 | 0 |
 | [tests/helpers/domStub.js](../../../tests/helpers/domStub.js) | testing | 341 | 5 | 0 | 1 |
 | [tests/helpers/lawWorld.js](../../../tests/helpers/lawWorld.js) | testing | 78 | 9 | 4 | 2 |
@@ -249,6 +257,7 @@ The generator scanned `340` files from active repository inputs. Individual modu
 | [tests/unit/civilizationPanel.test.js](../../../tests/unit/civilizationPanel.test.js) | testing | 262 | 0 | 7 | 0 |
 | [tests/unit/civilizationSequelWiring.test.js](../../../tests/unit/civilizationSequelWiring.test.js) | testing | 286 | 0 | 10 | 0 |
 | [tests/unit/civilizationWiring.test.js](../../../tests/unit/civilizationWiring.test.js) | testing | 90 | 0 | 6 | 0 |
+| [tests/unit/civRuntime.test.js](../../../tests/unit/civRuntime.test.js) | testing | 120 | 0 | 9 | 1 |
 | [tests/unit/codex.test.js](../../../tests/unit/codex.test.js) | testing | 402 | 0 | 5 | 16 |
 | [tests/unit/compatibilityFastPath.test.js](../../../tests/unit/compatibilityFastPath.test.js) | testing | 30 | 0 | 4 | 0 |
 | [tests/unit/computeEngines.test.js](../../../tests/unit/computeEngines.test.js) | testing | 70 | 0 | 8 | 1 |
@@ -256,6 +265,7 @@ The generator scanned `340` files from active repository inputs. Individual modu
 | [tests/unit/continuity.test.js](../../../tests/unit/continuity.test.js) | testing | 308 | 0 | 3 | 1 |
 | [tests/unit/createEngine.test.js](../../../tests/unit/createEngine.test.js) | testing | 31 | 0 | 7 | 0 |
 | [tests/unit/crossCategoryScenarios.test.js](../../../tests/unit/crossCategoryScenarios.test.js) | testing | 83 | 0 | 5 | 26 |
+| [tests/unit/culturalSelection.test.js](../../../tests/unit/culturalSelection.test.js) | testing | 54 | 0 | 3 | 1 |
 | [tests/unit/cultureTransmission.test.js](../../../tests/unit/cultureTransmission.test.js) | testing | 228 | 0 | 2 | 0 |
 | [tests/unit/dataPanels.test.js](../../../tests/unit/dataPanels.test.js) | testing | 328 | 0 | 8 | 0 |
 | [tests/unit/deepTime.test.js](../../../tests/unit/deepTime.test.js) | testing | 129 | 0 | 4 | 0 |
@@ -327,6 +337,8 @@ The generator scanned `340` files from active repository inputs. Individual modu
 | [tests/unit/quantumStateMachine.test.js](../../../tests/unit/quantumStateMachine.test.js) | testing | 46 | 0 | 3 | 11 |
 | [tests/unit/relationshipCompatibility.test.js](../../../tests/unit/relationshipCompatibility.test.js) | testing | 79 | 0 | 4 | 2 |
 | [tests/unit/relationshipExplorer.test.js](../../../tests/unit/relationshipExplorer.test.js) | testing | 56 | 0 | 2 | 3 |
+| [tests/unit/relationshipGraph.test.js](../../../tests/unit/relationshipGraph.test.js) | testing | 58 | 0 | 2 | 0 |
+| [tests/unit/relationshipLab.test.js](../../../tests/unit/relationshipLab.test.js) | testing | 54 | 0 | 5 | 0 |
 | [tests/unit/relativity.test.js](../../../tests/unit/relativity.test.js) | testing | 210 | 0 | 5 | 2 |
 | [tests/unit/renderer.test.js](../../../tests/unit/renderer.test.js) | testing | 27 | 0 | 2 | 0 |
 | [tests/unit/signal.test.js](../../../tests/unit/signal.test.js) | testing | 105 | 0 | 4 | 3 |

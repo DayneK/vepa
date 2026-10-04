@@ -312,6 +312,7 @@
         "tests/audit/params_batch_06.test.js",
         "tests/audit/params_batch_14.test.js",
         "tests/audit/params_batch_15.test.js",
+        "tests/e2e/civ-runtime.spec.js",
         "tests/unit/auditSignoff.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/crossCategoryScenarios.test.js",
@@ -411,6 +412,7 @@
         "tests/audit/params_batch_06.test.js",
         "tests/audit/params_batch_14.test.js",
         "tests/audit/params_batch_15.test.js",
+        "tests/e2e/civ-runtime.spec.js",
         "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/informationTrace.test.js",
         "tests/unit/multiplex.test.js",
@@ -545,6 +547,7 @@
         "tests/audit/params_batch_13.test.js",
         "tests/audit/params_batch_14.test.js",
         "tests/audit/params_batch_15.test.js",
+        "tests/unit/civRuntime.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/electricFieldSplit.test.js",
@@ -2185,6 +2188,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_18.test.js",
+        "tests/unit/culturalSelection.test.js",
         "tests/unit/informationTrace.test.js",
         "tests/unit/multiplexScheduler.test.js"
       ],
