@@ -99,7 +99,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 │   ├── spawn/              ← distribution.js (initial population)
 │   └── worker/             ← physics.worker.js (SharedArrayBuffer loop)
 │
-├── tests/                  ← vitest: 170 files / 1780 tests (unit + audit + params); Playwright e2e in tests/e2e/;
+├── tests/                  ← vitest: 174 files / 1802 tests (unit + audit + params); Playwright e2e in tests/e2e/;
 │                               legacy `run.mjs` node:test runner — do not use
 ├── bench/                  ← headless solver benchmark (vepa4 bench; --scale/--knobs/--report)
 ├── public/bench-report/    ← benchmark report SPA (served at /bench-report/)
@@ -326,7 +326,7 @@ The **B-4RK principle** stands: documentation is not an afterthought; it is a fe
 
 ## 8. TESTING & QUALITY ASSURANCE
 
-- **Unit/audit:** `npm test` (vitest 3.2.7, `tests/`). **170 files / 1780 tests, all green** (verified 2026-10-03 on Node 22). Config: `vitest.config.js` includes `tests/**/*.test.js`, node environment. Suite layout: `tests/unit/`, `tests/audit/` (`batch_01-32` + `params_batch_01-18`), `tests/bench/`.
+- **Unit/audit:** `npm test` (vitest 3.2.7, `tests/`). **174 files / 1802 tests, all green** (verified 2026-10-03 on Node 22). Config: `vitest.config.js` includes `tests/**/*.test.js`, node environment. Suite layout: `tests/unit/`, `tests/audit/` (`batch_01-32` + `params_batch_01-18`), `tests/bench/`.
 - **E2E:** `npm run test:e2e` (Playwright, `playwright.config.js`) — specs in `tests/e2e/` (`physics-worker.spec.js`, `runtime-acceptance.spec.js`); not yet run in CI.
 - **Syntax:** `vepa4 syntax` (`node --check` on `src` + `tests`).
 - **Audit docs:** `docs/audit/` — historical a3 law-audit corpus (`laws/a3/`, retained in repo per `provenance.json`); signoff gate `docs/spec/audit/signoff-manifest.json` + `scripts/validate-signoff.mjs`.
@@ -514,7 +514,7 @@ git log --oneline -3 -- CHANGELOG.md     # confirm HEAD = changelog top
 
 # v4 workflow
 vepa4 dev                             # dev server (COOP/COEP), port 5180
-vepa4 test                            # vitest suite (170 files / 1780 tests)
+vepa4 test                            # vitest suite (174 files / 1802 tests)
 vepa4 syntax                          # node --check all v4 JS
 vepa4 build                           # vite build → .dist
 npx playwright test          # e2e suite
