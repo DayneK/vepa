@@ -90,8 +90,6 @@ const FLOOR_PX = 9;
  * this set contains nothing that has since grown.
  */
 const EXCEPTIONS = new Set([
-  // Painted inside a 14px orb; the DATA tab carries the real population readout.
-  '.hud-population-orb::after',
   // Tick labels under a 34px-tall sparkline; the DNA charts carry the real trend.
   '.dna-history-values span',
 ]);

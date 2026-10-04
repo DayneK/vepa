@@ -12,7 +12,7 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | Simulation | 33 | 241 | 379 |
 | State | 39 | 317 | 494 |
 | Testing | 192 | 36 | 771 |
-| Ui | 28 | 98 | 379 |
+| Ui | 28 | 99 | 379 |
 
 ## Module list
 
@@ -26,7 +26,7 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | [bench/shard-worker-node.mjs](../../../bench/shard-worker-node.mjs) | benchmark | 10 | 0 | 1 | 0 |
 | [bench/solver.bench.mjs](../../../bench/solver.bench.mjs) | benchmark | 587 | 0 | 6 | 9 |
 | [bench/worker-bench-worker.mjs](../../../bench/worker-bench-worker.mjs) | benchmark | 79 | 0 | 7 | 0 |
-| [index.html](../../../index.html) | repository | 204 | 0 | 0 | 1 |
+| [index.html](../../../index.html) | repository | 206 | 0 | 0 | 1 |
 | [package-lock.json](../../../package-lock.json) | repository | 2618 | 0 | 0 | 0 |
 | [package.json](../../../package.json) | repository | 48 | 0 | 0 | 0 |
 | [playwright.config.js](../../../playwright.config.js) | application | 25 | 1 | 1 | 0 |
@@ -155,7 +155,7 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | [src/ui/helpOverlay.js](../../../src/ui/helpOverlay.js) | ui | 410 | 11 | 3 | 1 |
 | [src/ui/helpRegistry.js](../../../src/ui/helpRegistry.js) | ui | 460 | 14 | 0 | 8 |
 | [src/ui/html.js](../../../src/ui/html.js) | ui | 40 | 1 | 0 | 0 |
-| [src/ui/hud.js](../../../src/ui/hud.js) | ui | 112 | 2 | 1 | 0 |
+| [src/ui/hud.js](../../../src/ui/hud.js) | ui | 142 | 3 | 1 | 0 |
 | [src/ui/intelPanel.js](../../../src/ui/intelPanel.js) | ui | 126 | 1 | 1 | 1 |
 | [src/ui/launchModal.js](../../../src/ui/launchModal.js) | ui | 254 | 2 | 2 | 1 |
 | [src/ui/lawInspectorPanel.js](../../../src/ui/lawInspectorPanel.js) | ui | 63 | 5 | 3 | 0 |
@@ -168,13 +168,13 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | [src/ui/settingsPanel.js](../../../src/ui/settingsPanel.js) | ui | 195 | 1 | 6 | 1 |
 | [src/ui/sliderControl.js](../../../src/ui/sliderControl.js) | ui | 426 | 14 | 2 | 0 |
 | [src/ui/speciesPanel.js](../../../src/ui/speciesPanel.js) | ui | 251 | 1 | 3 | 10 |
-| [src/ui/toolbarHelp.css](../../../src/ui/toolbarHelp.css) | ui | 511 | 0 | 0 | 0 |
+| [src/ui/toolbarHelp.css](../../../src/ui/toolbarHelp.css) | ui | 502 | 0 | 0 | 0 |
 | [src/ui/tooltip.js](../../../src/ui/tooltip.js) | ui | 171 | 2 | 4 | 122 |
 | [src/ui/tooltipDismiss.js](../../../src/ui/tooltipDismiss.js) | ui | 106 | 5 | 0 | 0 |
 | [src/ui/ui.js](../../../src/ui/ui.js) | ui | 551 | 5 | 17 | 1 |
 | [src/ui/worldPanel.js](../../../src/ui/worldPanel.js) | ui | 554 | 3 | 6 | 128 |
 | [src/worker/physics.worker.js](../../../src/worker/physics.worker.js) | simulation | 452 | 0 | 5 | 3 |
-| [style.css](../../../style.css) | repository | 3839 | 0 | 0 | 1 |
+| [style.css](../../../style.css) | repository | 3835 | 0 | 0 | 1 |
 | [tests/audit/batch_01.test.js](../../../tests/audit/batch_01.test.js) | testing | 224 | 0 | 7 | 8 |
 | [tests/audit/batch_02.test.js](../../../tests/audit/batch_02.test.js) | testing | 323 | 0 | 8 | 8 |
 | [tests/audit/batch_03.test.js](../../../tests/audit/batch_03.test.js) | testing | 249 | 0 | 6 | 8 |
@@ -289,7 +289,7 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | [tests/unit/helpRegistry.test.js](../../../tests/unit/helpRegistry.test.js) | testing | 302 | 0 | 5 | 0 |
 | [tests/unit/helpTierContract.test.js](../../../tests/unit/helpTierContract.test.js) | testing | 30 | 0 | 3 | 0 |
 | [tests/unit/htmlEscaping.test.js](../../../tests/unit/htmlEscaping.test.js) | testing | 113 | 0 | 9 | 0 |
-| [tests/unit/hud.test.js](../../../tests/unit/hud.test.js) | testing | 13 | 0 | 2 | 0 |
+| [tests/unit/hud.test.js](../../../tests/unit/hud.test.js) | testing | 81 | 0 | 4 | 0 |
 | [tests/unit/informationTrace.test.js](../../../tests/unit/informationTrace.test.js) | testing | 72 | 0 | 3 | 6 |
 | [tests/unit/infrastructure.test.js](../../../tests/unit/infrastructure.test.js) | testing | 201 | 0 | 5 | 1 |
 | [tests/unit/interactionSpace.test.js](../../../tests/unit/interactionSpace.test.js) | testing | 52 | 0 | 3 | 5 |
@@ -361,7 +361,7 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | [tests/unit/tidalBloom.test.js](../../../tests/unit/tidalBloom.test.js) | testing | 222 | 0 | 7 | 16 |
 | [tests/unit/tooltipDismiss.test.js](../../../tests/unit/tooltipDismiss.test.js) | testing | 210 | 0 | 3 | 0 |
 | [tests/unit/touchSupport.test.js](../../../tests/unit/touchSupport.test.js) | testing | 259 | 0 | 3 | 0 |
-| [tests/unit/typeScale.test.js](../../../tests/unit/typeScale.test.js) | testing | 206 | 0 | 3 | 1 |
+| [tests/unit/typeScale.test.js](../../../tests/unit/typeScale.test.js) | testing | 204 | 0 | 3 | 1 |
 | [tests/unit/webgpuContract.test.js](../../../tests/unit/webgpuContract.test.js) | testing | 95 | 0 | 4 | 0 |
 | [tests/unit/workerCopyMode.test.js](../../../tests/unit/workerCopyMode.test.js) | testing | 67 | 0 | 5 | 3 |
 | [tests/unit/worldSave.test.js](../../../tests/unit/worldSave.test.js) | testing | 322 | 0 | 7 | 4 |
