@@ -536,6 +536,8 @@ async function boot() {
     // mechanics fixture in the shared particle buffer. Stripped from builds.
     if (import.meta.env && import.meta.env.DEV) {
         const R = STRIDE_INDEXES;
+        // LRA-10: opt-in law inspector (?lawInspector); dev builds only.
+        import('./ui/lawInspectorPanel.js').then((m) => m.mountLawInspector(document, { dev: true, search: location.search, hash: location.hash })).catch(() => {});
         window.__VEPA_TEST__ = {
             state: () => ({ tick, particleCount, paused, workerReady: !!workerReady, workerFailed: !!workerFailed }),
             setTimelineInterval: (n) => { TIMELINE_SNAPSHOT_INTERVAL = Math.max(1, n | 0); return TIMELINE_SNAPSHOT_INTERVAL; },

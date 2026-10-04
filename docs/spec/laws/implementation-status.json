@@ -35,6 +35,7 @@
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/lawImplementedBy.test.js",
+        "tests/unit/lawInspectorPanel.test.js",
         "tests/unit/multiplex.test.js",
         "tests/unit/multiplexScheduler.test.js",
         "tests/unit/octree.test.js",
@@ -896,6 +897,7 @@
         "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawCouplingChains.test.js",
         "tests/unit/lawFeedbackStability.test.js",
+        "tests/unit/lawInspectorPanel.test.js",
         "tests/unit/multiplexScheduler.test.js",
         "tests/unit/tidalBloom.test.js"
       ],

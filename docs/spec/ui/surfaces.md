@@ -17,6 +17,7 @@
 | ui | [src/ui/hud.js](../../../src/ui/hud.js) | programmatic |
 | ui | [src/ui/intelPanel.js](../../../src/ui/intelPanel.js) | programmatic |
 | ui | [src/ui/launchModal.js](../../../src/ui/launchModal.js) | programmatic |
+| ui | [src/ui/lawInspectorPanel.js](../../../src/ui/lawInspectorPanel.js) | programmatic |
 | ui | [src/ui/lawPanel.js](../../../src/ui/lawPanel.js) | programmatic |
 | ui | [src/ui/mechanicsIcons.js](../../../src/ui/mechanicsIcons.js) | programmatic |
 | ui | [src/ui/narrativePanel.js](../../../src/ui/narrativePanel.js) | programmatic |

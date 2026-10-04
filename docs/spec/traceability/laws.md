@@ -4,7 +4,7 @@
 
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 29 | LAW_HELP_DB |
+| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 30 | LAW_HELP_DB |
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 11 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 9 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
@@ -29,7 +29,7 @@
 | 22 | [ISOMERIZATION](../laws/chemistry/022_ISOMERIZATION.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 23 | [CHIRALITY](../laws/chemistry/023_CHIRALITY.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 24 | [CRYSTALLIZATION](../laws/chemistry/024_CRYSTALLIZATION.md) | chemistry | 1 | 3 | 1 | LAW_HELP_DB |
-| 25 | [HEAT](../laws/thermodynamics/025_HEAT.md) | thermodynamics | 1 | 4 | 12 | LAW_HELP_DB |
+| 25 | [HEAT](../laws/thermodynamics/025_HEAT.md) | thermodynamics | 1 | 4 | 13 | LAW_HELP_DB |
 | 26 | [COLD](../laws/thermodynamics/026_COLD.md) | thermodynamics | 1 | 3 | 2 | LAW_HELP_DB |
 | 27 | [CONVECTION](../laws/thermodynamics/027_CONVECTION.md) | thermodynamics | 1 | 2 | 4 | LAW_HELP_DB |
 | 28 | [PHASE_RADIATION](../laws/thermodynamics/028_PHASE_RADIATION.md) | thermodynamics | 1 | 2 | 1 | LAW_HELP_DB |

@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `335` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `337` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,8 +11,8 @@ The generator scanned `335` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 2 |
 | Simulation | 33 | 241 | 379 |
 | State | 36 | 294 | 474 |
-| Testing | 183 | 32 | 739 |
-| Ui | 27 | 93 | 379 |
+| Testing | 184 | 32 | 741 |
+| Ui | 28 | 98 | 379 |
 
 ## Module list
 
@@ -59,7 +59,7 @@ The generator scanned `335` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 1897 | 0 | 50 | 12 |
+| [src/main.js](../../../src/main.js) | application | 1899 | 0 | 50 | 12 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1751 | 37 | 12 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 514 | 7 | 0 | 5 |
 | [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
@@ -151,6 +151,7 @@ The generator scanned `335` files from active repository inputs. Individual modu
 | [src/ui/hud.js](../../../src/ui/hud.js) | ui | 112 | 2 | 1 | 0 |
 | [src/ui/intelPanel.js](../../../src/ui/intelPanel.js) | ui | 126 | 1 | 1 | 1 |
 | [src/ui/launchModal.js](../../../src/ui/launchModal.js) | ui | 254 | 2 | 2 | 1 |
+| [src/ui/lawInspectorPanel.js](../../../src/ui/lawInspectorPanel.js) | ui | 63 | 5 | 3 | 0 |
 | [src/ui/lawPanel.js](../../../src/ui/lawPanel.js) | ui | 196 | 1 | 2 | 0 |
 | [src/ui/mechanicsIcons.js](../../../src/ui/mechanicsIcons.js) | ui | 16 | 1 | 0 | 8 |
 | [src/ui/narrativePanel.js](../../../src/ui/narrativePanel.js) | ui | 123 | 1 | 1 | 1 |
@@ -295,6 +296,7 @@ The generator scanned `335` files from active repository inputs. Individual modu
 | [tests/unit/lawHelpFold.test.js](../../../tests/unit/lawHelpFold.test.js) | testing | 26 | 0 | 4 | 0 |
 | [tests/unit/lawImplementationManifest.test.js](../../../tests/unit/lawImplementationManifest.test.js) | testing | 28 | 0 | 2 | 0 |
 | [tests/unit/lawImplementedBy.test.js](../../../tests/unit/lawImplementedBy.test.js) | testing | 44 | 0 | 7 | 5 |
+| [tests/unit/lawInspectorPanel.test.js](../../../tests/unit/lawInspectorPanel.test.js) | testing | 54 | 0 | 4 | 2 |
 | [tests/unit/lawOntologyCoverage.test.js](../../../tests/unit/lawOntologyCoverage.test.js) | testing | 25 | 0 | 4 | 0 |
 | [tests/unit/laws.test.js](../../../tests/unit/laws.test.js) | testing | 93 | 0 | 2 | 0 |
 | [tests/unit/lawsets.test.js](../../../tests/unit/lawsets.test.js) | testing | 29 | 0 | 3 | 0 |
