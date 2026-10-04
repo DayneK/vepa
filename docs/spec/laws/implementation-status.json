@@ -1243,7 +1243,8 @@
         "src/physics/laws.js",
         "src/physics/mergePhysics.js",
         "src/physics/relationshipExplorer.js",
-        "src/physics/solver.js"
+        "src/physics/solver.js",
+        "src/physics/structureFormation.js"
       ],
       "solverGateFiles": [
         "src/physics/solver.js"
@@ -1277,6 +1278,7 @@
         "tests/unit/relationshipCompatibility.test.js",
         "tests/unit/relationshipExplorer.test.js",
         "tests/unit/solverReset.test.js",
+        "tests/unit/structureFormation.test.js",
         "tests/unit/workerCopyMode.test.js",
         "tests/unit/worldSave.test.js",
         "tests/unit/worldSaveRng.test.js"
@@ -3563,7 +3565,8 @@
         "tests/unit/backendArchitecture.test.js",
         "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/mechanicsArchitecture.test.js",
-        "tests/unit/provenance.test.js"
+        "tests/unit/provenance.test.js",
+        "tests/unit/structureFormation.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -3671,13 +3674,15 @@
       "implementationFiles": [
         "src/physics/interactionSpace.js",
         "src/physics/lawgroups/mechanicsHelp.js",
-        "src/physics/solver.js"
+        "src/physics/solver.js",
+        "src/physics/structureFormation.js"
       ],
       "solverGateFiles": [
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/unit/backendArchitecture.test.js"
+        "tests/unit/backendArchitecture.test.js",
+        "tests/unit/structureFormation.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -3722,7 +3727,8 @@
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/lawgroups/mechanicsLaws.js",
         "src/physics/mechanicsDiagnostics.js",
-        "src/physics/solver.js"
+        "src/physics/solver.js",
+        "src/physics/structureFormation.js"
       ],
       "solverGateFiles": [
         "src/physics/solver.js"
@@ -3730,7 +3736,8 @@
       "testFiles": [
         "tests/unit/backendArchitecture.test.js",
         "tests/unit/mechanics.test.js",
-        "tests/unit/mechanicsDiagnosticsFields.test.js"
+        "tests/unit/mechanicsDiagnosticsFields.test.js",
+        "tests/unit/structureFormation.test.js"
       ],
       "relationshipTypes": [
         "dependsOn",

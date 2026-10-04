@@ -26,11 +26,11 @@
 
 ## Implementation evidence
 
-[src/physics/lawgroups/mechanicsHelp.js](../../../../src/physics/lawgroups/mechanicsHelp.js), [src/physics/lawgroups/mechanicsLaws.js](../../../../src/physics/lawgroups/mechanicsLaws.js), [src/physics/mechanicsDiagnostics.js](../../../../src/physics/mechanicsDiagnostics.js), [src/physics/solver.js](../../../../src/physics/solver.js)
+[src/physics/lawgroups/mechanicsHelp.js](../../../../src/physics/lawgroups/mechanicsHelp.js), [src/physics/lawgroups/mechanicsLaws.js](../../../../src/physics/lawgroups/mechanicsLaws.js), [src/physics/mechanicsDiagnostics.js](../../../../src/physics/mechanicsDiagnostics.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/structureFormation.js](../../../../src/physics/structureFormation.js)
 
 ## Verification evidence
 
-- Tests: [tests/unit/backendArchitecture.test.js](../../../../tests/unit/backendArchitecture.test.js), [tests/unit/mechanics.test.js](../../../../tests/unit/mechanics.test.js), [tests/unit/mechanicsDiagnosticsFields.test.js](../../../../tests/unit/mechanicsDiagnosticsFields.test.js)
+- Tests: [tests/unit/backendArchitecture.test.js](../../../../tests/unit/backendArchitecture.test.js), [tests/unit/mechanics.test.js](../../../../tests/unit/mechanics.test.js), [tests/unit/mechanicsDiagnosticsFields.test.js](../../../../tests/unit/mechanicsDiagnosticsFields.test.js), [tests/unit/structureFormation.test.js](../../../../tests/unit/structureFormation.test.js)
 - Audits: [docs/audit/A3-RECONCILIATION.md](../../../audit/A3-RECONCILIATION.md)
 
 ## Interpretation boundary

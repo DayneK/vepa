@@ -26,11 +26,11 @@
 
 ## Implementation evidence
 
-[src/physics/interactionSpace.js](../../../../src/physics/interactionSpace.js), [src/physics/lawgroups/mechanicsHelp.js](../../../../src/physics/lawgroups/mechanicsHelp.js), [src/physics/solver.js](../../../../src/physics/solver.js)
+[src/physics/interactionSpace.js](../../../../src/physics/interactionSpace.js), [src/physics/lawgroups/mechanicsHelp.js](../../../../src/physics/lawgroups/mechanicsHelp.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/structureFormation.js](../../../../src/physics/structureFormation.js)
 
 ## Verification evidence
 
-- Tests: [tests/unit/backendArchitecture.test.js](../../../../tests/unit/backendArchitecture.test.js)
+- Tests: [tests/unit/backendArchitecture.test.js](../../../../tests/unit/backendArchitecture.test.js), [tests/unit/structureFormation.test.js](../../../../tests/unit/structureFormation.test.js)
 - Audits: [docs/audit/A3-RECONCILIATION.md](../../../audit/A3-RECONCILIATION.md)
 
 ## Interpretation boundary

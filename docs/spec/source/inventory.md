@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `328` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `330` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 41 | 179 | 481 |
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
-| Simulation | 31 | 233 | 370 |
+| Simulation | 32 | 236 | 373 |
 | State | 35 | 291 | 467 |
-| Testing | 179 | 32 | 692 |
+| Testing | 180 | 32 | 696 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -96,6 +96,7 @@ The generator scanned `328` files from active repository inputs. Individual modu
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
 | [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2068 | 15 | 22 | 134 |
 | [src/physics/spatialGrid.js](../../../src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
+| [src/physics/structureFormation.js](../../../src/physics/structureFormation.js) | simulation | 43 | 3 | 1 | 3 |
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
 | [src/react-entry.js](../../../src/react-entry.js) | application | 20 | 0 | 2 | 0 |
 | [src/render/pixiRenderer.js](../../../src/render/pixiRenderer.js) | application | 357 | 5 | 6 | 1 |
@@ -327,6 +328,7 @@ The generator scanned `328` files from active repository inputs. Individual modu
 | [tests/unit/stateBudgets.test.js](../../../tests/unit/stateBudgets.test.js) | testing | 33 | 0 | 4 | 5 |
 | [tests/unit/stellar.test.js](../../../tests/unit/stellar.test.js) | testing | 281 | 0 | 5 | 2 |
 | [tests/unit/strideWriteContract.test.js](../../../tests/unit/strideWriteContract.test.js) | testing | 22 | 0 | 3 | 2 |
+| [tests/unit/structureFormation.test.js](../../../tests/unit/structureFormation.test.js) | testing | 58 | 0 | 5 | 4 |
 | [tests/unit/structures.test.js](../../../tests/unit/structures.test.js) | testing | 451 | 0 | 3 | 1 |
 | [tests/unit/synergyCache.test.js](../../../tests/unit/synergyCache.test.js) | testing | 62 | 0 | 4 | 28 |
 | [tests/unit/synthetic.test.js](../../../tests/unit/synthetic.test.js) | testing | 420 | 0 | 6 | 1 |
