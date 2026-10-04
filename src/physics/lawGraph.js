@@ -167,3 +167,42 @@ export function validateLawGraph() {
   }
   return [...new Set(errors)];
 }
+
+/**
+ * LRA-4 (AC-32): classify feedback cycles beyond hard dependencies.
+ *  - hard: directed dependsOn cycles (findLawCycles)
+ *  - synergy: mutual synergizesWith pairs (A lists B and B lists A)
+ *  - declaredFeedback: laws with an explicit feedback polarity
+ *  - resource: two-law loops where A writes a state field B reads and B writes one A reads
+ *    (kinematic POS/VEL/ACCELERATION excluded)
+ *  - selfLoop: laws that read and write the same stride field (self-reinforcing candidates)
+ * Descriptive only; derived from the ontology.
+ */
+export function classifyLawCycles() {
+  const names = Object.keys(LAW_INDEXES);
+  const rec = (n) => LAW_RELATIONSHIPS[n] || {};
+  const synergy = [];
+  for (const a of names) for (const b of rec(a).synergizesWith || []) {
+    if (a < b && (rec(b).synergizesWith || []).includes(a)) synergy.push([a, b]);
+  }
+  const declaredFeedback = names.filter((n) => rec(n).feedback).map((n) => ({ law: n, polarity: rec(n).feedback }));
+  // Kinematic fields (POS_*, VEL_*) couple almost every force law through
+  // integration, so resource loops are computed over state fields only.
+  const kinematic = (f) => /^(POS|VEL)_[XYZ]$|^(POS|VEL)_X\/Y\/Z$|^ACCELERATION$/.test(f);
+  const reads = (n) => new Set((rec(n).reads || []).filter((f) => !kinematic(f)));
+  const writes = (n) => new Set((rec(n).writes || []).filter((f) => !kinematic(f)));
+  const resource = [];
+  for (let i = 0; i < names.length; i++) {
+    const a = names[i], wa = writes(a), ra = reads(a);
+    if (!wa.size) continue;
+    for (let j = i + 1; j < names.length; j++) {
+      const b = names[j];
+      const ab = [...wa].filter((f) => reads(b).has(f));
+      if (!ab.length) continue;
+      const ba = [...writes(b)].filter((f) => ra.has(f));
+      if (ba.length) resource.push({ laws: [a, b], aToB: ab, bToA: ba });
+    }
+  }
+  const selfLoop = names.filter((n) => [...writes(n)].some((f) => reads(n).has(f)));
+  return { hard: findLawCycles(), synergy, declaredFeedback, resource, selfLoop };
+}

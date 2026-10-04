@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_05.test.js](../../../../tests/audit/batch_05.test.js), [tests/unit/codex.test.js](../../../../tests/unit/codex.test.js)
+- Tests: [tests/audit/batch_05.test.js](../../../../tests/audit/batch_05.test.js), [tests/unit/codex.test.js](../../../../tests/unit/codex.test.js), [tests/unit/lawFeedbackStability.test.js](../../../../tests/unit/lawFeedbackStability.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/chemistry.md](../../../audit/laws/a3/chemistry.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/17_CATALYSIS_LAW.md](../../../audit/laws/a3/stage-1/17_CATALYSIS_LAW.md), [docs/audit/laws/a3/stage-2/17_CATALYSIS_LAW.md](../../../audit/laws/a3/stage-2/17_CATALYSIS_LAW.md), [docs/audit/laws/a3/stage-3/17_CATALYSIS_LAW.md](../../../audit/laws/a3/stage-3/17_CATALYSIS_LAW.md)
 
 ## Interpretation boundary

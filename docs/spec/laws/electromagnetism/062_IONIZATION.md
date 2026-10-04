@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_16.test.js](../../../../tests/audit/batch_16.test.js)
+- Tests: [tests/audit/batch_16.test.js](../../../../tests/audit/batch_16.test.js), [tests/unit/lawFeedbackStability.test.js](../../../../tests/unit/lawFeedbackStability.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/electromagnetism.md](../../../audit/laws/a3/electromagnetism.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/62_IONIZATION.md](../../../audit/laws/a3/stage-1/62_IONIZATION.md), [docs/audit/laws/a3/stage-1/64_PLASMA.md](../../../audit/laws/a3/stage-1/64_PLASMA.md), [docs/audit/laws/a3/stage-2/62_IONIZATION.md](../../../audit/laws/a3/stage-2/62_IONIZATION.md), [docs/audit/laws/a3/stage-2/64_PLASMA.md](../../../audit/laws/a3/stage-2/64_PLASMA.md), [docs/audit/laws/a3/stage-3/62_IONIZATION.md](../../../audit/laws/a3/stage-3/62_IONIZATION.md), [docs/audit/laws/a3/stage-3/64_PLASMA.md](../../../audit/laws/a3/stage-3/64_PLASMA.md)
 
 ## Interpretation boundary

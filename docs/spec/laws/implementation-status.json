@@ -28,6 +28,7 @@
         "tests/unit/codex.test.js",
         "tests/unit/computeEngines.test.js",
         "tests/unit/gravEngineAlias.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/lawImplementedBy.test.js",
@@ -186,6 +187,7 @@
         "tests/unit/codex.test.js",
         "tests/unit/continuity.test.js",
         "tests/unit/fields.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawImplementedBy.test.js",
         "tests/unit/mechanics.test.js",
@@ -231,6 +233,7 @@
         "tests/audit/params_batch_11.test.js",
         "tests/e2e/mechanics-worker.spec.js",
         "tests/unit/interactionSpace.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
@@ -475,6 +478,7 @@
         "src/physics/lawgroups/quantumLaws.js",
         "src/physics/lawgroups/thermoLaws.js",
         "src/physics/laws.js",
+        "src/physics/loopDiagnostics.js",
         "src/physics/mergePhysics.js",
         "src/physics/relationshipCompatibility.js",
         "src/physics/solver.js",
@@ -532,6 +536,7 @@
         "tests/unit/infrastructure.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/lawClock.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawgroupsBiologyChemistry.test.js",
         "tests/unit/lawgroupsEmInfoMeta.test.js",
@@ -583,7 +588,8 @@
       "testFiles": [
         "tests/audit/batch_04.test.js",
         "tests/audit/batch_08.test.js",
-        "tests/audit/params_batch_05.test.js"
+        "tests/audit/params_batch_05.test.js",
+        "tests/unit/lawFeedbackStability.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -665,7 +671,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_05.test.js",
-        "tests/unit/codex.test.js"
+        "tests/unit/codex.test.js",
+        "tests/unit/lawFeedbackStability.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -871,6 +878,7 @@
         "tests/audit/params_batch_04.test.js",
         "tests/audit/params_batch_14.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/multiplexScheduler.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
@@ -1438,6 +1446,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_12.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/multiplex.test.js"
       ],
       "relationshipTypes": [
@@ -1685,6 +1694,7 @@
       "testFiles": [
         "tests/audit/batch_14.test.js",
         "tests/audit/params_batch_13.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/lawsSingleton.test.js"
       ],
       "relationshipTypes": [
@@ -1710,7 +1720,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_15.test.js"
+        "tests/audit/batch_15.test.js",
+        "tests/unit/lawFeedbackStability.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -1854,7 +1865,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_16.test.js"
+        "tests/audit/batch_16.test.js",
+        "tests/unit/lawFeedbackStability.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -1882,7 +1894,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_16.test.js",
-        "tests/unit/lawCategories.test.js"
+        "tests/unit/lawCategories.test.js",
+        "tests/unit/lawFeedbackStability.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -1909,7 +1922,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_17.test.js",
-        "tests/unit/lawCategories.test.js"
+        "tests/unit/lawCategories.test.js",
+        "tests/unit/lawFeedbackStability.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -2247,6 +2261,7 @@
       "testFiles": [
         "tests/audit/batch_20.test.js",
         "tests/unit/lawCategories.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/multiplexScheduler.test.js",
         "tests/unit/synergyCache.test.js"
@@ -2336,6 +2351,7 @@
         "tests/audit/batch_20.test.js",
         "tests/unit/interactionSpace.test.js",
         "tests/unit/lawCategories.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
@@ -2792,6 +2808,7 @@
         "tests/audit/batch_25.test.js",
         "tests/audit/params_batch_13.test.js",
         "tests/audit/params_batch_14.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
@@ -3539,6 +3556,7 @@
         "tests/e2e/runtime-acceptance.spec.js",
         "tests/unit/auditSignoff.test.js",
         "tests/unit/backendArchitecture.test.js",
+        "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/mechanicsArchitecture.test.js",
         "tests/unit/provenance.test.js"
       ],

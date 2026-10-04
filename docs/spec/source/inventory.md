@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `322` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `325` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 41 | 179 | 481 |
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
-| Simulation | 30 | 230 | 369 |
+| Simulation | 31 | 233 | 370 |
 | State | 34 | 288 | 460 |
-| Testing | 175 | 23 | 668 |
+| Testing | 177 | 32 | 687 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -74,7 +74,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | [src/physics/force.js](../../../src/physics/force.js) | simulation | 44 | 2 | 1 | 2 |
 | [src/physics/gpuCompute.js](../../../src/physics/gpuCompute.js) | simulation | 399 | 3 | 0 | 4 |
 | [src/physics/interactionSpace.js](../../../src/physics/interactionSpace.js) | simulation | 132 | 4 | 2 | 16 |
-| [src/physics/lawGraph.js](../../../src/physics/lawGraph.js) | simulation | 170 | 8 | 3 | 4 |
+| [src/physics/lawGraph.js](../../../src/physics/lawGraph.js) | simulation | 209 | 9 | 3 | 4 |
 | [src/physics/lawgroups/biologyLaws.js](../../../src/physics/lawgroups/biologyLaws.js) | simulation | 53 | 1 | 2 | 2 |
 | [src/physics/lawgroups/chemistryLaws.js](../../../src/physics/lawgroups/chemistryLaws.js) | simulation | 88 | 1 | 2 | 1 |
 | [src/physics/lawgroups/emLaws.js](../../../src/physics/lawgroups/emLaws.js) | simulation | 67 | 1 | 2 | 1 |
@@ -86,6 +86,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | [src/physics/lawgroups/quantumLaws.js](../../../src/physics/lawgroups/quantumLaws.js) | simulation | 326 | 1 | 3 | 7 |
 | [src/physics/lawgroups/thermoLaws.js](../../../src/physics/lawgroups/thermoLaws.js) | simulation | 113 | 1 | 3 | 8 |
 | [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2762 | 106 | 8 | 85 |
+| [src/physics/loopDiagnostics.js](../../../src/physics/loopDiagnostics.js) | simulation | 40 | 2 | 1 | 1 |
 | [src/physics/mechanicsDiagnostics.js](../../../src/physics/mechanicsDiagnostics.js) | simulation | 67 | 1 | 3 | 3 |
 | [src/physics/mergePhysics.js](../../../src/physics/mergePhysics.js) | simulation | 344 | 6 | 2 | 8 |
 | [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 399 | 5 | 0 | 0 |
@@ -226,6 +227,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | [tests/fixtures/lawHelpMerged.snapshot.json](../../../tests/fixtures/lawHelpMerged.snapshot.json) | testing | 745 | 0 | 0 | 136 |
 | [tests/helpers/cssSources.js](../../../tests/helpers/cssSources.js) | testing | 137 | 6 | 3 | 0 |
 | [tests/helpers/domStub.js](../../../tests/helpers/domStub.js) | testing | 341 | 5 | 0 | 1 |
+| [tests/helpers/lawWorld.js](../../../tests/helpers/lawWorld.js) | testing | 77 | 9 | 4 | 2 |
 | [tests/run.mjs](../../../tests/run.mjs) | testing | 236 | 0 | 4 | 2 |
 | [tests/unit/a3Reconciliation.test.js](../../../tests/unit/a3Reconciliation.test.js) | testing | 18 | 0 | 3 | 1 |
 | [tests/unit/agencyNarrative.test.js](../../../tests/unit/agencyNarrative.test.js) | testing | 111 | 0 | 5 | 0 |
@@ -276,6 +278,7 @@ The generator scanned `322` files from active repository inputs. Individual modu
 | [tests/unit/launchModal.test.js](../../../tests/unit/launchModal.test.js) | testing | 332 | 0 | 4 | 1 |
 | [tests/unit/lawCategories.test.js](../../../tests/unit/lawCategories.test.js) | testing | 292 | 0 | 6 | 16 |
 | [tests/unit/lawClock.test.js](../../../tests/unit/lawClock.test.js) | testing | 88 | 0 | 9 | 3 |
+| [tests/unit/lawFeedbackStability.test.js](../../../tests/unit/lawFeedbackStability.test.js) | testing | 64 | 0 | 4 | 17 |
 | [tests/unit/lawGating.test.js](../../../tests/unit/lawGating.test.js) | testing | 186 | 0 | 6 | 8 |
 | [tests/unit/lawGraph.test.js](../../../tests/unit/lawGraph.test.js) | testing | 59 | 0 | 4 | 10 |
 | [tests/unit/lawgroupsBiologyChemistry.test.js](../../../tests/unit/lawgroupsBiologyChemistry.test.js) | testing | 166 | 0 | 4 | 1 |
