@@ -58,7 +58,8 @@ export function step(world, lawNames, ticks, { seed = 9, dt = 1 / 60, each } = {
     const prng = lcg(seed);
     for (let t = 0; t < ticks; t++) {
       solve(world.view, world.n, PARTICLE_STRIDE, laws, dna, world.worldSize, dt, prng);
-      drainOffspring();
+      const born = drainOffspring();
+      if (born.length) (world.offspring ||= []).push(...born);
       if (each) each(world, t);
     }
   } finally {

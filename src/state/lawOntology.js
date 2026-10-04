@@ -216,6 +216,13 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
     writes: ['ENERGY', 'DEAD', 'MASS'],
     notes: ['Behavioral evidence lives in audit batches 02/04 and lawGating; viability thresholds are proxy-level.'],
   }),
+  CULTURE: freezeRecord({
+    synergizesWith: ['LEARN', 'SYMBOL'],
+    transforms: ['WITHIN_SPECIES_CONTACT -> DNA_CACHE_CONVERGENCE'],
+    reads: ['SPECIES_ID', 'DNA_CACHE'],
+    writes: ['DNA_CACHE'],
+    notes: ['LRA-7: applyCulture blends every third DNA-cache locus between same-species neighbours (cultural transmission).'],
+  }),
   REPRO: freezeRecord({
     dependsOn: ['LIFE'],
     synergizesWith: ['ENERGY', 'GENOTYPE', 'PHENOTYPE'],
@@ -260,9 +267,9 @@ const DECLARED_LAW_RELATIONSHIPS = Object.freeze({
   // ── Risk-prioritized expansion (remediation §6.1): extreme forces ──
   GRAV: freezeRecord({
     synergizesWith: ['PLANETARY', 'SINGULARITY', 'MASS_INERTIA'],
-    reads: ['POS_X', 'POS_Y', 'POS_Z', 'MASS'],
+    reads: ['POS_X', 'POS_Y', 'POS_Z', 'MASS', 'DNA_CACHE'],
     writes: ['VEL_X', 'VEL_Y', 'VEL_Z'],
-    notes: ['Exact pairwise gravity is the reference kernel for every approximate backend envelope (docs/BACKEND_ENVELOPES.md).'],
+    notes: ['Per-pair DNA modifiers (FORCE / TIDAL / HIDDEN_MASS) are read from the particle DNA cache (LRA-7).', 'Exact pairwise gravity is the reference kernel for every approximate backend envelope (docs/BACKEND_ENVELOPES.md).'],
   }),
   PLANETARY: freezeRecord({
     dependsOn: ['GRAV'],

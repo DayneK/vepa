@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `330` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `332` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -10,8 +10,8 @@ The generator scanned `330` files from active repository inputs. Individual modu
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 32 | 236 | 373 |
-| State | 35 | 291 | 467 |
-| Testing | 180 | 32 | 696 |
+| State | 36 | 294 | 474 |
+| Testing | 181 | 32 | 702 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -114,11 +114,12 @@ The generator scanned `330` files from active repository inputs. Individual modu
 | [src/state/exoticMatter.js](../../../src/state/exoticMatter.js) | state | 332 | 8 | 3 | 3 |
 | [src/state/governance.js](../../../src/state/governance.js) | state | 243 | 2 | 4 | 0 |
 | [src/state/groupRegistry.js](../../../src/state/groupRegistry.js) | state | 416 | 10 | 1 | 6 |
+| [src/state/informationTrace.js](../../../src/state/informationTrace.js) | state | 36 | 3 | 1 | 6 |
 | [src/state/infrastructure.js](../../../src/state/infrastructure.js) | state | 224 | 2 | 3 | 1 |
 | [src/state/launchSettings.js](../../../src/state/launchSettings.js) | state | 181 | 10 | 1 | 2 |
 | [src/state/lawCouplingChains.js](../../../src/state/lawCouplingChains.js) | state | 64 | 2 | 0 | 7 |
 | [src/state/lawImplementations.generated.js](../../../src/state/lawImplementations.generated.js) | state | 1704 | 1 | 0 | 136 |
-| [src/state/lawOntology.js](../../../src/state/lawOntology.js) | state | 372 | 7 | 2 | 57 |
+| [src/state/lawOntology.js](../../../src/state/lawOntology.js) | state | 379 | 7 | 2 | 58 |
 | [src/state/lawState.js](../../../src/state/lawState.js) | state | 223 | 12 | 1 | 0 |
 | [src/state/memoryBuffers.js](../../../src/state/memoryBuffers.js) | state | 102 | 11 | 1 | 1 |
 | [src/state/particleBuffer.js](../../../src/state/particleBuffer.js) | state | 173 | 21 | 1 | 6 |
@@ -229,7 +230,7 @@ The generator scanned `330` files from active repository inputs. Individual modu
 | [tests/fixtures/lawHelpMerged.snapshot.json](../../../tests/fixtures/lawHelpMerged.snapshot.json) | testing | 745 | 0 | 0 | 136 |
 | [tests/helpers/cssSources.js](../../../tests/helpers/cssSources.js) | testing | 137 | 6 | 3 | 0 |
 | [tests/helpers/domStub.js](../../../tests/helpers/domStub.js) | testing | 341 | 5 | 0 | 1 |
-| [tests/helpers/lawWorld.js](../../../tests/helpers/lawWorld.js) | testing | 77 | 9 | 4 | 2 |
+| [tests/helpers/lawWorld.js](../../../tests/helpers/lawWorld.js) | testing | 78 | 9 | 4 | 2 |
 | [tests/run.mjs](../../../tests/run.mjs) | testing | 236 | 0 | 4 | 2 |
 | [tests/unit/a3Reconciliation.test.js](../../../tests/unit/a3Reconciliation.test.js) | testing | 18 | 0 | 3 | 1 |
 | [tests/unit/agencyNarrative.test.js](../../../tests/unit/agencyNarrative.test.js) | testing | 111 | 0 | 5 | 0 |
@@ -275,6 +276,7 @@ The generator scanned `330` files from active repository inputs. Individual modu
 | [tests/unit/helpTierContract.test.js](../../../tests/unit/helpTierContract.test.js) | testing | 30 | 0 | 3 | 0 |
 | [tests/unit/htmlEscaping.test.js](../../../tests/unit/htmlEscaping.test.js) | testing | 113 | 0 | 9 | 0 |
 | [tests/unit/hud.test.js](../../../tests/unit/hud.test.js) | testing | 13 | 0 | 2 | 0 |
+| [tests/unit/informationTrace.test.js](../../../tests/unit/informationTrace.test.js) | testing | 72 | 0 | 3 | 6 |
 | [tests/unit/infrastructure.test.js](../../../tests/unit/infrastructure.test.js) | testing | 201 | 0 | 5 | 1 |
 | [tests/unit/interactionSpace.test.js](../../../tests/unit/interactionSpace.test.js) | testing | 52 | 0 | 3 | 5 |
 | [tests/unit/launchModal.test.js](../../../tests/unit/launchModal.test.js) | testing | 332 | 0 | 4 | 1 |

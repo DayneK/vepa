@@ -28,6 +28,7 @@
         "tests/unit/codex.test.js",
         "tests/unit/computeEngines.test.js",
         "tests/unit/gravEngineAlias.test.js",
+        "tests/unit/informationTrace.test.js",
         "tests/unit/lawCouplingChains.test.js",
         "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/lawGating.test.js",
@@ -399,6 +400,7 @@
         "tests/audit/params_batch_06.test.js",
         "tests/audit/params_batch_14.test.js",
         "tests/audit/params_batch_15.test.js",
+        "tests/unit/informationTrace.test.js",
         "tests/unit/multiplex.test.js",
         "tests/unit/relationshipExplorer.test.js",
         "tests/unit/synergyCache.test.js",
@@ -535,6 +537,7 @@
         "tests/unit/fieldAdvanceOnce.test.js",
         "tests/unit/fields.test.js",
         "tests/unit/groupRegistry.test.js",
+        "tests/unit/informationTrace.test.js",
         "tests/unit/infrastructure.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/lawClock.test.js",
@@ -2002,6 +2005,7 @@
         "tests/audit/params_batch_18.test.js",
         "tests/unit/fields.test.js",
         "tests/unit/groupRegistry.test.js",
+        "tests/unit/informationTrace.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
@@ -2142,6 +2146,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_18.test.js",
+        "tests/unit/informationTrace.test.js",
         "tests/unit/multiplexScheduler.test.js"
       ],
       "relationshipTypes": [
@@ -2328,12 +2333,16 @@
         "tests/audit/batch_20.test.js",
         "tests/unit/civilization.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/informationTrace.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
+        "synergizesWith",
+        "transforms",
         "reads",
+        "writes",
         "implementedBy",
         "notes"
       ],
