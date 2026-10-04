@@ -366,3 +366,6 @@ export function validateLawOntology() {
   }
   return errors;
 }
+
+// LRA-5 (AC-33): coupling chains are part of the ontology surface.
+export { LAW_COUPLING_CHAINS, validateCouplingChains } from './lawCouplingChains.js';

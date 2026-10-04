@@ -28,6 +28,7 @@
         "tests/unit/codex.test.js",
         "tests/unit/computeEngines.test.js",
         "tests/unit/gravEngineAlias.test.js",
+        "tests/unit/lawCouplingChains.test.js",
         "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
@@ -880,6 +881,7 @@
         "tests/audit/params_batch_04.test.js",
         "tests/audit/params_batch_14.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/lawCouplingChains.test.js",
         "tests/unit/lawFeedbackStability.test.js",
         "tests/unit/multiplexScheduler.test.js",
         "tests/unit/tidalBloom.test.js"

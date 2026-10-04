@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `326` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `328` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -10,8 +10,8 @@ The generator scanned `326` files from active repository inputs. Individual modu
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 31 | 233 | 370 |
-| State | 34 | 288 | 460 |
-| Testing | 178 | 32 | 690 |
+| State | 35 | 291 | 467 |
+| Testing | 179 | 32 | 692 |
 | Ui | 27 | 93 | 379 |
 
 ## Module list
@@ -115,8 +115,9 @@ The generator scanned `326` files from active repository inputs. Individual modu
 | [src/state/groupRegistry.js](../../../src/state/groupRegistry.js) | state | 416 | 10 | 1 | 6 |
 | [src/state/infrastructure.js](../../../src/state/infrastructure.js) | state | 224 | 2 | 3 | 1 |
 | [src/state/launchSettings.js](../../../src/state/launchSettings.js) | state | 181 | 10 | 1 | 2 |
+| [src/state/lawCouplingChains.js](../../../src/state/lawCouplingChains.js) | state | 64 | 2 | 0 | 7 |
 | [src/state/lawImplementations.generated.js](../../../src/state/lawImplementations.generated.js) | state | 1704 | 1 | 0 | 136 |
-| [src/state/lawOntology.js](../../../src/state/lawOntology.js) | state | 369 | 6 | 2 | 57 |
+| [src/state/lawOntology.js](../../../src/state/lawOntology.js) | state | 372 | 7 | 2 | 57 |
 | [src/state/lawState.js](../../../src/state/lawState.js) | state | 223 | 12 | 1 | 0 |
 | [src/state/memoryBuffers.js](../../../src/state/memoryBuffers.js) | state | 102 | 11 | 1 | 1 |
 | [src/state/particleBuffer.js](../../../src/state/particleBuffer.js) | state | 173 | 21 | 1 | 6 |
@@ -278,6 +279,7 @@ The generator scanned `326` files from active repository inputs. Individual modu
 | [tests/unit/launchModal.test.js](../../../tests/unit/launchModal.test.js) | testing | 332 | 0 | 4 | 1 |
 | [tests/unit/lawCategories.test.js](../../../tests/unit/lawCategories.test.js) | testing | 292 | 0 | 6 | 16 |
 | [tests/unit/lawClock.test.js](../../../tests/unit/lawClock.test.js) | testing | 88 | 0 | 9 | 3 |
+| [tests/unit/lawCouplingChains.test.js](../../../tests/unit/lawCouplingChains.test.js) | testing | 33 | 0 | 3 | 2 |
 | [tests/unit/lawFeedbackStability.test.js](../../../tests/unit/lawFeedbackStability.test.js) | testing | 64 | 0 | 4 | 17 |
 | [tests/unit/lawGating.test.js](../../../tests/unit/lawGating.test.js) | testing | 186 | 0 | 6 | 8 |
 | [tests/unit/lawGraph.test.js](../../../tests/unit/lawGraph.test.js) | testing | 59 | 0 | 4 | 10 |

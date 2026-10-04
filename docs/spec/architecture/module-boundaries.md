@@ -8,8 +8,8 @@
 | Benchmark | 8 | 6 | 22 | 12 |
 | Repository | 7 | 2 | 2 | 2 |
 | Simulation | 31 | 233 | 83 | 370 |
-| State | 34 | 288 | 60 | 460 |
-| Testing | 178 | 32 | 885 | 690 |
+| State | 35 | 291 | 60 | 467 |
+| Testing | 179 | 32 | 888 | 692 |
 | Ui | 27 | 93 | 67 | 379 |
 
 ## Boundary observations
