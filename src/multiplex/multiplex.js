@@ -706,6 +706,11 @@ function shardFromSnapshot(snap) {
  * normalized (0-1), means are plain averages over living particles, and
  * novelty is a 0-1 normalized mean genome distance vs the source DNA.
  */
+/** 0 for NaN / ±Infinity, else the value (fitness metrics stay finite). */
+function finiteOr0(x) {
+  return Number.isFinite(x) ? x : 0;
+}
+
 export function computeShardMetrics(shard, worldSize = WORLD_SIZE) {
   const out = {
     population: 0,
@@ -736,26 +741,31 @@ export function computeShardMetrics(shard, worldSize = WORLD_SIZE) {
   let mobilitySum = 0;
   let signalSum = 0;
   let bondsSum = 0;
+  // NaN-1 (D-026): a single non-finite particle field (±Infinity slips past
+  // `|| 0`) used to poison every sum, turning the min-max spans into
+  // Infinity and the normalized metrics / ΔSEL / ΔAVG into NaN. Non-finite
+  // fields count as 0 so one broken particle cannot wreck the whole report.
+  const v = shard.view;
   for (let p = 0; p < n; p++) {
     const b = p * PARTICLE_STRIDE;
-    if (shard.view[b + S.DEAD] >= 0.5) continue;
+    if (v[b + S.DEAD] >= 0.5) continue;
     alive++;
-    ageSum += shard.view[b + S.AGE] || 0;
-    energySum += shard.view[b + S.ENERGY] || 0;
-    reservesSum += shard.view[b + S.STORED_ENERGY] || 0;
-    armorSum += shard.view[b + S.ARMOR] || 0;
+    ageSum += finiteOr0(v[b + S.AGE]);
+    energySum += finiteOr0(v[b + S.ENERGY]);
+    reservesSum += finiteOr0(v[b + S.STORED_ENERGY]);
+    armorSum += finiteOr0(v[b + S.ARMOR]);
     mobilitySum += Math.hypot(
-      shard.view[b + S.VEL_X] || 0,
-      shard.view[b + S.VEL_Y] || 0,
-      shard.view[b + S.VEL_Z] || 0,
+      finiteOr0(v[b + S.VEL_X]),
+      finiteOr0(v[b + S.VEL_Y]),
+      finiteOr0(v[b + S.VEL_Z]),
     );
-    signalSum += shard.view[b + S.SIGNAL] || 0;
-    bondsSum += shard.view[b + S.BOND_COUNT] || 0;
-    const sp = shard.view[b + S.SPECIES_ID] | 0;
+    signalSum += finiteOr0(v[b + S.SIGNAL]);
+    bondsSum += finiteOr0(v[b + S.BOND_COUNT]);
+    const sp = v[b + S.SPECIES_ID] | 0;
     speciesCounts.set(sp, (speciesCounts.get(sp) || 0) + 1);
-    const bx = Math.max(0, Math.min(EXPLORATION_BINS - 1, Math.floor(shard.view[b + S.POS_X] / binSize)));
-    const by = Math.max(0, Math.min(EXPLORATION_BINS - 1, Math.floor(shard.view[b + S.POS_Y] / binSize)));
-    const bz = Math.max(0, Math.min(EXPLORATION_BINS - 1, Math.floor(shard.view[b + S.POS_Z] / binSize)));
+    const bx = Math.max(0, Math.min(EXPLORATION_BINS - 1, Math.floor(finiteOr0(v[b + S.POS_X]) / binSize)));
+    const by = Math.max(0, Math.min(EXPLORATION_BINS - 1, Math.floor(finiteOr0(v[b + S.POS_Y]) / binSize)));
+    const bz = Math.max(0, Math.min(EXPLORATION_BINS - 1, Math.floor(finiteOr0(v[b + S.POS_Z]) / binSize)));
     bins[bx * EXPLORATION_BINS * EXPLORATION_BINS + by * EXPLORATION_BINS + bz]++;
   }
   out.population = alive;
@@ -853,7 +863,8 @@ export function getFitnessReport(mx) {
     const span = max - min;
     const mode = modes[key];
     for (const r of raw) {
-      const norm = span === 0 ? 1 : (r.metrics[key] - min) / span;
+      let norm = span === 0 ? 1 : (r.metrics[key] - min) / span;
+      if (!Number.isFinite(norm)) norm = 0; // NaN-1: never leak NaN into fitness
       r.metrics[key] = mode === 'min' ? 1 - norm : norm;
     }
   }
@@ -875,7 +886,7 @@ export function getFitnessReport(mx) {
       const meanOthers = cnt ? others / cnt : r.metrics[key];
       sum += Math.abs(r.metrics[key] - meanOthers);
     }
-    r.rawDelta = sum / BASE_FITNESS_METRICS.length;
+    r.rawDelta = Number.isFinite(sum) ? sum / BASE_FITNESS_METRICS.length : 0;
   }
   {
     let min = Infinity;
@@ -890,7 +901,8 @@ export function getFitnessReport(mx) {
     for (const r of raw) {
       // Zero span means no divergence at all — normalized delta is 0, not 1
       // (unlike the base metrics, where the lone shard IS both min and max).
-      const norm = span === 0 ? 0 : (r.rawDelta - min) / span;
+      let norm = span === 0 ? 0 : (r.rawDelta - min) / span;
+      if (!Number.isFinite(norm)) norm = 0; // NaN-1
       r.metrics.delta = mode === 'min' ? 1 - norm : norm;
     }
   }

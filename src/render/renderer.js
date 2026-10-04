@@ -259,11 +259,15 @@ export function drawParticles(renderer, particleBuffer, particleCount, stride, w
         const z = view[base + STRIDE_INDEXES.POS_Z] || 0;
         const speciesId = view[base + STRIDE_INDEXES.SPECIES_ID];
 
-        // NaN guard — never draw broken coordinates
-        if (x !== x || y !== y) continue;
+        // NaN-1 (D-026): never draw broken coordinates. The old `x !== x`
+        // check caught NaN but let ±Infinity through; the projection then
+        // yields NaN screen coords that also slip past the off-screen cull
+        // (every comparison with NaN is false) and reach createRadialGradient.
+        if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) continue;
 
         // 3D camera projection (pan, zoom, orbit)
         const { sx, sy, sr } = projectPoint(x, y, z, worldSize, width, height);
+        if (!Number.isFinite(sx) || !Number.isFinite(sy) || !Number.isFinite(sr)) continue;
 
         // Off-screen cull (perf overhaul for large populations): skip the
         // phenotype + draw work for particles projected well outside the
@@ -291,7 +295,12 @@ export function drawParticles(renderer, particleBuffer, particleCount, stride, w
         // Clamp to a minimum screen size so particles stay visible even when
         // the whole world is in view (otherwise sub-pixel dots disappear).
         const MIN_PARTICLE_RADIUS_PX = 1.5;
-        const screenR = Math.max(radius * uniformScale * sr, MIN_PARTICLE_RADIUS_PX);
+        // NaN-1: Math.max(NaN, 1.5) is NaN, so a non-finite phenotype radius
+        // (NaN/Infinity mass or DNA cache) falls back to the minimum size.
+        const rawScreenR = radius * uniformScale * sr;
+        const screenR = Number.isFinite(rawScreenR)
+            ? Math.max(rawScreenR, MIN_PARTICLE_RADIUS_PX)
+            : MIN_PARTICLE_RADIUS_PX;
 
         // Skip fully transparent particles
         if (alpha < 0.001) continue;
@@ -303,7 +312,10 @@ export function drawParticles(renderer, particleBuffer, particleCount, stride, w
         // Gravitational collapse: stars render as glowing cores with a halo
         const starMass = view[base + STRIDE_INDEXES.MASS];
         if (starMass > runtimeConfig.starMass) {
-          const glowR = screenR * 2.6 * runtimeConfig.visualScale;
+          const glowRaw = screenR * 2.6 * runtimeConfig.visualScale;
+          // NaN-1: createRadialGradient throws a TypeError on any non-finite
+          // argument; clamp the halo to a finite, non-negative radius.
+          const glowR = Number.isFinite(glowRaw) && glowRaw > 0 ? glowRaw : screenR * 2.6;
           if (eco) {
             // Flat halo — two cheap arcs, no per-star radial gradient allocation.
             // Radial gradients are the dominant Canvas2D cost once accretion

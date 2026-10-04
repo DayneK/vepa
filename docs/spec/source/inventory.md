@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `352` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `354` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
-| Application | 45 | 198 | 483 |
+| Application | 46 | 200 | 483 |
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 2 |
 | Simulation | 33 | 241 | 379 |
 | State | 39 | 317 | 494 |
-| Testing | 192 | 36 | 771 |
+| Testing | 193 | 36 | 772 |
 | Ui | 28 | 99 | 379 |
 
 ## Module list
@@ -64,10 +64,11 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
 | [src/main.js](../../../src/main.js) | application | 1934 | 0 | 52 | 12 |
-| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1751 | 37 | 12 | 7 |
+| [src/multiplex/metricFormat.js](../../../src/multiplex/metricFormat.js) | application | 15 | 2 | 0 | 0 |
+| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1763 | 37 | 12 | 7 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 514 | 7 | 0 | 5 |
 | [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
-| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 992 | 1 | 6 | 2 |
+| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 993 | 1 | 7 | 2 |
 | [src/multiplex/previewLaws.js](../../../src/multiplex/previewLaws.js) | application | 57 | 4 | 2 | 16 |
 | [src/multiplex/shardPool.js](../../../src/multiplex/shardPool.js) | application | 52 | 3 | 0 | 0 |
 | [src/multiplex/shardWorker.js](../../../src/multiplex/shardWorker.js) | application | 8 | 0 | 1 | 0 |
@@ -105,7 +106,7 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
 | [src/react-entry.js](../../../src/react-entry.js) | application | 20 | 0 | 2 | 0 |
 | [src/render/pixiRenderer.js](../../../src/render/pixiRenderer.js) | application | 357 | 5 | 6 | 1 |
-| [src/render/renderer.js](../../../src/render/renderer.js) | application | 455 | 9 | 6 | 2 |
+| [src/render/renderer.js](../../../src/render/renderer.js) | application | 467 | 9 | 6 | 2 |
 | [src/render/spriteSync.js](../../../src/render/spriteSync.js) | application | 160 | 1 | 3 | 4 |
 | [src/render/zeroCopy.js](../../../src/render/zeroCopy.js) | application | 26 | 1 | 0 | 1 |
 | [src/spawn/distribution.js](../../../src/spawn/distribution.js) | simulation | 108 | 4 | 1 | 1 |
@@ -320,6 +321,7 @@ The generator scanned `352` files from active repository inputs. Individual modu
 | [tests/unit/memoryCulture.test.js](../../../tests/unit/memoryCulture.test.js) | testing | 86 | 0 | 2 | 1 |
 | [tests/unit/multiplex.test.js](../../../tests/unit/multiplex.test.js) | testing | 969 | 0 | 9 | 5 |
 | [tests/unit/multiplexIsolation.test.js](../../../tests/unit/multiplexIsolation.test.js) | testing | 111 | 0 | 13 | 3 |
+| [tests/unit/multiplexNaN.test.js](../../../tests/unit/multiplexNaN.test.js) | testing | 115 | 0 | 5 | 1 |
 | [tests/unit/multiplexPenta.test.js](../../../tests/unit/multiplexPenta.test.js) | testing | 91 | 0 | 6 | 1 |
 | [tests/unit/multiplexScale.test.js](../../../tests/unit/multiplexScale.test.js) | testing | 77 | 0 | 6 | 2 |
 | [tests/unit/multiplexScheduler.test.js](../../../tests/unit/multiplexScheduler.test.js) | testing | 109 | 0 | 7 | 11 |

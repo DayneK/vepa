@@ -568,6 +568,7 @@
         "tests/unit/livingWorld.test.js",
         "tests/unit/multiplex.test.js",
         "tests/unit/multiplexIsolation.test.js",
+        "tests/unit/multiplexNaN.test.js",
         "tests/unit/multiplexPenta.test.js",
         "tests/unit/multiplexScale.test.js",
         "tests/unit/multiplexScheduler.test.js",

@@ -35,6 +35,7 @@ import { MAX_PARTICLES } from '../constants.js';
 import { DEFAULT_LIGHT_LAWS, sanitizeLawNames } from './previewLaws.js';
 import { createShardPool, browserSpawn, defaultPoolSize } from './shardPool.js';
 import { loadMultiplexSettings, saveMultiplexSettings, PARTICLES_PER_SIM_MIN, PARTICLES_PER_SIM_MAX } from './multiplexSettings.js';
+import { formatMetric } from './metricFormat.js';
 
 const MODAL_ID = 'chaos-modal';
 const OVERLAY_ID = 'multiplex-overlay';
@@ -844,7 +845,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
     if (chips) {
       chips.innerHTML = report.perShard.map((e) => {
         const sel = e.id === mx.selected ? ' selected' : '';
-        return `<button class="mpx-metric-chip${sel}" data-shard="${e.id}" type="button">S${String(e.id + 1).padStart(2, '0')} ${e.fitness.toFixed(2)}</button>`;
+        return `<button class="mpx-metric-chip${sel}" data-shard="${e.id}" type="button">S${String(e.id + 1).padStart(2, '0')} ${formatMetric(e.fitness)}</button>`;
       }).join('');
       chips.querySelectorAll('.mpx-metric-chip').forEach((c) => {
         c.addEventListener('click', () => selectShard(mx, parseInt(c.dataset.shard, 10)));
@@ -854,11 +855,11 @@ export function createMultiplexController(bus, getSource, applyShard) {
       const sum = summarizeMultiplex(mx);
       const sel = report.perShard.find((e) => e.id === mx.selected);
       const ms = mx.lastTickMs === undefined ? 0 : mx.lastTickMs;
-      const best = mx.bestFitness == null ? '—' : Number(mx.bestFitness).toFixed(2);
+      const best = formatMetric(mx.bestFitness);
       const stag = mx.stagnantGenerations || 0;
       const limit = mx.config.stagnationLimit || 0;
       const stagTxt = limit > 0 ? `${stag}/${limit}` : String(stag);
-      stats.textContent = `ALIVE ${sum.alive} · CAP ${sum.populationCap} · ΔSEL ${sel ? sel.metrics.delta.toFixed(2) : '—'} · ΔAVG ${report.avgDelta.toFixed(2)} · ITER ${mx.iteration} · BEST ${best} · STAG ${stagTxt}${mx.stagnantPaused ? ' · ⏸ CONVERGED' : ''} · MS ${ms.toFixed(2)}`;
+      stats.textContent = `ALIVE ${sum.alive} · CAP ${sum.populationCap} · ΔSEL ${formatMetric(sel && sel.metrics ? sel.metrics.delta : null)} · ΔAVG ${formatMetric(report.avgDelta)} · ITER ${mx.iteration} · BEST ${best} · STAG ${stagTxt}${mx.stagnantPaused ? ' · ⏸ CONVERGED' : ''} · MS ${formatMetric(ms)}`;
     }
     updateHistTab();
   }
@@ -902,7 +903,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
     if (history) {
       history.innerHTML = mx.history.map((entry) => {
         const current = entry.generation === mx.iteration;
-        const best = entry.bestFitness == null ? '—' : Number(entry.bestFitness).toFixed(2);
+        const best = formatMetric(entry.bestFitness);
         return `<div class="mpx-hist-row${current ? ' current' : ''}">
           <span class="mpx-hist-gen">G${entry.generation}</span>
           <span class="mpx-hist-best">BEST ${best}</span>
@@ -932,7 +933,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
     if (gridStat) gridStat.textContent = `${mx.config.cols}×${mx.config.rows} · ${mx.shards.length} SIMS`;
     if (selStat) selStat.textContent = `SELECTED S${String(mx.selected + 1).padStart(2, '0')}`;
     if (iterStat) {
-      const best = mx.bestFitness == null ? '—' : Number(mx.bestFitness).toFixed(2);
+      const best = formatMetric(mx.bestFitness);
       const stag = mx.stagnantGenerations || 0;
       const limit = mx.config.stagnationLimit || 0;
       const stagTxt = limit > 0 ? `${stag}/${limit}` : String(stag);
