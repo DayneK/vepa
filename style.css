@@ -4036,7 +4036,8 @@ input[type='range']:focus-visible::-moz-range-thumb {
 .launch-preset {
   display: grid;
   gap: 4px;
-  padding: 10px 12px;
+  width: 100%;
+  padding: 10px 44px 10px 12px;
   min-height: 44px;
   text-align: left;
   border: 1px solid var(--border);
@@ -4338,13 +4339,15 @@ input[type='range']:focus-visible::-moz-range-thumb {
 }
 .launch-filter-chip.current,
 .launch-tab.current { color: var(--accent-cyan); border-color: var(--accent-cyan); background: rgba(74,232,255,.11); }
-.launch-preset-wrap { display: grid; grid-template-rows: 1fr auto; gap: 4px; min-width: 0; }
+.launch-preset-wrap { position: relative; min-width: 0; }
 .launch-preset-wrap[hidden],
 .launch-check-row[hidden],
 .launch-param-row[hidden] { display: none !important; }
 .launch-preset-objective { color: var(--accent-gold); font-size: 10px; line-height: 1.45; }
-.launch-compare { min-height: 32px; border: 1px solid rgba(255,255,255,.08); border-radius: 3px; background: transparent; color: var(--text-dim); font: inherit; font-size: 9px; letter-spacing: 1px; cursor: pointer; touch-action: manipulation; }
-.launch-compare.current { border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(255,204,74,.08); }
+.launch-compare { position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 30px; height: 30px; min-height: 30px; padding: 0; border: 1px solid rgba(255,255,255,.12); border-radius: 4px; background: rgba(0,0,0,.22); color: var(--text-dim); font: inherit; font-size: 17px; line-height: 1; cursor: pointer; touch-action: manipulation; transition: color .15s ease, border-color .15s ease, background .15s ease; }
+.launch-compare:hover,
+.launch-compare:focus-visible { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+.launch-compare.current { border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(255,204,74,.12); }
 .launch-comparison { margin-top: 8px; }
 .launch-compare-scroll { overflow-x: auto; border: 1px solid rgba(74,232,255,.18); border-radius: 5px; }
 .launch-compare-table { width: 100%; min-width: 500px; border-collapse: collapse; font-size: 10px; line-height: 1.45; }
@@ -4400,7 +4403,8 @@ input[type='range']:focus-visible::-moz-range-thumb {
 .launch-preset-wrap :focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
 @media (pointer: coarse) {
   .launch-filter-chip, .launch-tab, .launch-panel-tools button, .launch-filter button,
-  .launch-seed-row button, .launch-param-reset, .launch-compare { min-height: 44px; }
+  .launch-seed-row button, .launch-param-reset { min-height: 44px; }
+  .launch-compare { width: 44px; height: 44px; min-height: 44px; }
   .launch-check-row { min-height: 48px; }
   .launch-species-card { min-height: 58px; }
 }

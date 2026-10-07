@@ -222,7 +222,12 @@ describe('launch modal', () => {
   it('compares presets in a table and filters the preset catalog by category', async () => {
     const { showLaunchModal } = await load();
     const promise = showLaunchModal({});
-    doc.querySelector('.launch-compare[data-compare-select="STARFALL"]').dispatch('click');
+    const starfallCompare = doc.querySelector('.launch-compare[data-compare-select="STARFALL"]');
+    expect(starfallCompare.querySelector('span').textContent).toBe('⇄');
+    expect(starfallCompare.getAttribute('aria-label')).toContain('Add to comparison');
+    starfallCompare.dispatch('click');
+    expect(starfallCompare.getAttribute('aria-pressed')).toBe('true');
+    expect(starfallCompare.getAttribute('aria-label')).toContain('Remove from comparison');
     doc.querySelector('.launch-compare[data-compare-select="TIDAL_BLOOM"]').dispatch('click');
     expect(doc.querySelector('.launch-compare-table')).toBeTruthy();
     expect(doc.querySelector('.launch-compare-table').textContent).toContain('STARTING POPULATION');
@@ -300,11 +305,16 @@ describe('launch modal', () => {
     expect((await promise).simSpeed).toBe(2.5);
   });
 
-  it('renders the initial population slider through 10,000', async () => {
+  it('renders the population controls within the 10,000-particle engine cap', async () => {
     const { showLaunchModal } = await load();
     const promise = showLaunchModal({});
+    doc.querySelector('[data-act="toggle-advanced"]').dispatch('click');
+    doc.querySelector('.launch-tab[data-tab="parameters"]').dispatch('click');
     const range = doc.querySelector('.launch-range[data-key="initialPop"]');
     expect(LAUNCH_FIELDS.find((field) => field.key === 'initialPop').max).toBe(10000);
+    expect(LAUNCH_FIELDS.find((field) => field.key === 'maxPopulation').max).toBe(10000);
+    expect(doc.querySelector('[data-param="PARTICLE_COUNT"]').getAttribute('max')).toBe('10000');
+    expect(doc.querySelector('[data-param="MAX_POP"]').getAttribute('max')).toBe('10000');
     expect(doc.querySelector('[data-value-for="initialPop"]').textContent).toBe('from preset');
     range.value = String(launchValueToPosition(LAUNCH_FIELDS.find((field) => field.key === 'initialPop'), 10000));
     range.dispatch('input', { target: range });

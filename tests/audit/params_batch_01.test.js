@@ -60,11 +60,11 @@ describe('Batch 01 — WORLD_SIZE / GROUND_HEIGHT / PARTICLE_COUNT / INITIAL_POP
     expect(initialPopulationTarget(cfg({ INITIAL_POP: 5000 }), small)).toBe(100);
   });
 
-  it('INITIAL_POP: applyWorldParam clamps to [0, 100000]', () => {
+  it('INITIAL_POP: applyWorldParam clamps to the 10,000-particle engine cap', () => {
     let s = applyWorldParam(createWorldParams(), 'INITIAL_POP', -5);
     expect(s.INITIAL_POP).toBe(0);
     s = applyWorldParam(s, 'INITIAL_POP', 999999);
-    expect(s.INITIAL_POP).toBe(100000);
+    expect(s.INITIAL_POP).toBe(MAX_PARTICLES);
   });
 
   it('gate: neutral defaults keep a single centre at the world middle', () => {

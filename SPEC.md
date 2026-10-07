@@ -1,7 +1,12 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.3.0 | **Date**: 2026-10-07 | **Base**: VEPA4 integrated intelligence
+**Version**: 9.3.1 | **Date**: 2026-10-07 | **Base**: VEPA4 integrated intelligence
 **Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
+
+## Working-tree Update (v9.3.1 — 2026-10-07)
+
+- Lowers the application particle ceiling to 10,000 and aligns population-control maxima; this reduces capacity allocation but is not a device-independent performance guarantee.
+- Replaces preset comparison text with compact, accessible icon toggles while preserving selection state and three-profile comparison.
 
 ## Release Note (v9.3.0 — 2026-10-07)
 

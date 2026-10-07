@@ -155,7 +155,7 @@ function ensureNeighborBuf(cap) {
 }
 
 // Per-tick scratch buffers, reused across solves to avoid GC pressure in the
-// O(N) / pairwise hot loops (at 100k particles a fresh Float32Array + three
+// O(N) / pairwise hot loops (at high populations a fresh Float32Array + three
 // per-pair force objects every tick adds up to hundreds of MB of churn).
 let _localDt = new Float32Array(0);
 function ensureLocalDt(n) {
@@ -324,8 +324,9 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   // neighbour gather — and therefore total pairwise work — stays ~flat as N
   // grows (dim ≈ ∛(N / 0.5), clamped to the slider range). The density target
   // is ~0.5 particles/cell, which keeps the 27-cell gather sparse at every
-  // population: ~17³ at 2.5k, ~27³ at 10k, ~37³ at 25k, ~59³ at 100k. The
-  // finer grid reduces pairwise work at larger populations, with diminishing
+  // population: ~17³ at 2.5k and ~27³ at the current 10k ceiling (higher
+  // values were representative of historical pre-cap benchmarks). The finer
+  // grid reduces pairwise work at larger populations, with diminishing
   // returns once grid rebuild cost dominates. The classic 12³ floor remains
   // the minimum, so tiny populations stay bounded.
   const configuredInteractions = Math.max(8, Math.round(WP.MAX_INTERACTIONS ?? DEFAULT_MAX_INTERACTIONS));

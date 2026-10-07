@@ -34,7 +34,7 @@ export const EXACT_KEY_HELP = {
   PARTICLE_COUNT: {
     what: 'Hard allocation cap for the particle pool.',
     effect: 'The SharedArrayBuffer is sized from this; also the hard ceiling used by spawning.',
-    tuning: 'Larger pools cost memory (100 floats × count) but never physics time — only alive particles are simulated. Leave headroom for reproduction.',
+    tuning: 'Larger pools cost memory (100 floats × count). The current hard cap is 10,000 particles; only alive particles are simulated.',
     units: 'particles.',
   },
   INITIAL_POP: {
@@ -46,7 +46,7 @@ export const EXACT_KEY_HELP = {
   MAX_POP: {
     what: 'Soft population cap enforced against spawning and reproduction.',
     effect: 'Births are refused once the alive count reaches this.',
-    tuning: 'Pair with PERFORMANCE knobs — physics cost scales with the alive count, not the pool size.',
+    tuning: 'Keep the ceiling at or below the 10,000-particle engine cap. Pair it with PERFORMANCE knobs — physics cost scales with the alive count, not the pool size.',
     units: 'particles.',
   },
   SHAPE: {

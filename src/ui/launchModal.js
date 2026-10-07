@@ -78,13 +78,13 @@ function presetCardHtml(entry, selected, compared) {
       <span class="launch-preset-blurb">${esc(entry.blurb)}</span>
       <span class="launch-preset-objective">${esc(entry.objective || 'Your saved world, ready to begin.')}</span>
     </button>
-    <button type="button" class="launch-compare${compared ? ' current' : ''}" data-compare-select="${esc(entry.id)}" aria-pressed="${compared ? 'true' : 'false'}">${compared ? 'IN COMPARISON' : 'COMPARE'}</button>
+    <button type="button" class="launch-compare${compared ? ' current' : ''}" data-compare-select="${esc(entry.id)}" aria-label="${compared ? 'Remove from' : 'Add to'} comparison: ${esc(entry.name)}" title="${compared ? 'Remove from' : 'Add to'} comparison" aria-pressed="${compared ? 'true' : 'false'}"><span aria-hidden="true">⇄</span></button>
   </div>`;
 }
 
 function comparisonHtml(presets, ids) {
   const entries = ids.map((id) => presets.find((entry) => entry.id === id)).filter(Boolean);
-  if (!entries.length) return '<p class="launch-note">Choose up to three worlds with COMPARE to see their starting profiles side by side.</p>';
+  if (!entries.length) return '<p class="launch-note">Choose up to three worlds with the ⇄ button to see their starting profiles side by side.</p>';
   const rows = [
     ['STYLE', (entry) => entry.playstyle || 'Custom'],
     ['STARTING POPULATION', (entry) => formatValue(entry.preset.worldParams?.INITIAL_POP ?? entry.preset.worldParams?.initialPopulation ?? 0)],
@@ -248,9 +248,12 @@ function renderComparison(overlay, presets, comparedIds) {
 function updateComparisonButtons(overlay, presets, comparedIds) {
   for (const button of overlay.querySelectorAll('[data-compare-select]')) {
     const selected = comparedIds.includes(button.dataset.compareSelect);
+    const preset = presets.find((entry) => entry.id === button.dataset.compareSelect);
+    const action = selected ? 'Remove from' : 'Add to';
     button.classList.toggle('current', selected);
     button.setAttribute('aria-pressed', selected ? 'true' : 'false');
-    button.textContent = selected ? 'IN COMPARISON' : 'COMPARE';
+    button.setAttribute('aria-label', `${action} comparison: ${preset?.name || 'world'}`);
+    button.setAttribute('title', `${action} comparison`);
   }
 }
 

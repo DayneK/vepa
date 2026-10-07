@@ -1,10 +1,17 @@
 # Implementation Plan: VEPA4 — Integrated Intelligence
 
-**Date**: 2026-10-07 | **Status**: v9.3.0 release slice delivered; full second-pass UI plan remains incomplete | **Spec**: `SPEC.md`
+**Date**: 2026-10-07 | **Status**: v9.3.0 deployed; v9.3.1 population/UI task is an uncommitted working-tree update | **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
-> (current `9.3.0`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
+> (current `9.3.1`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
 > Conventional Commits 1.0.0 — see `AGENTS.md` §10.4.
+
+## Current task — population ceiling and launch comparison controls (2026-10-07)
+
+- Lowered the live application particle ceiling from 100,000 to 10,000, aligned WORLD and launch population controls, and retained benchmark reports as historical measurements.
+- Replaced each preset card's COMPARE label with a compact accessible ⇄ toggle; the comparison still supports up to three worlds.
+- The 20,000-point per-species spawn sampling grid remains unchanged: it controls initial spatial-distribution granularity, not particle count. The 100,000→10,000 CPU benchmark figures below are historical measurements, not current capacity claims.
+- The cap lowers preallocated particle-buffer capacity, but is not a measured frame-time guarantee; active solver work still depends on alive particles, laws and device.
 
 ## Milestone note (v9.3.0 — 2026-10-07)
 
@@ -178,10 +185,12 @@ npx vite build                                        # clean bundle
   3 gravity wells and 4 clustered spawn centres — kept out of
   `WORLD_PARAM_DEFS` defaults so the audit suite's neutral baseline is
   untouched.
-- **Population cap 2,500 → 100,000:** `MAX_PARTICLES` raised; WORLD-panel
-  caps follow (PARTICLE COUNT / MAX POP 100k, INITIAL POP 50k, NEIGHBOR
-  BUFFER 32,768); the renderer culls off-screen particles (perf overhaul).
-  Benchmark scaling curve regenerated to 100k (`/bench-report/`). See
+- **Historical milestone: population cap 2,500 → 100,000:** `MAX_PARTICLES`
+  was raised; WORLD-panel caps followed (PARTICLE COUNT / MAX POP 100k,
+  INITIAL POP 50k, NEIGHBOR BUFFER 32,768); the renderer culled off-screen
+  particles (perf overhaul). Benchmark scaling curve regenerated to 100k
+  (`/bench-report/`). The current application cap was lowered to 10,000 in the
+  v9.3.1 working-tree update; historical measurements remain unchanged. See
   `CHANGELOG.md` [8.15.0].
 
 ## Milestone note (v8.14.1 — 2026-08-19)

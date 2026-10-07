@@ -1,5 +1,13 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.34] - 2026-10-07 → 9.3.1
+
+**Working-tree update (not released or deployed).**
+
+- Reduced the active particle-pool ceiling and world/launch population caps from 100,000 to 10,000; adjusted the renderer benchmark workload accordingly while preserving previously recorded benchmark results.
+- Replaced preset-card COMPARE text with compact, stateful ⇄ icon buttons that retain accessible labels and comparison behavior.
+- Lower preallocated capacity reduces buffer demand; it does not establish a device-independent frame-rate guarantee.
+
 ## [4.9.33] - 2026-10-07 → 9.3.0
 
 **Release scope:** all current workspace changes, including the second-pass UI implementation and remaining documented gaps, the launch designer with initial population up to 10,000, corrected GROUND_HEIGHT help, regression coverage, and the parameter/law atlas at `docs/systems/parameter-law-atlas.html`.

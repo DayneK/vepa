@@ -11,7 +11,7 @@
  */
 
 import { PRIME_DEFAULT, TIDAL_BLOOM } from './defaultPresets.js';
-import { LAW_INDEXES } from '../constants.js';
+import { LAW_INDEXES, MAX_PARTICLES } from '../constants.js';
 import { WORLD_PARAM_DEFS } from './worldParams.js';
 
 /** Where the last launch choice is kept. */
@@ -254,16 +254,16 @@ export const LAUNCH_FIELDS = Object.freeze([
     label: 'INITIAL POPULATION',
     kind: 'range',
     min: 100,
-    max: 10000,
+    max: MAX_PARTICLES,
     step: 100,
     worldParamKey: 'INITIAL_POP',
-    marks: [100, 250, 500, 1000, 2500, 5000, 7500, 10000],
-    help: 'How many particles exist at t=0. You can start with up to 10,000; the engine hard cap still applies, and larger starts may run slowly depending on device, active laws, and world settings.',
+    marks: [100, 250, 500, 1000, 2500, 5000, 7500, MAX_PARTICLES],
+    help: 'How many particles exist at t=0. The engine hard cap is 10,000; starts near that ceiling may run slowly depending on device, active laws, and world settings.',
   },
   {
-    key: 'maxPopulation', label: 'POPULATION CEILING', kind: 'range', min: 1000, max: 20000, step: 100,
-    worldParamKey: 'MAX_POP', marks: [1000, 2000, 4000, 8000, 12000, 20000],
-    help: 'Soft ceiling for future population growth. The hard engine limit still applies; choose a lower cap for a lighter, more readable simulation.',
+    key: 'maxPopulation', label: 'POPULATION CEILING', kind: 'range', min: 1000, max: MAX_PARTICLES, step: 100,
+    worldParamKey: 'MAX_POP', marks: [1000, 2000, 4000, 8000, MAX_PARTICLES],
+    help: 'Soft ceiling for future population growth, up to the 10,000-particle engine limit; choose a lower cap for a lighter, more readable simulation.',
   },
   {
     key: 'gravity', label: 'GRAVITY', kind: 'range', min: 0.1, max: 20, step: 0.1,

@@ -358,7 +358,7 @@ function metaOf(state) {
     speciesCount: state.speciesCount,
     // Payload size, so the list can say how heavy a world is before you load
     // it. Computed from the data actually written, not guessed from particle
-    // count — a 100k world and a 200-particle world differ by three orders of
+    // count — a 10k world and a 200-particle world differ by orders of
     // magnitude.
     bytes: state.bytes !== undefined
       ? state.bytes

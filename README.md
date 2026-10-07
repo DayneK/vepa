@@ -5,7 +5,7 @@
 ## Versioning & Commits
 
 - **Product:** **VEPA4**; versions use **`major.minor.build`** (npm-semver-native) —
-  current: **9.3.0** (legacy label `4.9.33`). Retroactive mapping of the v4 line:
+  current: **9.3.1** (legacy label `4.9.34`). Retroactive mapping of the v4 line:
   old `4.M.N` → `M.N.0`; see `CHANGELOG.md` and `AGENTS.md` §10.4.
 - **Commits:** [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
   — `<type>(<scope>): <description>`, release commits `chore(release): v7.0.0`,
@@ -103,7 +103,7 @@ The original v4 features remain part of the product, while the later v8/v9 addit
   species over a 2000³ torus with world-size-scaled gravity; the actual boot
   population depends on the configured species count. `PARTICLE_STRIDE = 100`
   means 100 floats per particle, not 100 particles; the current capacity is
-  `MAX_PARTICLES = 100000` and the law registry contains 136 entries.
+  `MAX_PARTICLES = 10000` and the law registry contains 136 entries.
 - **WebGPU compute (opt-in)** — when `computeEngine = 'gpu'` and the browser
   grants a WebGPU device, the worker sends the spatial-grid neighbor pairs to a
   WGSL gravity pre-pass, while the CPU retains exact CONTACT/COLL response and continues all DNA-dependent,
@@ -170,7 +170,7 @@ The original v4 features remain part of the product, while the later v8/v9 addit
   accreting, Hawking-emitting **black holes**; past SUPERNOVA MASS they can
   **detonate** with a radial shockwave and bounded exotic heavy-element seeding.
   The controls live under SETUP > WORLD > MATTER > STELLAR. The source supports
-  a rich configurable substrate and the population cap is **100,000 particles**.
+  a rich configurable substrate and the current population cap is **10,000 particles**; historical benchmark reports retain their original 100,000-particle results.
 - **Quantum Macroscale (v8.14)** — particles go non-classical (build 3,
   **closing** the L·M·N physics frontier): slow, isolated particles hold a
   deterministic second position state that collapses to one branch on the
