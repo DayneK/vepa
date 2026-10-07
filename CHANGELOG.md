@@ -8,7 +8,9 @@
 - Implemented the current partial second-pass UI work in LOGS, ECO, LAWS, SAVES and world snapshot behavior, with focused regression tests and an adversarial findings ledger. This release does not claim the entire proposed overhaul or browser verification is complete.
 - Added a code-derived parameter/law atlas and corrected GROUND_HEIGHT documentation to match spawn-time-only behavior.
 - **Verification:** `npm run syntax-check`, `npm run build`, `npm run report:ui:check`, and 151 focused regressions passed. All 88 unit files (1,081 tests) and all 50 audit files (458 tests) pass when run separately/serially. Combined Vitest invocation terminates with Tinypool `ERR_IPC_CHANNEL_CLOSED`; `repository:check` is blocked by pre-existing generated-spec drift (13 generated paths, including mechanics specs and inventories). The untracked WRAP spec was preserved; no generated spec tree was overwritten. Real-browser verification was unavailable; see `docs/systems/ui-overhaul-plan.md`.
-- Release commit: pending. Tag: pending. Push: pending. Production deployment: pending verification.
+- **Release delivery:** payload commit [`daae7c0`](https://github.com/DayneK/vepa/commit/daae7c093d1865758ca3c58611b1cfec1f738377); tag `v9.3.0` published; pushed to `origin/main`.
+- **Deployed:** `https://v5.freebuff.app/` — Freebuff reports `active`, 118 files, no warnings, and zero unresolved build errors.
+- **Atlas:** [Parameter & Law Atlas](https://github.com/DayneK/vepa/blob/main/docs/systems/parameter-law-atlas.html).
 - The full second-pass UI acceptance plan remains incomplete; this release does not claim otherwise.
 
 ## [4.9.32] - 2026-10-01 → 9.2.0
