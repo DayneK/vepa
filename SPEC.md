@@ -1,7 +1,12 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.2.0 | **Date**: 2026-10-01 | **Base**: VEPA4 integrated intelligence
+**Version**: 9.3.0 | **Date**: 2026-10-07 | **Base**: VEPA4 integrated intelligence
 **Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
+
+## Release Note (v9.3.0 — 2026-10-07)
+
+- Adds the parameter/law atlas (`docs/systems/parameter-law-atlas.html`) and a launch designer that supports a 10,000 initial-population target while warning that runtime depends on device and configuration.
+- Records the partial second-pass UI implementation and its outstanding acceptance gaps; it does not assert full-overhaul completion or browser verification.
 
 ## Problem Statement
 
@@ -14,7 +19,7 @@ The repository includes a deterministic, dependency-free specification generator
 ## Development Standards (2026-08-10)
 
 - **Product & versioning:** the product is **VEPA4**; versions use
-  **`major.minor.build`** (npm-semver-native, current `9.2.0`). The v4 line is
+  **`major.minor.build`** (npm-semver-native, current `9.3.0`). The v4 line is
   retroactively mapped old `4.M.N` → `M.N.0` (generation `4` moved into the
   product name). Changelog headers carry both labels
   (`## [4.6.28] - date → 6.28.0`); the full rule lives in `AGENTS.md` §10.4.
@@ -129,7 +134,7 @@ Run before declaring any change complete:
 
 | Gate | Command | Contract |
 |---|---|---|
-| Tests | `npm test` | 109 files / 951 tests, all green |
+| Tests | `npm test` | Current serial verification: 88 unit files / 1,081 tests and 50 audit files / 458 tests pass separately; combined Vitest worker invocation currently ends with `ERR_IPC_CHANNEL_CLOSED` |
 | Syntax | `npm run syntax-check` | `node --check` over every `src/**/*.js` |
 | Spec drift | `npm run spec:check` | generated `docs/spec/` matches source byte-for-byte |
 | Repository | `npm run repository:check` | `spec:check` + law/provenance/signoff manifests |

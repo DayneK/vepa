@@ -1,10 +1,17 @@
 # Implementation Plan: VEPA4 — Integrated Intelligence
 
-**Date**: 2026-10-01 | **Status**: Complete | **Spec**: `SPEC.md`
+**Date**: 2026-10-07 | **Status**: v9.3.0 release slice delivered; full second-pass UI plan remains incomplete | **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
-> (current `9.2.0`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
+> (current `9.3.0`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
 > Conventional Commits 1.0.0 — see `AGENTS.md` §10.4.
+
+## Milestone note (v9.3.0 — 2026-10-07)
+
+- Added expanded launch design controls and raised the declared initial population maximum to 10,000; this is a selectable start target, not a performance promise.
+- Added a source-grounded parameter/law atlas and corrected spawn-only GROUND_HEIGHT help.
+- Delivered the current partial second-pass UI work with regression coverage, while documenting remaining plan gaps and lack of real-browser verification in `docs/systems/ui-overhaul-plan.md`.
+- Verification: syntax, build, UI report check, 88 unit files / 1,081 tests, and 50 audit files / 458 tests pass; combined Vitest run ends in a Tinypool IPC channel error, and `spec:check` detects generated-spec drift. See the top of `CHANGELOG.md` for full details.
 
 ## Milestone note (v9.2.0 — 2026-10-01)
 

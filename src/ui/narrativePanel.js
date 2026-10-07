@@ -20,7 +20,11 @@
 import { escapeHtml } from './html.js';
 import { createLogQueue } from '../core/logQueue.js';
 
-const MAX_ENTRIES = 100;
+const MAX_ENTRIES = 1000;
+const LOG_STORAGE_KEY = 'vepa4-narrative-history';
+const DISPLAY_STORAGE_KEY = 'vepa4-narrative-display';
+const FOLLOW_STORAGE_KEY = 'vepa4-narrative-follow';
+let nextEntryId = 1;
 
 const VOICE_COLORS = {
   Stabilizer: 'var(--accent-blue)',
@@ -39,11 +43,24 @@ const PIN_THRESHOLD_PX = 24;
 
 let container = null;
 let chipsEl = null;
+let typeChipsEl = null;
+let searchEl = null;
 let pinEl = null;
+let resumeEl = null;
 let entries = [];
 let activeVoice = 'ALL';
+let activeType = 'ALL';
 let follow = true;
+let newItems = 0;
+let clearedThrough = 0;
 let queue = null;
+let unsubscribeBatch = null;
+let unsubscribeScroll = null;
+let unsubscribeFilterToggle = null;
+let unsubscribeClear = null;
+let unsubscribePin = null;
+let unsubscribeResume = null;
+let unsubscribeSearch = null;
 
 /**
  * The category an entry belongs to.
@@ -69,9 +86,35 @@ function scrollToNewest() {
   if (container) container.scrollTop = 0;
 }
 
+function eventCategory(entry) {
+  return entry.eventType || entry.type || (entry.voice && entry.voice !== 'System' ? 'narrative' : 'system');
+}
+
+function loadEntries() {
+  try {
+    const saved = JSON.parse(globalThis.localStorage?.getItem(LOG_STORAGE_KEY) || '[]');
+    if (!Array.isArray(saved)) return [];
+    const valid = saved.filter((entry) => entry && typeof entry.text === 'string').slice(-MAX_ENTRIES);
+    nextEntryId = valid.reduce((next, entry) => Math.max(next, (entry.id || 0) + 1), 1);
+    return valid.map((entry) => ({ ...entry, id: entry.id || nextEntryId++ }));
+  } catch { return []; }
+}
+
+function persistEntries() {
+  try { globalThis.localStorage?.setItem(LOG_STORAGE_KEY, JSON.stringify(entries)); } catch { /* Storage can be unavailable or full. */ }
+}
+
+function persistViewState() {
+  try {
+    globalThis.localStorage?.setItem(DISPLAY_STORAGE_KEY, String(clearedThrough));
+    globalThis.localStorage?.setItem(FOLLOW_STORAGE_KEY, follow ? '1' : '0');
+  } catch { /* Storage can be unavailable or full. */ }
+}
+
 function renderChips() {
   if (!chipsEl) return;
-  const counts = categoryCounts(entries);
+  const visibleHistory = entries.filter((entry) => entry.id > clearedThrough || (searchEl && searchEl.value.trim()));
+  const counts = categoryCounts(visibleHistory);
   const chips = ['ALL', ...VOICES];
   chipsEl.innerHTML = chips.map((voice) => {
     const on = voice === activeVoice;
@@ -86,11 +129,30 @@ function renderChips() {
       render();
     });
   }
+  if (typeChipsEl) {
+    const types = [...new Set(visibleHistory.map(eventCategory))].sort();
+    const options = ['ALL', ...types];
+    typeChipsEl.innerHTML = options.map((type) => {
+      const active = type === activeType;
+      const count = type === 'ALL' ? visibleHistory.length : visibleHistory.filter((entry) => eventCategory(entry) === type).length;
+      return `<button class="narrative-type-chip${active ? ' active' : ''}" data-type="${escapeHtml(type)}" aria-pressed="${active}">${escapeHtml(type.toUpperCase())} ${count}</button>`;
+    }).join('');
+    for (const btn of typeChipsEl.querySelectorAll('.narrative-type-chip')) {
+      btn.addEventListener('click', () => { activeType = btn.dataset.type; render(); });
+    }
+  }
 }
 
 function render() {
   if (!container) return;
-  const visible = entries.filter((e) => activeVoice === 'ALL' || entryCategory(e) === activeVoice);
+  const query = searchEl ? searchEl.value.trim().toLocaleLowerCase() : '';
+  const visible = entries.filter((entry) => {
+    const retainedByClear = entry.id > clearedThrough || !!query;
+    return retainedByClear
+      && (activeVoice === 'ALL' || entryCategory(entry) === activeVoice)
+      && (activeType === 'ALL' || eventCategory(entry) === activeType)
+      && (!query || `${entry.voice || 'System'} ${eventCategory(entry)} ${entry.text}`.toLocaleLowerCase().includes(query));
+  }).slice().reverse();
   container.innerHTML = visible.map((entry) => {
     const voice = entry.voice || 'System';
     const color = VOICE_COLORS[voice] || DEFAULT_VOICE_COLOR;
@@ -107,9 +169,11 @@ function render() {
   if (follow) scrollToNewest();
   renderChips();
   if (pinEl) {
-    pinEl.textContent = follow ? 'FOLLOWING' : 'PAUSED';
+    pinEl.textContent = follow ? 'FOLLOWING' : (newItems ? `HOLD · ${newItems} NEW` : 'HOLD');
+    pinEl.setAttribute('aria-pressed', follow ? 'true' : 'false');
     pinEl.classList.toggle('paused', !follow);
   }
+  if (resumeEl) resumeEl.hidden = follow || newItems === 0;
 }
 
 /**
@@ -119,8 +183,10 @@ function render() {
  */
 export function pushEntries(batch) {
   if (!Array.isArray(batch) || !batch.length) return;
-  entries = entries.concat(batch);
-  if (entries.length > MAX_ENTRIES) entries = entries.slice(entries.length - MAX_ENTRIES);
+  const additions = batch.map((entry) => ({ ...entry, id: entry.id || nextEntryId++ }));
+  entries = entries.concat(additions).slice(-MAX_ENTRIES);
+  if (!follow) newItems += additions.length;
+  persistEntries();
   render();
 }
 
@@ -133,43 +199,130 @@ export function createNarrativePanel(bus) {
   const panel = document.getElementById('narrative-panel');
   if (!panel) return null;
 
+  queue?.stop();
+  unsubscribeBatch?.();
+  unsubscribeScroll?.();
+  unsubscribeFilterToggle?.();
+  unsubscribeClear?.();
+  unsubscribePin?.();
+  unsubscribeResume?.();
+  unsubscribeSearch?.();
+  queue = null;
+  unsubscribeBatch = null;
+  unsubscribeScroll = null;
+
   panel.innerHTML = `
     <div class="narrative-header">
       <span class="narrative-title">Narrative Log</span>
-      <span id="narrative-pin" class="narrative-pin">FOLLOWING</span>
-      <button id="narrative-clear-btn" class="narrative-clear-btn" title="Clear log">✕</button>
+      <div class="narrative-actions">
+        <button id="narrative-pin" class="narrative-pin" type="button" aria-pressed="true">FOLLOWING</button>
+        <button id="narrative-resume" class="narrative-resume" type="button" hidden>RESUME</button>
+        <button id="narrative-clear-btn" class="narrative-clear-btn" title="Clear the current view; history remains searchable">CLEAR VIEW</button>
+      </div>
     </div>
-    <div id="narrative-chips" class="narrative-chips"></div>
+    <div class="narrative-controls">
+      <label for="narrative-search">SEARCH</label>
+      <input id="narrative-search" type="search" placeholder="Search retained history" autocomplete="off">
+      <button id="narrative-filter-toggle" type="button" aria-expanded="false">FILTER</button>
+    </div>
+    <div id="narrative-filter-panel" class="narrative-filter-panel" hidden>
+      <div id="narrative-chips" class="narrative-chips" aria-label="Filter by voice"></div>
+      <div id="narrative-type-chips" class="narrative-chips" aria-label="Filter by event type"></div>
+    </div>
     <div id="narrative-scroll" class="narrative-scroll"></div>
   `;
 
   container = document.getElementById('narrative-scroll');
   chipsEl = document.getElementById('narrative-chips');
+  typeChipsEl = document.getElementById('narrative-type-chips');
+  searchEl = document.getElementById('narrative-search');
   pinEl = document.getElementById('narrative-pin');
-  entries = [];
+  resumeEl = document.getElementById('narrative-resume');
+  entries = loadEntries();
   activeVoice = 'ALL';
-  follow = true;
+  activeType = 'ALL';
+  try {
+    clearedThrough = Number(globalThis.localStorage?.getItem(DISPLAY_STORAGE_KEY)) || 0;
+    follow = globalThis.localStorage?.getItem(FOLLOW_STORAGE_KEY) !== '0';
+  } catch { clearedThrough = 0; follow = true; }
+  newItems = 0;
 
-  document.getElementById('narrative-clear-btn')?.addEventListener('click', () => {
-    entries = [];
-    activeVoice = 'ALL';
-    render();
-  });
+  const filterToggle = document.getElementById('narrative-filter-toggle');
+  const clearButton = document.getElementById('narrative-clear-btn');
+  unsubscribeSearch = null;
+  if (searchEl) {
+    const onSearch = () => render();
+    searchEl.addEventListener('input', onSearch);
+    unsubscribeSearch = () => searchEl?.removeEventListener('input', onSearch);
+  }
+  unsubscribeFilterToggle = null;
+  if (filterToggle) {
+    const onFilterToggle = (event) => {
+      const button = event.currentTarget;
+      const panelEl = document.getElementById('narrative-filter-panel');
+      const expanded = button.getAttribute('aria-expanded') !== 'true';
+      button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      panelEl.hidden = !expanded;
+    };
+    filterToggle.addEventListener('click', onFilterToggle);
+    unsubscribeFilterToggle = () => filterToggle.removeEventListener('click', onFilterToggle);
+  }
+  unsubscribeClear = null;
+  if (clearButton) {
+    const onClear = () => {
+      clearedThrough = nextEntryId - 1;
+      activeVoice = 'ALL';
+      activeType = 'ALL';
+      if (searchEl) searchEl.value = '';
+      persistViewState();
+      render();
+    };
+    clearButton.addEventListener('click', onClear);
+    unsubscribeClear = () => clearButton.removeEventListener('click', onClear);
+  }
+  unsubscribePin = null;
+  if (pinEl) {
+    const onPin = () => {
+      follow = !follow;
+      if (follow) { newItems = 0; scrollToNewest(); }
+      persistViewState();
+      render();
+    };
+    pinEl.addEventListener('click', onPin);
+    unsubscribePin = () => pinEl.removeEventListener('click', onPin);
+  }
+  unsubscribeResume = null;
+  if (resumeEl) {
+    const onResume = () => {
+      follow = true;
+      newItems = 0;
+      scrollToNewest();
+      persistViewState();
+      render();
+    };
+    resumeEl.addEventListener('click', onResume);
+    unsubscribeResume = () => resumeEl.removeEventListener('click', onResume);
+  }
 
   // Scrolling away from the newest entry stops the panel dragging you back.
-  container.addEventListener('scroll', () => {
-    follow = container.scrollTop <= PIN_THRESHOLD_PX;
-    if (pinEl) {
-      pinEl.textContent = follow ? 'FOLLOWING' : 'PAUSED';
-      pinEl.classList.toggle('paused', !follow);
+  const onScroll = () => {
+    const nowFollowing = container.scrollTop <= PIN_THRESHOLD_PX;
+    if (nowFollowing !== follow) {
+      follow = nowFollowing;
+      if (follow) newItems = 0;
+      persistViewState();
+      render();
     }
-  });
+  };
+  container.addEventListener('scroll', onScroll);
+  unsubscribeScroll = () => container?.removeEventListener('scroll', onScroll);
 
   // The queue is the only producer of `narrative:batch`, and this panel is its
   // only consumer, so both live here rather than in main.js's wiring.
-  queue = createLogQueue(bus);
-  bus.on('narrative:batch', pushEntries);
+  const panelQueue = createLogQueue(bus);
+  queue = panelQueue;
+  unsubscribeBatch = bus.on('narrative:batch', pushEntries);
 
-  renderChips();
-  return { flush: () => queue && queue.flush(), pending: () => queue && queue.pending() };
+  render();
+  return { flush: () => panelQueue.flush(), pending: () => panelQueue.pending() };
 }

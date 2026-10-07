@@ -68,8 +68,8 @@ export function createLogQueue(bus, opts = {}) {
   }
 
   // The channels the LOGS panel used to render one node at a time.
-  bus.on('narrative:entry', push);
-  bus.on('narrative:system', ({ text, timestamp } = {}) => {
+  const unsubscribeEntry = bus.on('narrative:entry', push);
+  const unsubscribeSystem = bus.on('narrative:system', ({ text, timestamp } = {}) => {
     push({ voice: 'System', text: text || '', timestamp: timestamp || Date.now() });
   });
 
@@ -81,6 +81,8 @@ export function createLogQueue(bus, opts = {}) {
         clearTimeout(timer);
         timer = null;
       }
+      unsubscribeEntry();
+      unsubscribeSystem();
       pending = [];
     },
   };

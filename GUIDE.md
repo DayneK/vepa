@@ -206,6 +206,12 @@ When the `REPRO` law is active, species can propagate through three distinct cha
 
 ## 3. Keeping a Large Dish Responsive
 
+The launch designer accepts an initial population up to 10,000. Treat that as a
+user-selected starting count, not a real-time guarantee: active law families,
+world density, device, renderer and compute route all affect throughput. The
+[Parameter & Law Atlas](docs/systems/parameter-law-atlas.html) summarizes the
+current solver trade-offs and calls out which fast paths alter fidelity.
+
 At larger populations, the deterministic solver uses a serialized Web Worker
 when the host provides cross-origin isolation and SharedArrayBuffer. The worker
 owns the spatial-grid and pairwise physics tick; the main thread continues to
@@ -215,7 +221,7 @@ next worker tick. Hosts without SharedArrayBuffer use the safe synchronous
 fallback, so reducing `MAX INTERACTIONS` or `NEIGHBOR BUFFER` in
 SETUP → WORLD → PERFORMANCE may be necessary.
 
-Use `/bench-report/` to compare the default profile with all 128 laws across
+Use `/bench-report/` to compare the default profile with all 136 laws across
 full-stress populations. The per-law table reports standalone time separately
 from “Saved if OFF”; leave-one-out values overlap when laws share neighbor and
 clumping work, so those percentages are not expected to sum to 100%.

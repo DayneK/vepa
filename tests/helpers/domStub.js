@@ -370,6 +370,14 @@ export function makeEl(tagName = 'div', doc = null) {
       this.classes = new Set(String(value ?? '').split(/\s+/).filter(Boolean));
     },
   });
+  Object.defineProperty(el, 'hidden', {
+    configurable: true,
+    get() { return this.hasAttribute('hidden'); },
+    set(value) {
+      if (value) this.attrs.hidden = '';
+      else delete this.attrs.hidden;
+    },
+  });
   // Canvas elements need a 2D context for the analytics panels' draw paths.
   if (el.tagName === 'canvas') attachContext2d(el);
   // `textContent` reads through the subtree, as it does in a browser. Reading

@@ -5,7 +5,7 @@
 ## Versioning & Commits
 
 - **Product:** **VEPA4**; versions use **`major.minor.build`** (npm-semver-native) —
-  current: **9.2.0** (legacy label `4.9.32`). Retroactive mapping of the v4 line:
+  current: **9.3.0** (legacy label `4.9.33`). Retroactive mapping of the v4 line:
   old `4.M.N` → `M.N.0`; see `CHANGELOG.md` and `AGENTS.md` §10.4.
 - **Commits:** [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
   — `<type>(<scope>): <description>`, release commits `chore(release): v7.0.0`,
@@ -28,7 +28,7 @@ The 48 roadmap variants (A–D across twelve systems) now share `src/state/syste
 npm install
 npm run dev    # Dev server with COOP/COEP headers
 npm run build  # Production build
-npm test       # Unit tests (88 files / 870 tests; see current pass/fail output)
+npm test       # Vitest unit + audit suite (see current pass/fail output)
 npm run spec:generate # Generate the hierarchical docs/spec tree
 npm run spec:check    # Fail when generated specifications drift
 npm run systems:bundle # Regenerate the hierarchical concatenated systems atlas
@@ -38,18 +38,17 @@ npm run systems:bundle # Regenerate the hierarchical concatenated systems atlas
 
 | Platform | URL | Notes |
 |----------|-----|-------|
-| Vercel (production) | https://vepa-v4.vercel.app/ | COOP/COEP headers served — `SharedArrayBuffer` enabled; true memory model |
+| Freebuff (current production) | https://v5.freebuff.app/ | Current deployment target; confirm release status in CHANGELOG.md |
+| Vercel (historical) | https://vepa-v4.vercel.app/ | Historical URL; not the currently verified production target |
 | GitHub Pages | https://gemquota.github.io/vepa/vepar/ | No COOP/COEP on Pages — runs ArrayBuffer fallback |
 | Vercel (historical Seven deployment) | https://vepa-seven.vercel.app/ | Feature-rich v8.16-era snapshot; not the current repository-root production URL |
 
 ### Deployment authority and snapshot relationship
 
-The two Vercel URLs are live deployment snapshots, not separate product
-versions. Both may contain mechanics and advanced multiplex/features, but they
-are not guaranteed to be built from the same commit:
+Deployment URLs are snapshots, not separate product versions, and may not be built from the same commit:
 
-- **Canonical source:** this repository root, currently VEPA4 **9.2.0**.
-- **Intended current production target:** `https://vepa-v4.vercel.app/`.
+- **Canonical source:** this repository root, currently VEPA4 **9.3.0**.
+- **Current production target:** `https://v5.freebuff.app/`.
 - **`vepa-seven.vercel.app`:** a later, feature-rich historical deployment
   associated with the v8.16-era line. It is useful for comparison and recovery,
   but it is not runtime or release authority.
@@ -63,11 +62,7 @@ Integrated Intelligence”** and `vepa-seven` reported **“VEPA4 — Integrated
 Intelligence”**. This confirms separate deployed snapshots, not two different
 products. Deployment parity should be verified after each production release.
 
-Vercel deploys from the repo root using `vercel.json` (static build, root base,
-COOP/COEP headers). GitHub Pages previously deployed via `.github/workflows/deploy.yml`
-(base `/vepa/vepar/`); that workflow was archived with the legacy trees on
-2026-08-10 — re-add it with a root layout (base `/vepa/`) when Pages deploys
-are wanted again. The vite base switches on `VERCEL=1`.
+The Freebuff static hosting target is authoritative for current deploy status; the historical Vercel/Pages URLs above are retained for reference. GitHub Pages previously deployed via `.github/workflows/deploy.yml` (base `/vepa/vepar/`); that workflow was archived with the legacy trees on 2026-08-10.
 
 ### Run from anywhere
 
@@ -83,7 +78,7 @@ The repo-root launcher `./vepa4` works from any directory (no `cd` needed):
 /path/to/vepa-feature-nuclear-rewrite/vepa4 bench    # headless solver benchmark (--laws / --all / --json)
 ```
 
-The exhaustive technical specification tree is generated under [`docs/spec/`](docs/spec/README.md). The organization and lifecycle systems atlas is under [`docs/systems/`](docs/systems/README.md), including a single hierarchical [complete concatenated reference](docs/systems/complete-atlas.md), implementation boundaries for mating, reproduction, family, species, lineage, groups, tribes, clans, nations, civilizations, culture, economy, governance, infrastructure, ecology, and synthetic society. The completed roadmap catalog contains four variants (A–D) for each of the twelve systems at [`docs/systems/roadmaps/`](docs/systems/roadmaps/README.md). It separates architecture, UI (`general`, `appearance`, `function`, and surfaces), simulation (`solver`, fields, lifecycle, and similar concepts), state, law records, source inventory, testing, operations, traceability, and review findings. Regenerate it with `npm run spec:generate`; use `npm run spec:check` in verification or CI. The generated tree describes the current source contracts; it is not a substitute for the runtime test result.
+The [Parameter & Law Atlas](docs/systems/parameter-law-atlas.html) maps the 149 world-parameter definitions, 136 laws, data flow, and scale/fidelity trade-offs; its 10,000-particle launch range is not a performance guarantee. The exhaustive technical specification tree is generated under [`docs/spec/`](docs/spec/README.md). The organization and lifecycle systems atlas is under [`docs/systems/`](docs/systems/README.md), including a single hierarchical [complete concatenated reference](docs/systems/complete-atlas.md), implementation boundaries for mating, reproduction, family, species, lineage, groups, tribes, clans, nations, civilizations, culture, economy, governance, infrastructure, ecology, and synthetic society. The completed roadmap catalog contains four variants (A–D) for each of the twelve systems at [`docs/systems/roadmaps/`](docs/systems/roadmaps/README.md). It separates architecture, UI (`general`, `appearance`, `function`, and surfaces), simulation (`solver`, fields, lifecycle, and similar concepts), state, law records, source inventory, testing, operations, traceability, and review findings. Regenerate it with `npm run spec:generate`; use `npm run spec:check` in verification or CI. The generated tree describes the current source contracts; it is not a substitute for the runtime test result.
 
 The launcher can also be installed as a global command in Termux
 (`/data/data/com.termux/files/usr/bin/vepa4` → repo `vepa4`), so plain

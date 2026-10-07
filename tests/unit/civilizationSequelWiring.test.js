@@ -183,6 +183,10 @@ describe('sequel save/restore contract', () => {
     expect(MAIN).toMatch(/if \(out\.codex\) codex = restoreCodex\(out\.codex\)/);
   });
 
+  it('captures civilization and CODEX in epoch checkpoints as well as named saves', () => {
+    expect(MAIN).toMatch(/captureFn: \(\) => captureWorldState\(\{[\s\S]*?name: `Epoch \$\{epochEngine\.era\}`,[\s\S]*?civilization: civilization \? serializeCivilization\(civilization\) : null,[\s\S]*?codex: codex \? serializeCodex\(codex\) : null/);
+  });
+
   it('re-hosts structures on the restored lifecycle', () => {
     // A restored civilization brings a new lifecycle object with it, so the
     // structure registry must be re-pointed at it or every record lookup

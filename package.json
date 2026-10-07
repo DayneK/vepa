@@ -1,6 +1,6 @@
 {
   "name": "vepa-v4",
-  "version": "9.2.0",
+  "version": "9.3.0",
   "description": "VEPA4 — Vector Emergent Physics Automata (Integrated Intelligence release)",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "report:ui": "node scripts/generate-ui-module-report.mjs",
     "report:ui:check": "node scripts/generate-ui-module-report.mjs --check",
     "generate:vepa-all": "node exports/generate-vepa-all.mjs",
-    "dev": "vite --host",
+    "dev": "vite --host 0.0.0.0 --port ${PORT:-5180}",
     "build": "vite build && node scripts/generate-ui-module-report.mjs && node scripts/publish-system-atlas.mjs",
     "preview": "vite preview",
     "test": "vitest run",

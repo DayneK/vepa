@@ -1,5 +1,16 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.33] - 2026-10-07 → 9.3.0
+
+**Release scope:** all current workspace changes, including the second-pass UI implementation and remaining documented gaps, the launch designer with initial population up to 10,000, corrected GROUND_HEIGHT help, regression coverage, and the parameter/law atlas at `docs/systems/parameter-law-atlas.html`.
+
+- Expanded launch presets and design controls for laws, world parameters, species, seeds and founder eras; documented that higher population starts may run slowly depending on device and world configuration.
+- Implemented the current partial second-pass UI work in LOGS, ECO, LAWS, SAVES and world snapshot behavior, with focused regression tests and an adversarial findings ledger. This release does not claim the entire proposed overhaul or browser verification is complete.
+- Added a code-derived parameter/law atlas and corrected GROUND_HEIGHT documentation to match spawn-time-only behavior.
+- **Verification:** `npm run syntax-check`, `npm run build`, `npm run report:ui:check`, and 151 focused regressions passed. All 88 unit files (1,081 tests) and all 50 audit files (458 tests) pass when run separately/serially. Combined Vitest invocation terminates with Tinypool `ERR_IPC_CHANNEL_CLOSED`; `repository:check` is blocked by pre-existing generated-spec drift (13 generated paths, including mechanics specs and inventories). The untracked WRAP spec was preserved; no generated spec tree was overwritten. Real-browser verification was unavailable; see `docs/systems/ui-overhaul-plan.md`.
+- Release commit: pending. Tag: pending. Push: pending. Production deployment: pending verification.
+- The full second-pass UI acceptance plan remains incomplete; this release does not claim otherwise.
+
 ## [4.9.32] - 2026-10-01 → 9.2.0
 
 **Deployed** to `https://v5.freebuff.app/` (Freebuff static Vite build, tag `v9.2.0`).

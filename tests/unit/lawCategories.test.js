@@ -84,6 +84,11 @@ describe('New law categories', () => {
     expect(LAW_COUNT).toBe(Math.max(...Object.values(LAW_INDEXES)) + 1);
   });
 
+  it('describes buoyancy independently from WRAP boundary behavior', () => {
+    expect(LAW_HELP_DB.BUOYANCY.explanation).not.toMatch(/replaces WRAP/i);
+    expect(LAW_HELP_DB.BUOYANCY.explanation).toMatch(/independent of WRAP/i);
+  });
+
   it('every law has a HELP_DB entry', () => {
     for (const [catName, cat] of Object.entries(LAW_CATEGORIES)) {
       for (const idx of cat.laws) {

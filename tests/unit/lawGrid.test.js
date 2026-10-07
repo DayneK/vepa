@@ -86,6 +86,50 @@ describe('the LAWS grid', () => {
       .querySelector('.law-cat-count').textContent).toBe(`${LAW_CATEGORIES.quantum.laws.length}/${LAW_CATEGORIES.quantum.laws.length}`);
   });
 
+  it('reports an explicit no-op when the only visible bulk match is WRAP', () => {
+    const messages = [];
+    bus.on('narrative:system', (message) => messages.push(message.text));
+    const search = doc.getElementById('law-search');
+    search.value = 'wrap';
+    search.dispatch('input', {});
+    const mechanicsOn = doc.getElementById('law-grid')
+      .querySelector('[data-cat-row="mechanics"] .law-cat-bulk[data-bulk="on"]');
+    expect(mechanicsOn.textContent).toBe('ON 0');
+    const lawEventsBefore = emits.length;
+    mechanicsOn.dispatch('click', {});
+    expect(isSet(laws, LAW_INDEXES.WRAP)).toBe(false);
+    expect(emits).toHaveLength(lawEventsBefore);
+    expect(messages.at(-1)).toContain('0 visible targets; 0 changed');
+    expect(messages.at(-1)).toContain('WRAP boundary mode was preserved');
+  });
+
+  it('searches law help hints as well as law names', () => {
+    const input = doc.getElementById('law-search');
+    input.value = 'hard contact prevents';
+    input.dispatch('input', {});
+    expect(visibleTiles(doc).map((tile) => tile.dataset.name)).toContain('contact');
+  });
+
+  it('bulk operations target visible matches and exclude WRAP with explicit feedback', () => {
+    const messages = [];
+    bus.on('narrative:system', (message) => messages.push(message.text));
+    const search = doc.getElementById('law-search');
+    search.value = 'hard contact prevents';
+    search.dispatch('input', {});
+
+    const onVisible = doc.getElementById('law-grid')
+      .querySelector('[data-cat-row="mechanics"] .law-cat-bulk[data-bulk="on"]');
+    expect(visibleTiles(doc).map((tile) => tile.dataset.name)).toEqual(['contact']);
+    expect(onVisible.textContent).toBe('ON 1');
+    onVisible.dispatch('click', {});
+    expect(isSet(laws, LAW_INDEXES.CONTACT)).toBe(true);
+    expect(isSet(laws, LAW_INDEXES.MOMENTUM)).toBe(false);
+    expect(emits.at(-1)).toMatchObject({ category: 'mechanics', targetCount: 1, changed: 1 });
+
+    expect(messages.at(-1)).toContain('1 visible target');
+    expect(messages.at(-1)).toContain('1 changed');
+  });
+
   it('turns a whole category off', () => {
     for (const idx of LAW_CATEGORIES.biology.laws) setLaw(laws, idx);
     bus.emit('law:sync');
@@ -161,7 +205,7 @@ describe('the LAWS grid', () => {
     input.value = 'grav';
     input.dispatch('input', {});
     expect(doc.getElementById('law-grid').querySelector('[data-cat-row="physics"]').style.display).toBe('none');
-    expect(doc.getElementById('law-search-count').textContent).toBe('0 of 136');
+    expect(doc.getElementById('law-search-count').textContent).toBe('1 of 136');
 
     // Restoring the category brings back only the matching tiles.
     physicsTab.dispatch('click', {});

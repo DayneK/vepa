@@ -36,6 +36,7 @@ import {
     normaliseLaunchSettings,
     presetFor,
     defaultLaunchSettings,
+    LAUNCH_FIELDS,
 } from './state/launchSettings.js';
 import { createMemoryBuffers, speciesMemory, groupMemory, blendMemory, adaptMemory, decayMemory, pruneGroupMemory, resetMemoryBuffers, MEM } from './state/memoryBuffers.js';
 import { createAgencyEngine, updateAgency, detectMilestones, resetAgency } from './engines/agencyEngine.js';
@@ -102,7 +103,8 @@ logDebug('main module loaded');
 
 const SUBSTEPS = 4;
 const DT = 0.25;
-const WORKER_SEED = 0x51f15e;
+let WORKER_SEED = 0x51f15e;
+let launchSettings = null;
 
 let bus, prng, particleBuffer, particleView, lawState, dnaBuffer, renderer;
 let insightEngine, narrativeEngine, lineageEngine, goalEngine, timelineEngine;
@@ -202,13 +204,18 @@ function applyDefaultWorldConfig() {
         }
         const paramKey = legacy[key] || key;
         worldParams = applyWorldParam(worldParams, paramKey, value);
-    }
-    for (const [key, value] of Object.entries(launchOverrides)) {
+    }    for (const [key, value] of Object.entries(launchOverrides)) {
         if (value === null || value === undefined) continue;
+        if (key === 'simSpeed') {
+            runtimeConfig.simSpeed = value;
+            continue;
+        }
         const paramKey = legacy[key] || key;
         worldParams = applyWorldParam(worldParams, paramKey, value);
     }
     runtimeConfig.worldParams = worldParams;
+    worldSize = worldParams.WORLD_SIZE;
+    spawnRate = worldParams.SPAWN_RATE;
 }
 
 /** Launch-modal answers that override the preset. Empty until boot resolves. */
@@ -237,6 +244,13 @@ async function resolveLaunchConfiguration() {
         choice = null;
     }
     const settings = normaliseLaunchSettings(choice || remembered);
+    launchSettings = settings;
+    if (settings.launchSeed !== null) {
+        prng = new PRNG(settings.launchSeed);
+        WORKER_SEED = settings.launchSeed;
+    } else {
+        WORKER_SEED = Date.now() | 0;
+    }
     if (choice) writeLaunchSettings(settings);
 
     ACTIVE_PRESET = presetFor(settings);
@@ -245,8 +259,13 @@ async function resolveLaunchConfiguration() {
     SPECIES_PROFILES.push(...(ACTIVE_PRESET.species || []).map((s) => ({ ...s, ...s.dna })));
 
     launchOverrides = {};
-    if (settings.worldSize !== null) launchOverrides.worldSize = settings.worldSize;
-    if (settings.initialPop !== null) launchOverrides.INITIAL_POP = settings.initialPop;
+    launchOverrides.simSpeed = settings.simSpeed;
+    for (const field of LAUNCH_FIELDS) {
+        if (field.kind !== 'range' || !field.worldParamKey) continue;
+        const value = settings[field.key];
+        if (value !== null && value !== undefined) launchOverrides[field.worldParamKey] = value;
+    }
+    for (const [key, value] of Object.entries(settings.parameterOverrides || {})) launchOverrides[key] = value;
 
     runtimeConfig.renderBackend = settings.renderBackend;
     runtimeConfig.computeEngine = settings.computeEngine;
@@ -701,7 +720,13 @@ function spawnDefaultPopulation(preserveDNA = false, keepSpecies = false) {
             setVelocity(particleBuffer, idx, PARTICLE_STRIDE, 0, 0, 0);
             setMass(particleBuffer, idx, PARTICLE_STRIDE, 1.0 + prng.nextFloat(0, 1.0));
             setSpeciesId(particleBuffer, idx, PARTICLE_STRIDE, s);
-            setEnergy(particleBuffer, idx, PARTICLE_STRIDE, 50 + prng.nextFloat(0, 50));
+            const founderEra = launchSettings?.founderEra || 'newborn';
+            const age = founderEra === 'ancient' ? 420 + prng.nextFloat(0, 180)
+                : founderEra === 'established' ? prng.nextFloat(80, 420) : 0;
+            const energy = founderEra === 'ancient' ? 25 + prng.nextFloat(0, 55)
+                : founderEra === 'established' ? 40 + prng.nextFloat(0, 70) : 50 + prng.nextFloat(0, 50);
+            setEnergy(particleBuffer, idx, PARTICLE_STRIDE, energy);
+            particleView[ptr + STRIDE_INDEXES.AGE] = age;
             // Copy species DNA to particle DNA cache (stride 8-49)
             const dnaBase = s * 64;
             for (let d = 0; d < 42; d++) {
@@ -711,7 +736,7 @@ function spawnDefaultPopulation(preserveDNA = false, keepSpecies = false) {
                 particleView[ptr + STRIDE_INDEXES.DNA_CACHE_START + d] = norm * (r.max - r.min) + r.min;
             }
             particleView[ptr + STRIDE_INDEXES.DEAD] = 0;
-            particleView[ptr + STRIDE_INDEXES.AGE] = 0;
+            particleView[ptr + STRIDE_INDEXES.AGE] = age;
             particleView[ptr + STRIDE_INDEXES.SIGNAL] = 0;
             particleView[ptr + STRIDE_INDEXES.BOND_COUNT] = 0;
             particleView[ptr + STRIDE_INDEXES.BOND_PARTNER_1] = -1;
@@ -1071,7 +1096,8 @@ function setDNAFromProfile(species, profile) {
     bus.on('sim:restart', (opts = {}) => {
         const restartWorker = !!physicsWorker;
         stopPhysicsWorker();
-        prng = new PRNG(Date.now());
+        prng = new PRNG(launchSettings?.launchSeed ?? Date.now());
+        WORKER_SEED = launchSettings?.launchSeed ?? (Date.now() | 0);
         particleView.fill(0);
         resetOffspringRing();
         spawnDefaultPopulation(true, true);
@@ -1670,6 +1696,8 @@ function updateIntelligenceCore() {
                 worldSize,
                 tick,
                 name: `Epoch ${epochEngine.era}`,
+                civilization: civilization ? serializeCivilization(civilization) : null,
+                codex: codex ? serializeCodex(codex) : null,
             }),
         });
         for (const ev of epochEvents) bus.emit(ev.type, ev);

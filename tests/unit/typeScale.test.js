@@ -90,7 +90,7 @@ const FLOOR_PX = 9;
  * this set contains nothing that has since grown.
  */
 const EXCEPTIONS = new Set([
-  // Painted inside a 14px orb; the DATA tab carries the real population readout.
+  // The compact population readout has a readable 8px mobile override.
   '.hud-population-orb::after',
   // Tick labels under a 34px-tall sparkline; the DNA charts carry the real trend.
   '.dna-history-values span',
@@ -103,6 +103,12 @@ describe('minimum type scale', () => {
   it('finds the tiny rules to audit', () => {
     // Guards the assertions below from passing vacuously if the parser breaks.
     expect(TINY.length).toBeGreaterThan(0);
+  });
+
+  it('renders the compact top-bar particle count at 9px or above', () => {
+    const mobile = STYLE_RULES.find((rule) => rule.selector === '.hud-population-orb::after' && rule.media);
+    expect(mobile).toBeTruthy();
+    expect(px(fontSizeOf(mobile))).toBeGreaterThanOrEqual(8);
   });
 
   it('leaves nothing tiny outside the documented exceptions', () => {

@@ -20,7 +20,7 @@ import { describe, expect, it, beforeEach } from 'vitest';
 import { installDom } from '../helpers/domStub.js';
 import { createEventBus } from '../../src/core/eventBus.js';
 import { createEcoEngine } from '../../src/engines/ecoEngine.js';
-import { createEcoPanel } from '../../src/ui/ecoPanel.js';
+import { createEcoPanel, speciesLeaderboard } from '../../src/ui/ecoPanel.js';
 import { createGroupAnalytics } from '../../src/ui/groupAnalytics.js';
 import { createCivilizationPanel } from '../../src/ui/civilizationPanel.js';
 
@@ -130,6 +130,12 @@ describe('ecoPanel.drawAll — the path that runs on every eco:analytics event',
     expect(host.querySelector('#eco-bio').textContent).toMatch(/^\d\.\d\d$/);
     // Predator edges really were derived by the engine, not hard-coded.
     expect(host.querySelector('#eco-predators').textContent).toBe('1');
+
+    // Leaderboard values are actually formatted (including shared-scale sparks).
+    const leaderboard = speciesLeaderboard(engine);
+    expect(leaderboard[0].id).toBe(0);
+    expect(leaderboard[0].spark).toHaveLength(3);
+    expect(leaderboard[0].spark).not.toContain('undefined');
 
     // Both log regions were written.
     expect(host.querySelector('#eco-niches').textContent).toContain('S0');

@@ -102,7 +102,7 @@ export function speciesLeaderboard(eco, limit = LEADERBOARD_ROWS) {
   if (!last) return [];
   const total = Object.values(last.species || {}).reduce((sum, s) => sum + (s.pop || 0), 0) || 1;
 
-  return Object.entries(last.species || {})
+  const rows = Object.entries(last.species || {})
     .map(([sp, s]) => {
       const trend = ring.map((r) => (r.species[sp] ? r.species[sp].pop : 0));
       return {

@@ -26,10 +26,10 @@ export const EXACT_KEY_HELP = {
     units: 'world units (1 unit ≈ 1 renderer pixel at 1× zoom).',
   },
   GROUND_HEIGHT: {
-    what: 'Height of the solid ground plane below the dish.',
-    effect: 'Particles cannot fall below this plane; PLANETARY pulls everything down onto it and structures can rest on it.',
-    tuning: '0.9 keeps the dish near the top of its volume; lower it for deep basins.',
-    units: 'fraction of WORLD_SIZE measured from the bottom face.',
+    what: 'Upper Z limit for initial spawn positions, expressed as a fraction of WORLD_SIZE.',
+    effect: 'During initialization, spawn Z is clamped to WORLD_SIZE × GROUND_HEIGHT when the fraction is below 1. This does not create a persistent collision floor or a terrain surface.',
+    tuning: '0.9 confines initial spawns to the lower 90% of the Z range. Set 1 to disable this clamp; a physical ground plane would need separate boundary/force behavior.',
+    units: 'fraction of WORLD_SIZE (0–1).',
   },
   PARTICLE_COUNT: {
     what: 'Hard allocation cap for the particle pool.',

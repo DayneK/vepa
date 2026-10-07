@@ -104,6 +104,7 @@ describe('world save capture/restore (v7.4)', () => {
   it('captures the full world state with summary metadata', () => {
     const world = makeWorld();
     set(world.laws, LAW_INDEXES.GRAV);
+    set(world.laws, LAW_INDEXES.WRAP);
     const state = capture(world, 'alpha');
     expect(state.format).toBe(WORLD_SAVE_FORMAT);
     expect(state.version).toBe(WORLD_SAVE_VERSION);
@@ -115,11 +116,12 @@ describe('world save capture/restore (v7.4)', () => {
     expect(state.particles).toBeInstanceOf(Float32Array);
     expect(state.dna).toBeInstanceOf(Uint16Array);
     expect(state.laws.low & (1 << LAW_INDEXES.GRAV)).toBeTruthy();
+    expect(state.laws.penta & (1 << (LAW_INDEXES.WRAP - 128))).toBeTruthy();
     expect(state.worldParams.GLOBAL_G).toBe(2);
     expect(state.runtime.forceScale).toBe(1.25);
     expect(state.summary.alive).toBe(4);
     expect(state.summary.species).toBe(2);
-    expect(state.summary.lawsOn).toBe(1);
+    expect(state.summary.lawsOn).toBe(2);
     expect(state.summary.avgEnergy).toBeCloseTo((50 + 60 + 70 + 80) / 4, 5);
   });
 
@@ -127,6 +129,7 @@ describe('world save capture/restore (v7.4)', () => {
     const world = makeWorld();
     set(world.laws, LAW_INDEXES.GRAV);
     set(world.laws, LAW_INDEXES.BOND);
+    set(world.laws, LAW_INDEXES.WRAP);
     const state = capture(world);
     const before = Array.from(state.particles);
 
@@ -144,6 +147,7 @@ describe('world save capture/restore (v7.4)', () => {
     expect(Array.from(fresh.view.subarray(0, 4 * PARTICLE_STRIDE))).toEqual(before);
     expect(fresh.laws.lowFlags[0]).toBe(state.laws.low);
     expect(fresh.laws.highFlags[0]).toBe(state.laws.high);
+    expect(fresh.laws.pentaFlags[0]).toBe(state.laws.penta);
     expect(fresh.worldParams.GLOBAL_G).toBe(2);
     expect(fresh.worldParams.ACIDITY_PH).toBe(7);
     expect(fresh.runtime.forceScale).toBe(1.25);
@@ -169,6 +173,23 @@ describe('world save capture/restore (v7.4)', () => {
     expect(fresh.worldParams.ACIDITY_PH).toBe(14);
   });
 
+  it('loads pre-five-word saves with an empty penta word', () => {
+    const legacy = parseWorldSave({
+      format: WORLD_SAVE_FORMAT,
+      version: WORLD_SAVE_VERSION,
+      particleCount: 0,
+      speciesCount: 1,
+      laws: { low: 1, high: 2, ext: 3, quad: 4 },
+    });
+    expect(legacy.laws.penta).toBe(0);
+    const fresh = makeWorld(0, 1);
+    fresh.laws.pentaFlags[0] = -1;
+    const restored = restoreWorldState(legacy, { laws: fresh.laws });
+    expect(fresh.laws.pentaFlags[0]).toBe(0);
+    expect(restored.civilization).toBeNull();
+    expect(restored.codex).toBeNull();
+  });
+
   it('restore throws on non-world payloads', () => {
     expect(() => restoreWorldState(null, {})).toThrow();
     expect(() => restoreWorldState({ format: 'nope' }, {})).toThrow();
@@ -190,13 +211,19 @@ describe('world save export/import (v7.4)', () => {
   it('export → parse → restore reproduces the world exactly', () => {
     const world = makeWorld(8, 3);
     set(world.laws, LAW_INDEXES.GRAV);
+    set(world.laws, LAW_INDEXES.WRAP);
     const state = capture(world, 'portable');
+    state.civilization = { cultures: [{ name: 'Tide' }] };
+    state.codex = { entries: [{ statement: 'reef formed' }] };
     const json = exportWorldSave(state);
     expect(json).toContain('"format": "vepa-world-save"');
     expect(json).toContain('"particlesB64"');
 
     const parsed = parseWorldSave(json);
     expect(parsed.name).toBe('portable');
+    expect(parsed.laws.penta).toBe(state.laws.penta);
+    expect(parsed.civilization).toEqual(state.civilization);
+    expect(parsed.codex).toEqual(state.codex);
     expect(parsed.particles).toBeInstanceOf(Float32Array);
     expect(Array.from(parsed.particles)).toEqual(Array.from(state.particles));
 
@@ -210,6 +237,9 @@ describe('world save export/import (v7.4)', () => {
     });
     expect(out.particleCount).toBe(8);
     expect(out.speciesCount).toBe(3);
+    expect(out.civilization).toEqual(state.civilization);
+    expect(out.codex).toEqual(state.codex);
+    expect(fresh.laws.pentaFlags[0]).toBe(state.laws.penta);
     expect(Array.from(fresh.view.subarray(0, 8 * PARTICLE_STRIDE))).toEqual(Array.from(state.particles));
   });
 
@@ -312,10 +342,16 @@ describe('world undo ring (v7.5)', () => {
   });
 
   it('sameWorldFingerprint distinguishes param-only changes', () => {
-    const a = { tick: 5, particleCount: 4, speciesCount: 2, laws: { low: 1, high: 0, ext: 0, quad: 0 }, worldParams: { GLOBAL_G: 1 } };
+    const a = { tick: 5, particleCount: 4, speciesCount: 2, laws: { low: 1, high: 0, ext: 0, quad: 0, penta: 0 }, worldParams: { GLOBAL_G: 1 } };
     const b = { ...a };
     const c = { ...a, worldParams: { GLOBAL_G: 2 } };
+    const d = { ...a, laws: { ...a.laws, penta: 1 } };
+    const e = { ...a, civilization: { cultures: [{ id: 'c1' }] } };
+    const f = { ...a, codex: { entries: [{ id: 'e1' }] } };
     expect(sameWorldFingerprint(a, b)).toBe(true);
     expect(sameWorldFingerprint(a, c)).toBe(false);
+    expect(sameWorldFingerprint(a, d)).toBe(false);
+    expect(sameWorldFingerprint(a, e)).toBe(false);
+    expect(sameWorldFingerprint(a, f)).toBe(false);
   });
 });

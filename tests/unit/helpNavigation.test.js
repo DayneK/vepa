@@ -238,6 +238,12 @@ describe('law info contrast', () => {
     }
   });
 
+  it('makes the law info module roughly twice as tall with tighter padding', () => {
+    const module = STYLE.match(/\.law-info-module \{[^}]*\}/)?.[0] || '';
+    expect(module).toMatch(/height:\s*192px/);
+    expect(module).toMatch(/padding:\s*4px 5px/);
+  });
+
   it('raised every law-info tier to a legible size', () => {
     expect(rule('\\.info-title')).toMatch(/font-size:\s*15px/);
     expect(rule('\\.info-category')).toMatch(/font-size:\s*11px/);

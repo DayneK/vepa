@@ -3,7 +3,7 @@
  * Category filter tabs + law grid (icon ⇄ settings-style word mode) +
  * world parameter sliders grouped into accordion sections.
  */
-import { LAW_INDEXES, LAW_CATEGORIES, LAW_COUNT, LAW_SPECTRUM, LAW_HUE_BY_INDEX, LAW_SAT_BY_INDEX } from '../constants.js';
+import { LAW_INDEXES, LAW_CATEGORIES, LAW_COUNT, LAW_SPECTRUM, LAW_HUE_BY_INDEX, LAW_SAT_BY_INDEX, LAW_HELP_DB } from '../constants.js';
 import { isSet, set as setLaw, clear as clearLaw, toggle as toggleLaw } from '../state/lawState.js';
 import { WORLD_PARAM_DEFS } from '../state/worldParams.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
@@ -234,14 +234,13 @@ function renderLawGrid(grid, lawStateObj, bus) {
     let onCount = 0;
     for (const idx of cat.laws) if (isSet(lawStateObj, idx)) onCount += 1;
     html += `<div class="law-cat-row" data-cat-row="${catName}">`;
-    // The count answers "what is on?" without counting lit tiles, and the
-    // ON/OFF pair answers "turn this whole category on" — which, with 136
-    // tiles, is the only practical way to build a preset.
+    // The count answers "what is on?" without counting lit tiles, and bulk
+    // controls act on visible matches only (with WRAP excluded explicitly).
     html += `<div class="law-cat-label" style="color:hsl(${centerHue} ${catSat ?? 85}% 65%);--law-h:${centerHue};--law-s:${catSat ?? 85}%">`
           + `<span class="law-cat-name">${catName}</span>`
           + `<span class="law-cat-count">${onCount}/${cat.laws.length}</span>`
-          + `<button class="law-cat-bulk" data-bulk="on" data-cat="${catName}" title="Turn every ${catName} law on" aria-label="Turn every ${catName} law on">ON</button>`
-          + `<button class="law-cat-bulk" data-bulk="off" data-cat="${catName}" title="Turn every ${catName} law off" aria-label="Turn every ${catName} law off">OFF</button>`
+          + `<button class="law-cat-bulk" data-bulk="on" data-cat="${catName}" title="Turn visible ${catName} matches on" aria-label="Turn visible ${catName} matches on">ON</button>`
+          + `<button class="law-cat-bulk" data-bulk="off" data-cat="${catName}" title="Turn visible ${catName} matches off" aria-label="Turn visible ${catName} matches off">OFF</button>`
           + `</div>`;
     for (const idx of cat.laws) {
       const name = LAW_NAME_BY_IDX[idx] || `LAW_${idx}`;
@@ -293,18 +292,34 @@ function renderLawGrid(grid, lawStateObj, bus) {
       const cat = LAW_CATEGORIES[btn.dataset.cat];
       if (!cat) return;
       const wantOn = btn.dataset.bulk === 'on';
+      const row = btn.closest('.law-cat-row');
+      const visibleIndexes = [...row.querySelectorAll('[data-law]')]
+        .filter((tile) => tile.style.display !== 'none')
+        .map((tile) => Number(tile.dataset.law));
+      const excluded = visibleIndexes.filter((idx) => idx === LAW_INDEXES.WRAP);
+      const targetIndexes = visibleIndexes.filter((idx) => idx !== LAW_INDEXES.WRAP);
       let changed = 0;
-      for (const idx of cat.laws) {
+      for (const idx of targetIndexes) {
         if (isSet(lawStateObj, idx) === wantOn) continue;
         if (wantOn) setLaw(lawStateObj, idx);
         else clearLaw(lawStateObj, idx);
         changed += 1;
       }
-      if (!changed) return;
-      renderLawGrid(grid, lawStateObj, bus);
-      bus.emit('law:toggled', { category: btn.dataset.cat, active: wantOn, state: wantOn ? 1 : 0, changed });
+      if (changed) {
+        renderLawGrid(grid, lawStateObj, bus);
+        bus.emit('law:toggled', {
+          category: btn.dataset.cat,
+          active: wantOn,
+          state: wantOn ? 1 : 0,
+          changed,
+          targetCount: targetIndexes.length,
+          excluded: excluded.map(() => 'WRAP'),
+        });
+      }
+      const scope = `${targetIndexes.length} visible target${targetIndexes.length === 1 ? '' : 's'}`;
+      const exception = excluded.length ? ' WRAP boundary mode was preserved.' : '';
       bus.emit('narrative:system', {
-        text: `${btn.dataset.cat}: ${wantOn ? 'enabled' : 'disabled'} (${changed} law${changed === 1 ? '' : 's'}).`,
+        text: `${btn.dataset.cat}: ${changed ? (wantOn ? 'enabled' : 'disabled') : 'unchanged'} ${scope}; ${changed} changed.${exception}`,
       });
     });
   });
@@ -604,7 +619,11 @@ function applyLawVisibility(grid) {
     const catOpen = catName !== undefined && activeCats.has('cat-' + catName);
     let rowMatches = 0;
     row.querySelectorAll('[data-law]').forEach((tile) => {
-      const hit = !query || String(tile.dataset.name || '').includes(query);
+      const idx = Number(tile.dataset.law);
+      const lawName = LAW_NAME_BY_IDX[idx] || '';
+      const hint = LAW_HELP_DB[lawName]?.hint || '';
+      const searchText = `${lawName} ${catName} ${hint}`.toLocaleLowerCase();
+      const hit = !query || searchText.includes(query);
       tile.style.display = catOpen && hit ? '' : 'none';
       if (catOpen && hit) rowMatches += 1;
     });
@@ -612,6 +631,20 @@ function applyLawVisibility(grid) {
     // with a count and no laws under it.
     row.style.display = catOpen && (rowMatches > 0 || !query) ? '' : 'none';
     visibleTiles += rowMatches;
+  });
+
+  grid.querySelectorAll('.law-cat-bulk').forEach((button) => {
+    const row = button.closest('.law-cat-row');
+    const catName = button.dataset.cat;
+    const visible = [...row.querySelectorAll('[data-law]')]
+      .filter((tile) => tile.style.display !== 'none');
+    const excludedWrap = visible.some((tile) => Number(tile.dataset.law) === LAW_INDEXES.WRAP);
+    const targetCount = visible.filter((tile) => Number(tile.dataset.law) !== LAW_INDEXES.WRAP).length;
+    const action = button.dataset.bulk === 'on' ? 'Turn on' : 'Turn off';
+    const exception = excludedWrap ? '; WRAP boundary mode excluded' : '';
+    button.textContent = `${button.dataset.bulk.toUpperCase()} ${targetCount}`;
+    button.title = `${action} ${targetCount} visible ${catName} law${targetCount === 1 ? '' : 's'}${exception}`;
+    button.setAttribute('aria-label', button.title);
   });
 
   const countEl = document.getElementById('law-search-count');
@@ -648,7 +681,7 @@ function setupLawSearch(grid, lawStateObj, bus) {
     event.preventDefault();
     for (const row of grid.querySelectorAll('.law-cat-row')) {
       if (row.style.display === 'none') continue;
-      const first = row.querySelectorAll('[data-law]').find((t) => t.style.display !== 'none');
+      const first = [...row.querySelectorAll('[data-law]')].find((t) => t.style.display !== 'none');
       if (first) {
         first.click();
         return;

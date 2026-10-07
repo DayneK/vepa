@@ -27,11 +27,17 @@ import {
   BUILTIN_LAUNCH_PRESETS,
   DEFAULT_LAUNCH_PRESET_ID,
   LAUNCH_FIELDS,
+  LAUNCH_PRESETS_STORAGE_KEY,
   LAUNCH_STORAGE_KEY,
   defaultLaunchSettings,
+  getCustomLaunchPresets,
+  launchMarkPosition,
+  launchPositionToValue,
+  launchValueToPosition,
   normaliseLaunchSettings,
   presetFor,
   readLaunchSettings,
+  saveCustomLaunchPreset,
   writeLaunchSettings,
 } from '../../src/state/launchSettings.js';
 
@@ -75,10 +81,39 @@ describe('launch settings state', () => {
 
   it('clamps and snaps range fields to their own step', () => {
     const simSpeed = LAUNCH_FIELDS.find((f) => f.key === 'simSpeed');
+    const initialPop = LAUNCH_FIELDS.find((f) => f.key === 'initialPop');
+    expect(initialPop.max).toBe(10000);
+    expect(initialPop.step).toBe(100);
+    expect(normaliseLaunchSettings({ initialPop: 10000 }).initialPop).toBe(10000);
+    expect(normaliseLaunchSettings({ initialPop: 20000 }).initialPop).toBe(10000);
     expect(normaliseLaunchSettings({ simSpeed: 99 }).simSpeed).toBe(simSpeed.max);
     expect(normaliseLaunchSettings({ simSpeed: -5 }).simSpeed).toBe(simSpeed.min);
     // A hand-edited or stale value must not land between increments.
     expect(normaliseLaunchSettings({ simSpeed: 1.37 }).simSpeed).toBe(1.4);
+    expect(normaliseLaunchSettings({ simSpeed: null }).simSpeed).toBe(1);
+    expect(normaliseLaunchSettings({ worldSize: null }).worldSize).toBeNull();
+  });
+
+  it('maps logarithmic slider positions to values and places reference marks', () => {
+    const gravity = LAUNCH_FIELDS.find((field) => field.key === 'gravity');
+    expect(launchValueToPosition(gravity, gravity.min)).toBe(0);
+    expect(launchValueToPosition(gravity, gravity.max)).toBe(1000);
+    expect(launchPositionToValue(gravity, 0)).toBe(gravity.min);
+    expect(launchPositionToValue(gravity, 1000)).toBe(gravity.max);
+    expect(launchValueToPosition(gravity, 1)).toBeCloseTo(launchValueToPosition(gravity, 0.1) + 435, -1);
+    expect(launchMarkPosition(gravity, 1)).toBe(launchValueToPosition(gravity, 1) / 10);
+  });
+
+  it('saves named launch configurations locally and caps their count', () => {
+    const entry = saveCustomLaunchPreset('  My   World ', { ...defaultLaunchSettings(), gravity: 2.4 });
+    expect(entry.name).toBe('My World');
+    expect(entry.settings.gravity).toBe(2.4);
+    expect(globalThis.localStorage.getItem(LAUNCH_PRESETS_STORAGE_KEY)).toBeTruthy();
+    expect(getCustomLaunchPresets()).toHaveLength(1);
+    expect(presetFor(entry.settings).name).toBe('TIDAL_BLOOM');
+    expect(saveCustomLaunchPreset('   ', defaultLaunchSettings())).toBeNull();
+    for (let i = 0; i < 14; i++) saveCustomLaunchPreset(`Saved ${i}`, defaultLaunchSettings());
+    expect(getCustomLaunchPresets()).toHaveLength(12);
   });
 
   it('degrades a null, partial or non-object input to the defaults', () => {
@@ -91,6 +126,57 @@ describe('launch settings state', () => {
     const out = normaliseLaunchSettings({ presetId: 'PRIME_DEFAULT', rogueField: 'x' });
     expect(out.presetId).toBe('PRIME_DEFAULT');
     expect('rogueField' in out).toBe(false);
+  });
+
+  it('reapplies custom launch choices once over their source preset and can clear saved overrides', () => {
+    const saved = saveCustomLaunchPreset('Starfall Lab', normaliseLaunchSettings({
+      presetId: 'STARFALL',
+      gravity: 7.2,
+      parameterOverrides: { STELLAR_MAX: 12 },
+    }));
+    const configured = presetFor(saved.settings);
+    expect(configured.worldParams.GLOBAL_G).toBe(7.2);
+    expect(configured.worldParams.STELLAR_MAX).toBe(12);
+
+    const reset = presetFor({ ...saved.settings, gravity: null, parameterOverrides: {} });
+    const starfall = BUILTIN_LAUNCH_PRESETS.find((preset) => preset.id === 'STARFALL').preset;
+    expect(reset.worldParams.GLOBAL_G).toBe(starfall.worldParams.GLOBAL_G);
+    expect(reset.worldParams.STELLAR_MAX).toBe(starfall.worldParams.STELLAR_MAX);
+  });
+
+  it('validates advanced laws, species, world overrides, seed and founder era', () => {
+    const out = normaliseLaunchSettings({
+      laws: ['GRAV', 'NOT_A_LAW', 'GRAV'],
+      speciesNames: ['Bloom', 'Bloom'],
+      parameterOverrides: { GLOBAL_G: 30, NOT_A_PARAM: 7, FIELD_THERMAL: 1.5 },
+      launchSeed: -2,
+      founderEra: 'ancient',
+    });
+    expect(out.laws).toEqual(['GRAV']);
+    expect(out.speciesNames).toEqual(['Bloom']);
+    expect(out.parameterOverrides).toEqual({ GLOBAL_G: 20, FIELD_THERMAL: 1.5 });
+    expect(out.launchSeed).toBe(1);
+    expect(out.founderEra).toBe('ancient');
+    expect(normaliseLaunchSettings({ speciesNames: [] }).speciesNames).toBeNull();
+    expect(presetFor(normaliseLaunchSettings({ speciesNames: [] })).species.length).toBeGreaterThan(0);
+  });
+
+  it('resolves the advanced law, species and parameter choices into the real preset', () => {
+    const configured = presetFor(normaliseLaunchSettings({
+      presetId: 'TIDAL_BLOOM', laws: ['GRAV', 'MIND'], speciesNames: ['Bloom', 'Chorus'],
+      parameterOverrides: { FIELD_THERMAL: 1.5 },
+    }));
+    expect(configured.laws).toEqual(['GRAV', 'MIND']);
+    expect(configured.species.map((species) => species.name)).toEqual(['Bloom', 'Chorus']);
+    expect(configured.speciesCount).toBe(2);
+    expect(configured.worldParams.FIELD_THERMAL).toBe(1.5);
+  });
+
+  it('ships distinct categorized presets with varied laws, species, and objectives', () => {
+    expect(BUILTIN_LAUNCH_PRESETS.length).toBeGreaterThanOrEqual(10);
+    expect(new Set(BUILTIN_LAUNCH_PRESETS.map((preset) => preset.category)).size).toBeGreaterThan(4);
+    expect(new Set(BUILTIN_LAUNCH_PRESETS.map((preset) => preset.objective)).size).toBeGreaterThan(8);
+    expect(BUILTIN_LAUNCH_PRESETS.find((preset) => preset.id === 'STARFALL').preset.laws).toContain('ANTIMATTER');
   });
 
   it('round-trips through storage', () => {
@@ -121,14 +207,59 @@ describe('launch settings state', () => {
 describe('launch modal', () => {
   const load = async () => import('../../src/ui/launchModal.js');
 
-  it('renders a card per built-in preset, with the current one marked', async () => {
+  it('renders a card per built-in preset, with the current one marked and categories available', async () => {
     const { showLaunchModal } = await load();
     const promise = showLaunchModal({ settings: normaliseLaunchSettings({ presetId: 'PRIME_DEFAULT' }) });
     const cards = doc.querySelectorAll('.launch-preset');
     expect(cards).toHaveLength(BUILTIN_LAUNCH_PRESETS.length);
     expect(doc.querySelector('.launch-preset.current').dataset.preset).toBe('PRIME_DEFAULT');
+    expect(doc.querySelectorAll('.launch-filter-chip').length).toBeGreaterThan(4);
+    expect(doc.querySelector('.launch-preset[data-preset="STARFALL"]')).toBeTruthy();
     doc.dispatch('keydown', { key: 'Escape' });
     await promise;
+  });
+
+  it('compares presets in a table and filters the preset catalog by category', async () => {
+    const { showLaunchModal } = await load();
+    const promise = showLaunchModal({});
+    doc.querySelector('.launch-compare[data-compare-select="STARFALL"]').dispatch('click');
+    doc.querySelector('.launch-compare[data-compare-select="TIDAL_BLOOM"]').dispatch('click');
+    expect(doc.querySelector('.launch-compare-table')).toBeTruthy();
+    expect(doc.querySelector('.launch-compare-table').textContent).toContain('STARTING POPULATION');
+    doc.querySelector('.launch-filter-chip[data-preset-filter="Cosmos"]').dispatch('click');
+    expect(doc.querySelector('.launch-preset-wrap[data-category="Ecologies"]').hidden).toBe(true);
+    expect(doc.querySelector('.launch-preset-wrap[data-category="Cosmos"]').hidden).toBe(false);
+    doc.dispatch('keydown', { key: 'Escape' });
+    await promise;
+  });
+
+  it('opens the advanced designer and returns law, parameter, species and seed choices', async () => {
+    const { showLaunchModal } = await load();
+    const promise = showLaunchModal({});
+    doc.querySelector('[data-act="toggle-advanced"]').dispatch('click');
+    expect(doc.querySelector('.launch-advanced-body').hidden).toBe(false);
+    const law = doc.querySelector('.launch-law-toggle[data-law="MIND"]');
+    law.checked = true;
+    law.dispatch('change');
+    doc.querySelector('.launch-tab[data-tab="parameters"]').dispatch('click');
+    const parameter = doc.querySelector('.launch-param-row input[data-param="FIELD_THERMAL"]');
+    parameter.value = '2';
+    parameter.dispatch('input');
+    expect(doc.querySelector('[data-value-for="thermalField"]').textContent).toBe('from advanced');
+    doc.querySelector('.launch-tab[data-tab="species"]').dispatch('click');
+    const founder = doc.querySelector('.launch-species-toggle[data-species="Drift"]');
+    founder.checked = false;
+    founder.dispatch('change');
+    doc.querySelector('.launch-tab[data-tab="launch"]').dispatch('click');
+    const seed = doc.querySelector('#launch-seed');
+    seed.value = '12345';
+    seed.dispatch('input');
+    doc.querySelector('[data-act="launch"]').dispatch('click');
+    const answer = await promise;
+    expect(answer.laws).toContain('MIND');
+    expect(answer.parameterOverrides.FIELD_THERMAL).toBe(2);
+    expect(answer.speciesNames).not.toContain('Drift');
+    expect(answer.launchSeed).toBe(12345);
   });
 
   it('renders one control per declared field', async () => {
@@ -161,22 +292,88 @@ describe('launch modal', () => {
   it('carries a range value back', async () => {
     const { showLaunchModal } = await load();
     const promise = showLaunchModal({});
+    const field = LAUNCH_FIELDS.find((candidate) => candidate.key === 'simSpeed');
     const range = doc.querySelector('.launch-range[data-key="simSpeed"]');
-    range.value = '2.5';
+    range.value = String(launchValueToPosition(field, 2.5));
     range.dispatch('input', { target: range });
     doc.querySelector('[data-act="launch"]').dispatch('click');
     expect((await promise).simSpeed).toBe(2.5);
   });
 
-  it('shows the live value beside a range as it moves', async () => {
+  it('renders the initial population slider through 10,000', async () => {
     const { showLaunchModal } = await load();
     const promise = showLaunchModal({});
-    const range = doc.querySelector('.launch-range[data-key="simSpeed"]');
-    range.value = '0.7';
+    const range = doc.querySelector('.launch-range[data-key="initialPop"]');
+    expect(LAUNCH_FIELDS.find((field) => field.key === 'initialPop').max).toBe(10000);
+    expect(doc.querySelector('[data-value-for="initialPop"]').textContent).toBe('from preset');
+    range.value = String(launchValueToPosition(LAUNCH_FIELDS.find((field) => field.key === 'initialPop'), 10000));
     range.dispatch('input', { target: range });
-    expect(doc.querySelector('[data-value-for="simSpeed"]').textContent).toBe('0.7');
+    doc.querySelector('[data-act="launch"]').dispatch('click');
+    expect((await promise).initialPop).toBe(10000);
+  });
+
+  it('shows the live value beside a logarithmic range as it moves', async () => {
+    const { showLaunchModal } = await load();
+    const promise = showLaunchModal({});
+    const field = LAUNCH_FIELDS.find((candidate) => candidate.key === 'simSpeed');
+    const range = doc.querySelector('.launch-range[data-key="simSpeed"]');
+    expect(range.getAttribute('min')).toBe('0');
+    expect(range.getAttribute('max')).toBe('1000');
+    range.value = '650';
+    range.dispatch('input', { target: range });
+    expect(doc.querySelector('[data-value-for="simSpeed"]').textContent)
+      .toBe(String(launchPositionToValue(field, 650)));
     doc.dispatch('keydown', { key: 'Escape' });
     await promise;
+  });
+
+  it('opens and closes slider descriptions by tapping the label', async () => {
+    const { showLaunchModal } = await load();
+    const promise = showLaunchModal({});
+    const label = doc.querySelector('.launch-help-trigger[data-help="gravity"]');
+    const help = doc.querySelector('#launch-help-gravity');
+    expect(help.hidden).toBe(true);
+    label.dispatch('click');
+    expect(help.hidden).toBe(false);
+    expect(label.getAttribute('aria-expanded')).toBe('true');
+    label.dispatch('click');
+    expect(help.hidden).toBe(true);
+    doc.dispatch('keydown', { key: 'Escape' });
+    await promise;
+  });
+
+  it('saves the edited launch setup and can select it again', async () => {
+    const { showLaunchModal } = await load();
+    const promise = showLaunchModal({});
+    const gravity = doc.querySelector('.launch-range[data-key="gravity"]');
+    gravity.value = '700';
+    gravity.dispatch('input', { target: gravity });
+    const name = doc.querySelector('#launch-custom-name');
+    name.value = 'Gravity test';
+    doc.querySelector('.launch-save-preset').dispatch('click');
+    expect(doc.querySelector('.launch-custom-status').textContent).toContain('Saved');
+    expect(doc.querySelector('.launch-preset[data-preset="CUSTOM:gravity-test"]')).toBeTruthy();
+    doc.querySelector('.launch-preset[data-preset="TIDAL_BLOOM"]').dispatch('click');
+    doc.querySelector('.launch-preset[data-preset="CUSTOM:gravity-test"]').dispatch('click');
+    doc.querySelector('[data-act="launch"]').dispatch('click');
+    const result = await promise;
+    expect(result.presetId).toBe('CUSTOM:gravity-test');
+    expect(result.gravity).toBe(launchPositionToValue(LAUNCH_FIELDS.find((field) => field.key === 'gravity'), 700));
+  });
+
+  it('resets advanced parameters back to the selected preset and clears the quick slider override', async () => {
+    const { showLaunchModal } = await load();
+    const promise = showLaunchModal({});
+    doc.querySelector('[data-act="toggle-advanced"]').dispatch('click');
+    doc.querySelector('.launch-tab[data-tab="parameters"]').dispatch('click');
+    const parameter = doc.querySelector('[data-param="FIELD_THERMAL"]');
+    parameter.value = '2';
+    parameter.dispatch('input');
+    doc.querySelector('[data-param-reset="FIELD_THERMAL"]').dispatch('click');
+    doc.querySelector('[data-act="launch"]').dispatch('click');
+    const answer = await promise;
+    expect(answer.parameterOverrides.FIELD_THERMAL).toBeUndefined();
+    expect(answer.thermalField).toBeNull();
   });
 
   it('labels a range that is still following the preset', async () => {
