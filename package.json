@@ -23,6 +23,7 @@
     "syntax-check": "find src -name '*.js' -exec node --check {} +",
     "bench:backends": "node bench/backend-compare.mjs",
     "bench:multiplex": "node bench/multiplex-bench.mjs",
+    "bench:solver": "node bench/solver-tps.mjs",
     "audit:inventory": "node scripts/audit-corpus-report.mjs",
     "artifact:inventory": "node scripts/repository-artifact-report.mjs",
     "provenance:check": "node scripts/validate-provenance.mjs",

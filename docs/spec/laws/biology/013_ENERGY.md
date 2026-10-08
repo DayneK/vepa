@@ -8,7 +8,7 @@
 | Category | biology |
 | Color | ORANGE |
 | Status | wired |
-| Solver gate references | 2 |
+| Solver gate references | 3 |
 | Help source | LAW_HELP_DB |
 
 ## Parameters

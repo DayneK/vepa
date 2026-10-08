@@ -2,12 +2,12 @@
 
 # Source: Inventory
 
-The generator scanned `370` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `371` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 47 | 206 | 489 |
-| Benchmark | 8 | 6 | 13 |
+| Benchmark | 9 | 6 | 16 |
 | Repository | 7 | 2 | 4 |
 | Simulation | 33 | 242 | 381 |
 | State | 40 | 328 | 537 |
@@ -24,11 +24,12 @@ The generator scanned `370` files from active repository inputs. Individual modu
 | [bench/multiplex-render.mjs](../../../bench/multiplex-render.mjs) | benchmark | 70 | 0 | 1 | 0 |
 | [bench/results/renderer-benchmark.json](../../../bench/results/renderer-benchmark.json) | benchmark | 253 | 0 | 0 | 0 |
 | [bench/shard-worker-node.mjs](../../../bench/shard-worker-node.mjs) | benchmark | 10 | 0 | 1 | 0 |
+| [bench/solver-tps.mjs](../../../bench/solver-tps.mjs) | benchmark | 96 | 0 | 4 | 3 |
 | [bench/solver.bench.mjs](../../../bench/solver.bench.mjs) | benchmark | 587 | 0 | 6 | 10 |
 | [bench/worker-bench-worker.mjs](../../../bench/worker-bench-worker.mjs) | benchmark | 79 | 0 | 7 | 0 |
 | [index.html](../../../index.html) | repository | 226 | 0 | 0 | 1 |
 | [package-lock.json](../../../package-lock.json) | repository | 2618 | 0 | 0 | 0 |
-| [package.json](../../../package.json) | repository | 48 | 0 | 0 | 0 |
+| [package.json](../../../package.json) | repository | 49 | 0 | 0 | 0 |
 | [playwright.config.js](../../../playwright.config.js) | application | 25 | 1 | 1 | 0 |
 | [public/bench-report/data.js](../../../public/bench-report/data.js) | application | 20740 | 0 | 0 | 124 |
 | [public/bench-report/index.html](../../../public/bench-report/index.html) | application | 928 | 0 | 0 | 11 |
