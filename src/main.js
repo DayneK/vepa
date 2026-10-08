@@ -379,6 +379,24 @@ function handleWorkerTick(message) {
     // solver — adopt its tickCount so the HUD does not show a frozen TICK 0.
     if (typeof message.tickCount === 'number') tick = message.tickCount;
     finishPhysicsTick(tickStart, offspring);
+    requeueWorkerTickIfLate(tickStart);
+}
+
+// PERF-2: a worker tick is normally requested by the render loop, one per
+// animation frame. When a tick (round trip plus the main-thread population and
+// intelligence pass) already took at least a frame, the next frame is late
+// anyway, and waiting for it left the worker idle: 178 ms between ticks for an
+// 88 ms solve at 300 particles in a slow-raster browser. So queue the next tick
+// now, with exactly the arguments the render loop would pass. Same ticks in
+// the same order with the same inputs; only the idle gap goes. Fast ticks
+// (under a frame) still wait for rAF, so a light world never runs faster than
+// one tick per frame.
+const WORKER_REQUEUE_MIN_MS = 1000 / 60;
+function requeueWorkerTickIfLate(tickStart) {
+    if (paused || !particleView || workerBusy || !physicsWorker || !workerReady || workerFailed) return;
+    if (multiplexController && multiplexController.isActive()) return;
+    if (performance.now() - tickStart < WORKER_REQUEUE_MIN_MS) return;
+    solve(particleView, particleCount, PARTICLE_STRIDE, lawState, dnaBuffer, worldSize, DT * runtimeConfig.simSpeed, rng);
 }
 
 function solve(...args) {

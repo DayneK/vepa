@@ -385,33 +385,33 @@ point of listing them: a panel-to-panel edge is often also a command.
 
 | Event | Produced by | Panel |
 | --- | --- | --- |
-| `civilization:analytics` | `main.js:1869` | `civilizationPanel.js` |
+| `civilization:analytics` | `main.js:1887` | `civilizationPanel.js` |
 | `cluster:detected` | `engines/insightEngine.js:70` | `intelPanel.js` |
-| `dna:sync` | `main.js:561`<br>`speciesPanel.js:166` | `dnaPanel.js`, `speciesPanel.js` |
-| `eco:analytics` | `main.js:1857` | `ecoPanel.js` |
-| `goal:applied` | `main.js:1450` | `intelPanel.js` |
-| `groups:analytics` | `main.js:1854` | `groupAnalytics.js` |
-| `law:sync` | `main.js:562`<br>`worldPanel.js:409` | `lawPanel.js`, `worldPanel.js` |
+| `dna:sync` | `main.js:579`<br>`speciesPanel.js:166` | `dnaPanel.js`, `speciesPanel.js` |
+| `eco:analytics` | `main.js:1875` | `ecoPanel.js` |
+| `goal:applied` | `main.js:1468` | `intelPanel.js` |
+| `groups:analytics` | `main.js:1872` | `groupAnalytics.js` |
+| `law:sync` | `main.js:580`<br>`worldPanel.js:409` | `lawPanel.js`, `worldPanel.js` |
 | `lineage:branch` | `engines/lineageTracker.js:91` | `intelPanel.js` |
 | `lineage:death` | `engines/lineageTracker.js:126` | `intelPanel.js` |
 | `narrative:batch` | `core/logQueue.js:48` | `narrativePanel.js` |
 | `physics:tick` | `main.js:365` | `dnaAnalytics.js`, `hud.js`, `speciesPanel.js` |
-| `preset:loaded` | `main.js:1068` | `presetPanel.js` |
-| `preset:stateResponse` | `main.js:1043` | `presetPanel.js` |
-| `sim:metrics` | `main.js:1852` | `hud.js` |
-| `sim:paused` | `main.js:585` | `ui.js` |
-| `species:sync` | `main.js:560` | `speciesPanel.js` |
-| `timeline:cleared` | `main.js:1467` | `intelPanel.js` |
-| `timeline:restored` | `main.js:1459` | `intelPanel.js` |
-| `timeline:snapshot` | `engines/timelineEngine.js:72`<br>`main.js:1599` | `intelPanel.js` |
-| `world:compareResponse` | `main.js:1151` | `savePanel.js` |
-| `world:exported` | `main.js:1131` | `savePanel.js` |
-| `world:imported` | `main.js:1138` | `savePanel.js` |
-| `world:listResponse` | `main.js:1119` | `savePanel.js` |
-| `world:loaded` | `main.js:1102` | `savePanel.js` |
-| `world:paramsRestored` | `main.js:1029` | `worldPanel.js` |
-| `world:saved` | `main.js:1095` | `savePanel.js` |
-| `world:undoState` | `main.js:979`<br>`savePanel.js:340` | `savePanel.js` |
+| `preset:loaded` | `main.js:1086` | `presetPanel.js` |
+| `preset:stateResponse` | `main.js:1061` | `presetPanel.js` |
+| `sim:metrics` | `main.js:1870` | `hud.js` |
+| `sim:paused` | `main.js:603` | `ui.js` |
+| `species:sync` | `main.js:578` | `speciesPanel.js` |
+| `timeline:cleared` | `main.js:1485` | `intelPanel.js` |
+| `timeline:restored` | `main.js:1477` | `intelPanel.js` |
+| `timeline:snapshot` | `engines/timelineEngine.js:72`<br>`main.js:1617` | `intelPanel.js` |
+| `world:compareResponse` | `main.js:1169` | `savePanel.js` |
+| `world:exported` | `main.js:1149` | `savePanel.js` |
+| `world:imported` | `main.js:1156` | `savePanel.js` |
+| `world:listResponse` | `main.js:1137` | `savePanel.js` |
+| `world:loaded` | `main.js:1120` | `savePanel.js` |
+| `world:paramsRestored` | `main.js:1047` | `worldPanel.js` |
+| `world:saved` | `main.js:1113` | `savePanel.js` |
+| `world:undoState` | `main.js:997`<br>`savePanel.js:340` | `savePanel.js` |
 
 #### Command: panel → orchestrator
 
@@ -496,12 +496,12 @@ never sent, on either dispatch channel.
 
 | Event | Subscribed at |
 | --- | --- |
-| `epoch:list`<br><sub>orchestrator</sub> | `main.js:1370` |
-| `epoch:restore`<br><sub>orchestrator</sub> | `main.js:1373` |
-| `group:declare`<br><sub>orchestrator</sub> | `main.js:1293` |
+| `epoch:list`<br><sub>orchestrator</sub> | `main.js:1388` |
+| `epoch:restore`<br><sub>orchestrator</sub> | `main.js:1391` |
+| `group:declare`<br><sub>orchestrator</sub> | `main.js:1311` |
 | `preset:refresh`<br><sub>panel</sub> | `presetPanel.js:178` |
-| `sim:pause`<br><sub>orchestrator</sub> | `main.js:1186` |
-| `sim:resume`<br><sub>orchestrator</sub> | `main.js:1187` |
+| `sim:pause`<br><sub>orchestrator</sub> | `main.js:1204` |
+| `sim:resume`<br><sub>orchestrator</sub> | `main.js:1205` |
 | `species:info`<br><sub>panel</sub> | `dnaPanel.js:175` |
 | `stats:update`<br><sub>panel</sub> | `hud.js:158` |
 

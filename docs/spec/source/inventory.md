@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `371` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `372` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `371` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 4 |
 | Simulation | 33 | 242 | 381 |
 | State | 40 | 328 | 537 |
-| Testing | 205 | 39 | 798 |
+| Testing | 206 | 39 | 798 |
 | Ui | 30 | 113 | 385 |
 
 ## Module list
@@ -65,7 +65,7 @@ The generator scanned `371` files from active repository inputs. Individual modu
 | [src/engines/speciation.js](../../../src/engines/speciation.js) | application | 210 | 4 | 3 | 0 |
 | [src/engines/timelineEngine.js](../../../src/engines/timelineEngine.js) | application | 175 | 8 | 1 | 0 |
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
-| [src/main.js](../../../src/main.js) | application | 2041 | 0 | 52 | 14 |
+| [src/main.js](../../../src/main.js) | application | 2059 | 0 | 52 | 14 |
 | [src/multiplex/metricFormat.js](../../../src/multiplex/metricFormat.js) | application | 26 | 3 | 0 | 0 |
 | [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1888 | 39 | 12 | 8 |
 | [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 550 | 7 | 0 | 6 |
@@ -382,6 +382,7 @@ The generator scanned `371` files from active repository inputs. Individual modu
 | [tests/unit/uiModuleReport.test.js](../../../tests/unit/uiModuleReport.test.js) | testing | 174 | 1 | 4 | 1 |
 | [tests/unit/webgpuContract.test.js](../../../tests/unit/webgpuContract.test.js) | testing | 95 | 0 | 4 | 0 |
 | [tests/unit/workerCopyMode.test.js](../../../tests/unit/workerCopyMode.test.js) | testing | 67 | 0 | 5 | 3 |
+| [tests/unit/workerRequeue.test.js](../../../tests/unit/workerRequeue.test.js) | testing | 37 | 0 | 2 | 0 |
 | [tests/unit/worldSave.test.js](../../../tests/unit/worldSave.test.js) | testing | 358 | 0 | 7 | 5 |
 | [tests/unit/worldSaveCompat.test.js](../../../tests/unit/worldSaveCompat.test.js) | testing | 100 | 0 | 6 | 2 |
 | [tests/unit/worldSaveRng.test.js](../../../tests/unit/worldSaveRng.test.js) | testing | 84 | 0 | 7 | 4 |
