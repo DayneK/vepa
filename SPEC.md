@@ -1,6 +1,6 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.3.1 | **Date**: 2026-10-07 | **Base**: VEPA4 integrated intelligence
+**Version**: 9.1.27 | **Date**: 2026-10-03 | **Base**: VEPA4 integrated intelligence
 **Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
 
 ## Working-tree Update (v9.3.1 — 2026-10-07)
@@ -24,7 +24,7 @@ The repository includes a deterministic, dependency-free specification generator
 ## Development Standards (2026-08-10)
 
 - **Product & versioning:** the product is **VEPA4**; versions use
-  **`major.minor.build`** (npm-semver-native, current `9.3.0`). The v4 line is
+  **`major.minor.build`** (npm-semver-native, current `9.1.27`). The v4 line is
   retroactively mapped old `4.M.N` → `M.N.0` (generation `4` moved into the
   product name). Changelog headers carry both labels
   (`## [4.6.28] - date → 6.28.0`); the full rule lives in `AGENTS.md` §10.4.
@@ -129,7 +129,7 @@ integration, and REPRO/LIFE synergy points. Insight consumes `scanInterval` /
 4. **Dashboard renders**: the WORLD tab shows the intelligence section with
    live counters, REC toggle, and scrub slider. *(DOM-driven, no unit test —
    manual verify in browser)*
-5. **No regressions**: `npm test` green — currently **1832 tests across 178
+5. **No regressions**: `npm test` green — currently **1942 tests across 187
    files** (verified 2026-10-03), `npm run repository:check` green
    (136 laws, provenance + signoff manifests valid), and `vite build` succeeds.
 
@@ -139,7 +139,7 @@ Run before declaring any change complete:
 
 | Gate | Command | Contract |
 |---|---|---|
-| Tests | `npm test` | 178 files / 1832 tests, all green |
+| Tests | `npm test` | 187 files / 1942 tests, all green |
 | Syntax | `npm run syntax-check` | `node --check` over every `src/**/*.js` |
 | Spec drift | `npm run spec:check` | generated `docs/spec/` matches source byte-for-byte |
 | Repository | `npm run repository:check` | `spec:check` + law/provenance/signoff manifests |
