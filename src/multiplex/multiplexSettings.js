@@ -10,6 +10,7 @@ export const MULTIPLEX_SETTINGS_KEY = 'vepa-multiplex-settings';
 export const PERSISTED_KEYS = Object.freeze([
   'preset', 'cols', 'rows', 'particlesPerSim', 'populationPercent', 'lawTier', 'lightLaws',
   'tickMode', 'ticksPerSecond', 'frameBudgetMs', 'useWorkers', 'workerCount',
+  'refillToCap', // D-030
 ]);
 export const PARTICLES_PER_SIM_MIN = 125;
 export const PARTICLES_PER_SIM_MAX = 2500;
@@ -38,6 +39,7 @@ export function sanitizeMultiplexSettings(raw) {
   if (r.ticksPerSecond !== undefined) out.ticksPerSecond = clamp(r.ticksPerSecond, 0.5, 240, d.ticksPerSecond);
   if (r.frameBudgetMs !== undefined) out.frameBudgetMs = clamp(r.frameBudgetMs, 1, 14, d.frameBudgetMs);
   if (r.useWorkers !== undefined) out.useWorkers = r.useWorkers !== false;
+  if (r.refillToCap !== undefined) out.refillToCap = r.refillToCap !== false;
   if (r.workerCount !== undefined) out.workerCount = Math.round(clamp(r.workerCount, 0, 16, 0));
   return out;
 }

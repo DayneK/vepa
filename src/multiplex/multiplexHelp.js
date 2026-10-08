@@ -63,7 +63,7 @@ export const MULTIPLEX_HELP_DB = {
     section: 'setup',
     title: 'DERIVE',
     hint: 'How each shard gets its starting population.',
-    explanation: 'CLONE copies positions, DNA and laws from the selected simulation, then applies variation. SPAWN builds a fresh, evenly distributed population grid while keeping the source DNA and laws. Note: CLONE copies the selected shard as it is now — only its surviving particles; dead slots are not refilled up to CAP. If the selected world is shrinking, repeated iterates inherit the shrinkage; use SPAWN for a fresh, full population.',
+    explanation: 'CLONE copies positions, DNA and laws from the selected simulation, then applies variation. SPAWN builds a fresh, evenly distributed population grid while keeping the source DNA and laws. With REFILL TO CAP on (the default), CLONE then tops every new shard back up to full population; with it off, only the survivors are carried over.',
   },
   popScale: {
     section: 'setup',
@@ -136,6 +136,12 @@ export const MULTIPLEX_HELP_DB = {
     title: 'SUBSTEPS',
     hint: 'Solver sub-steps per shard tick (1–8).',
     explanation: 'Each shard tick runs the solver this many times with a smaller time step. Higher substeps integrate physics more finely (stable fast worlds) but multiply the per-tick cost across every shard.',
+  },
+  refillToCap: {
+    section: 'setup',
+    title: 'REFILL TO CAP',
+    hint: 'Clone iterate tops every new shard back up to full population (default on).',
+    explanation: 'CLONE copies the selected shard\u2019s particle slots, dead ones included. With this on, each new shard\u2019s empty slots are filled with copies of random survivors (bonds, age and partners reset, nudged slightly apart) before the per-sim variation is applied, so every generation starts at full population. If nothing survived, the shard is respawned from the selected shard\u2019s DNA. Full population is the PARTICLES / SIM (or POP % / SIM) cap when one is set — every preset sets one — otherwise the population each shard started with. Off = the old behaviour: survivors only, so a dying world keeps shrinking across iterates. SPAWN mode is unaffected. Saved with your multiplex settings.',
   },
   spawnSpecies: {
     section: 'setup',

@@ -119,7 +119,7 @@ integration, and REPRO/LIFE synergy points. Insight consumes `scanInterval` /
 4. **Dashboard renders**: the WORLD tab shows the intelligence section with
    live counters, REC toggle, and scrub slider. *(DOM-driven, no unit test —
    manual verify in browser)*
-5. **No regressions**: `npm test` green — currently **1824 tests across 177
+5. **No regressions**: `npm test` green — currently **1832 tests across 178
    files** (verified 2026-10-03), `npm run repository:check` green
    (136 laws, provenance + signoff manifests valid), and `vite build` succeeds.
 
@@ -129,7 +129,7 @@ Run before declaring any change complete:
 
 | Gate | Command | Contract |
 |---|---|---|
-| Tests | `npm test` | 177 files / 1824 tests, all green |
+| Tests | `npm test` | 178 files / 1832 tests, all green |
 | Syntax | `npm run syntax-check` | `node --check` over every `src/**/*.js` |
 | Spec drift | `npm run spec:check` | generated `docs/spec/` matches source byte-for-byte |
 | Repository | `npm run repository:check` | `spec:check` + law/provenance/signoff manifests |

@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `358` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `359` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
-| Application | 46 | 201 | 485 |
+| Application | 46 | 203 | 486 |
 | Benchmark | 8 | 6 | 12 |
 | Repository | 7 | 2 | 3 |
 | Simulation | 33 | 241 | 379 |
 | State | 39 | 317 | 494 |
-| Testing | 195 | 36 | 773 |
+| Testing | 196 | 36 | 775 |
 | Ui | 30 | 105 | 381 |
 
 ## Module list
@@ -65,10 +65,10 @@ The generator scanned `358` files from active repository inputs. Individual modu
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
 | [src/main.js](../../../src/main.js) | application | 1934 | 0 | 52 | 12 |
 | [src/multiplex/metricFormat.js](../../../src/multiplex/metricFormat.js) | application | 26 | 3 | 0 | 0 |
-| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1763 | 37 | 12 | 7 |
-| [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 544 | 7 | 0 | 6 |
-| [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 63 | 7 | 2 | 0 |
-| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 1034 | 1 | 8 | 3 |
+| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1888 | 39 | 12 | 8 |
+| [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 550 | 7 | 0 | 6 |
+| [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 65 | 7 | 2 | 0 |
+| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 1040 | 1 | 8 | 3 |
 | [src/multiplex/previewLaws.js](../../../src/multiplex/previewLaws.js) | application | 57 | 4 | 2 | 16 |
 | [src/multiplex/shardPool.js](../../../src/multiplex/shardPool.js) | application | 52 | 3 | 0 | 0 |
 | [src/multiplex/shardWorker.js](../../../src/multiplex/shardWorker.js) | application | 8 | 0 | 1 | 0 |
@@ -326,6 +326,7 @@ The generator scanned `358` files from active repository inputs. Individual modu
 | [tests/unit/multiplexIsolation.test.js](../../../tests/unit/multiplexIsolation.test.js) | testing | 111 | 0 | 13 | 3 |
 | [tests/unit/multiplexNaN.test.js](../../../tests/unit/multiplexNaN.test.js) | testing | 115 | 0 | 5 | 1 |
 | [tests/unit/multiplexPenta.test.js](../../../tests/unit/multiplexPenta.test.js) | testing | 91 | 0 | 6 | 1 |
+| [tests/unit/multiplexRefill.test.js](../../../tests/unit/multiplexRefill.test.js) | testing | 132 | 0 | 7 | 2 |
 | [tests/unit/multiplexScale.test.js](../../../tests/unit/multiplexScale.test.js) | testing | 77 | 0 | 6 | 2 |
 | [tests/unit/multiplexScheduler.test.js](../../../tests/unit/multiplexScheduler.test.js) | testing | 109 | 0 | 7 | 11 |
 | [tests/unit/octree.test.js](../../../tests/unit/octree.test.js) | testing | 151 | 0 | 7 | 1 |
@@ -346,7 +347,7 @@ The generator scanned `358` files from active repository inputs. Individual modu
 | [tests/unit/relationshipLab.test.js](../../../tests/unit/relationshipLab.test.js) | testing | 54 | 0 | 5 | 0 |
 | [tests/unit/relativity.test.js](../../../tests/unit/relativity.test.js) | testing | 210 | 0 | 5 | 2 |
 | [tests/unit/renderer.test.js](../../../tests/unit/renderer.test.js) | testing | 27 | 0 | 2 | 0 |
-| [tests/unit/settingsTabs.test.js](../../../tests/unit/settingsTabs.test.js) | testing | 113 | 0 | 5 | 0 |
+| [tests/unit/settingsTabs.test.js](../../../tests/unit/settingsTabs.test.js) | testing | 115 | 0 | 5 | 0 |
 | [tests/unit/signal.test.js](../../../tests/unit/signal.test.js) | testing | 105 | 0 | 4 | 3 |
 | [tests/unit/singleImplementations.test.js](../../../tests/unit/singleImplementations.test.js) | testing | 30 | 0 | 6 | 0 |
 | [tests/unit/sliderControl.test.js](../../../tests/unit/sliderControl.test.js) | testing | 149 | 0 | 2 | 0 |

@@ -66,6 +66,8 @@ describe('MULTIPLEX setup screen tabs', () => {
     'mpx-adapt': 'unchecked', 'mpx-max-iters': '0', 'mpx-stag-limit': '5', 'mpx-keep-selected': 'unchecked',
     'mpx-elites': '0', 'mpx-hist-depth': '6', 'mpx-sim-speed': '1', 'mpx-paused': 'unchecked', 'mpx-eco': 'checked',
     'mpx-import-on-exit': 'checked',
+    // D-030 (approved default change): REFILL TO CAP, on by default.
+    'mpx-refill': 'checked',
   };
   const CONTROLS = [...Object.keys(DEFAULTS), 'mpx-preset', 'mpx-law-tier', 'mpx-light-laws', 'mpx-tick-mode', 'mpx-select-after', 'mpx-fit-metrics'];
 

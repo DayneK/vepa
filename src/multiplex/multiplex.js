@@ -38,6 +38,7 @@ export const MULTIPLEX_DEFAULTS = {
   randomizeParams: true,   // perturb world-param (law-tuning) knobs between shards
   variation: 0.5,
   deriveMode: 'clone', // 'clone' | 'spawn'
+  refillToCap: true,         // D-030: Clone-mode iterate tops every new shard back up to its refill target (see refillTargetFor)
   autoIterate: false,        // regenerate all shards every autoIterateInterval ticks
   autoIterateInterval: 400,  // ticks between auto-iterations
   autoSelectFittest: false,  // after each iteration, select the shard with the most life
@@ -267,6 +268,9 @@ export function startMultiplex(mx, source, config, container) {
   const seed = Math.max(1, Math.round(mx.config.seed) || 0);
   mx.sourceSeed = seed > 0 ? (seed & 0x7fffffff) | 0 : (Date.now() & 0x7fffffff) | 0;
   buildShards(mx, source, false);
+  // D-030: the population each shard was dealt at generation 0 — the refill
+  // target when the per-sim cap is the automatic ceiling (see refillTargetFor).
+  mx.refillBaseline = Math.min(Math.max(0, source.count || 0), mx.populationCap);
   // Generation 0 is the first on-screen grid state — history starts here.
   recordHistory(mx, getFitnessReport(mx));
 }
@@ -1405,6 +1409,10 @@ function buildShards(mx, source, fromShard) {
 
   const old = mx.shards;
   mx.shards = [];
+  // D-030: Clone-mode ITERATE refills each new shard (start and Spawn never do).
+  const refillTarget = fromShard && mx.config.deriveMode !== 'spawn' && mx.config.refillToCap !== false
+    ? refillTargetFor(mx)
+    : 0;
 
   for (let i = 0; i < total; i++) {
     const seed = ((mx.sourceSeed + i * 104729) & 0x7fffffff) | 0;
@@ -1415,7 +1423,7 @@ function buildShards(mx, source, fromShard) {
     // derive from its data during construction.
     const prev = old[i];
     const recycle = prev && prev !== source ? prev : null;
-    const shard = createShard(i, seed, source, mx.config, mx.populationCap, recycle);
+    const shard = createShard(i, seed, source, mx.config, mx.populationCap, recycle, refillTarget);
     // Reuse the DOM cell when the grid layout is unchanged so canvases,
     // renderers, and the selection box survive iteration.
     if (prev) {
@@ -1441,13 +1449,12 @@ function buildShards(mx, source, fromShard) {
   if (typeof requestAnimationFrame !== 'undefined') {
     requestAnimationFrame(() => resizeMultiplex(mx));
   }
-  void fromShard;
 }
 
 let _shardEpoch = 0;
 function nextShardEpoch() { _shardEpoch = (_shardEpoch + 1) | 0; return _shardEpoch; }
 
-function createShard(index, seed, source, config, maxCount, recycle) {
+function createShard(index, seed, source, config, maxCount, recycle, refillTarget = 0) {
   // MX-20: size the buffer to the shard cap (+ headroom) instead of
   // MAX_PARTICLES — 100k × stride 100 floats was 38 MB per shard. Recycle the
   // previous buffer only when it is big enough for the new cap.
@@ -1518,6 +1525,9 @@ function createShard(index, seed, source, config, maxCount, recycle) {
     if (shard.count > 0) {
       shard.view.set(source.view.subarray(0, shard.count * PARTICLE_STRIDE));
     }
+    // D-030: top the clone back up BEFORE variation, so refilled particles
+    // get the same per-sim variation as the survivors they were copied from.
+    if (refillTarget > 0) refillShardToCap(shard, refillTarget);
   }
   applyVariation(shard, config);
   shard.prevAlive = countAlive(shard);
@@ -1640,6 +1650,121 @@ function spawnShardPopulation(shard) {
     }
   }
   shard.count = idx;
+}
+
+/**
+ * D-030: how many alive particles a Clone-mode iterate refills each shard to.
+ *
+ * When the per-sim population is set explicitly (PARTICLES / SIM or POP % /
+ * SIM — every performance preset sets one) that number IS the cap, and the
+ * target is the cap. Otherwise the cap is the automatic ceiling
+ * (MAX_PARTICLES / √shards, e.g. 50,000 on a 2×2 grid), which no shard was
+ * ever dealt; refilling to it would multiply each preview sim ~50× and stall
+ * the tab. In that mode the target is the population each shard was dealt at
+ * generation 0 (never above the cap).
+ */
+export function refillTargetFor(mx) {
+  const cap = Math.max(0, mx.populationCap || 0);
+  const c = mx.config || {};
+  const explicit = (parseFloat(c.particlesPerSim) || 0) > 0 || (parseFloat(c.populationPercent) || 0) > 0;
+  if (explicit) return cap;
+  const base = Number.isFinite(mx.refillBaseline) && mx.refillBaseline > 0 ? mx.refillBaseline : cap;
+  return Math.min(cap, base);
+}
+
+/** Relational / lifecycle fields a refilled copy must not inherit. */
+function resetCopiedParticle(view, b) {
+  view[b + S.DEAD] = 0;
+  view[b + S.AGE] = 0;
+  view[b + S.MITOSIS_TIMER] = 0;
+  view[b + S.REPRO_DRIVE] = 0;
+  view[b + S.PARTNER_ID] = -1;
+  view[b + S.BOND_COUNT] = 0;
+  view[b + S.BOND_PARTNER_1] = -1;
+  view[b + S.BOND_PARTNER_2] = -1;
+  view[b + S.BOND_PARTNER_3] = -1;
+  view[b + S.BOND_PARTNER_4] = -1;
+  view[b + S.BOND_PARTNER_5] = -1;
+  view[b + S.BOND_PARTNER_6] = -1;
+  view[b + S.ACCR_LINK_MASK] = 0;
+  view[b + S.ENTANGLE_ID] = -1;
+  view[b + S.ENTANGLE_PHASE] = 0;
+}
+
+/**
+ * D-030: refill a freshly cloned shard so `target` particles are alive.
+ *
+ * Survivors first: each empty slot gets a copy of a random survivor (shard
+ * PRNG, so seeded runs stay deterministic) with its bonds, partner,
+ * entanglement, age and reproduction timers reset and its position nudged by
+ * up to ±1 world unit so copies never sit exactly on top of each other. The
+ * per-sim variation is applied afterwards by createShard, to originals and
+ * copies alike. This keeps the selected world's evolved genomes, colours and
+ * species mix in the proportions that survived — what CLONE means.
+ *
+ * No survivors at all: fall back to a fresh SPAWN-style population built from
+ * the source shard's DNA (the only thing left to clone).
+ *
+ * Dead slots are filled in place rather than compacted: compaction would move
+ * particles and break every index-based reference (bond partners,
+ * PARTNER_ID, ENTANGLE_ID); in-place reuse is the same slot recycling the
+ * offspring path already does. Souls (DEAD = 0.5) are left for ASTRAL.
+ *
+ * @returns {{ mode: 'none'|'clone'|'spawn', added: number }}
+ */
+export function refillShardToCap(shard, target) {
+  const view = shard.view;
+  const slots = Math.min(shard.maxCount || 0, (view.length / PARTICLE_STRIDE) | 0);
+  const goal = Math.max(0, Math.min(slots, Math.round(target) || 0));
+  const n = Math.min(shard.count || 0, slots);
+  const survivors = [];
+  const free = [];
+  let alive = 0;
+  for (let p = 0; p < n; p++) {
+    const b = p * PARTICLE_STRIDE;
+    const dead = view[b + S.DEAD] || 0;
+    const mass = view[b + S.MASS] || 0;
+    if (dead >= 1.0 || (dead < 0.5 && !(mass > 0))) { free.push(p); continue; }
+    if (dead >= 0.5) continue; // soul
+    alive++;
+    if (Number.isFinite(view[b + S.POS_X]) && Number.isFinite(view[b + S.POS_Y]) && Number.isFinite(view[b + S.POS_Z])) {
+      survivors.push(p);
+    }
+  }
+  if (alive >= goal) return { mode: 'none', added: 0 };
+  if (survivors.length === 0) {
+    const keep = shard.maxCount;
+    shard.maxCount = goal;
+    spawnShardPopulation(shard);
+    shard.maxCount = keep;
+    // Even species split can land a few short of the goal (e.g. 200 / 3);
+    // top up the remainder from the fresh population.
+    const rest = refillShardToCap(shard, goal);
+    return { mode: 'spawn', added: shard.count, toppedUp: rest.added };
+  }
+  let need = goal - alive;
+  let added = 0;
+  const prng = shard.prng;
+  const lo = 1;
+  const hi = WORLD_SIZE - 1;
+  const fill = (slot) => {
+    const src = survivors[Math.floor(prng.next() * survivors.length) % survivors.length];
+    const sb = src * PARTICLE_STRIDE;
+    const b = slot * PARTICLE_STRIDE;
+    view.copyWithin(b, sb, sb + PARTICLE_STRIDE);
+    resetCopiedParticle(view, b);
+    view[b + S.POS_X] = Math.max(lo, Math.min(hi, view[b + S.POS_X] + (prng.next() - 0.5) * 2));
+    view[b + S.POS_Y] = Math.max(lo, Math.min(hi, view[b + S.POS_Y] + (prng.next() - 0.5) * 2));
+    view[b + S.POS_Z] = Math.max(lo, Math.min(hi, view[b + S.POS_Z] + (prng.next() - 0.5) * 2));
+    added++;
+    need--;
+  };
+  for (let i = 0; i < free.length && need > 0; i++) fill(free[i]);
+  while (need > 0 && shard.count < slots) {
+    fill(shard.count);
+    shard.count++;
+  }
+  return { mode: 'clone', added };
 }
 
 /**

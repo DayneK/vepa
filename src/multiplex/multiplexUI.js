@@ -302,7 +302,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
           <p class="settings-tab-intro">How each new generation is made from the selected sim, and how different the sims are from each other.</p>
           <div class="chaos-modal-section">
             <div class="chaos-modal-label" data-mpx-help="derive">DERIVED FROM THE SELECTED SIMULATION</div>
-            <label class="chaos-radio" data-mpx-help="derive"><input type="radio" name="mpx-derive" value="clone" checked><span>Clone — copy the current particles (survivors only), DNA &amp; laws, then vary</span></label>
+            <label class="chaos-radio" data-mpx-help="derive"><input type="radio" name="mpx-derive" value="clone" checked><span>Clone — copy the current particles, DNA &amp; laws, then vary</span></label>
             <label class="chaos-radio" data-mpx-help="derive"><input type="radio" name="mpx-derive" value="spawn"><span>Spawn — fresh full population, keep DNA &amp; laws</span></label>
             <div class="mpx-set-row" data-mpx-help="spawnSpecies">
               <span class="mpx-set-label">SPAWN SPECIES</span>
@@ -310,6 +310,10 @@ export function createMultiplexController(bus, getSource, applyShard) {
               <span class="mpx-set-value" id="mpx-spawn-species-value">5</span>
             </div>
             <span class="settings-hint">Spawn species is used only by Spawn.</span>
+            <div class="mpx-set-row" data-mpx-help="refillToCap">
+              <label class="mpx-check"><input id="mpx-refill" type="checkbox" checked><span>REFILL TO CAP</span></label>
+            </div>
+            <span class="settings-hint">Clone only: on each iterate, top every new sim back up to full population by copying survivors (or respawning from the selected sim's DNA if none survived). Off = survivors only, so a shrinking world keeps shrinking.</span>
           </div>
 
           <div class="chaos-modal-section">
@@ -663,6 +667,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
         popVariation: numberOr(modal.querySelector('#mpx-pop-var').value, 1),
         paramVariation: numberOr(modal.querySelector('#mpx-param-var').value, 1),
         deriveMode: (modal.querySelector('input[name="mpx-derive"]:checked') || {}).value || 'clone',
+        refillToCap: modal.querySelector('#mpx-refill').checked,
         populationScale: parseFloat(modal.querySelector('#mpx-pop-scale').value) || 1,
         populationPercent: Math.max(0, Math.min(100, parseFloat((modal.querySelector('#mpx-pop-percent') || {}).value) || 0)),
         seed: Math.max(0, parseInt(modal.querySelector('#mpx-seed').value, 10) || 0),
@@ -742,6 +747,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
     setPct('#mpx-param-var', '#mpx-param-var-value', c.paramVariation ?? 1);
     const derive = modal.querySelector(`input[name="mpx-derive"][value="${c.deriveMode || 'clone'}"]`);
     if (derive) derive.checked = true;
+    check('#mpx-refill', c.refillToCap !== false);
     setPct('#mpx-pop-scale', '#mpx-pop-scale-value', c.populationScale ?? 1);
     { const pp = modal.querySelector('#mpx-pop-percent'); if (pp) pp.value = String(c.populationPercent ?? 0); }
     setVal('#mpx-seed', c.seed || 0);
