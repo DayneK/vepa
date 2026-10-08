@@ -133,7 +133,7 @@
     "ANTIMATTER",
     "CONTACT",
     "MOMENTUM",
-    "INERTIA",
+    "WRAP",
     "TORQUE",
     "CONSTRAINT",
     "FRAGMENTATION",
@@ -145,7 +145,7 @@
   "recordsByRelationshipType": {
     "dependsOn": 13,
     "synergizesWith": 31,
-    "antagonizes": 8,
+    "antagonizes": 9,
     "transforms": 32,
     "reads": 125,
     "writes": 98,

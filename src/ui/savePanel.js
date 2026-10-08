@@ -1,9 +1,15 @@
 // ============================================================================
 // VEPA4 — World States Panel (SAVES tab)
-// Save / load / compare / export / import full world states, plus the
-// toolbar quick-save (💾) and undo (⏪) buttons. The undo ring itself lives
-// in main.js (world:undo / world:redo) — this panel is pure presentation and
-// talks to it exclusively through the bus.
+//
+// Three sub-tabs, split out of the one long list this panel used to be:
+//
+//   SAVES > 🗃️ WORLD STATES — the saved-world list: load, compare, delete.
+//   SAVES > ↶  UNDO         — the undo ring: step backwards, step forwards, and
+//                             see whether auto-snapshotting is on.
+//   SAVES > ⇄  IMPORT/EXPORT — moving worlds in and out as files.
+//
+// The undo ring itself lives in main.js (world:undo / world:redo) — this panel
+// is pure presentation and talks to it exclusively through the bus.
 // ============================================================================
 
 const WS_STYLES_ID = 'ws-styles';
@@ -32,6 +38,13 @@ function ensureStyles() {
     .ws-item .ws-actions button { background: none; border: 1px solid var(--border); border-radius: 3px; color: var(--text-secondary); font-size: 11px; cursor: pointer; padding: 2px 4px; touch-action: manipulation; }
     .ws-item .ws-actions button:hover { border-color: var(--accent-red); color: var(--accent-red); }
     .ws-empty { font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; padding: 8px 4px; }
+    /* Undo sub-tab: one row per step the ring still holds. */
+    .ws-ring { display: flex; flex-direction: column; gap: 2px; max-height: 220px; overflow-y: auto; margin: 6px 0; }
+    .ws-ring-step { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; padding: 3px 6px; border-radius: 3px; color: var(--text-secondary); border-left: 2px solid transparent; }
+    .ws-ring-step.now { color: var(--accent-red); border-left-color: var(--accent-red); background: rgba(255,74,74,0.08); }
+    .ws-ring-depth { font-size: 10px; opacity: 0.7; padding: 2px 4px; }
+    /* Import/export sub-tab. */
+    .ws-io-note { font-size: 10px; color: var(--text-secondary); letter-spacing: 1px; line-height: 1.5; padding: 2px 4px 8px; }
     .ws-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; align-items: flex-start; justify-content: center; padding: 6vh 4vw; z-index: 1000; }
     .ws-overlay.hidden { display: none; }
     .ws-overlay-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; max-width: 92vw; max-height: 88vh; overflow: auto; padding: 12px; }
@@ -78,6 +91,8 @@ export function downloadTextFile(filename, text) {
 
 export function createSavePanel(bus) {
   const host = document.getElementById('saves-panel');
+  const undoHost = document.getElementById('undo-panel');
+  const ioHost = document.getElementById('io-panel');
   if (!host) return null;
   ensureStyles();
 
@@ -88,36 +103,20 @@ export function createSavePanel(bus) {
     const d = new Date();
     return `QUICK ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   };
-  if (saveBtn) saveBtn.addEventListener('click', () => {
-    bus.emit('world:save', { name: quickName() });
-    flashStatus('Saving…');
-  });
-  if (undoBtn) {
-    undoBtn.addEventListener('click', () => bus.emit('world:undo'));
-  }
 
-  // ── Panel markup ──
+  // ── WORLD STATES markup ──
   host.innerHTML = `
     <div class="ws-header">WORLD STATES</div>
-    <div class="ws-sub">SAVE · LOAD · COMPARE · UNDO — full world snapshots</div>
+    <div class="ws-sub">Full snapshots — particles, laws, DNA, world parameters</div>
     <div class="ws-row">
       <input id="ws-name" type="text" placeholder="Save name…" maxlength="40">
       <button id="ws-save" class="ws-btn primary">💾 SAVE</button>
     </div>
     <div class="ws-row">
-      <button id="ws-undo" class="ws-btn" disabled>⏪ UNDO</button>
-      <button id="ws-redo" class="ws-btn" disabled>⏩ REDO</button>
-      <label class="ws-check" title="Snapshot the world before Chaos / Restart / Reset / preset load / species edits / world-param changes">
-        <input id="ws-auto" type="checkbox" checked>AUTO
-      </label>
+      <button id="ws-compare-all" class="ws-btn" disabled>⇄ COMPARE ALL</button>
       <span id="ws-status" class="ws-status"></span>
     </div>
     <div id="ws-list" class="ws-list"></div>
-    <div class="ws-row">
-      <button id="ws-compare-all" class="ws-btn" disabled>⇄ COMPARE ALL</button>
-      <button id="ws-import" class="ws-btn">📂 IMPORT</button>
-      <input id="ws-import-file" type="file" accept=".json,application/json" hidden>
-    </div>
     <div id="ws-compare-overlay" class="ws-overlay hidden">
       <div class="ws-overlay-card">
         <div class="ws-overlay-head">
@@ -128,15 +127,52 @@ export function createSavePanel(bus) {
       </div>
     </div>`;
 
+  // ── UNDO markup ──
+  if (undoHost) {
+    undoHost.innerHTML = `
+      <div class="ws-header">UNDO HISTORY</div>
+      <div class="ws-sub">Steps taken since boot. Undo and redo do not leave the page.</div>
+      <div class="ws-row">
+        <button id="ws-undo" class="ws-btn" disabled>⏪ UNDO</button>
+        <button id="ws-redo" class="ws-btn" disabled>⏩ REDO</button>
+        <label class="ws-check" title="Snapshot the world before Chaos / Restart / Reset / preset load / species edits / world-param changes">
+          <input id="ws-auto" type="checkbox" checked>AUTO
+        </label>
+      </div>
+      <div id="ws-ring-depth" class="ws-ring-depth">no steps recorded yet</div>
+      <div id="ws-ring" class="ws-ring"></div>`;
+  }
+
+  // ── IMPORT / EXPORT markup ──
+  if (ioHost) {
+    ioHost.innerHTML = `
+      <div class="ws-header">IMPORT / EXPORT</div>
+      <div class="ws-io-note">
+        A world is a single <strong>.vepa.json</strong> file: particles, laws, DNA,
+        world parameters and the civilization record. Export from WORLD STATES;
+        import here to bring one back.
+      </div>
+      <div class="ws-row">
+        <button id="ws-import" class="ws-btn">📂 IMPORT FILE</button>
+        <button id="ws-export-live" class="ws-btn">⬇ EXPORT LIVE WORLD</button>
+      </div>
+      <input id="ws-import-file" type="file" accept=".json,application/json" hidden>`;
+  }
+
   const nameInput = host.querySelector('#ws-name');
   const statusEl = host.querySelector('#ws-status');
   const listEl = host.querySelector('#ws-list');
-  const undoPanelBtn = host.querySelector('#ws-undo');
-  const redoPanelBtn = host.querySelector('#ws-redo');
-  const autoToggle = host.querySelector('#ws-auto');
   const compareAllBtn = host.querySelector('#ws-compare-all');
   const overlay = host.querySelector('#ws-compare-overlay');
   const overlayBody = host.querySelector('#ws-compare-body');
+  const undoPanelBtn = undoHost ? undoHost.querySelector('#ws-undo') : null;
+  const redoPanelBtn = undoHost ? undoHost.querySelector('#ws-redo') : null;
+  const autoToggle = undoHost ? undoHost.querySelector('#ws-auto') : null;
+  const ringEl = undoHost ? undoHost.querySelector('#ws-ring') : null;
+  const ringDepthEl = undoHost ? undoHost.querySelector('#ws-ring-depth') : null;
+  const importBtn = ioHost ? ioHost.querySelector('#ws-import') : null;
+  const importFile = ioHost ? ioHost.querySelector('#ws-import-file') : null;
+  const exportLiveBtn = ioHost ? ioHost.querySelector('#ws-export-live') : null;
   let lastSaves = [];
 
   const flashStatus = (text, isError = false) => {
@@ -148,6 +184,13 @@ export function createSavePanel(bus) {
   };
 
   // ── Actions ──
+  if (saveBtn) saveBtn.addEventListener('click', () => {
+    bus.emit('world:save', { name: quickName() });
+    flashStatus('Saving…');
+  });
+  if (undoBtn) {
+    undoBtn.addEventListener('click', () => bus.emit('world:undo'));
+  }
   host.querySelector('#ws-save').addEventListener('click', () => {
     const name = (nameInput.value || '').trim();
     if (!name) {
@@ -157,18 +200,17 @@ export function createSavePanel(bus) {
     }
     bus.emit('world:save', { name });
   });
-  undoPanelBtn.addEventListener('click', () => bus.emit('world:undo'));
-  redoPanelBtn.addEventListener('click', () => bus.emit('world:redo'));
-  autoToggle.addEventListener('change', () => {
+  if (undoPanelBtn) undoPanelBtn.addEventListener('click', () => bus.emit('world:undo'));
+  if (redoPanelBtn) redoPanelBtn.addEventListener('click', () => bus.emit('world:redo'));
+  if (autoToggle) autoToggle.addEventListener('change', () => {
     bus.emit('world:toggleAutoUndo', { enabled: autoToggle.checked });
   });
   compareAllBtn.addEventListener('click', () => {
     bus.emit('world:compare', { names: lastSaves.map((s) => s.name) });
   });
-  host.querySelector('#ws-import').addEventListener('click', () => {
-    host.querySelector('#ws-import-file').click();
-  });
-  host.querySelector('#ws-import-file').addEventListener('change', (e) => {
+  if (exportLiveBtn) exportLiveBtn.addEventListener('click', () => bus.emit('world:export', { name: 'LIVE' }));
+  if (importBtn && importFile) importBtn.addEventListener('click', () => importFile.click());
+  if (importFile) importFile.addEventListener('change', (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -190,9 +232,11 @@ export function createSavePanel(bus) {
         const alive = meta.alive != null ? `ALIVE ${meta.alive}` : `N ${s.particleCount || 0}`;
         const sp = meta.species != null ? `SP ${meta.species}` : `SP ${s.speciesCount || 0}`;
         const laws = meta.lawsOn != null ? `LAWS ${meta.lawsOn}` : '';
+        const tick = Number.isFinite(s.tick) ? `T ${s.tick}` : '';
+        const bytes = Number.isFinite(s.bytes) ? ` · ${(s.bytes / 1024).toFixed(0)} KB` : '';
         return `<div class="ws-item">
           <span class="ws-name" title="${s.name}">${s.name}</span>
-          <span class="ws-meta">${fmtTime(s.savedAt)} · ${alive} · ${sp}${laws ? ' · ' + laws : ''}</span>
+          <span class="ws-meta">${fmtTime(s.savedAt)} · ${alive} · ${sp}${tick ? ' · ' + tick : ''}${laws ? ' · ' + laws : ''}${bytes}</span>
           <span class="ws-actions">
             <button data-load="${s.name}" title="Load this world">📂</button>
             <button data-compare="${s.name}" title="Compare vs live">⇄</button>
@@ -217,6 +261,38 @@ export function createSavePanel(bus) {
       });
     }
     compareAllBtn.disabled = lastSaves.length < 1;
+  }
+
+  /**
+   * Render the undo ring.
+   *
+   * The ring used to be invisible: the panel knew whether `world:undo` was
+   * allowed but never showed what was in it, so UNDO was a button with no
+   * history attached to it. The ring is now a list, oldest first, with the
+   * current position marked.
+   */
+  function renderRing({ canUndo, canRedo, enabled, history, position }) {
+    if (undoPanelBtn) undoPanelBtn.disabled = !canUndo;
+    if (redoPanelBtn) redoPanelBtn.disabled = !canRedo;
+    if (undoBtn) undoBtn.disabled = !canUndo;
+    if (autoToggle && enabled !== undefined && autoToggle.checked !== enabled) autoToggle.checked = enabled;
+    if (!ringEl) return;
+
+    const steps = Array.isArray(history) ? history : [];
+    const at = Number.isFinite(position) ? position : steps.length - 1;
+    if (ringDepthEl) {
+      ringDepthEl.textContent = enabled
+        ? `${steps.length} step(s) recorded · auto-snapshot ON · at ${Math.max(0, at + 1)}`
+        : `${steps.length} step(s) recorded · auto-snapshot OFF · at ${Math.max(0, at + 1)}`;
+    }
+    if (!steps.length) {
+      ringEl.innerHTML = '<div class="ws-empty">Nothing to undo yet. Chaos, Restart, Reset, preset loads and world-parameter changes each commit a step.</div>';
+      return;
+    }
+    ringEl.innerHTML = steps.map((label, i) => {
+      const cls = i === at ? 'ws-ring-step now' : 'ws-ring-step';
+      return `<div class="${cls}"><span>${i + 1}</span><span>${label || 'step'}</span></div>`;
+    }).join('');
   }
 
   // ── Render the compare matrix ──
@@ -257,15 +333,10 @@ export function createSavePanel(bus) {
     flashStatus(`Exported “${name}”`);
   });
   bus.on('world:compareResponse', ({ matrix }) => renderCompare(matrix));
-  bus.on('world:undoState', ({ canUndo, canRedo, enabled }) => {
-    undoPanelBtn.disabled = !canUndo;
-    redoPanelBtn.disabled = !canRedo;
-    if (undoBtn) undoBtn.disabled = !canUndo;
-    if (autoToggle && enabled !== undefined && autoToggle.checked !== enabled) autoToggle.checked = enabled;
-  });
+  bus.on('world:undoState', (state) => renderRing(state || {}));
 
   // Initial list + undo state.
   bus.emit('world:list');
-  bus.emit('world:undoState', { canUndo: false, canRedo: false, enabled: true });
+  bus.emit('world:undoState', { canUndo: false, canRedo: false, enabled: true, history: [], position: -1 });
   return { refresh: () => bus.emit('world:list') };
 }

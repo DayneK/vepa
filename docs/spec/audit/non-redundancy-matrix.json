@@ -1051,7 +1051,7 @@
       "status": "distinct"
     },
     {
-      "law": "INERTIA",
+      "law": "WRAP",
       "category": "mechanics",
       "effect": 0,
       "nearest": "ELECTRIC_FIELD",

@@ -20,7 +20,7 @@
  *
  * Everything is deterministic — no PRNG.
  */
-import { STRIDE_INDEXES, DNA_INDEXES } from '../constants.js';
+import { STRIDE_INDEXES, DNA_INDEXES, MAX_PARTICLES } from '../constants.js';
 import { writeField } from '../physics/fields.js';
 import { clamp, num } from '../core/numeric.js';
 
@@ -115,7 +115,7 @@ export function stepSynthetic(state, view, count, stride, fieldSystem, opts = {}
 
       // If there's room and the group has members, write a synthetic particle
       // into the stride buffer at the HUB centroid
-      if (count < (opts.maxParticles || 100000)) {
+      if (count < (opts.maxParticles ?? MAX_PARTICLES)) {
         const idx = count;
         const base = idx * stride;
         const cx = g.cx || 0;

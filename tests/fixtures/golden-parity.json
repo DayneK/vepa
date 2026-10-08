@@ -10,7 +10,7 @@
       "offspring": 0
     },
     "default-tidal-bloom": {
-      "sha256": "6ec06791cec04867b9bb40cf4438f793c397f326a787cdefbf2d61636c54c1bb",
+      "sha256": "104721a8fb539891f4660e86113a7006fb3cf73e072c4a935d55dbc80129dfdd",
       "offspring": 0
     },
     "all-laws": {
@@ -18,7 +18,7 @@
       "offspring": 0
     },
     "category-physics": {
-      "sha256": "6c5f1f56a3d0e0d6c88ee4163ff856cf32fcaec378cf58704d0be21161dfab90",
+      "sha256": "eb2640f06a41c3a18d811506d3400a93dbcd3d95a3a387293a9abf8d74be6fa9",
       "offspring": 0
     },
     "category-mechanics": {
@@ -26,7 +26,7 @@
       "offspring": 0
     },
     "category-biology": {
-      "sha256": "336aa441641048a8c672e46714bdbd475a2910849cceab7077eaf7b0521251ff",
+      "sha256": "e0cac94d83918d910f2c9158cdb3cce3b50ebef8af71c5bbcdfcc352a261f333",
       "offspring": 0
     },
     "category-chemistry": {
@@ -50,11 +50,11 @@
       "offspring": 0
     },
     "category-quantum": {
-      "sha256": "27a5eed83946232becd6a5646bc03333b65318e9e9a5e6bb6e4dad87f10d7504",
+      "sha256": "08861b63cd237259d0fd913b548d15cf39402b479923873852804b8ee2cda4f3",
       "offspring": 0
     },
     "default-tidal-bloom-params": {
-      "sha256": "fafed453f83a75b1666a31bfa77c55a106681bc6a9b67766cf28987a75f158ac",
+      "sha256": "a0bd3b350bdadc132b9a2eef38c869b9a81719d4b471499631c8da23a5552c9b",
       "offspring": 0
     }
   }

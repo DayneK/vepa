@@ -243,12 +243,16 @@ describe('the DATA panels got wider', () => {
     }
   });
 
-  it('CIVILIZATION grew from eight cells to eleven', () => {
+  it('CIVILIZATION grew from eight cells to ten, with CODEX promoted out of the grid', () => {
     const cells = cellsOf(CIV_SRC);
-    expect(cells.length).toBeGreaterThanOrEqual(11);
+    expect(cells.length).toBeGreaterThanOrEqual(10);
     for (const id of ['civ-households', 'civ-citizens', 'civ-generations']) {
       expect(cells, id).toContain(id);
     }
+    // The codex stopped being a "1/2" number and became a full-width block with
+    // its own help key; it is no longer one of the grid cells.
+    expect(cells, 'civ-codex should no longer be a grid cell').not.toContain('civ-codex');
+    expect(CIV_SRC).toContain('civ-codex-block');
   });
 
   it('renders every value cell it declares, so no cell is permanently blank', () => {

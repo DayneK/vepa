@@ -74,7 +74,7 @@
  },
  "BUOYANCY": {
   "hint": "Thermal buoyancy: hot particles rise, cool particles sink.",
-  "explanation": "Replaces WRAP: Archimedes-style lift along the vertical axis. Particles hotter than ambient get an upward force scaled by the temperature difference; cooler particles sink. Convection cells emerge with heat sources and RESISTANCE friction heating.",
+  "explanation": "Archimedean-style thermal lift along the vertical axis. Particles hotter than ambient get an upward force scaled by the temperature difference; cooler particles sink. This force is independent of WRAP, which controls world-edge boundary behavior.",
   "system": "lift = (TEMPERATURE - ambient) x HEAT_OUTPUT DNA x k applied on -z (up). TEMPERATURE is stride 66 (heated by RESISTANCE/fusion); HEAT_OUTPUT DNA scales the coupling. x1.25 with PLANETARY for convection stacks."
  },
  "CAPACITANCE": {
@@ -353,11 +353,11 @@
   "explanation": "Confirmed batch-15 (match irl): velocity alignment between coupled particles — magnetic coupling that damps relative motion and shepherds streams. Coupling needs a magnetic field (|MAGNETIC_MOMENT product|) and both particles must conduct, and it fades with distance like a real inductive field.",
   "system": "dv = (v_j − v_i)·k·couple, couple = |m1·m2|/(1 + dist·0.03), requires CONDUCTIVITY > 0 on both. Momentum-conserving; forms coherent flow lanes."
  },
- "INERTIA": {
-  "hint": "Inertia resists acceleration.",
-  "explanation": "Mass scales how strongly accumulated acceleration changes motion.",
-  "system": "Force response is divided by mass.",
-  "advanced": "It does not add particle stride state."
+ "WRAP": {
+  "hint": "The world edges wrap or bounce.",
+  "explanation": "With WRAP on, a particle that leaves one face of the world re-enters through the opposite one and keeps its velocity. With WRAP off, the same face stops it: WALL REFLECT decides whether it is absorbed, mirrored or over-reflected.",
+  "system": "Each axis is folded back into [0, world size) when the law is on. When it is off, an out-of-range axis is clamped to the face and its outward velocity is scaled by WALL REFLECT.",
+  "advanced": "The TOROIDAL EDGES world param is this law's default: it seeds the bit when a world loads, so a saved world remembers its own topology. With WRAP off, PLANETARY's z = 0 ground plane becomes a real floor instead of a fold."
  },
  "IONIZATION": {
   "hint": "Ionization: hard contacts strip charge onto particles.",

@@ -47,7 +47,7 @@ export const MULTIPLEX_DEFAULTS = {
   maxIterations: 0,          // 0 = unlimited; auto-iterate stops at this count
   variationDrift: 0,         // per-iteration variation increase (evolutionary pressure)
   populationScale: 1.0,      // scales the dynamic per-shard population cap (0.25–1)
-  populationPercent: 0,      // MX-20: >0 fixes each shard's cap at this % of MAX_PARTICLES (2.5 → 2,500); 0 = sqrt curve
+  populationPercent: 0,      // MX-20: >0 fixes each shard's cap at this % of MAX_PARTICLES (25 → 2,500 since the v9.3.1 10,000 ceiling); 0 = sqrt curve
   particlesPerSim: 0,        // MX-20: >0 fixes each shard's cap in particles (125–2,500 in the UI); wins over populationPercent
   lawTier: 'full',           // MX-20: 'full' | 'light' — preview law set (see previewLaws.js)
   lightLaws: null,           // MX-20: user-edited light set (law names); null = DEFAULT_LIGHT_LAWS
@@ -123,7 +123,7 @@ export const MULTIPLEX_PRESETS = Object.freeze({
   }),
   'full-fidelity': Object.freeze({
     label: 'Full fidelity', cols: 5, rows: 4, particlesPerSim: 2500, lawTier: 'full', tickMode: 'adaptive', useWorkers: true,
-    note: '20 sims × 2,500 particles (2.5%), full laws, ticks throttled to what the pool sustains; render stays at 60 fps.',
+    note: '20 sims × 2,500 particles (25%), full laws, ticks throttled to what the pool sustains; render stays at 60 fps.',
   }),
 });
 

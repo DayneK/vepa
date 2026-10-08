@@ -21,9 +21,9 @@
                     <button id="play-pause-btn" class="sq-btn active" title="Play/Pause">⏸</button>
                 </div>
                 <div class="toolbar-center">
-                    <span id="hud-population-count" class="hud-item hud-population-count" title="Population (alive particles)">0</span>
+                    <span id="hud-population-count" class="hud-item hud-population-count" role="status" aria-label="Particles alive" title="Population (alive particles)">0</span>
                     <span id="hud-particles" class="hud-item hud-population-orb" role="status" aria-label="Population indicator" title="Population indicator"></span>
-                    <span id="hud-tick" class="hud-item hud-tick-compact" title="Tick (top) · render fps (bottom)">0
+                    <span id="hud-tick" class="hud-item hud-tick-compact" role="status" aria-label="Tick telemetry loading" title="Tick (top) · render fps (bottom)">0
 0.0</span>
                 </div>
                 <div class="toolbar-right">
@@ -143,11 +143,18 @@
                                 <button class="cat-tab active" data-cat="cat-mechanics">MECH</button>
                             </div>
                             <div id="law-info-module" class="law-info-module hidden"></div>
+                            <div class="law-search-row">
+                                <input id="law-search" type="search" autocomplete="off" spellcheck="false"
+                                       placeholder="Search 136 laws…" aria-label="Search laws by name">
+                                <button id="law-search-clear" class="law-search-clear" title="Clear search" aria-label="Clear search">✕</button>
+                                <span id="law-search-count" class="law-search-count" role="status" aria-live="polite"></span>
+                            </div>
                             <div id="law-grid" class="law-icon-grid"></div>
                         </div>
                         <div id="setup-world" class="sub-tab-content">
                             <div class="world-inner">
                                 <div id="world-params" class="world-sliders"></div>
+                                <div id="world-presets" class="world-presets"></div>
                             </div>
                         </div>
                         <div id="setup-species" class="sub-tab-content">
@@ -164,7 +171,20 @@
                     </div>
 
                     <div id="tab-saves" class="tab-content">
-                        <div id="saves-panel"></div>
+                        <div class="sub-tabs">
+                            <button class="sub-tab-btn active" data-sub="saves-states" title="Saved worlds — list, load, compare, delete" aria-label="Saved worlds">🗃️</button>
+                            <button class="sub-tab-btn" data-sub="saves-undo" title="Undo history — step backwards and forwards" aria-label="Undo">↶</button>
+                            <button class="sub-tab-btn" data-sub="saves-io" title="Import and export worlds as files" aria-label="Import / export">⇄</button>
+                        </div>
+                        <div id="saves-states" class="sub-tab-content active">
+                            <div id="saves-panel"></div>
+                        </div>
+                        <div id="saves-undo" class="sub-tab-content">
+                            <div id="undo-panel"></div>
+                        </div>
+                        <div id="saves-io" class="sub-tab-content">
+                            <div id="io-panel"></div>
+                        </div>
                     </div>
                 </div>
             </div>

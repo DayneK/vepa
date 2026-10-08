@@ -2,7 +2,7 @@
 
 export const PARTICLE_STRIDE = 100;
 export const MAX_SPECIES = 64;
-export const MAX_PARTICLES = 100000;
+export const MAX_PARTICLES = 10000;
 
 export const STRIDE_INDEXES = {
   POS_X: 0,

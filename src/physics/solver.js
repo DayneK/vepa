@@ -122,7 +122,7 @@ import { compatibilityForViewsInto, createCompatibilityScratch, meetsCompatibili
 const _pairCompatScratch = createCompatibilityScratch();
 import { applyAlloy, adjoinParticles, maintainAdjoinedPair, isBondedPair, isAccretionPair } from './mergePhysics.js';
 import { applyTide, applyFriction, applyHorizon, applyRadiationPressure, applyMassInertia, applyField } from './lawgroups/physicsLaws.js';
-import { applyContactCorrection, applyCollisionImpulse, applyMomentum, applyInertia, applyTorque, applyConstraint, applyFragmentation, applyTopology, applyAdhesion } from './lawgroups/mechanicsLaws.js';
+import { applyContactCorrection, applyCollisionImpulse, applyMomentum, applyTorque, applyConstraint, applyFragmentation, applyTopology, applyAdhesion, applyWrapBoundary } from './lawgroups/mechanicsLaws.js';
 import { applyAdiabatic, applyCompression, applyExpansion, applyEquilibrium, applyLatentHeat, applyRunaway } from './lawgroups/thermoLaws.js';
 import { applySymbiosis, applyParasite, applyHibernation, applyImmunity } from './lawgroups/biologyLaws.js';
 import { applyElectrolysis, applyPhotolysis, applyPrecipitation, applyNeutralization, applyStoichiometry, applyAutocatalysis } from './lawgroups/chemistryLaws.js';
@@ -159,7 +159,7 @@ function ensureNeighborBuf(cap) {
 }
 
 // Per-tick scratch buffers, reused across solves to avoid GC pressure in the
-// O(N) / pairwise hot loops (at 100k particles a fresh Float32Array + three
+// O(N) / pairwise hot loops (at high populations a fresh Float32Array + three
 // per-pair force objects every tick adds up to hundreds of MB of churn).
 let _localDt = new Float32Array(0);
 function ensureLocalDt(n) {
@@ -387,8 +387,9 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   // neighbour gather — and therefore total pairwise work — stays ~flat as N
   // grows (dim ≈ ∛(N / 0.5), clamped to the slider range). The density target
   // is ~0.5 particles/cell, which keeps the 27-cell gather sparse at every
-  // population: ~17³ at 2.5k, ~27³ at 10k, ~37³ at 25k, ~59³ at 100k. The
-  // finer grid reduces pairwise work at larger populations, with diminishing
+  // population: ~17³ at 2.5k and ~27³ at the current 10k ceiling (higher
+  // values were representative of historical pre-cap benchmarks). The finer
+  // grid reduces pairwise work at larger populations, with diminishing
   // returns once grid rebuild cost dominates. The classic 12³ floor remains
   // the minimum, so tiny populations stay bounded.
   const configuredInteractions = Math.max(8, Math.round(WP.MAX_INTERACTIONS ?? DEFAULT_MAX_INTERACTIONS));
@@ -1747,24 +1748,22 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       vz *= vScale;
     }
 
-    // ── Toroidal wrapping ──
-    // TOROIDAL EDGES world param (the WRAP law was retired into WORLD →
-    // SIMULATION RULES): 1 = wrap around edges, 0 = soft walls (WALL REFLECT).
-
-    if (!Number.isFinite(WP.TOROIDAL) || WP.TOROIDAL !== 0) {
-      px = ((px % worldSize) + worldSize) % worldSize;
-      py = ((py % worldSize) + worldSize) % worldSize;
-      pz = ((pz % worldSize) + worldSize) % worldSize;
-    } else {
-      // Clamp to world bounds (soft wall). WALL_REFLECT slider: 0 = 100%
-      // absorption, 1 = 100% reflect (default), 2 = 200% reflect.
+    // ── Boundaries — the WRAP law (mechanics 130) ──
+    // This was the TOROIDAL EDGES world param alone until v9.1.29: the law lost
+    // its toggle, became a slider, and a player reading the grid had no way to
+    // reason about the world's topology. It is a law again — the bit decides,
+    // and the param is what seeds the bit at world load (see `syncWrapLaw`).
+    {
       const wallReflect = Number.isFinite(WP.WALL_REFLECT) ? WP.WALL_REFLECT : 1;
-      if (px < 0) { px = 0; vx = Math.abs(vx) * wallReflect; }
-      else if (px >= worldSize) { px = worldSize - 0.01; vx = -Math.abs(vx) * wallReflect; }
-      if (py < 0) { py = 0; vy = Math.abs(vy) * wallReflect; }
-      else if (py >= worldSize) { py = worldSize - 0.01; vy = -Math.abs(vy) * wallReflect; }
-      if (pz < 0) { pz = 0; vz = Math.abs(vz) * wallReflect; }
-      else if (pz >= worldSize) { pz = worldSize - 0.01; vz = -Math.abs(vz) * wallReflect; }
+      const boundary = applyWrapBoundary(
+        { x: px, y: py, z: pz },
+        { x: vx, y: vy, z: vz },
+        worldSize,
+        active[LAW_INDEXES.WRAP],
+        wallReflect,
+      );
+      px = boundary.position.x; py = boundary.position.y; pz = boundary.position.z;
+      vx = boundary.velocity.x; vy = boundary.velocity.y; vz = boundary.velocity.z;
     }
 
     // ── Field medium: portals + hard walls (v8.2 E.1) ──

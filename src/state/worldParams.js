@@ -7,15 +7,16 @@
  * the same state through runtimeConfig.worldParams (shared module instance —
  * VEPA runs the solver on the main thread).
  */
-import { WORLD_SIZE, MAX_PARTICLES } from '../constants.js';
+import { WORLD_SIZE, MAX_PARTICLES, LAW_INDEXES } from '../constants.js';
+import * as lawState from './lawState.js';
 
 export const WORLD_PARAM_DEFS = [
   // ── SPACE ──
   { key: 'WORLD_SIZE', label: 'WORLD SIZE', min: 50, max: 20000, default: WORLD_SIZE, step: 100, group: 'SPACE', subgroup: 'WORLD' },
   { key: 'GROUND_HEIGHT', label: 'GROUND HEIGHT', min: 0, max: 1, default: 0.9, step: 0.05, group: 'SPACE', subgroup: 'WORLD' },
-  { key: 'PARTICLE_COUNT', label: 'PARTICLE COUNT', min: 100, max: 100000, default: 100000, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
-  { key: 'INITIAL_POP', label: 'INITIAL POPULATION', min: 0, max: 100000, default: 0, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
-  { key: 'MAX_POP', label: 'MAX POPULATION', min: 100, max: 100000, default: 100000, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
+  { key: 'PARTICLE_COUNT', label: 'PARTICLE COUNT', min: 100, max: MAX_PARTICLES, default: MAX_PARTICLES, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
+  { key: 'INITIAL_POP', label: 'INITIAL POPULATION', min: 0, max: MAX_PARTICLES, default: 0, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
+  { key: 'MAX_POP', label: 'MAX POPULATION', min: 100, max: MAX_PARTICLES, default: MAX_PARTICLES, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
   { key: 'SHAPE', label: 'DISTRIBUTION', min: 0, max: 1, default: 0, step: 0.05, group: 'SPACE', subgroup: 'DISTRIBUTION' },
   { key: 'SPAWN_CENTRES', label: 'CENTRES', min: 1, max: 64, default: 1, step: 1, group: 'SPACE', subgroup: 'DISTRIBUTION' },
   { key: 'SPAWN_CENTRE_RANDOM', label: 'CENTRE SCATTER', min: 0, max: 1, default: 0.5, step: 0.05, group: 'SPACE', subgroup: 'DISTRIBUTION' },
@@ -253,4 +254,48 @@ export function spawnCaps(state) {
 
 export function worldParamDef(key) {
   return DEF_BY_KEY.get(key) || null;
+}
+
+/**
+ * Seed the WRAP law bit from the TOROIDAL EDGES param.
+ *
+ * WRAP is the world's boundary rule and it is a law again (mechanics 130), but
+ * TOROIDAL predates it and is how a saved world records its own topology. So
+ * the param is the law's *default*: call this wherever a law state is
+ * (re)built — world load, preset applied, saved state restored — and the two
+ * never disagree.
+ *
+ * Returns true when the bit changed, so callers can skip a redundant
+ * `law:sync` broadcast.
+ *
+ * @param {object} params world-param state (only `TOROIDAL` is read)
+ * @param {object} lawStateObj the law bitmask, mutated in place
+ */
+export function syncWrapLaw(params, lawStateObj) {
+  // Read the raw value, not a coerced one: `Number(null)` and `Number('')` are
+  // both 0, which would silently turn a world with no TOROIDAL at all — an
+  // older save, a half-built param object — into a walled one. `TOROIDAL` is
+  // 0/1; everything else, including null and NaN, is toroidal, which is what
+  // the solver did before this law existed.
+  const raw = params ? params.TOROIDAL : undefined;
+  const want = !(Number.isFinite(raw) && raw === 0);
+  const have = lawState.isSet(lawStateObj, LAW_INDEXES.WRAP);
+  if (want === have) return false;
+  if (want) lawState.set(lawStateObj, LAW_INDEXES.WRAP);
+  else lawState.clear(lawStateObj, LAW_INDEXES.WRAP);
+  return true;
+}
+
+/**
+ * The inverse mirror: turn the TOROIDAL param from the WRAP law bit.
+ *
+ * Called when the player flips the WRAP tile, so the slider and the law can
+ * never show opposite answers.
+ *
+ * @returns {object} the new world-param state (unchanged if not a wrap move)
+ */
+export function syncToroidalParam(params, lawStateObj) {
+  const on = lawState.isSet(lawStateObj, LAW_INDEXES.WRAP);
+  if (params.TOROIDAL === (on ? 1 : 0)) return params;
+  return { ...params, TOROIDAL: on ? 1 : 0 };
 }

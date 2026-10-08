@@ -12,9 +12,11 @@ import { setCellValue } from './analyticsPanel.js';
 import { escapeHtml as esc } from './html.js';
 
 let host = null;
+let selection = null;
 
 
-export function createCivilizationPanel(bus) {
+export function createCivilizationPanel(bus, selectionContext = null) {
+  selection = selectionContext;
   const ctx = mountAnalyticsPanel(bus, {
     mountId: 'civilization-dashboard',
     title: 'CIVILIZATION',
@@ -26,7 +28,6 @@ export function createCivilizationPanel(bus) {
       { id: 'civ-structures', label: 'STRUCTURES' },
       { id: 'civ-regime', label: 'REGIME' },
       { id: 'civ-confidence', label: 'CONFIDENCE' },
-      { id: 'civ-codex', label: 'CODEX' },
       { id: 'civ-households', label: 'HOUSEHOLDS' },
       { id: 'civ-citizens', label: 'CITIZENS' },
       { id: 'civ-generations', label: 'FED GEN' },
@@ -35,7 +36,18 @@ export function createCivilizationPanel(bus) {
     subscribe: (b, deliver) => b.on('civilization:analytics', ({ report }) => deliver(report)),
     draw: (c, report) => draw(c, report),
   });
-  if (ctx) host = ctx.host;
+  if (!ctx) return ctx;
+  host = ctx.host;
+
+  // The codex used to be one more number in the grid ("1/2"), squeezed into a
+  // cell the width of CULTURES, with its statement buried in the detail log.
+  // It is the only thing on this panel that says what the world *is*, so it
+  // gets its own full-width block with a "last changed" stamp — without one,
+  // a stale codex reads exactly like a current one.
+  const block = document.createElement('div');
+  block.id = 'civ-codex-block';
+  block.className = 'civ-codex-block';
+  host.appendChild(block);
   return ctx;
 }
 
@@ -106,6 +118,44 @@ export function formatCivilizationLines(report) {
   return lines;
 }
 
+/**
+ * The codex block's markup.
+ *
+ * Pure and exported for the same reason `formatCivilizationLines` is: the
+ * block that used to be a number has to be testable in full, including the
+ * refusal case and the empty case, without a DOM.
+ *
+ * @param {object|null} codex a `codexReport()` payload
+ * @returns {string} an HTML fragment
+ */
+export function formatCodexBlock(codex) {
+  if (!codex) {
+    return '<div class="civ-codex-empty">No codex yet — the observer states something once it has '
+      + 'measured an era boundary.</div>';
+  }
+  const stamp = Number.isFinite(codex.tick)
+    ? `last changed at tick ${codex.tick}`
+    : 'last changed: unknown tick';
+  const regime = codex.latest ? `<span class="civ-codex-regime">${esc(codex.latest)}</span>` : '';
+  const caveat = codex.wellEvidenced ? '' : ' <em>— not enough evidence</em>';
+  const lines = [
+    '<div class="civ-codex-head">',
+    '<span class="civ-codex-title">CODEX</span>',
+    regime,
+    `<span class="civ-codex-stamp">${stamp}</span>`,
+    '</div>',
+    `<div class="civ-codex-statement">${esc(codex.statement)}${caveat}</div>`,
+    `<div class="civ-codex-meta">confidence ${codex.confidence.toFixed(2)} · ${codex.evidence} evidence `
+      + `item(s) · ${codex.asserted} stated / ${codex.admitted} uncertain${codex.rejected ? ` · ${codex.rejected} declined` : ''}</div>`,
+  ];
+  // A refusal is surfaced rather than swallowed: silence would read as
+  // "nothing to report" when it actually means "the guard declined to say".
+  if (codex.refused) {
+    lines.push(`<div class="civ-codex-refused">codex declined to explain — ${esc(codex.refused)}</div>`);
+  }
+  return lines.join('');
+}
+
 function draw(ctx, report) {
   host = ctx.host;
   const setVal = ctx.setVal;
@@ -119,13 +169,14 @@ function draw(ctx, report) {
   const regime = report.latestRegime;
   setVal('civ-regime', regime ? regime.regime : '—');
   setVal('civ-confidence', regime ? regime.confidence.toFixed(2) : '—');
-  const codex = report.codex;
-  setVal('civ-codex', codex ? `${codex.asserted}/${codex.entries}` : '—');
   setVal('civ-households', report.households ?? '—');
   setVal('civ-citizens', report.citizens ?? '—');
   const gens = (report.detail && report.detail.federations ? report.detail.federations : [])
     .map((f) => f.generation || 0);
   setVal('civ-generations', gens.length ? Math.max(...gens) : '—');
+
+  const block = host.querySelector('#civ-codex-block');
+  if (block) block.innerHTML = formatCodexBlock(report.codex || null);
 
   const log = host.querySelector('#civ-detail');
   if (!log) return;

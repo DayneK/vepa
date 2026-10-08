@@ -2,9 +2,10 @@
 // VEPA4 — World State Save / Load, Compare & Undo Ring
 //
 // Full-fidelity world snapshots: particle buffer, species DNA, law state
-// (128-bit), world params, runtime knobs, world size and tick. Snapshots are
-// stored as typed arrays in memory / IndexedDB (structured clone) and can be
-// exported to a portable `.vepa.json` file (chunked base64) and re-imported.
+// (136 laws across five words), world params, runtime knobs, world size and
+// tick. Snapshots are stored as typed arrays in memory / IndexedDB (structured
+// clone) and can be exported to a portable `.vepa.json` file (chunked base64)
+// and re-imported.
 //
 // The undo ring is the classic two-stack model: `commit()` records a
 // checkpoint, `undo(current)` restores the last checkpoint while pushing the
@@ -114,6 +115,7 @@ export function summarizeWorld(view, count, laws) {
     lawsOn += laws.highFlags ? popcount(laws.highFlags[0]) : 0;
     lawsOn += laws.extFlags ? popcount(laws.extFlags[0]) : 0;
     lawsOn += laws.quadFlags ? popcount(laws.quadFlags[0]) : 0;
+    lawsOn += laws.pentaFlags ? popcount(laws.pentaFlags[0]) : 0;
   }
   const denom = Math.max(1, alive);
   return {
@@ -138,7 +140,7 @@ export function summarizeWorld(view, count, laws) {
  * @param {number} opts.count           live particle count
  * @param {number} opts.speciesCount    species roster size
  * @param {Uint16Array} opts.dna        species genome buffer
- * @param {object} opts.laws            lawState {lowFlags, highFlags, extFlags, quadFlags}
+ * @param {object} opts.laws            lawState {lowFlags, highFlags, extFlags, quadFlags, pentaFlags}
  * @param {object} opts.worldParams     WORLD panel state
  * @param {object} opts.runtime         runtimeConfig singleton
  * @param {number} opts.worldSize       solver world size
@@ -220,7 +222,7 @@ function pickRuntime(runtime) {
  *
  * @param {object} state    captured world state
  * @param {object} target   { view, dna, laws, worldParams, runtime }
- * @returns {{particleCount: number, speciesCount: number, worldSize: number}}
+ * @returns {{particleCount: number, speciesCount: number, worldSize: number, civilization: object|null, codex: object|null}}
  */
 export function restoreWorldState(state, target = {}) {
   if (!state || state.format !== WORLD_SAVE_FORMAT) {
@@ -249,8 +251,9 @@ export function restoreWorldState(state, target = {}) {
     target.laws.highFlags[0] = state.laws.high | 0;
     if (target.laws.extFlags) target.laws.extFlags[0] = state.laws.ext | 0;
     if (target.laws.quadFlags) target.laws.quadFlags[0] = state.laws.quad | 0;
-    // Saves written before the penta word existed leave Mechanics laws as they are.
-    if (target.laws.pentaFlags && state.laws.penta !== undefined) target.laws.pentaFlags[0] = state.laws.penta | 0;
+    // Upstream v9.3.0 (adopted in D-031): the penta word is always restored, so a
+    // pre-five-word state clears Mechanics rather than inheriting the live bits.
+    if (target.laws.pentaFlags) target.laws.pentaFlags[0] = state.laws.penta | 0;
   }
   if (target.worldParams && state.worldParams) {
     for (const key of Object.keys(state.worldParams)) {
@@ -331,7 +334,10 @@ export function parseWorldSave(json) {
     worldSize: Number.isFinite(data.worldSize) ? data.worldSize : WORLD_SIZE,
     particleCount: Math.max(0, Math.min(data.particleCount || 0, MAX_PARTICLES)),
     speciesCount: Math.max(1, Math.min(data.speciesCount || 5, MAX_SPECIES)),
-    laws: { low: 0, high: 0, ext: 0, quad: 0, ...(data.laws || {}) },
+    // A save written before the fifth word existed restores with Mechanics off
+    // (upstream v9.3.0 rule, adopted in the D-031 merge so a restore is fully
+    // determined by the file); main.js re-seeds WRAP from TOROIDAL on law:sync.
+    laws: { low: 0, high: 0, ext: 0, quad: 0, penta: 0, ...(data.laws || {}) },
     worldParams: { ...(data.worldParams || {}) },
     runtime: { ...(data.runtime || {}) },
     summary: { ...(data.summary || {}) },
@@ -385,8 +391,26 @@ function metaOf(state) {
     worldSize: state.worldSize,
     particleCount: state.particleCount,
     speciesCount: state.speciesCount,
+    // Payload size, so the list can say how heavy a world is before you load
+    // it. Computed from the data actually written, not guessed from particle
+    // count — a 10k world and a 200-particle world differ by orders of
+    // magnitude.
+    bytes: state.bytes !== undefined
+      ? state.bytes
+      : estimateBytes(state),
     summary: state.summary,
   };
+}
+
+/** Rough serialized size of a save, in bytes. */
+function estimateBytes(state) {
+  let total = 0;
+  if (state.particles) total += state.particles.byteLength ?? state.particles.length * 4;
+  if (state.dna) total += state.dna.byteLength ?? state.dna.length * 2;
+  try {
+    total += new TextEncoder().encode(JSON.stringify(state.civilization || '')).length;
+  } catch { /* a cyclic record is its own error report */ }
+  return total;
 }
 
 /** Browser adapter: IndexedDB primary, localStorage fallback for small stores. */
@@ -545,13 +569,19 @@ export function compareWorldSaves(live, saves = []) {
 
 // ── Undo ring (two-stack: every undo is redo-able, every redo is undo-able) ──
 
-/** Cheap identity check used to dedupe auto-snapshots (state/tick/params/laws). */
+/**
+ * Cheap identity check used to dedupe auto-snapshots.
+ * @param {object} a
+ * @param {object} b
+ */
 export function sameWorldFingerprint(a, b) {
   if (!a || !b) return false;
   if (a.tick !== b.tick || a.particleCount !== b.particleCount || a.speciesCount !== b.speciesCount) return false;
+  if (JSON.stringify(a.civilization ?? null) !== JSON.stringify(b.civilization ?? null)) return false;
+  if (JSON.stringify(a.codex ?? null) !== JSON.stringify(b.codex ?? null)) return false;
   const la = a.laws || {};
   const lb = b.laws || {};
-  if (la.low !== lb.low || la.high !== lb.high || la.ext !== lb.ext || la.quad !== lb.quad) return false;
+  if (la.low !== lb.low || la.high !== lb.high || la.ext !== lb.ext || la.quad !== lb.quad || (la.penta || 0) !== (lb.penta || 0)) return false;
   const pa = a.worldParams || {};
   const pb = b.worldParams || {};
   const ka = Object.keys(pa);
@@ -588,6 +618,24 @@ export function createUndoRing(cap = UNDO_RING_CAP) {
     },
     canUndo() { return this.past.length > 0; },
     canRedo() { return this.future.length > 0; },
+    /**
+     * A flat, presentable view of the ring, oldest first.
+     *
+     * The UNDO sub-tab renders this instead of nothing: a button that can undo
+     * without showing what will be undone is a button you cannot predict.
+     * Labels come from the state's own `name` when it has one, and from its tick
+     * otherwise, so a step is identifiable.
+     */
+    describe() {
+      const label = (s) => (s && (s.name || s.label))
+        || (s && Number.isFinite(s.tick) ? `tick ${s.tick}` : 'step');
+      return {
+        history: this.past.map(label),
+        redo: this.future.map(label).reverse(),
+        position: this.past.length - 1,
+        cap: this.cap,
+      };
+    },
     clear() { this.past = []; this.future = []; },
   };
   return ring;

@@ -57,8 +57,8 @@ describe('presets', () => {
     expect(applyMultiplexPreset({ seed: 7 }, 'nope')).toEqual({ seed: 7 });
   });
   it('particles per sim wins over POP % and the automatic cap', () => {
-    expect(computeShardPopulationCap(20, 1, 2.5, 0)).toBe(2500);
-    expect(computeShardPopulationCap(20, 1, 2.5, 125)).toBe(125);
+    expect(computeShardPopulationCap(20, 1, 25, 0)).toBe(2500);
+    expect(computeShardPopulationCap(20, 1, 25, 125)).toBe(125);
   });
 });
 

@@ -2,7 +2,7 @@ import { getPairGeometry } from './pairGeometry.js';
 import { STRIDE_INDEXES as S } from '../constants.js';
 import {
   applyContact, applyMomentum, applyTorque, applyConstraint, applyFragmentation, applyAdhesion,
-  diagnoseCollisionImpulse, diagnoseInertia, diagnoseTopology,
+  diagnoseCollisionImpulse, diagnoseWrapBoundary, diagnoseTopology,
 } from './lawgroups/mechanicsLaws.js';
 
 const massOf = (view, base) => Math.max(0.001, Number.isFinite(view[base + S.MASS]) ? view[base + S.MASS] : 0.001);
@@ -28,11 +28,16 @@ export function inspectMechanicsPair(view, iBase, jBase, worldSize) {
   const constraint = applyConstraint(view, iBase, jBase, geometry.dx, geometry.dy, geometry.dz, geometry.distance, 0.03);
   const fragmentation = applyFragmentation(view, iBase, jBase, geometry.dx, geometry.dy, geometry.dz, geometry.distance, 0.02);
   const adhesion = applyAdhesion(view, iBase, jBase, geometry.dx, geometry.dy, geometry.dz, geometry.distance, 0.015);
-  // ARP-6: COLL impulse along the i → j normal, INERTIA scaling of the contact
-  // correction, TOPOLOGY imbalance, and pair momentum before/after the impulse
+  // ARP-6: COLL impulse along the i → j normal, particle i's WRAP boundary
+  // decision (upstream v9.2.0 replaced mechanics INERTIA with WRAP at law 130),
+  // TOPOLOGY imbalance, and pair momentum before/after the impulse
   // (applied as the solver does: Δv_i = J·m_j·n, Δv_j = −J·m_i·n).
   const collImpulse = diagnoseCollisionImpulse(view, iBase, jBase, geometry.normalX, geometry.normalY, geometry.normalZ, 0.5);
-  const inertia = diagnoseInertia(view, iBase, contact ? contact.ax : 0, contact ? contact.ay : 0, contact ? contact.az : 0, 0.02);
+  const wrap = diagnoseWrapBoundary(
+    { x: view[iBase + S.POS_X], y: view[iBase + S.POS_Y], z: view[iBase + S.POS_Z] },
+    { x: view[iBase + S.VEL_X], y: view[iBase + S.VEL_Y], z: view[iBase + S.VEL_Z] },
+    worldSize,
+  );
   const topology = diagnoseTopology(view, iBase, jBase, geometry.dx, geometry.dy, geometry.dz, geometry.distance, 0.01);
   const momentumBefore = momentumOf(view, iBase, jBase);
   const mi = massOf(view, iBase), mj = massOf(view, jBase);
@@ -58,7 +63,7 @@ export function inspectMechanicsPair(view, iBase, jBase, worldSize) {
     fragmentationContribution: fragmentation,
     adhesionContribution: adhesion,
     collImpulse,
-    inertia,
+    wrap,
     topology,
     momentumBefore,
     momentumAfter,

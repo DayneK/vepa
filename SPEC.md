@@ -1,7 +1,17 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.1.27 | **Date**: 2026-10-03 | **Base**: VEPA4 integrated intelligence
+**Version**: 9.3.1 | **Date**: 2026-10-07 | **Base**: VEPA4 integrated intelligence
 **Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
+
+## Working-tree Update (v9.3.1 — 2026-10-07)
+
+- Lowers the application particle ceiling to 10,000 and aligns population-control maxima; this reduces capacity allocation but is not a device-independent performance guarantee.
+- Replaces preset comparison text with compact, accessible icon toggles while preserving selection state and three-profile comparison.
+
+## Release Note (v9.3.0 — 2026-10-07)
+
+- Adds the parameter/law atlas (`docs/systems/parameter-law-atlas.html`) and a launch designer that supports a 10,000 initial-population target while warning that runtime depends on device and configuration.
+- Records the partial second-pass UI implementation and its outstanding acceptance gaps; it does not assert full-overhaul completion or browser verification.
 
 ## Problem Statement
 
@@ -14,7 +24,7 @@ The repository includes a deterministic, dependency-free specification generator
 ## Development Standards (2026-08-10)
 
 - **Product & versioning:** the product is **VEPA4**; versions use
-  **`major.minor.build`** (npm-semver-native, current `9.1.27`). The v4 line is
+  **`major.minor.build`** (npm-semver-native, current `9.3.0`). The v4 line is
   retroactively mapped old `4.M.N` → `M.N.0` (generation `4` moved into the
   product name). Changelog headers carry both labels
   (`## [4.6.28] - date → 6.28.0`); the full rule lives in `AGENTS.md` §10.4.

@@ -68,14 +68,15 @@ describe('TAB_SUBTABS', () => {
     expect(subtabsForTab('tab-data')).not.toContain('data-bogus');
   });
 
-  it('returns an empty list for an unknown tab and for one without sub-tabs', () => {
-    expect(subtabsForTab('tab-saves')).toEqual([]);
+  it('returns an empty list for an unknown tab', () => {
     expect(subtabsForTab('tab-nonexistent')).toEqual([]);
   });
 
-  it('has setup and data tabbed, saves flat', () => {
+  it('has setup, data and saves all tabbed', () => {
     expect(subtabsForTab('tab-setup')).toEqual(['setup-laws', 'setup-world', 'setup-species', 'setup-settings']);
     expect(subtabsForTab('tab-data').length).toBe(6);
+    // SAVES was flat until v9.1.29; it now carries its own three sub-tabs.
+    expect(subtabsForTab('tab-saves')).toEqual(['saves-states', 'saves-undo', 'saves-io']);
   });
 });
 
@@ -235,6 +236,12 @@ describe('law info contrast', () => {
     for (const token of ['--text-primary', '--text-secondary', '--text-dim']) {
       expect(STYLE).toMatch(new RegExp(`${token}:\\s*#`));
     }
+  });
+
+  it('makes the law info module roughly twice as tall with tighter padding', () => {
+    const module = STYLE.match(/\.law-info-module \{[^}]*\}/)?.[0] || '';
+    expect(module).toMatch(/height:\s*192px/);
+    expect(module).toMatch(/padding:\s*4px 5px/);
   });
 
   it('raised every law-info tier to a legible size', () => {

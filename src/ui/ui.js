@@ -15,6 +15,7 @@ import { createCivilizationPanel } from './civilizationPanel.js';
 import { createPresetPanel } from './presetPanel.js';
 import { createSavePanel } from './savePanel.js';
 import { createSettingsPanel } from './settingsPanel.js';
+import { createSelectionContext } from '../state/selection.js';
 import { initTooltip } from './tooltip.js';
 import { initHelpLongPress } from './helpOverlay.js';
 import { initParamHelpDismiss } from './paramHelp.js';
@@ -38,15 +39,19 @@ export function initUI(bus, lawStateObj, dnaBuffer) {
   setupToolbarControls(bus);
   setupKeyboardShortcuts(bus);
 
+  // One selection for the whole drawer, owned here and handed down. Panels
+  // subscribe to `selection:changed`; none of them owns the value.
+  const selection = createSelectionContext(bus);
+
   createHUD(bus);
   createWorldPanel(bus, lawStateObj);
-  createIntelPanel(bus);
+  createIntelPanel(bus, selection);
   createSpeciesPanel(bus, dnaBuffer);
-  createDNAAnalytics(bus);
+  createDNAAnalytics(bus, selection);
   createNarrativePanel(bus);
-  createGroupAnalytics(bus);
-  createEcoPanel(bus);
-  createCivilizationPanel(bus);
+  createGroupAnalytics(bus, selection);
+  createEcoPanel(bus, selection);
+  createCivilizationPanel(bus, selection);
   createPresetPanel(bus);
   createSavePanel(bus);
   createSettingsPanel(bus, lawStateObj);

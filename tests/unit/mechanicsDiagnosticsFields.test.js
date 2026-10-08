@@ -1,4 +1,4 @@
-// ARP-6 (AC-20): mechanicsDiagnostics reports COLL impulse, INERTIA, TOPOLOGY
+// ARP-6 (AC-20): mechanicsDiagnostics reports COLL impulse, WRAP, TOPOLOGY
 // and pair momentum before/after on a collision fixture, without mutating it.
 import { describe, it, expect } from 'vitest';
 import { PARTICLE_STRIDE, STRIDE_INDEXES as S } from '../../src/constants.js';
@@ -13,7 +13,7 @@ function fixture() {
 }
 
 describe('mechanicsDiagnostics collision fields (ARP-6)', () => {
-  it('reports collImpulse, inertia, topology and momentum before/after', () => {
+  it('reports collImpulse, wrap, topology and momentum before/after', () => {
     const view = fixture();
     const before = Array.from(view);
     const d = inspectMechanicsPair(view, 0, PARTICLE_STRIDE, 100);
@@ -22,8 +22,10 @@ describe('mechanicsDiagnostics collision fields (ARP-6)', () => {
     expect(d.collImpulse.relativeVelocityAlongNormal).toBeCloseTo(3, 6);
     // J = −(1+e)·v_n/(m_i+m_j) = −1.5·3/3 = −1.5; impulse on i = J·m_j·n = (−1.5, 0, 0)
     expect(d.collImpulse.impulse.x).toBeCloseTo(-1.5, 6);
-    expect(d.inertia.mass).toBe(2);
-    expect(d.inertia.scale).toBeCloseTo(0.01, 9);
+    // WRAP (law 130 since upstream v9.2.0) replaced the mechanics INERTIA field.
+    expect(d.wrap.worldSize).toBe(100);
+    expect(d.wrap.escapedFaces).toEqual([]); // particle i is inside the world
+    expect(d.wrap.toroidal).toEqual({ x: 10, y: 10, z: 10 });
     expect(d.topology.bondImbalance).toBe(2);
     expect(d.momentumBefore.x).toBeCloseTo(3, 6); // 2·2 + 1·(−1)
     expect(d.momentumBefore.y).toBeCloseTo(1, 6);

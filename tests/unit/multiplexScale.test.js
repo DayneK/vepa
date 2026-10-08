@@ -1,4 +1,4 @@
-// MX-20 (AC-95, structural part): 20 sims at 2.5% of the default population
+// MX-20 (AC-95, structural part): 20 sims at 25% (2,500) of the default population (10,000 since v9.3.1)
 // fit in the grid, and shard memory scales with the shard cap.
 import { describe, it, expect } from 'vitest';
 import { PARTICLE_STRIDE, MAX_PARTICLES, STRIDE_INDEXES as S } from '../../src/constants.js';
@@ -28,12 +28,12 @@ describe('multiplex at scale (MX-20)', () => {
     expect(mx.shards.length).toBe(20);
   });
 
-  it('populationPercent 2.5 caps every shard at 2,500 particles regardless of grid size', () => {
-    expect(computeShardPopulationCap(20, 1, 2.5)).toBe(2500);
-    expect(computeShardPopulationCap(1, 0.25, 2.5)).toBe(2500);
+  it('populationPercent 25 caps every shard at 2,500 particles regardless of grid size (MAX_PARTICLES 10,000 since v9.3.1)', () => {
+    expect(computeShardPopulationCap(20, 1, 25)).toBe(2500);
+    expect(computeShardPopulationCap(1, 0.25, 25)).toBe(2500);
     expect(computeShardPopulationCap(20, 1, 0)).toBe(computeShardPopulationCap(20, 1)); // 0 = legacy curve
     const mx = createMultiplex(null);
-    startMultiplex(mx, source(3000), { ...MULTIPLEX_DEFAULTS, cols: 5, rows: 4, variation: 0, populationPercent: 2.5 }, null);
+    startMultiplex(mx, source(3000), { ...MULTIPLEX_DEFAULTS, cols: 5, rows: 4, variation: 0, populationPercent: 25 }, null);
     for (const sh of mx.shards) {
       expect(sh.maxCount).toBe(2500);
       expect(sh.count).toBe(2500);
@@ -42,7 +42,7 @@ describe('multiplex at scale (MX-20)', () => {
 
   it('shard buffers are sized to the cap, not MAX_PARTICLES', () => {
     const mx = createMultiplex(null);
-    startMultiplex(mx, source(100), { ...MULTIPLEX_DEFAULTS, cols: 5, rows: 4, variation: 0, populationPercent: 2.5 }, null);
+    startMultiplex(mx, source(100), { ...MULTIPLEX_DEFAULTS, cols: 5, rows: 4, variation: 0, populationPercent: 25 }, null);
     for (const sh of mx.shards) {
       expect(sh.view.length).toBe((2500 + SHARD_BUFFER_HEADROOM) * PARTICLE_STRIDE);
       expect(sh.view.length).toBeLessThan(MAX_PARTICLES * PARTICLE_STRIDE);
@@ -51,10 +51,10 @@ describe('multiplex at scale (MX-20)', () => {
 
   it('restoreShard grows a cap-sized buffer when a snapshot is larger', () => {
     const big = createMultiplex(null);
-    startMultiplex(big, source(600), { ...MULTIPLEX_DEFAULTS, cols: 1, rows: 1, variation: 0, populationPercent: 1 }, null);
+    startMultiplex(big, source(600), { ...MULTIPLEX_DEFAULTS, cols: 1, rows: 1, variation: 0, populationPercent: 10 }, null);
     const snap = snapshotShard(big.shards[0]);
     const small = createMultiplex(null);
-    startMultiplex(small, source(10), { ...MULTIPLEX_DEFAULTS, cols: 1, rows: 1, variation: 0, populationPercent: 0.01 }, null);
+    startMultiplex(small, source(10), { ...MULTIPLEX_DEFAULTS, cols: 1, rows: 1, variation: 0, populationPercent: 0.1 }, null);
     const sh = small.shards[0];
     expect(sh.view.length).toBeLessThan(snap.view.length);
     restoreShard(sh, snap);
@@ -65,7 +65,7 @@ describe('multiplex at scale (MX-20)', () => {
 
   it('stepping 20 shards advances every shard exactly one tick per frame', () => {
     const mx = createMultiplex(null);
-    startMultiplex(mx, source(50), { ...MULTIPLEX_DEFAULTS, cols: 5, rows: 4, variation: 0, populationPercent: 2.5 }, null);
+    startMultiplex(mx, source(50), { ...MULTIPLEX_DEFAULTS, cols: 5, rows: 4, variation: 0, populationPercent: 25 }, null);
     for (let f = 0; f < 3; f++) stepMultiplex(mx, 1 / 60, 1, 2000);
     for (const sh of mx.shards) expect(sh.tick).toBe(3);
   });

@@ -4,13 +4,13 @@
 
 | Area | Files | Exports | Imports | Law references |
 | --- | --- | --- | --- | --- |
-| Application | 46 | 203 | 122 | 486 |
-| Benchmark | 8 | 6 | 22 | 12 |
-| Repository | 7 | 2 | 2 | 3 |
-| Simulation | 33 | 241 | 86 | 379 |
-| State | 39 | 317 | 63 | 494 |
-| Testing | 196 | 36 | 971 | 775 |
-| Ui | 30 | 105 | 73 | 381 |
+| Application | 47 | 206 | 122 | 489 |
+| Benchmark | 8 | 6 | 22 | 13 |
+| Repository | 7 | 2 | 2 | 4 |
+| Simulation | 33 | 242 | 86 | 381 |
+| State | 40 | 328 | 66 | 537 |
+| Testing | 205 | 39 | 1024 | 798 |
+| Ui | 30 | 113 | 78 | 385 |
 
 ## Boundary observations
 

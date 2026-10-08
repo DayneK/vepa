@@ -1,15 +1,67 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { formatTickStats, formatPopulation, createHUD } from '../../src/ui/hud.js';
+import { EventBus } from '../../src/core/eventBus.js';
+import { formatTickStats, formatPopulation, tickAriaLabel, createHUD } from '../../src/ui/hud.js';
 import { installDom, makeEl } from '../helpers/domStub.js';
 
+let restoreNow;
+let savedRaf;
+let savedCancelRaf;
+
+afterEach(() => {
+  restoreNow?.();
+  restoreNow = null;
+  if (savedRaf === undefined) delete globalThis.requestAnimationFrame;
+  else globalThis.requestAnimationFrame = savedRaf;
+  if (savedCancelRaf === undefined) delete globalThis.cancelAnimationFrame;
+  else globalThis.cancelAnimationFrame = savedCancelRaf;
+  savedRaf = undefined;
+  savedCancelRaf = undefined;
+});
+
 describe('HUD telemetry', () => {
-  it('keeps total tick count beside the render frame rate', () => {
+  it('keeps total tick count beside the render frame rate (D-025)', () => {
     expect(formatTickStats(1234, 59.96)).toBe('1,234\n60.0');
+    // Upstream call sites pass a TPS third argument; the visible text ignores it.
+    expect(formatTickStats(1234, 59.96, 42.25)).toBe('1,234\n60.0');
   });
 
   it('normalizes an uninitialized tick value', () => {
     expect(formatTickStats(-1, 0)).toBe('0\n0.0');
+  });
+
+  it('speaks tick, tick rate and frame rate together (upstream v9.3.0)', () => {
+    expect(tickAriaLabel(32, 20, 59.96)).toBe('Tick 32, 20.0 ticks per second, 60.0 frames per second');
+    expect(tickAriaLabel(-1, 0, 0)).toBe('Tick 0, 0.0 ticks per second, 0.0 frames per second');
+  });
+
+  it('updates population, optional species, tick and tick-rate telemetry from events', () => {
+    const doc = installDom();
+    doc.body.innerHTML = '<span id="hud-population-count"></span><span id="hud-particles"></span><span id="hud-species"></span><span id="hud-tick"></span>';
+    let now = 0;
+    restoreNow = vi.spyOn(performance, 'now').mockImplementation(() => now);
+    savedRaf = globalThis.requestAnimationFrame;
+    savedCancelRaf = globalThis.cancelAnimationFrame;
+    globalThis.requestAnimationFrame = () => 1;
+    globalThis.cancelAnimationFrame = () => {};
+    const bus = new EventBus();
+    createHUD(bus);
+
+    bus.emit('physics:tick', { tick: 12, particleCount: 1200, speciesCount: 5 });
+    now = 1000;
+    bus.emit('physics:tick', { tick: 32, particleCount: 1190, speciesCount: 6 });
+
+    expect(doc.querySelector('#hud-population-count').textContent).toBe('1,190');
+    expect(doc.querySelector('#hud-particles').dataset.count).toBe('1,190');
+    expect(doc.querySelector('#hud-particles').getAttribute('aria-label')).toBe('Population indicator: 1,190 particles alive');
+    expect(doc.querySelector('#hud-species').textContent).toBe('SPECIES 6');
+    expect(doc.querySelector('#hud-tick').textContent).toBe('32\n0.0');
+    expect(doc.querySelector('#hud-tick').getAttribute('aria-label')).toBe('Tick 32, 20.0 ticks per second, 0.0 frames per second');
+
+    // stats:update accepts the upstream `particles` / `species` aliases.
+    bus.emit('stats:update', { particles: 1100, species: 7 });
+    expect(doc.querySelector('#hud-population-count').textContent).toBe('1,100');
+    expect(doc.querySelector('#hud-species').textContent).toBe('SPECIES 7');
   });
 
   it('formats the population with thousands separators and never negative', () => {
@@ -68,7 +120,7 @@ describe('createHUD population readout', () => {
     expect(doc.getElementById('hud-population-count').textContent).toBe('930');
     emit('physics:tick', { tick: 6, particleCount: 1201 });
     expect(doc.getElementById('hud-population-count').textContent).toBe('930');
-    expect(doc.getElementById('hud-particles').getAttribute('aria-label')).toBe('Population indicator: 930 active entities');
+    expect(doc.getElementById('hud-particles').getAttribute('aria-label')).toBe('Population indicator: 930 particles alive');
   });
 
   it('drops a stale alive count when the world restarts smaller', () => {

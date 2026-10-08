@@ -11,7 +11,10 @@ describe('a3 reconciliation report (ACO-2)', () => {
   });
   it('lists TURBULENCE, CENTRIPETAL and ROTATION as retired claims, and the 128 vs live count', () => {
     const md = readFileSync('docs/audit/A3-RECONCILIATION.md', 'utf8');
-    for (const law of ['TURBULENCE', 'CENTRIPETAL', 'ROTATION', 'WRAP']) expect(md).toMatch(new RegExp(`\\| retired or renamed \\| ${law} \\|`));
+    for (const law of ['TURBULENCE', 'CENTRIPETAL', 'ROTATION']) expect(md).toMatch(new RegExp(`\\| retired or renamed \\| ${law} \\|`));
+    // WRAP is live again (law 130, mechanics) since upstream v9.2.0, so the
+    // corpus's physics #3 WRAP is now an index/category mismatch, not retired.
+    expect(md).toMatch(/\| index mismatch \| WRAP \| #3 \| #130 \|/);
     expect(md).toMatch(/\| law count \| \(corpus\) \| 128 laws/);
   });
 });

@@ -9,7 +9,7 @@ import { WORLD_SIZE, PARTICLE_STRIDE, MAX_PARTICLES, MAX_SPECIES, DEFAULT_PARTIC
 import { createParticleBuffer, setX, setY, setVelocity, setMass, setSpeciesId, setEnergy } from './state/particleBuffer.js';
 import { createLawState, set as lawSet, clear as lawClear, serialize as serializeLawState, getActiveCount as getLawCount } from './state/lawState.js';
 import { runtimeConfig } from './state/runtimeConfig.js';
-import { createWorldParams, applyWorldParam, spawnCaps } from './state/worldParams.js';
+import { createWorldParams, applyWorldParam, spawnCaps, syncWrapLaw, syncToroidalParam } from './state/worldParams.js';
 import { sampleSpawnPosition, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from './spawn/distribution.js';
 import { createDNABuffer, loadDefaults } from './dna/dnaBuffer.js';
 import { quantizeDNA, writeDNACache } from './dna/codec.js';
@@ -36,6 +36,7 @@ import {
     normaliseLaunchSettings,
     presetFor,
     defaultLaunchSettings,
+    LAUNCH_FIELDS,
 } from './state/launchSettings.js';
 import { createMemoryBuffers, speciesMemory, groupMemory, blendMemory, adaptMemory, decayMemory, pruneGroupMemory, resetMemoryBuffers, MEM } from './state/memoryBuffers.js';
 import { createAgencyEngine, updateAgency, detectMilestones, resetAgency } from './engines/agencyEngine.js';
@@ -93,6 +94,8 @@ import {
   createWorldSaveStore,
   compareWorldSaves,
   createUndoRing,
+  WORLD_SAVE_FORMAT,
+  WORLD_SAVE_VERSION,
 } from './state/worldSave.js';
 initDebug();
 logDebug('main module loaded');
@@ -101,7 +104,8 @@ logDebug('main module loaded');
 
 const SUBSTEPS = 4;
 const DT = 0.25;
-const WORKER_SEED = 0x51f15e;
+let WORKER_SEED = 0x51f15e;
+let launchSettings = null;
 
 let bus, prng, particleBuffer, particleView, lawState, dnaBuffer, renderer;
 let insightEngine, narrativeEngine, lineageEngine, goalEngine, timelineEngine;
@@ -206,13 +210,18 @@ function applyDefaultWorldConfig() {
         }
         const paramKey = legacy[key] || key;
         worldParams = applyWorldParam(worldParams, paramKey, value);
-    }
-    for (const [key, value] of Object.entries(launchOverrides)) {
+    }    for (const [key, value] of Object.entries(launchOverrides)) {
         if (value === null || value === undefined) continue;
+        if (key === 'simSpeed') {
+            runtimeConfig.simSpeed = value;
+            continue;
+        }
         const paramKey = legacy[key] || key;
         worldParams = applyWorldParam(worldParams, paramKey, value);
     }
     runtimeConfig.worldParams = worldParams;
+    worldSize = worldParams.WORLD_SIZE;
+    spawnRate = worldParams.SPAWN_RATE;
 }
 
 /** Launch-modal answers that override the preset. Empty until boot resolves. */
@@ -241,6 +250,13 @@ async function resolveLaunchConfiguration() {
         choice = null;
     }
     const settings = normaliseLaunchSettings(choice || remembered);
+    launchSettings = settings;
+    if (settings.launchSeed !== null) {
+        prng = new PRNG(settings.launchSeed);
+        WORKER_SEED = settings.launchSeed;
+    } else {
+        WORKER_SEED = Date.now() | 0;
+    }
     if (choice) writeLaunchSettings(settings);
 
     ACTIVE_PRESET = presetFor(settings);
@@ -249,8 +265,13 @@ async function resolveLaunchConfiguration() {
     SPECIES_PROFILES.push(...(ACTIVE_PRESET.species || []).map((s) => ({ ...s, ...s.dna })));
 
     launchOverrides = {};
-    if (settings.worldSize !== null) launchOverrides.worldSize = settings.worldSize;
-    if (settings.initialPop !== null) launchOverrides.INITIAL_POP = settings.initialPop;
+    launchOverrides.simSpeed = settings.simSpeed;
+    for (const field of LAUNCH_FIELDS) {
+        if (field.kind !== 'range' || !field.worldParamKey) continue;
+        const value = settings[field.key];
+        if (value !== null && value !== undefined) launchOverrides[field.worldParamKey] = value;
+    }
+    for (const [key, value] of Object.entries(settings.parameterOverrides || {})) launchOverrides[key] = value;
 
     runtimeConfig.renderBackend = settings.renderBackend;
     runtimeConfig.computeEngine = settings.computeEngine;
@@ -483,6 +504,12 @@ async function boot() {
     }
 
     applyDefaultWorldConfig();
+
+    // WRAP is seeded from TOROIDAL EDGES rather than from the preset's law
+    // list, so a preset that predates the law still boots with the topology its
+    // world params ask for. Runs after `applyDefaultWorldConfig` because that
+    // is what resolves the preset's world params.
+    syncWrapLaw(worldParams, lawState);
 
     spawnDefaultPopulation();
 
@@ -778,11 +805,17 @@ function spawnDefaultPopulation(preserveDNA = false, keepSpecies = false) {
             setVelocity(particleBuffer, idx, PARTICLE_STRIDE, 0, 0, 0);
             setMass(particleBuffer, idx, PARTICLE_STRIDE, 1.0 + prng.nextFloat(0, 1.0));
             setSpeciesId(particleBuffer, idx, PARTICLE_STRIDE, s);
-            setEnergy(particleBuffer, idx, PARTICLE_STRIDE, 50 + prng.nextFloat(0, 50));
+            const founderEra = launchSettings?.founderEra || 'newborn';
+            const age = founderEra === 'ancient' ? 420 + prng.nextFloat(0, 180)
+                : founderEra === 'established' ? prng.nextFloat(80, 420) : 0;
+            const energy = founderEra === 'ancient' ? 25 + prng.nextFloat(0, 55)
+                : founderEra === 'established' ? 40 + prng.nextFloat(0, 70) : 50 + prng.nextFloat(0, 50);
+            setEnergy(particleBuffer, idx, PARTICLE_STRIDE, energy);
+            particleView[ptr + STRIDE_INDEXES.AGE] = age;
             // Copy species DNA to particle DNA cache (stride 8-49) via the codec.
             writeDNACache(particleView, ptr + STRIDE_INDEXES.DNA_CACHE_START, dnaBuffer, s);
             particleView[ptr + STRIDE_INDEXES.DEAD] = 0;
-            particleView[ptr + STRIDE_INDEXES.AGE] = 0;
+            particleView[ptr + STRIDE_INDEXES.AGE] = age;
             particleView[ptr + STRIDE_INDEXES.SIGNAL] = 0;
             particleView[ptr + STRIDE_INDEXES.BOND_COUNT] = 0;
             particleView[ptr + STRIDE_INDEXES.BOND_PARTNER_1] = -1;
@@ -941,7 +974,14 @@ function setDNAFromProfile(species, profile) {
         window.__VEPA_SAVE_ROUNDTRIP__ = () => { applyWorldRestore(parseWorldSave(exportWorldSave(currentWorldState('e2e-roundtrip')))); return true; };
     }
     const emitUndoState = () => {
-        bus.emit('world:undoState', { canUndo: undoRing.canUndo(), canRedo: undoRing.canRedo(), enabled: undoEnabled });
+        // The ring's contents ride along: the UNDO sub-tab renders the history,
+        // not just whether a step is available.
+        bus.emit('world:undoState', {
+            canUndo: undoRing.canUndo(),
+            canRedo: undoRing.canRedo(),
+            enabled: undoEnabled,
+            ...undoRing.describe(),
+        });
     };
     const commitAutoSnapshot = () => {
         if (!undoEnabled) return;
@@ -992,6 +1032,41 @@ function setDNAFromProfile(species, profile) {
     bus.on('sim:chaos', () => commitAutoSnapshot());
     bus.on('sim:restart', () => commitAutoSnapshot());
     bus.on('preset:load', () => commitAutoSnapshot());
+    // ── Presets (WORLD sub-tab) ──
+    // The preset panel asks the world for its current state rather than reading
+    // the buffer itself: it has no access to the particle view, the law state
+    // or the live world params, and duplicating that reach would be a second
+    // source of truth for "what is this world right now".
+    bus.on('preset:requestState', ({ presetName }) => {
+        const name = String(presetName || '').trim();
+        if (!name) return;
+        bus.emit('preset:stateResponse', {
+            presetName: name,
+            savedAt: Date.now(),
+            law: lawState.serialize(lawState),
+            dna: dnaBuffer ? dnaBuffer.slice() : null,
+            speciesCount,
+            worldParams: { ...worldParams },
+        });
+    });
+    bus.on('preset:load', ({ name, preset }) => {
+        if (!preset) return;
+        commitAutoSnapshot();
+        // Restores laws, DNA and world parameters, and deliberately leaves the
+        // particles alone: a preset is a configuration, not a world snapshot.
+        // `particles` is absent, so restoreWorldState skips the buffer fill.
+        applyWorldRestore({
+            format: WORLD_SAVE_FORMAT,
+            version: WORLD_SAVE_VERSION,
+            particleCount,
+            speciesCount: preset.speciesCount || speciesCount,
+            worldSize,
+            dna: preset.dna || null,
+            laws: preset.law || null,
+            worldParams: preset.worldParams || null,
+        });
+        bus.emit('preset:loaded', { name: String(name || '') });
+    });
     bus.on('species:aboutToChange', () => commitAutoSnapshot());
     bus.on('world:paramChanged', () => {
         if (!undoEnabled) return;
@@ -1048,7 +1123,10 @@ function setDNAFromProfile(species, profile) {
         bus.emit('world:list');
     });
     bus.on('world:export', async ({ name }) => {
-        const state = await saveStore.load(String(name || ''));
+        const key = String(name || '');
+        // `LIVE` exports what is on screen right now without saving it first —
+        // the IMPORT/EXPORT sub-tab's "export live world" button.
+        const state = key === 'LIVE' ? currentWorldState('LIVE') : await saveStore.load(key);
         if (!state) return;
         bus.emit('world:exported', { name: state.name, json: exportWorldSave(state) });
     });
@@ -1078,8 +1156,29 @@ function setDNAFromProfile(species, profile) {
     });
     emitUndoState();
 
-    bus.on('law:sync', syncPhysicsWorker);
-    bus.on('law:toggled', syncPhysicsWorker);
+    bus.on('law:sync', () => {
+        // A wholesale rebuild of the law state — preset applied, laws cleared,
+        // chaos, external sync — is not a request to change the world's
+        // topology. Re-assert WRAP from TOROIDAL EDGES so "clear all laws"
+        // cannot silently turn a toroidal world into a walled one.
+        //
+        // The panels' own `law:sync` listeners may already have re-rendered by
+        // the time this runs, so when the bit actually moved we broadcast once
+        // more. The second pass changes nothing, so this cannot recurse.
+        if (syncWrapLaw(worldParams, lawState)) bus.emit('law:sync');
+        syncPhysicsWorker();
+    });
+    bus.on('law:toggled', (payload) => {
+        // WRAP is the world's boundary rule, and TOROIDAL EDGES is its slider.
+        // Flip one and the other follows, so the grid and the WORLD panel can
+        // never show opposite answers about the same bit.
+        if (payload && payload.lawIndex === LAW_INDEXES.WRAP) {
+            worldParams = syncToroidalParam(worldParams, lawState);
+            runtimeConfig.worldParams = worldParams;
+            bus.emit('world:paramsRestored');
+        }
+        syncPhysicsWorker(payload);
+    });
     bus.on('dna:sync', syncPhysicsWorker);
     bus.on('dna:changed', syncPhysicsWorker);
     bus.on('world:paramApplied', syncPhysicsWorker);
@@ -1089,7 +1188,8 @@ function setDNAFromProfile(species, profile) {
     bus.on('sim:restart', (opts = {}) => {
         const restartWorker = !!physicsWorker;
         stopPhysicsWorker();
-        prng = new PRNG(Date.now());
+        prng = new PRNG(launchSettings?.launchSeed ?? Date.now());
+        WORKER_SEED = launchSettings?.launchSeed ?? (Date.now() | 0);
         particleView.fill(0);
         resetOffspringRing();
         // DET-1 + HIDDEN-STATE: the law clock, field medium and HISTORY state
@@ -1298,6 +1398,9 @@ function setDNAFromProfile(species, profile) {
     bus.on('world:paramChanged', ({ key, value }) => {
         worldParams = applyWorldParam(worldParams, key, value);
         runtimeConfig.worldParams = worldParams;
+        if (key === 'TOROIDAL' && syncWrapLaw(worldParams, lawState)) {
+            bus.emit('law:sync');
+        }
         switch (key) {
             case 'WORLD_SIZE':
                 worldSize = worldParams.WORLD_SIZE;
@@ -1698,6 +1801,10 @@ function updateIntelligenceCore() {
                 tick,
                 name: `Epoch ${epochEngine.era}`,
                 rng: prng.snapshot(),
+                civilization: civilization
+                    ? (civRuntimeOn() ? { ...serializeCivilization(civilization), runtime: serializeCivRuntime(civRuntime) } : serializeCivilization(civilization))
+                    : null,
+                codex: codex ? serializeCodex(codex) : null,
             }),
         });
         for (const ev of epochEvents) bus.emit(ev.type, ev);

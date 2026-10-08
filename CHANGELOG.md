@@ -1,5 +1,187 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.34] - 2026-10-07 → 9.3.1
+
+**Working-tree update (not released or deployed).**
+
+- Reduced the active particle-pool ceiling and world/launch population caps from 100,000 to 10,000; adjusted the renderer benchmark workload accordingly while preserving previously recorded benchmark results.
+- Replaced preset-card COMPARE text with compact, stateful ⇄ icon buttons that retain accessible labels and comparison behavior.
+- Lower preallocated capacity reduces buffer demand; it does not establish a device-independent frame-rate guarantee.
+
+## [4.9.33] - 2026-10-07 → 9.3.0
+
+**Release scope:** all current workspace changes, including the second-pass UI implementation and remaining documented gaps, the launch designer with initial population up to 10,000, corrected GROUND_HEIGHT help, regression coverage, and the parameter/law atlas at `docs/systems/parameter-law-atlas.html`.
+
+- Expanded launch presets and design controls for laws, world parameters, species, seeds and founder eras; documented that higher population starts may run slowly depending on device and world configuration.
+- Implemented the current partial second-pass UI work in LOGS, ECO, LAWS, SAVES and world snapshot behavior, with focused regression tests and an adversarial findings ledger. This release does not claim the entire proposed overhaul or browser verification is complete.
+- Added a code-derived parameter/law atlas and corrected GROUND_HEIGHT documentation to match spawn-time-only behavior.
+- **Verification:** `npm run syntax-check`, `npm run build`, `npm run report:ui:check`, and 151 focused regressions passed. All 88 unit files (1,081 tests) and all 50 audit files (458 tests) pass when run separately/serially. Combined Vitest invocation terminates with Tinypool `ERR_IPC_CHANNEL_CLOSED`; `repository:check` is blocked by pre-existing generated-spec drift (13 generated paths, including mechanics specs and inventories). The untracked WRAP spec was preserved; no generated spec tree was overwritten. Real-browser verification was unavailable; see `docs/systems/ui-overhaul-plan.md`.
+- **Release delivery:** payload commit [`daae7c0`](https://github.com/DayneK/vepa/commit/daae7c093d1865758ca3c58611b1cfec1f738377); tag `v9.3.0` published; pushed to `origin/main`.
+- **Deployed:** `https://v5.freebuff.app/` — Freebuff reports `active`, 118 files, no warnings, and zero unresolved build errors.
+- **Atlas:** [Parameter & Law Atlas](https://github.com/DayneK/vepa/blob/main/docs/systems/parameter-law-atlas.html).
+- The full second-pass UI acceptance plan remains incomplete; this release does not claim otherwise.
+
+## [4.9.32] - 2026-10-01 → 9.2.0
+
+**Deployed** to `https://v5.freebuff.app/` (Freebuff static Vite build, tag `v9.2.0`).
+Plan: `/docs/systems/ui-overhaul-plan.md` — also published at
+`https://v5.freebuff.app/docs/systems/ui-overhaul-plan.md`.
+Report: `/docs/systems/ui-module-report.md`.
+
+**The UI overhaul, in six phases, and the gate that stops the same bug recurring.**
+
+The review found eleven defects with evidence behind every one — a law tile whose
+gate was never executed, a preset panel mounted into an element that had not existed for
+releases, an event with a listener and no producer, and analytics draw paths no test had
+ever entered. Two of those (a `ReferenceError` in `civilizationPanel`, a dead `INERTIA`
+toggle) had already shipped. The phases are ordered so the tests that catch the next one
+land before the code they guard.
+
+### Phase 0 — audit infrastructure
+- **`tests/unit/deadLawToggles.test.js`** — every `LAW_INDEXES` key must be gated in
+  `src/physics`/`worker`/`engines`, or be on a written allow-list asserted to match
+  `docs/spec/laws/implementation-status.json` exactly. This is the test that would have
+  caught `INERTIA` on day one. It reports a second, pre-existing gap: **`ELECTRIC_FIELD`
+  (54) is metadata-only** — a declared law with a four-tier help entry and no
+  implementation anywhere. It is allow-listed and recorded rather than quietly dropped.
+- **`tests/unit/analyticsDrawPaths.test.js`** — `ecoPanel.drawAll`, `groupAnalytics.drawAll`
+  and `civilizationPanel.draw` are now executed through the DOM and canvas stubs, with
+  recorded 2D calls and asserted cell values. `civilizationPanel` shipped a `ReferenceError`
+  for a full release because nothing ever called `draw`.
+- **`tests/helpers/domStub.js`** grew a recording 2D context, a `dataset` view that honours
+  the DOM's camelCase rule (`data-cat-row` ↔ `dataset.catRow`), a CSS custom-property
+  `style`, and a real descendant-selector engine. Each of those was quietly returning
+  nothing, which is how a stub starts lying to its tests.
+- **Doc corrections** — the LAWS help text claimed "128 laws" and named a mechanics band
+  that has not existed for several releases; the GROUPS help entry complained about a
+  misleading title that was no longer anywhere.
+
+### Phase 1 — `INERTIA` removed, `WRAP` at 130
+- `INERTIA` was **imported into `solver.js:121` and never called** — a dead toggle that
+  duplicated `MASS_INERTIA` (86), which *is* dispatched. `applyInertia`, `diagnoseInertia`,
+  its help, parameters, icon, dependencies and ontology records are gone.
+- **`WRAP` is a law again at mechanics index 130.** It was one: the solver said so
+  verbatim — *"the WRAP law was retired into WORLD → SIMULATION RULES"*. Its body now
+  lives in `mechanicsLaws.js` as `applyWrapBoundary` (toroidal fold vs. soft-wall reflect)
+  and is gated on `active[LAW_INDEXES.WRAP]`.
+- **The `TOROIDAL EDGES` world param is kept as the law's default**, mirrored in both
+  directions by `syncWrapLaw` / `syncToroidalParam`, so the slider and the tile can never
+  show opposite answers. A wholesale law rebuild re-asserts WRAP from the param, so
+  "clear all laws" cannot silently turn a toroidal world into a walled one.
+
+### Phase 2 — one selection for the whole drawer
+- **`src/state/selection.js`** owns one selected species or group and broadcasts
+  `selection:changed`. Panels subscribe; none of them owns the value.
+- **ECO grew a species leaderboard** — top eight by population, with a block sparkline
+  scaled to the *board* maximum so a species stuck at three particles cannot look like the
+  dominant one. Tapping a row selects it; tapping it again clears it.
+
+### Phase 3 — SAVES split in three, presets revived
+- **SAVES now has three sub-tabs**: WORLD STATES (the list, now with tick and size per
+  entry), UNDO (the ring itself, not just a button that can undo), and IMPORT / EXPORT
+  (with "export live world", which does not require saving first).
+- **`createPresetPanel` mounts again.** It had been rendering into `#world-panel`, an id
+  that has not existed since the drawer was rebuilt, behind an `if (!panel) return;` —
+  so the preset buttons in the docs had nothing behind them and `presetManager.js` was
+  unreachable. It now mounts into `#world-presets` inside WORLD, appends rather than
+  replacing its container, and `main.js` answers `preset:requestState` / `preset:load`.
+
+### Phase 4 — the DATA panels
+- **`narrative:batch` has a producer.** It had a listener and none for the life of the
+  panel; `src/core/logQueue.js` now batches entries, flushing on size or on a 250 ms
+  window. LOGS also gained per-voice **filter chips with counts** that apply to the whole
+  ring, and a **visible FOLLOWING/PAUSED** autoscroll state.
+- **CODEX promoted to a full-width block** with the statement, the regime, the evidence
+  count and a *last changed at tick N* stamp. It was one more number in the grid; a codex
+  with no visible age reads as current no matter how old it is.
+- **DNA ANALYTICS graphs gained explicit EXPAND and PIN controls.** Expanding was bound to
+  double-click alone — a desktop gesture in a touch-first drawer with no visible
+  affordance. Double-click is kept as a shortcut; PIN lets two graphs stay open at once,
+  which is the entire reason to expand one.
+
+### Phase 5 — the LAWS grid
+- **Search box** over all 136 law names, composing with the category filter rather than
+  replacing it, reporting how many laws are reachable, and jumping to the first match on
+  Enter.
+- **Per-category ON / OFF** on each band header, and a live `7/16` active count. The bulk
+  path toggles through the same `law:toggled` emit a manual tap uses — a bulk path of its
+  own would be a second way for the worker and the grid to disagree.
+
+### Phase 6 — SETTINGS precedence
+- The launch modal and SETTINGS both owned `renderBackend` and `computeEngine` with no
+  stated precedence. The rule is now on screen: **the modal sets the starting value,
+  SETTINGS is the live value**, and *USE AS LAUNCH DEFAULT* writes back.
+- **ACTIVE / PENDING badges and a RELOAD TO APPLY button**, because a backend change is
+  not live until a reload and a select control cannot express that.
+
+### Known limitations, stated plainly
+- **No real-browser verification.** Chromium cannot launch here, vitest runs
+  `environment: 'node'`, and there is no DOM library. Every UI change is covered by the
+  `tests/helpers/domStub.js` harness and by structural assertions on markup — nothing here
+  has been clicked in a browser.
+- `ELECTRIC_FIELD` (54) remains a declared law with no implementation. It is recorded in
+  the allow-list and in the generated spec; it is not a regression from this release.
+
+### Files
+- `src/state/selection.js`, `src/core/logQueue.js` — new
+- `src/ui/ecoPanel.js`, `src/ui/narrativePanel.js`, `src/ui/savePanel.js`,
+  `src/ui/presetPanel.js`, `src/ui/settingsPanel.js`, `src/ui/worldPanel.js`,
+  `src/ui/civilizationPanel.js`, `src/ui/dnaAnalytics.js`, `src/ui/ui.js`,
+  `src/ui/helpRegistry.js`, `src/ui/paramHelp.js` — reworked
+- `src/physics/lawgroups/mechanicsLaws.js`, `mechanicsHelp.js` — INERTIA out, WRAP in
+- `src/constants/laws.js`, `src/state/lawOntology.js`, `src/state/worldParams.js`,
+  `src/state/worldSave.js`, `src/physics/solver.js`, `src/main.js` — WRAP gating and
+  mirroring, preset and undo wiring
+- `index.html`, `style.css` — search row, SAVES sub-tabs, presets mount, CSS
+- `docs/systems/ui-overhaul-plan.md` — the plan this release executes
+
+---
+
+## [4.9.31] - 2026-10-01 → 9.1.28
+
+**Shipped with 9.2.0.** Report: `/docs/systems/ui-module-report.md`.
+
+**A semantic map of the UI layer — generated, audited, and honest about its loose ends.**
+
+### Semantic map (`## Semantic map`, appended to the UI module report)
+- The report answered *what is on this tab*. It now also answers *how the layer is wired*:
+  a boot-order table, the two event channels in both directions, the shared kernel, and a
+  loose-ends section. All of it is derived from call sites in `src/**` by
+  `scripts/generate-ui-module-report.mjs`, so it cannot describe wiring that no longer
+  exists — and `npm run report:ui:check` still fails the build if the file drifts.
+- **Two dispatch channels, both read.** The bus sends most events by name, but `main.js`
+  also runs six `emit(ev.type, ev)` loops over event objects that the engines push. Reading
+  only the named channel would report every epoch, speciation and agency event as an orphan
+  subscription — a false alarm in a document whose whole value is that its claims check out.
+- **Reachability, not in-degree.** A module imported only by another unreachable module is
+  dead, and counting importers would call it used. The map walks imports from the entry
+  script named in `index.html` and reports what nothing reachable loads.
+- `createPresetPanel` is constructed on every boot and **renders nothing**: it mounts into
+  `#world-panel`, an id that is in neither `index.html` nor its own markup, and
+  `if (!panel) return;` makes that silent. Consequently `preset:refresh` and
+  `preset:stateResponse` never arrive and `preset:saved`, `preset:deleted` and
+  `preset:requestState` reach nothing. Boot-time presets are unaffected — they come from
+  `src/state/launchSettings.js` through `presetFor()`. Reported, not changed: reviving or
+  deleting that surface is a decision, not a bug fix.
+- Also surfaced: `src/ui/dnaPanel.js` and `src/state/presetManager.js` are unreachable, and
+  8 further modules across `physics/` and `state/` are unreachable as a cluster.
+- **The map is audited by `tests/unit/uiModuleReport.test.js`** (8 tests). A generator that
+  mis-reads the bus still produces a confident table, so the test re-derives the claims
+  independently: a "no producer" row must really have no producer, a push row must really
+  have a subscriber in `src/ui/`, and every `initUI` step and panel module must be present.
+  Mutation-checked — dropping a dangling row, renaming a boot step, blanking a panel file
+  and inventing a push event each fail exactly one test.
+
+### Changed
+- `scripts/generate-ui-module-report.mjs` — walks `src/**`, builds the event graph from both
+  dispatch channels, computes reachability from the `index.html` entry point, and appends
+  the map. `docs/systems/ui-module-report.md` 266 → 464 lines.
+- `tests/unit/uiModuleReport.test.js` — new (8 tests). Suite: 1431 → 1439 tests, 129 → 130 files.
+
+### Not verified
+- No real-browser run: Chromium cannot launch in this sandbox and the project ships no DOM
+  library, so the map was verified against the source and by test, not against the running app.
+
 ## [4.9.30] - 2026-10-01 → 9.1.27
 
 **Deployed:** `https://v5.freebuff.app/` (Freebuff static Vite hosting, 116 files, no build warnings). Report: `/docs/systems/ui-module-report.md`.

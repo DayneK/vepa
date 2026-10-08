@@ -10,7 +10,7 @@
 | --- | --- | --- | --- | --- |
 | 128 | [CONTACT](../../mechanics/128_CONTACT.md) | wired | LAW_HELP_DB | src/physics/gpuCompute.js |
 | 129 | [MOMENTUM](../../mechanics/129_MOMENTUM.md) | wired | LAW_HELP_DB | src/physics/lawGraph.js |
-| 130 | [INERTIA](../../mechanics/130_INERTIA.md) | wired | LAW_HELP_DB | src/physics/lawgroups/mechanicsHelp.js |
+| 130 | [WRAP](../../mechanics/130_WRAP.md) | wired | LAW_HELP_DB | src/physics/lawgroups/mechanicsHelp.js |
 | 131 | [TORQUE](../../mechanics/131_TORQUE.md) | wired | LAW_HELP_DB | src/physics/lawgroups/mechanicsHelp.js |
 | 132 | [CONSTRAINT](../../mechanics/132_CONSTRAINT.md) | wired | LAW_HELP_DB | src/physics/interactionSpace.js |
 | 133 | [FRAGMENTATION](../../mechanics/133_FRAGMENTATION.md) | wired | LAW_HELP_DB | src/physics/lawgroups/mechanicsHelp.js |

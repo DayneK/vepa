@@ -4,14 +4,14 @@
 
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 32 | LAW_HELP_DB |
+| 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 33 | LAW_HELP_DB |
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 12 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 9 | LAW_HELP_DB |
-| 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 26 | LAW_HELP_DB |
+| 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 27 | LAW_HELP_DB |
 | 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 24 | LAW_HELP_DB |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 6 | LAW_HELP_DB |
-| 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 4 | 5 | LAW_HELP_DB |
-| 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 18 | LAW_HELP_DB |
+| 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 5 | 5 | LAW_HELP_DB |
+| 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 19 | LAW_HELP_DB |
 | 8 | [GLOW](../laws/biology/008_GLOW.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 9 | [AFFINITY](../laws/biology/009_AFFINITY.md) | biology | 1 | 2 | 7 | LAW_HELP_DB |
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 13 | LAW_HELP_DB |
@@ -37,11 +37,11 @@
 | 30 | [TIME_DILATION](../laws/metaphysics/030_TIME_DILATION.md) | metaphysics | 1 | 2 | 3 | LAW_HELP_DB |
 | 31 | [DIMENSIONALITY](../laws/metaphysics/031_DIMENSIONALITY.md) | metaphysics | 1 | 2 | 1 | LAW_HELP_DB |
 | 32 | [CHAOS](../laws/metaphysics/032_CHAOS.md) | metaphysics | 1 | 4 | 6 | LAW_HELP_DB |
-| 33 | [ORDER](../laws/metaphysics/033_ORDER.md) | metaphysics | 1 | 3 | 9 | LAW_HELP_DB |
+| 33 | [ORDER](../laws/metaphysics/033_ORDER.md) | metaphysics | 1 | 3 | 10 | LAW_HELP_DB |
 | 34 | [FATE](../laws/metaphysics/034_FATE.md) | metaphysics | 1 | 3 | 2 | LAW_HELP_DB |
 | 35 | [WILL](../laws/metaphysics/035_WILL.md) | metaphysics | 1 | 3 | 2 | LAW_HELP_DB |
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 2 | LAW_HELP_DB |
-| 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 3 | LAW_HELP_DB |
+| 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 4 | LAW_HELP_DB |
 | 38 | [VOID](../laws/physics/038_VOID.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
 | 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 7 | 35 | LAW_HELP_DB |
 | 40 | [REDUCTION](../laws/chemistry/040_REDUCTION.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
@@ -58,7 +58,7 @@
 | 51 | [PREDATION](../laws/biology/051_PREDATION.md) | biology | 1 | 4 | 6 | LAW_HELP_DB |
 | 52 | [COMMS](../laws/biology/052_COMMS.md) | biology | 1 | 5 | 9 | LAW_HELP_DB |
 | 53 | [CHARGE_LAW](../laws/electromagnetism/053_CHARGE_LAW.md) | electromagnetism | 1 | 3 | 7 | LAW_HELP_DB |
-| 54 | [ELECTRIC_FIELD](../laws/electromagnetism/054_ELECTRIC_FIELD.md) | electromagnetism | 1 | 2 | 4 | LAW_HELP_DB |
+| 54 | [ELECTRIC_FIELD](../laws/electromagnetism/054_ELECTRIC_FIELD.md) | electromagnetism | 1 | 2 | 5 | LAW_HELP_DB |
 | 55 | [CURRENT](../laws/electromagnetism/055_CURRENT.md) | electromagnetism | 1 | 3 | 4 | LAW_HELP_DB |
 | 56 | [RESISTANCE](../laws/electromagnetism/056_RESISTANCE.md) | electromagnetism | 1 | 3 | 2 | LAW_HELP_DB |
 | 57 | [CAPACITANCE](../laws/electromagnetism/057_CAPACITANCE.md) | electromagnetism | 1 | 2 | 1 | LAW_HELP_DB |
@@ -78,7 +78,7 @@
 | 71 | [SYMBOL](../laws/information/071_SYMBOL.md) | information | 1 | 3 | 4 | LAW_HELP_DB |
 | 72 | [METRIC](../laws/information/072_METRIC.md) | information | 1 | 2 | 2 | LAW_HELP_DB |
 | 73 | [PREDICT](../laws/information/073_PREDICT.md) | information | 1 | 3 | 1 | LAW_HELP_DB |
-| 74 | [CODE](../laws/information/074_CODE.md) | information | 1 | 3 | 3 | LAW_HELP_DB |
+| 74 | [CODE](../laws/information/074_CODE.md) | information | 1 | 3 | 5 | LAW_HELP_DB |
 | 75 | [PROTOCOL](../laws/information/075_PROTOCOL.md) | information | 1 | 3 | 1 | LAW_HELP_DB |
 | 76 | [FEEDBACK](../laws/information/076_FEEDBACK.md) | information | 1 | 3 | 6 | LAW_HELP_DB |
 | 77 | [LANGUAGE](../laws/information/077_LANGUAGE.md) | information | 1 | 3 | 3 | LAW_HELP_DB |
@@ -91,7 +91,7 @@
 | 84 | [HORIZON](../laws/physics/084_HORIZON.md) | physics | 1 | 3 | 2 | LAW_HELP_DB |
 | 85 | [RADIATION_PRESSURE](../laws/physics/085_RADIATION_PRESSURE.md) | physics | 1 | 1 | 0 | LAW_HELP_DB |
 | 86 | [MASS_INERTIA](../laws/physics/086_MASS_INERTIA.md) | physics | 1 | 1 | 0 | LAW_HELP_DB |
-| 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 2 | 10 | LAW_HELP_DB |
+| 87 | [FIELD](../laws/physics/087_FIELD.md) | physics | 1 | 2 | 11 | LAW_HELP_DB |
 | 88 | [SYMBIOSIS](../laws/biology/088_SYMBIOSIS.md) | biology | 1 | 4 | 2 | LAW_HELP_DB |
 | 89 | [PARASITE](../laws/biology/089_PARASITE.md) | biology | 1 | 4 | 1 | LAW_HELP_DB |
 | 90 | [HIBERNATION](../laws/biology/090_HIBERNATION.md) | biology | 1 | 1 | 1 | LAW_HELP_DB |
@@ -116,13 +116,13 @@
 | 109 | [POLARIZATION](../laws/electromagnetism/109_POLARIZATION.md) | electromagnetism | 1 | 1 | 1 | LAW_HELP_DB |
 | 110 | [NAVIGATION](../laws/information/110_NAVIGATION.md) | information | 1 | 1 | 2 | LAW_HELP_DB |
 | 111 | [ENCRYPTION](../laws/information/111_ENCRYPTION.md) | information | 1 | 3 | 1 | LAW_HELP_DB |
-| 112 | [SUPERPOSITION](../laws/quantum/112_SUPERPOSITION.md) | quantum | 1 | 3 | 5 | LAW_HELP_DB |
+| 112 | [SUPERPOSITION](../laws/quantum/112_SUPERPOSITION.md) | quantum | 1 | 3 | 6 | LAW_HELP_DB |
 | 113 | [TUNNELING](../laws/quantum/113_TUNNELING.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 114 | [DECOHERENCE](../laws/quantum/114_DECOHERENCE.md) | quantum | 1 | 1 | 2 | LAW_HELP_DB |
 | 115 | [WAVE_PARTICLE](../laws/quantum/115_WAVE_PARTICLE.md) | quantum | 1 | 3 | 3 | LAW_HELP_DB |
 | 116 | [UNCERTAINTY](../laws/quantum/116_UNCERTAINTY.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 117 | [TELEPORT](../laws/quantum/117_TELEPORT.md) | quantum | 1 | 3 | 4 | LAW_HELP_DB |
-| 118 | [OBSERVER](../laws/quantum/118_OBSERVER.md) | quantum | 1 | 3 | 7 | LAW_HELP_DB |
+| 118 | [OBSERVER](../laws/quantum/118_OBSERVER.md) | quantum | 1 | 3 | 8 | LAW_HELP_DB |
 | 119 | [PLANCK](../laws/quantum/119_PLANCK.md) | quantum | 1 | 2 | 1 | LAW_HELP_DB |
 | 120 | [COHERENCE](../laws/quantum/120_COHERENCE.md) | quantum | 1 | 1 | 3 | LAW_HELP_DB |
 | 121 | [BOSONIC](../laws/quantum/121_BOSONIC.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
@@ -131,10 +131,10 @@
 | 124 | [SPECTRAL](../laws/quantum/124_SPECTRAL.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 125 | [WAVEFUNCTION](../laws/quantum/125_WAVEFUNCTION.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 126 | [HYPERPLANE](../laws/quantum/126_HYPERPLANE.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
-| 127 | [ANTIMATTER](../laws/quantum/127_ANTIMATTER.md) | quantum | 1 | 2 | 2 | LAW_HELP_DB |
-| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 5 | 12 | LAW_HELP_DB |
-| 129 | [MOMENTUM](../laws/mechanics/129_MOMENTUM.md) | mechanics | 1 | 3 | 5 | LAW_HELP_DB |
-| 130 | [INERTIA](../laws/mechanics/130_INERTIA.md) | mechanics | 1 | 4 | 4 | LAW_HELP_DB |
+| 127 | [ANTIMATTER](../laws/quantum/127_ANTIMATTER.md) | quantum | 1 | 2 | 3 | LAW_HELP_DB |
+| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 5 | 13 | LAW_HELP_DB |
+| 129 | [MOMENTUM](../laws/mechanics/129_MOMENTUM.md) | mechanics | 1 | 3 | 6 | LAW_HELP_DB |
+| 130 | [WRAP](../laws/mechanics/130_WRAP.md) | mechanics | 2 | 5 | 12 | LAW_HELP_DB |
 | 131 | [TORQUE](../laws/mechanics/131_TORQUE.md) | mechanics | 1 | 3 | 5 | LAW_HELP_DB |
 | 132 | [CONSTRAINT](../laws/mechanics/132_CONSTRAINT.md) | mechanics | 1 | 4 | 2 | LAW_HELP_DB |
 | 133 | [FRAGMENTATION](../laws/mechanics/133_FRAGMENTATION.md) | mechanics | 1 | 2 | 2 | LAW_HELP_DB |

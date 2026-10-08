@@ -30,6 +30,7 @@
         "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/gravEngineAlias.test.js",
         "tests/unit/informationTrace.test.js",
+        "tests/unit/launchModal.test.js",
         "tests/unit/lawAuditMatrices.test.js",
         "tests/unit/lawCouplingChains.test.js",
         "tests/unit/lawFeedbackStability.test.js",
@@ -158,6 +159,7 @@
         "tests/audit/params_batch_17.test.js",
         "tests/audit/params_batch_18.test.js",
         "tests/unit/fields.test.js",
+        "tests/unit/lawCategories.test.js",
         "tests/unit/lawGating.test.js"
       ],
       "relationshipTypes": [
@@ -266,6 +268,7 @@
       "status": "wired",
       "implementationFiles": [
         "src/physics/gpuCompute.js",
+        "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/laws.js",
         "src/physics/solver.js",
         "src/physics/synergy.js"
@@ -318,6 +321,7 @@
         "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/exoticMatter.test.js",
         "tests/unit/lawGating.test.js",
+        "tests/unit/lawGrid.test.js",
         "tests/unit/lawImplementedBy.test.js",
         "tests/unit/multiplex.test.js",
         "tests/unit/priorityLawSemantics.test.js",
@@ -1129,7 +1133,8 @@
         "tests/unit/systemFoundation.test.js",
         "tests/unit/systemVariants.test.js",
         "tests/unit/tabHelpSwitcher.test.js",
-        "tests/unit/typeScale.test.js"
+        "tests/unit/typeScale.test.js",
+        "tests/unit/uiModuleReport.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -1232,6 +1237,7 @@
       "testFiles": [
         "tests/audit/batch_10.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/launchModal.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
@@ -1714,6 +1720,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_14.test.js",
+        "tests/unit/deadLawToggles.test.js",
         "tests/unit/electricFieldSplit.test.js",
         "tests/unit/lawCategories.test.js",
         "tests/unit/priorityLawSemantics.test.js"
@@ -2268,7 +2275,9 @@
       ],
       "testFiles": [
         "tests/audit/batch_19.test.js",
+        "tests/unit/civilizationSequelWiring.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/dataPanels.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
@@ -2629,6 +2638,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_14.test.js",
+        "tests/unit/deadLawToggles.test.js",
         "tests/unit/electricFieldSplit.test.js",
         "tests/unit/fieldAdvanceOnce.test.js",
         "tests/unit/fields.test.js",
@@ -3240,6 +3250,7 @@
       "testFiles": [
         "tests/audit/batch_29.test.js",
         "tests/unit/crossCategoryScenarios.test.js",
+        "tests/unit/lawGrid.test.js",
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/quantumStateMachine.test.js"
@@ -3401,6 +3412,7 @@
         "tests/unit/codex.test.js",
         "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawGraph.test.js",
+        "tests/unit/logPanel.test.js",
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/quantumStateMachine.test.js"
@@ -3609,7 +3621,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_32.test.js",
-        "tests/unit/exoticMatter.test.js"
+        "tests/unit/exoticMatter.test.js",
+        "tests/unit/launchModal.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -3643,6 +3656,7 @@
         "tests/unit/backendArchitecture.test.js",
         "tests/unit/crossCategoryScenarios.test.js",
         "tests/unit/lawFeedbackStability.test.js",
+        "tests/unit/lawGrid.test.js",
         "tests/unit/mechanicsArchitecture.test.js",
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/provenance.test.js",
@@ -3677,7 +3691,8 @@
         "tests/audit/batch_22.test.js",
         "tests/audit/params_batch_11.test.js",
         "tests/unit/backendArchitecture.test.js",
-        "tests/unit/crossCategoryScenarios.test.js"
+        "tests/unit/crossCategoryScenarios.test.js",
+        "tests/unit/lawGrid.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -3691,12 +3706,13 @@
     },
     {
       "index": 130,
-      "name": "INERTIA",
+      "name": "WRAP",
       "category": "mechanics",
       "status": "wired",
       "implementationFiles": [
         "src/physics/lawgroups/mechanicsHelp.js",
         "src/physics/lawgroups/mechanicsLaws.js",
+        "src/physics/laws.js",
         "src/physics/mechanicsDiagnostics.js",
         "src/physics/solver.js"
       ],
@@ -3704,13 +3720,22 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
+        "tests/audit/batch_01.test.js",
         "tests/audit/params_batch_09.test.js",
+        "tests/unit/a3Reconciliation.test.js",
         "tests/unit/backendArchitecture.test.js",
+        "tests/unit/lawCategories.test.js",
+        "tests/unit/lawGrid.test.js",
         "tests/unit/mechanics.test.js",
-        "tests/unit/mechanicsDiagnosticsFields.test.js"
+        "tests/unit/mechanicsDiagnosticsFields.test.js",
+        "tests/unit/patchLawcatGuard.test.js",
+        "tests/unit/worldSave.test.js",
+        "tests/unit/worldSaveCompat.test.js",
+        "tests/unit/wrapLaw.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
+        "antagonizes",
         "transforms",
         "reads",
         "writes",

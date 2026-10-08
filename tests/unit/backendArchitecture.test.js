@@ -19,7 +19,7 @@ describe('backend and mechanics architecture contracts', () => {
   });
 
   it('documents every declared Mechanics law and its known consumer boundary', () => {
-    for (const law of ['CONTACT correction', 'MOMENTUM', 'INERTIA', 'TORQUE', 'CONSTRAINT', 'FRAGMENTATION', 'TOPOLOGY', 'ADHESION']) {
+    for (const law of ['CONTACT correction', 'MOMENTUM', 'WRAP', 'TORQUE', 'CONSTRAINT', 'FRAGMENTATION', 'TOPOLOGY', 'ADHESION']) {
       expect(mechanicsDoc).toContain(`| ${law} |`);
     }
     expect(mechanicsDoc).toContain('CONTACT` performs geometric separation correction');

@@ -2624,7 +2624,7 @@
       "undeclared": []
     },
     {
-      "law": "INERTIA",
+      "law": "WRAP",
       "category": "mechanics",
       "cells": {
         "energy": "kept",

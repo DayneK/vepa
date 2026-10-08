@@ -103,6 +103,15 @@ describe('minimum type scale', () => {
     expect(TINY.length).toBeGreaterThan(0);
   });
 
+  it('renders the compact top-bar particle count at 9px or above', () => {
+    // D-025 (kept over upstream's 'PARTICLES ####' orb in the D-031 merge): the
+    // count is #hud-population-count, a .hud-item, so the mobile .hud-item rule
+    // sizes it; the dot itself paints no text.
+    const mobile = STYLE_RULES.find((rule) => rule.selector === '#top-toolbar .hud-item' && rule.media);
+    expect(mobile).toBeTruthy();
+    expect(px(fontSizeOf(mobile))).toBeGreaterThanOrEqual(9);
+  });
+
   it('leaves nothing tiny outside the documented exceptions', () => {
     const unexplained = TINY.filter((s) => !EXCEPTIONS.has(s));
     expect(

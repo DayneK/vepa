@@ -39,7 +39,7 @@ describe('world save compatibility (FSM-SAVE)', () => {
     const state = parseWorldSave(legacyV1File());
     expect(state.tick).toBe(42);
     expect(state.particleCount).toBe(2);
-    expect(state.laws).toEqual({ low: 1, high: 0, ext: 0, quad: 0 });
+    expect(state.laws).toEqual({ low: 1, high: 0, ext: 0, quad: 0, penta: 0 }); // penta defaults to 0 (upstream v9.3.0, D-031)
     expect(state.civilization).toBeNull();
     expect(state.codex).toBeNull();
     const view = new Float32Array(4 * PARTICLE_STRIDE);
@@ -88,10 +88,12 @@ describe('world save compatibility (FSM-SAVE)', () => {
     expect(isSet(target, LAW_INDEXES.TORQUE)).toBe(true);
   });
 
-  it('a legacy save without the penta word leaves Mechanics laws untouched', () => {
+  it('a legacy save without the penta word restores with Mechanics laws off (upstream v9.3.0 rule, D-031)', () => {
+    // The restore is determined by the file alone; WRAP is re-seeded from the
+    // TOROIDAL world param by main.js on law:sync, not inherited from live bits.
     const target = createLawState();
     lawSet(target, LAW_INDEXES.TORQUE);
     restoreWorldState(parseWorldSave(legacyV1File()), { laws: target });
-    expect(isSet(target, LAW_INDEXES.TORQUE)).toBe(true);
+    expect(isSet(target, LAW_INDEXES.TORQUE)).toBe(false);
   });
 });

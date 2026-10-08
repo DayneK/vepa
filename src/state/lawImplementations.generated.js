@@ -1643,12 +1643,12 @@ export const LAW_IMPLEMENTATIONS = Object.freeze({
     "writes": [],
     "derivedBy": "static-scan: gated call"
   },
-  "INERTIA": {
-    "implementedBy": "src/physics/lawgroups/mechanicsLaws.js#applyInertia",
-    "gate": "(no direct gate found)",
+  "WRAP": {
+    "implementedBy": "src/physics/solver.js#solve",
+    "gate": "src/physics/solver.js",
     "reads": [],
     "writes": [],
-    "derivedBy": "static-scan: gated call"
+    "derivedBy": "static-scan: inline gated block"
   },
   "TORQUE": {
     "implementedBy": "src/physics/lawgroups/mechanicsLaws.js#applyTorque",

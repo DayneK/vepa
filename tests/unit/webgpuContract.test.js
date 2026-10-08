@@ -88,7 +88,7 @@ describe('WebGPU bridge contracts', () => {
 
   it('distinguishes storage layout, population capacity, and law registry size', () => {
     expect(PARTICLE_STRIDE).toBe(100);
-    expect(MAX_PARTICLES).toBe(100000);
+    expect(MAX_PARTICLES).toBe(10000);
     expect(LAW_COUNT).toBe(136);
   });
 });

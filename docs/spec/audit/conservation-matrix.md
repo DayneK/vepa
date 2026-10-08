@@ -144,7 +144,7 @@ Undeclared changes (law changes a total whose stride field its ontology record d
 | ANTIMATTER | quantum | **changed** (0.4722) | **changed** (0.4078) | **changed** (10.27) | **changed** (0.03142) | **changed** (17) |
 | CONTACT | mechanics | kept | kept | kept | kept | kept |
 | MOMENTUM | mechanics | kept | kept | kept | **changed** (0.003031) | kept |
-| INERTIA | mechanics | kept | kept | kept | kept | kept |
+| WRAP | mechanics | kept | kept | kept | kept | kept |
 | TORQUE | mechanics | kept | kept | kept | **changed** (0.1212) | kept |
 | CONSTRAINT | mechanics | kept | kept | kept | kept | kept |
 | FRAGMENTATION | mechanics | kept | kept | kept | kept | kept |

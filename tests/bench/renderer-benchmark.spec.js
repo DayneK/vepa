@@ -14,9 +14,9 @@ test.describe('renderer backend benchmark', () => {
     await expect.poll(() => page.evaluate(() => Boolean(window.__VEPA_BENCH__))).toBe(true);
 
     const report = await page.evaluate(async () => {
-      // 1k / 10k / 50k / 100k alive slots (fixture marks ~2% dead).
+      // 0.1k / 0.5k / 1k / 10k alive slots (fixture marks ~2% dead).
       return await window.__VEPA_BENCH__.run({
-        scales: [1000, 10000, 50000, 100000],
+        scales: [100, 500, 1000, 10000],
         frameSamples: 30,
         seed: 0x9e3779b9,
       });

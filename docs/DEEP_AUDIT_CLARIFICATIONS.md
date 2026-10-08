@@ -9,7 +9,7 @@ The value `100` is **not** a particle-count limit and is not an alternative to `
 | Concept | Live value | Meaning |
 |---|---:|---|
 | `PARTICLE_STRIDE` | 100 | Each particle occupies 100 `Float32` slots in the flat particle buffer. |
-| `MAX_PARTICLES` | 100000 | Maximum population capacity allocated by the application. |
+| `MAX_PARTICLES` | 10000 | Maximum population capacity allocated by the application. |
 | `LAW_COUNT` | 136 | Registered law slots, indexed 0–135. |
 | Legacy 128 reference | historical | The earlier registry/law-state boundary; it is not the current law count. |
 

@@ -75,19 +75,19 @@ export const MULTIPLEX_HELP_DB = {
     section: 'setup',
     title: 'POP % / SIM',
     hint: 'Fixed per-sim population as a percentage of the default cap.',
-    explanation: 'When above 0, every shard is capped at this percentage of the default population cap (100,000 particles), whatever the grid size: 2.5 gives 2,500 particles per sim. 0 keeps the automatic curve, where the cap shrinks with the square root of the shard count and POP SCALE applies. CLONE mode still copies at most the source population.',
+    explanation: 'When above 0, every shard is capped at this percentage of the default population cap (10,000 particles since v9.3.1), whatever the grid size: 25 gives 2,500 particles per sim. 0 keeps the automatic curve, where the cap shrinks with the square root of the shard count and POP SCALE applies. CLONE mode still copies at most the source population.',
   },
   perfPreset: {
     section: 'setup',
     title: 'PERFORMANCE PRESET',
     hint: 'Smooth 20, Balanced or Full fidelity — or Custom.',
-    explanation: 'Presets set the grid, particles per sim, preview laws and sim tick scheduling together. Smooth 20: 20 sims × 125 particles, light laws, a tick every frame. Balanced: 20 × 500, light laws, adaptive ticks. Full fidelity: 20 × 2,500 (2.5%), full laws, adaptive ticks — the sims tick slower than the screen draws, but the UI stays at 60 fps. Changing any performance control switches to Custom. Settings are remembered between sessions.',
+    explanation: 'Presets set the grid, particles per sim, preview laws and sim tick scheduling together. Smooth 20: 20 sims × 125 particles, light laws, a tick every frame. Balanced: 20 × 500, light laws, adaptive ticks. Full fidelity: 20 × 2,500 (25%), full laws, adaptive ticks — the sims tick slower than the screen draws, but the UI stays at 60 fps. Changing any performance control switches to Custom. Settings are remembered between sessions.',
   },
   particlesPerSim: {
     section: 'setup',
     title: 'PARTICLES / SIM',
     hint: 'Fixed population per sim (125–2,500). 0 uses POP %.',
-    explanation: 'Caps every sim at this many particles, whatever the grid size. It is kept in step with POP % / SIM (2,500 = 2.5% of the 100,000 default cap). Smaller previews tick much faster: 20 × 125 runs at 60 fps; 20 × 2,500 needs throttled ticks.',
+    explanation: 'Caps every sim at this many particles, whatever the grid size. It is kept in step with POP % / SIM (2,500 = 25% of the 10,000 default cap). Smaller previews tick much faster: 20 × 125 runs at 60 fps; 20 × 2,500 needs throttled ticks.',
   },
   lawTier: {
     section: 'setup',

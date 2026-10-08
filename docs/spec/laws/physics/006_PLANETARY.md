@@ -26,7 +26,7 @@
 
 ## Implementation evidence
 
-[src/physics/gpuCompute.js](../../../../src/physics/gpuCompute.js), [src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/synergy.js](../../../../src/physics/synergy.js)
+[src/physics/gpuCompute.js](../../../../src/physics/gpuCompute.js), [src/physics/lawgroups/mechanicsHelp.js](../../../../src/physics/lawgroups/mechanicsHelp.js), [src/physics/laws.js](../../../../src/physics/laws.js), [src/physics/solver.js](../../../../src/physics/solver.js), [src/physics/synergy.js](../../../../src/physics/synergy.js)
 
 ## Verification evidence
 

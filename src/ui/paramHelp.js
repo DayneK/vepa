@@ -26,15 +26,15 @@ export const EXACT_KEY_HELP = {
     units: 'world units (1 unit ≈ 1 renderer pixel at 1× zoom).',
   },
   GROUND_HEIGHT: {
-    what: 'Height of the solid ground plane below the dish.',
-    effect: 'Particles cannot fall below this plane; PLANETARY pulls everything down onto it and structures can rest on it.',
-    tuning: '0.9 keeps the dish near the top of its volume; lower it for deep basins.',
-    units: 'fraction of WORLD_SIZE measured from the bottom face.',
+    what: 'Upper Z limit for initial spawn positions, expressed as a fraction of WORLD_SIZE.',
+    effect: 'During initialization, spawn Z is clamped to WORLD_SIZE × GROUND_HEIGHT when the fraction is below 1. This does not create a persistent collision floor or a terrain surface.',
+    tuning: '0.9 confines initial spawns to the lower 90% of the Z range. Set 1 to disable this clamp; a physical ground plane would need separate boundary/force behavior.',
+    units: 'fraction of WORLD_SIZE (0–1).',
   },
   PARTICLE_COUNT: {
     what: 'Hard allocation cap for the particle pool.',
     effect: 'The SharedArrayBuffer is sized from this; also the hard ceiling used by spawning.',
-    tuning: 'Larger pools cost memory (100 floats × count) but never physics time — only alive particles are simulated. Leave headroom for reproduction.',
+    tuning: 'Larger pools cost memory (100 floats × count). The current hard cap is 10,000 particles; only alive particles are simulated.',
     units: 'particles.',
   },
   INITIAL_POP: {
@@ -46,7 +46,7 @@ export const EXACT_KEY_HELP = {
   MAX_POP: {
     what: 'Soft population cap enforced against spawning and reproduction.',
     effect: 'Births are refused once the alive count reaches this.',
-    tuning: 'Pair with PERFORMANCE knobs — physics cost scales with the alive count, not the pool size.',
+    tuning: 'Keep the ceiling at or below the 10,000-particle engine cap. Pair it with PERFORMANCE knobs — physics cost scales with the alive count, not the pool size.',
     units: 'particles.',
   },
   SHAPE: {
@@ -110,8 +110,8 @@ export const EXACT_KEY_HELP = {
     units: 'restitution fraction.',
   },
   TOROIDAL: {
-    what: 'Boundary topology of the dish (replaced the old WRAP law).',
-    effect: '1 = torus: leaving one edge re-enters the opposite edge. 0 = box with WALL REFLECT walls.',
+    what: 'Default boundary topology of the dish — the value the WRAP law boots with.',
+    effect: '1 = torus: leaving one edge re-enters the opposite edge. 0 = box with WALL REFLECT walls. Moving this slider flips the WRAP law and vice versa.',
     tuning: 'Toroidal boundaries avoid wall artifacts in gravity experiments.',
     units: '0/1 toggle.',
   },
@@ -316,7 +316,7 @@ export const DNA_HELP = {
   'Tuning Ch2': TUNING_CH_HELP,
   'Tuning Ch3': TUNING_CH_HELP,
   'Tuning Ch4': TUNING_CH_HELP,
-  Inertia: { what: 'Resistance to acceleration (INERTIA law + slate mechanics).', effect: 'Force response divides by effective inertia.', tuning: '1.0 is neutral.', units: 'inertia 0.1–5.' },
+  Inertia: { what: 'Resistance to acceleration (the MASS_INERTIA law).', effect: 'Force response divides by effective inertia.', tuning: '1.0 is neutral.', units: 'inertia 0.1–5.' },
   Friction: { what: 'Material surface friction.', effect: 'Under FRICTION law, drag scales with this and motion converts to heat.', tuning: '0.01 is near-frictionless ice.', units: 'coefficient.' },
   'Max Velocity': { what: 'Per-particle speed cap.', effect: 'Clamps integration output; also the fallback for MAX_VELOCITY DNA.', tuning: '10 is the global default cap.', units: 'units/second.' },
   'Base Radius': { what: 'Physical size of the particle.', effect: 'Contact, bonding and fusion all scale from this.', tuning: '5 is standard; large particles dominate space.', units: 'world units.' },

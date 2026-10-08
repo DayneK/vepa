@@ -6,7 +6,7 @@
 export const MECHANICS_ICONS = {
   CONTACT: '⊕',
   MOMENTUM: '⇄',
-  INERTIA: '◍',
+  WRAP: '⧉',
   TORQUE: '⟲',
   CONSTRAINT: '⛓',
   FRAGMENTATION: '✸',
