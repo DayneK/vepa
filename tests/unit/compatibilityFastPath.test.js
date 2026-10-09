@@ -27,3 +27,25 @@ describe('compatibilityForViewsInto (MX-20)', () => {
     }
   });
 });
+
+// PERF-4: the inlined hot path must stay bit-identical on edge values too
+// (NaN, ±Infinity, -0, huge and tiny magnitudes in every loci the path reads).
+describe('compatibilityForViewsInto edge values (PERF-4)', () => {
+  it('matches compatibilityForViews exactly when rows contain NaN, ±Infinity and -0', () => {
+    const g = new SplitMix32(777);
+    const N = 64;
+    const view = new Float32Array(N * PARTICLE_STRIDE);
+    const specials = [NaN, Infinity, -Infinity, -0, 0, 1e30, -1e30, 1e-30, 1, -1];
+    for (let i = 0; i < view.length; i++) view[i] = g.next() < 0.3 ? specials[(g.next() * specials.length) | 0] : (g.next() - 0.5) * 50;
+    const out = createCompatibilityScratch();
+    for (let k = 0; k < 4000; k++) {
+      const a = (g.next() * N | 0) * PARTICLE_STRIDE, b = (g.next() * N | 0) * PARTICLE_STRIDE;
+      const world = k % 4 === 0 ? {} : { SPECIES_INTERACTION: k % 4 === 1 ? NaN : g.next() * 4 - 2 };
+      const ref = compatibilityForViews(view, a, b, world);
+      const got = compatibilityForViewsInto(view, a, b, world, out);
+      expect(Object.is(got.overall, ref.overall)).toBe(true);
+      expect(Object.is(got.speciesAffinity, ref.speciesAffinity)).toBe(true);
+      for (const d of Object.keys(ref.dimensions)) expect(Object.is(got.dimensions[d], ref.dimensions[d]), d).toBe(true);
+    }
+  });
+});

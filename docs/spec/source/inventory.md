@@ -99,7 +99,7 @@ The generator scanned `372` files from active repository inputs. Individual modu
 | [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 399 | 5 | 0 | 0 |
 | [src/physics/pairGeometry.js](../../../src/physics/pairGeometry.js) | simulation | 41 | 1 | 1 | 0 |
 | [src/physics/quantumStateMachine.js](../../../src/physics/quantumStateMachine.js) | simulation | 63 | 5 | 2 | 6 |
-| [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 304 | 8 | 2 | 9 |
+| [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 399 | 8 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
 | [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2064 | 15 | 22 | 134 |
@@ -267,7 +267,7 @@ The generator scanned `372` files from active repository inputs. Individual modu
 | [tests/unit/civilizationWiring.test.js](../../../tests/unit/civilizationWiring.test.js) | testing | 90 | 0 | 6 | 0 |
 | [tests/unit/civRuntime.test.js](../../../tests/unit/civRuntime.test.js) | testing | 120 | 0 | 9 | 1 |
 | [tests/unit/codex.test.js](../../../tests/unit/codex.test.js) | testing | 402 | 0 | 5 | 16 |
-| [tests/unit/compatibilityFastPath.test.js](../../../tests/unit/compatibilityFastPath.test.js) | testing | 30 | 0 | 4 | 0 |
+| [tests/unit/compatibilityFastPath.test.js](../../../tests/unit/compatibilityFastPath.test.js) | testing | 52 | 0 | 4 | 0 |
 | [tests/unit/computeEngines.test.js](../../../tests/unit/computeEngines.test.js) | testing | 70 | 0 | 8 | 1 |
 | [tests/unit/constructionEconomy.test.js](../../../tests/unit/constructionEconomy.test.js) | testing | 128 | 0 | 6 | 0 |
 | [tests/unit/continuity.test.js](../../../tests/unit/continuity.test.js) | testing | 308 | 0 | 3 | 1 |

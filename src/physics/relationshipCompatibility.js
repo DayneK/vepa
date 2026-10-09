@@ -230,11 +230,106 @@ export function createCompatibilityScratch() {
   };
 }
 
+// PERF-4: exact re-implementations of clamp01() and similarity() for the hot
+// path. c01 returns bit-for-bit what clamp01 returns for every input (NaN,
+// ±Infinity and -0 included: -0 and 0 map to +0, +Infinity to 0). simC is
+// similarity() for a scale already known to be ≥ 1e-6, so Math.max(scale,
+// 1e-6) is the scale itself (or NaN for a NaN scale, unchanged).
+function c01(v) {
+  if (!(v > 0)) return 0;
+  if (v < 1) return v;
+  return v === Infinity ? 0 : 1;
+}
+function simC(a, b, scale) {
+  return c01(1 - Math.abs((a || 0) - (b || 0)) / scale);
+}
+// DOMINANCE (42), CROSSOVER_RATE (43) and GENE_FLOW (46) are outside the
+// 42-value particle cache, so the object path reads them as undefined and each
+// similarity is exactly 1; the genetic sum folds them to the same constants.
+const GENETIC_LOCI_CACHED = D.DOMINANCE < CACHE_LEN || D.CROSSOVER_RATE < CACHE_LEN || D.GENE_FLOW < CACHE_LEN;
+
 /**
  * Same result as compatibilityForViews(), written into `out` (reused; valid
  * until the next call with the same scratch). Not frozen.
+ *
+ * PERF-4: same arithmetic in the same order as before, with the helper calls
+ * inlined, the two repeated terms (radius and ENERGY_EFFICIENCY similarity)
+ * computed once, and the out-of-cache genetic loci folded; bit-identical
+ * (tests/unit/compatibilityFastPath.test.js, golden parity, bench:solver hash).
  */
 export function compatibilityForViewsInto(view, iBase, jBase, world, out) {
+  if (GENETIC_LOCI_CACHED) return compatibilityForViewsIntoGeneric(view, iBase, jBase, world, out);
+  const aSpecies = view[iBase + S.SPECIES_ID], bSpecies = view[jBase + S.SPECIES_ID];
+  const aEnergy = view[iBase + S.ENERGY], bEnergy = view[jBase + S.ENERGY];
+  const aRadius = view[iBase + S.RADIUS], bRadius = view[jBase + S.RADIUS];
+  const ad = iBase + DC, bd = jBase + DC;
+  const sameSpecies = aSpecies === bSpecies;
+  const speciesAffinity = clamp01(0.5 + average(view[ad + D.SPECIES_AFFINITY], view[bd + D.SPECIES_AFFINITY]) * 0.5);
+  const interaction = clamp01(Number.isFinite(world.SPECIES_INTERACTION) ? (world.SPECIES_INTERACTION + 2) / 4 : 0.5);
+  const radiusScale = Math.max(aRadius || 1, bRadius || 1, 1);
+  const radiusSim = simC(aRadius, bRadius, radiusScale);
+  const effSim = simC(view[ad + D.ENERGY_EFFICIENCY], view[bd + D.ENERGY_EFFICIENCY], 10);
+
+  const physical = c01(
+    simC(view[ad + D.STIFFNESS], view[bd + D.STIFFNESS], 5) * 0.45 +
+    simC(view[ad + D.ELASTICITY], view[bd + D.ELASTICITY], 1) * 0.25 +
+    radiusSim * 0.2 +
+    (sameSpecies ? 0.1 : 0),
+  );
+  const energetic = c01(
+    simC(aEnergy, bEnergy, 200) * 0.55 +
+    effSim * 0.45,
+  );
+  // 1 * 0.2, 1 * 0.2 and 1 * 0.15 are exact, so this is the old sum.
+  const genetic = c01(
+    speciesAffinity * 0.45 +
+    0.2 +
+    0.2 +
+    0.15,
+  );
+  const geometric = c01(
+    simC(view[ad + D.SYMMETRY], view[bd + D.SYMMETRY], 2) * 0.35 +
+    circularSimilarity(view[ad + D.BOND_ANGLE], view[bd + D.BOND_ANGLE]) * 0.35 +
+    radiusSim * 0.3,
+  );
+  const resource = c01(
+    effSim * 0.45 +
+    simC(view[ad + D.CONDUCTIVITY], view[bd + D.CONDUCTIVITY], 1) * 0.25 +
+    simC(view[ad + D.HEAT_OUTPUT], view[bd + D.HEAT_OUTPUT], 1) * 0.3,
+  );
+  const behavioral = c01(
+    simC(view[ad + D.SIGNAL_RESP], view[bd + D.SIGNAL_RESP], 2) * 0.35 +
+    simC(view[ad + D.MEMORY_DECAY], view[bd + D.MEMORY_DECAY], 0.1) * 0.25 +
+    simC(view[ad + D.PREDATION_BIAS], view[bd + D.PREDATION_BIAS], 20) * 0.2 +
+    speciesAffinity * 0.2,
+  );
+  const reproductive = c01(
+    speciesAffinity * 0.35 +
+    simC(view[ad + D.SEX_CHANCE], view[bd + D.SEX_CHANCE], 10) * 0.3 +
+    simC(view[ad + D.BIRTH_RATE], view[bd + D.BIRTH_RATE], 10) * 0.2 +
+    genetic * 0.15,
+  );
+  let product = 1;
+  product = product * Math.max(physical, 0.001);
+  product = product * Math.max(energetic, 0.001);
+  product = product * Math.max(genetic, 0.001);
+  product = product * Math.max(geometric, 0.001);
+  product = product * Math.max(resource, 0.001);
+  product = product * Math.max(behavioral, 0.001);
+  product = product * Math.max(reproductive, 0.001);
+  const weighted = product ** (1 / 7);
+  const dims = out.dimensions;
+  dims.physical = physical; dims.energetic = energetic; dims.genetic = genetic; dims.geometric = geometric;
+  dims.resource = resource; dims.behavioral = behavioral; dims.reproductive = reproductive;
+  out.sameSpecies = sameSpecies;
+  out.speciesAffinity = speciesAffinity;
+  out.interaction = interaction;
+  out.overall = c01(weighted * (sameSpecies ? 1 : interaction));
+  return out;
+}
+
+/** The pre-PERF-4 body, kept for a layout where the genetic loci are cached. */
+function compatibilityForViewsIntoGeneric(view, iBase, jBase, world, out) {
   const aSpecies = view[iBase + S.SPECIES_ID], bSpecies = view[jBase + S.SPECIES_ID];
   const aEnergy = view[iBase + S.ENERGY], bEnergy = view[jBase + S.ENERGY];
   const aRadius = view[iBase + S.RADIUS], bRadius = view[jBase + S.RADIUS];
