@@ -194,6 +194,14 @@ export const SPEED_SOCIAL_LAWS = Object.freeze([
 ]);
 const SPEED_SOCIAL_INDEXES = SPEED_SOCIAL_LAWS.map((n) => LAW_INDEXES[n]).filter((i) => i !== undefined);
 let _activeSocialSkip = new Uint8Array(0);
+// D-037 EXPENSIVE LAWS EVERY N TICKS (world param SPEED_EXPENSIVE_EVERY,
+// default 1 = every tick, results-identical). The eight laws that cost the
+// most per tick in the D-036 leave-one-out bench (bench/law-cost.mjs). The
+// list is fixed so the setting stays deterministic if the ranking is re-run.
+export const SPEED_EXPENSIVE_LAWS = Object.freeze([
+  'BOND', 'CAPACITANCE', 'COMPRESSION', 'SUPERCONDUCTIVITY', 'SOUL_LAW', 'AUTOCATALYSIS', 'MELT', 'RADIATION_PRESSURE',
+]);
+const SPEED_EXPENSIVE_INDEXES = SPEED_EXPENSIVE_LAWS.map((n) => LAW_INDEXES[n]).filter((i) => i !== undefined);
 const ACCR_PARTNER_SLOTS = [
   STRIDE_INDEXES.BOND_PARTNER_1,
   STRIDE_INDEXES.BOND_PARTNER_2,
@@ -458,6 +466,17 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     _activeSocialSkip.set(active);
     for (let k = 0; k < SPEED_SOCIAL_INDEXES.length; k++) _activeSocialSkip[SPEED_SOCIAL_INDEXES[k]] = 0;
     active = _activeSocialSkip;
+  }
+  // D-037: same scheme for the expensive laws (first tick after a reset, then
+  // every Nth). Applied after the social mask so both can be on together.
+  const expensiveEvery = Math.max(1, Math.round(speedValue(runtimeConfig.worldParams, 'SPEED_EXPENSIVE_EVERY')));
+  if (expensiveEvery > 1 && (_solveTick - 1) % expensiveEvery !== 0) {
+    if (active !== _activeSocialSkip) {
+      if (_activeSocialSkip.length !== active.length) _activeSocialSkip = new Uint8Array(active.length);
+      _activeSocialSkip.set(active);
+      active = _activeSocialSkip;
+    }
+    for (let k = 0; k < SPEED_EXPENSIVE_INDEXES.length; k++) _activeSocialSkip[SPEED_EXPENSIVE_INDEXES[k]] = 0;
   }
 
   // World parameters (WORLD panel sliders) — read live from runtimeConfig.

@@ -23,6 +23,7 @@ describe('speed sliders: shared contract (D-036)', () => {
     const want = {
       PAIRWISE_BUDGET: [8, 512, 96, 8], SPEED_MID_RANGE: [30, 600, 200, 5], SPEED_NEAR_RANGE: [10, 60, 30, 1],
       SPEED_PAIR_BUDGET: [8, 512, 512, 1], SPEED_SYMBIOSIS_RANGE: [10, 600, 600, 5], SPEED_SOCIAL_EVERY: [1, 16, 1, 1],
+      SPEED_EXPENSIVE_EVERY: [1, 16, 1, 1],
     };
     expect(Object.keys(want).sort()).toEqual([...SPEED_SLIDER_KEYS].sort());
     for (const [k, [min, max, d, step]] of Object.entries(want)) {
@@ -129,7 +130,7 @@ describe('FAST preset and D-034 saves', async () => {
   const { parseWorldSave, restoreWorldState, WORLD_SAVE_FORMAT, WORLD_SAVE_VERSION } = await import('../../src/state/worldSave.js');
   const save = (worldParams) => parseWorldSave({ format: WORLD_SAVE_FORMAT, version: WORLD_SAVE_VERSION, particleCount: 0, speciesCount: 1, laws: { low: 0, high: 0, ext: 0, quad: 0, penta: 0 }, worldParams });
   it('FAST sets every slider to the old FAST values (pair budget 20 per particle)', () => {
-    expect(SPEED_FAST_PRESET).toEqual({ PAIRWISE_BUDGET: 48, SPEED_MID_RANGE: 120, SPEED_NEAR_RANGE: 30, SPEED_PAIR_BUDGET: 20, SPEED_SYMBIOSIS_RANGE: 30, SPEED_SOCIAL_EVERY: 2 });
+    expect(SPEED_FAST_PRESET).toEqual({ PAIRWISE_BUDGET: 48, SPEED_MID_RANGE: 120, SPEED_NEAR_RANGE: 30, SPEED_PAIR_BUDGET: 20, SPEED_SYMBIOSIS_RANGE: 30, SPEED_SOCIAL_EVERY: 2, SPEED_EXPENSIVE_EVERY: 1 });
     for (const [k, v] of Object.entries(SPEED_FAST_PRESET)) { expect(v).toBeGreaterThanOrEqual(def(k).min); expect(v).toBeLessThanOrEqual(def(k).max); }
   });
   it('restores saved slider values', () => {

@@ -155,6 +155,8 @@ export const WORLD_PARAM_DEFS = [
   { key: 'SPEED_PAIR_BUDGET', label: 'PAIR BUDGET / PARTICLE / TICK', min: 8, max: 512, default: 512, step: 1, maxLabel: 'OFF', group: 'PERFORMANCE', subgroup: 'SPEED' },
   { key: 'SPEED_SYMBIOSIS_RANGE', label: 'SYMBIOSIS & PARASITE RANGE', min: 10, max: 600, default: 600, step: 5, maxLabel: 'ANY', group: 'PERFORMANCE', subgroup: 'SPEED' },
   { key: 'SPEED_SOCIAL_EVERY', label: 'SOCIAL & INFO LAWS EVERY N TICKS', min: 1, max: 16, default: 1, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
+  // D-037: the eight costliest laws (solver SPEED_EXPENSIVE_LAWS) act every Nth tick.
+  { key: 'SPEED_EXPENSIVE_EVERY', label: 'EXPENSIVE LAWS EVERY N TICKS', min: 1, max: 16, default: 1, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
 
   // ── TIME (v8.6 D.2 — Deep Time & Epochs) ──
   { key: 'TIME_SPEED', label: 'TIME SPEED', min: 0.1, max: 10, default: 1, step: 0.1, group: 'TIME', subgroup: 'TIME' },
@@ -271,7 +273,7 @@ export function spawnCaps(state) {
  * multiplex param perturbation never varies them (PAIRWISE_BUDGET, the
  * neighbour limit, predates them and keeps its old perturbation behaviour).
  */
-export const SPEED_PARAM_KEYS = Object.freeze(['SPEED_MID_RANGE', 'SPEED_NEAR_RANGE', 'SPEED_PAIR_BUDGET', 'SPEED_SYMBIOSIS_RANGE', 'SPEED_SOCIAL_EVERY']);
+export const SPEED_PARAM_KEYS = Object.freeze(['SPEED_MID_RANGE', 'SPEED_NEAR_RANGE', 'SPEED_PAIR_BUDGET', 'SPEED_SYMBIOSIS_RANGE', 'SPEED_SOCIAL_EVERY', 'SPEED_EXPENSIVE_EVERY']);
 /** Every slider in the SPEED group, neighbour limit included. */
 export const SPEED_SLIDER_KEYS = Object.freeze(['PAIRWISE_BUDGET', ...SPEED_PARAM_KEYS]);
 const SPEED_KEY_SET = new Set(SPEED_PARAM_KEYS);
@@ -291,6 +293,8 @@ export const SPEED_FAST_PRESET = Object.freeze({
   SPEED_PAIR_BUDGET: 20,
   SPEED_SYMBIOSIS_RANGE: 30,
   SPEED_SOCIAL_EVERY: 2,
+  // D-037: not part of FAST (FAST keeps its D-036 results); see SPEED-OPTIONS.md.
+  SPEED_EXPENSIVE_EVERY: 1,
 });
 
 /** Slider value, or its default when absent / non-finite. */
