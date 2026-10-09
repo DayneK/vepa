@@ -133,9 +133,9 @@
     {
       "law": "GENOTYPE",
       "category": "biology",
-      "effect": 32.6,
+      "effect": 27.25,
       "nearest": "AFFINITY",
-      "nearestDistance": 32.6,
+      "nearestDistance": 27.25,
       "status": "distinct"
     },
     {

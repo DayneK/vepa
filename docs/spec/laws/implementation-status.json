@@ -85,6 +85,7 @@
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/multiplexScheduler.test.js",
+        "tests/unit/nanEnergy.test.js",
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/speedOptions.test.js",
@@ -583,6 +584,7 @@
         "tests/unit/multiplexRefill.test.js",
         "tests/unit/multiplexScale.test.js",
         "tests/unit/multiplexScheduler.test.js",
+        "tests/unit/nanEnergy.test.js",
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/quantumMacro.test.js",
@@ -658,6 +660,7 @@
       "testFiles": [
         "tests/audit/batch_04.test.js",
         "tests/unit/lawClock.test.js",
+        "tests/unit/nanEnergy.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
@@ -1245,6 +1248,7 @@
         "tests/audit/batch_10.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/launchModal.test.js",
+        "tests/unit/nanEnergy.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
@@ -1322,6 +1326,7 @@
         "tests/unit/multiplexIsolation.test.js",
         "tests/unit/multiplexRefill.test.js",
         "tests/unit/multiplexScheduler.test.js",
+        "tests/unit/nanEnergy.test.js",
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/relationshipCompatibility.test.js",
@@ -2069,6 +2074,7 @@
         "tests/unit/lawgroupsQuantum.test.js",
         "tests/unit/lawsSingleton.test.js",
         "tests/unit/memoryCulture.test.js",
+        "tests/unit/nanEnergy.test.js",
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/quantumStateMachine.test.js",
         "tests/unit/signal.test.js",

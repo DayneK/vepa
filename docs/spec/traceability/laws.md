@@ -5,7 +5,7 @@
 | Index | Law | Category | Gate refs | Implementation | Tests | Help |
 | --- | --- | --- | --- | --- | --- | --- |
 | 0 | [GRAV](../laws/physics/000_GRAV.md) | physics | 2 | 4 | 34 | LAW_HELP_DB |
-| 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 13 | LAW_HELP_DB |
+| 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 14 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 9 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 27 | LAW_HELP_DB |
 | 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 25 | LAW_HELP_DB |
@@ -17,9 +17,9 @@
 | 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 14 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 3 | LAW_HELP_DB |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 3 | 14 | 81 | LAW_HELP_DB |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 3 | 14 | 82 | LAW_HELP_DB |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 4 | LAW_HELP_DB |
-| 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
+| 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 4 | LAW_HELP_DB |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | LAW_HELP_DB |
 | 17 | [CATALYSIS_LAW](../laws/chemistry/017_CATALYSIS_LAW.md) | chemistry | 1 | 3 | 3 | LAW_HELP_DB |
 | 18 | [SOLVATION](../laws/chemistry/018_SOLVATION.md) | chemistry | 1 | 3 | 1 | LAW_HELP_DB |
@@ -41,9 +41,9 @@
 | 34 | [FATE](../laws/metaphysics/034_FATE.md) | metaphysics | 1 | 3 | 2 | LAW_HELP_DB |
 | 35 | [WILL](../laws/metaphysics/035_WILL.md) | metaphysics | 1 | 3 | 2 | LAW_HELP_DB |
 | 36 | [SOUL_LAW](../laws/metaphysics/036_SOUL_LAW.md) | metaphysics | 1 | 2 | 2 | LAW_HELP_DB |
-| 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 4 | LAW_HELP_DB |
+| 37 | [MIND](../laws/metaphysics/037_MIND.md) | metaphysics | 1 | 4 | 5 | LAW_HELP_DB |
 | 38 | [VOID](../laws/physics/038_VOID.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
-| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 7 | 35 | LAW_HELP_DB |
+| 39 | [BOND](../laws/physics/039_BOND.md) | physics | 1 | 7 | 36 | LAW_HELP_DB |
 | 40 | [REDUCTION](../laws/chemistry/040_REDUCTION.md) | chemistry | 1 | 2 | 1 | LAW_HELP_DB |
 | 41 | [ALLOY](../laws/chemistry/041_ALLOY.md) | chemistry | 1 | 4 | 2 | LAW_HELP_DB |
 | 42 | [MELT](../laws/thermodynamics/042_MELT.md) | thermodynamics | 1 | 2 | 2 | LAW_HELP_DB |
@@ -70,7 +70,7 @@
 | 63 | [DISCHARGE](../laws/electromagnetism/063_DISCHARGE.md) | electromagnetism | 1 | 3 | 4 | LAW_HELP_DB |
 | 64 | [PLASMA](../laws/electromagnetism/064_PLASMA.md) | electromagnetism | 1 | 3 | 4 | LAW_HELP_DB |
 | 65 | [SUPERCONDUCTIVITY](../laws/electromagnetism/065_SUPERCONDUCTIVITY.md) | electromagnetism | 1 | 3 | 3 | LAW_HELP_DB |
-| 66 | [MEMORY](../laws/information/066_MEMORY.md) | information | 1 | 6 | 31 | LAW_HELP_DB |
+| 66 | [MEMORY](../laws/information/066_MEMORY.md) | information | 1 | 6 | 32 | LAW_HELP_DB |
 | 67 | [PATTERN](../laws/information/067_PATTERN.md) | information | 1 | 3 | 3 | LAW_HELP_DB |
 | 68 | [STIGMERGY](../laws/information/068_STIGMERGY.md) | information | 1 | 3 | 3 | LAW_HELP_DB |
 | 69 | [SIGNAL_BOOST](../laws/information/069_SIGNAL_BOOST.md) | information | 1 | 3 | 2 | LAW_HELP_DB |

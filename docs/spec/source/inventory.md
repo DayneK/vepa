@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `376` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `377` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 47 | 206 | 489 |
 | Benchmark | 9 | 6 | 16 |
 | Repository | 7 | 2 | 4 |
-| Simulation | 33 | 251 | 381 |
+| Simulation | 33 | 254 | 381 |
 | State | 40 | 331 | 537 |
-| Testing | 210 | 40 | 811 |
+| Testing | 211 | 40 | 817 |
 | Ui | 30 | 113 | 396 |
 
 ## Module list
@@ -92,7 +92,7 @@ The generator scanned `376` files from active repository inputs. Individual modu
 | [src/physics/lawgroups/physicsLaws.js](../../../src/physics/lawgroups/physicsLaws.js) | simulation | 173 | 1 | 3 | 6 |
 | [src/physics/lawgroups/quantumLaws.js](../../../src/physics/lawgroups/quantumLaws.js) | simulation | 326 | 1 | 3 | 7 |
 | [src/physics/lawgroups/thermoLaws.js](../../../src/physics/lawgroups/thermoLaws.js) | simulation | 113 | 1 | 3 | 8 |
-| [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2762 | 106 | 8 | 86 |
+| [src/physics/laws.js](../../../src/physics/laws.js) | simulation | 2775 | 107 | 8 | 86 |
 | [src/physics/loopDiagnostics.js](../../../src/physics/loopDiagnostics.js) | simulation | 40 | 2 | 1 | 1 |
 | [src/physics/mechanicsDiagnostics.js](../../../src/physics/mechanicsDiagnostics.js) | simulation | 72 | 1 | 3 | 3 |
 | [src/physics/mergePhysics.js](../../../src/physics/mergePhysics.js) | simulation | 344 | 6 | 2 | 8 |
@@ -102,7 +102,7 @@ The generator scanned `376` files from active repository inputs. Individual modu
 | [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 518 | 16 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
-| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2148 | 16 | 23 | 134 |
+| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2168 | 18 | 23 | 134 |
 | [src/physics/spatialGrid.js](../../../src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
 | [src/physics/structureFormation.js](../../../src/physics/structureFormation.js) | simulation | 43 | 3 | 1 | 3 |
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
@@ -338,6 +338,7 @@ The generator scanned `376` files from active repository inputs. Individual modu
 | [tests/unit/multiplexRefill.test.js](../../../tests/unit/multiplexRefill.test.js) | testing | 132 | 0 | 7 | 2 |
 | [tests/unit/multiplexScale.test.js](../../../tests/unit/multiplexScale.test.js) | testing | 77 | 0 | 6 | 2 |
 | [tests/unit/multiplexScheduler.test.js](../../../tests/unit/multiplexScheduler.test.js) | testing | 109 | 0 | 7 | 11 |
+| [tests/unit/nanEnergy.test.js](../../../tests/unit/nanEnergy.test.js) | testing | 87 | 0 | 6 | 6 |
 | [tests/unit/octree.test.js](../../../tests/unit/octree.test.js) | testing | 151 | 0 | 7 | 1 |
 | [tests/unit/octreeQuadrupole.test.js](../../../tests/unit/octreeQuadrupole.test.js) | testing | 64 | 0 | 2 | 0 |
 | [tests/unit/pairScalarParity.test.js](../../../tests/unit/pairScalarParity.test.js) | testing | 85 | 0 | 7 | 5 |
