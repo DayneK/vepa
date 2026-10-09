@@ -7,10 +7,10 @@
 | Application | 47 | 206 | 122 | 489 |
 | Benchmark | 9 | 6 | 26 | 16 |
 | Repository | 7 | 2 | 2 | 4 |
-| Simulation | 33 | 250 | 87 | 381 |
+| Simulation | 33 | 251 | 87 | 381 |
 | State | 40 | 331 | 66 | 537 |
-| Testing | 210 | 40 | 1046 | 808 |
-| Ui | 30 | 113 | 78 | 386 |
+| Testing | 210 | 40 | 1046 | 811 |
+| Ui | 30 | 113 | 78 | 396 |
 
 ## Boundary observations
 

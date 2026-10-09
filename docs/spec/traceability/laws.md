@@ -8,13 +8,13 @@
 | 1 | [DRAG](../laws/physics/001_DRAG.md) | physics | 2 | 2 | 13 | LAW_HELP_DB |
 | 2 | [ENTR](../laws/physics/002_ENTR.md) | physics | 2 | 1 | 9 | LAW_HELP_DB |
 | 3 | [BUOYANCY](../laws/physics/003_BUOYANCY.md) | physics | 0 | 1 | 27 | LAW_HELP_DB |
-| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 24 | LAW_HELP_DB |
+| 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 25 | LAW_HELP_DB |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 6 | LAW_HELP_DB |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 5 | 5 | LAW_HELP_DB |
 | 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 20 | LAW_HELP_DB |
 | 8 | [GLOW](../laws/biology/008_GLOW.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 9 | [AFFINITY](../laws/biology/009_AFFINITY.md) | biology | 1 | 2 | 7 | LAW_HELP_DB |
-| 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 13 | LAW_HELP_DB |
+| 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 14 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 3 | LAW_HELP_DB |
 | 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 3 | 14 | 81 | LAW_HELP_DB |
@@ -85,7 +85,7 @@
 | 78 | [CULTURE](../laws/information/078_CULTURE.md) | information | 1 | 3 | 8 | LAW_HELP_DB |
 | 79 | [SINGULARITY](../laws/physics/079_SINGULARITY.md) | physics | 1 | 4 | 5 | LAW_HELP_DB |
 | 80 | [ENTANGLEMENT](../laws/metaphysics/080_ENTANGLEMENT.md) | metaphysics | 1 | 6 | 8 | LAW_HELP_DB |
-| 81 | [HISTORY](../laws/information/081_HISTORY.md) | information | 2 | 3 | 5 | LAW_HELP_DB |
+| 81 | [HISTORY](../laws/information/081_HISTORY.md) | information | 2 | 3 | 6 | LAW_HELP_DB |
 | 82 | [TIDE](../laws/physics/082_TIDE.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
 | 83 | [FRICTION](../laws/physics/083_FRICTION.md) | physics | 1 | 2 | 2 | LAW_HELP_DB |
 | 84 | [HORIZON](../laws/physics/084_HORIZON.md) | physics | 1 | 3 | 2 | LAW_HELP_DB |

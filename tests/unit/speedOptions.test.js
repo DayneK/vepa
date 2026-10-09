@@ -116,3 +116,23 @@ describe('option 5: nearby-only SYMBIOSIS & PARASITE', () => {
     expect(on.hash).toBe(off.hash);
   });
 });
+
+describe('option 6: social & information laws every 2nd tick', async () => {
+  const { SPEED_SOCIAL_LAWS } = await import('../../src/physics/solver.js');
+  const { LAW_INDEXES } = await import('../../src/constants.js');
+  it('names only real laws, and keeps HISTORY every tick', () => {
+    for (const n of SPEED_SOCIAL_LAWS) expect(LAW_INDEXES[n], n).toBeTypeOf('number');
+    expect(SPEED_SOCIAL_LAWS).not.toContain('HISTORY');
+  });
+  it('runs them on the first tick (identical after 1 tick), skips them on the second', () => {
+    const p = { SPEED_SOCIAL_HALF: 1 };
+    expect(runSpeedWorld({ count: 300, spread: 200, ticks: 1, params: p }).hash).toBe(runSpeedWorld({ count: 300, spread: 200, ticks: 1 }).hash);
+    expect(runSpeedWorld({ count: 300, spread: 200, ticks: 2, params: p }).hash).not.toBe(runSpeedWorld({ count: 300, spread: 200, ticks: 2 }).hash);
+  });
+  it('is identical in a world with no social or information laws', () => {
+    const laws = ['GRAV', 'DRAG', 'COLL', 'LIFE', 'ENERGY', 'REPRO'];
+    const off = runSpeedWorld({ count: 300, spread: 200, laws, ticks: 4 });
+    const on = runSpeedWorld({ count: 300, spread: 200, laws, ticks: 4, params: { SPEED_SOCIAL_HALF: 1 } });
+    expect(on.hash).toBe(off.hash);
+  });
+});

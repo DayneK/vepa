@@ -187,6 +187,14 @@ const DEFAULT_MAX_INTERACTIONS = 500; // live override: WP.MAX_INTERACTIONS
 // D-034 speed options (PERFORMANCE › SPEED world params; all off by default).
 const SPEED_NEIGHBOR_LIMIT = 48; // option 2: per-particle neighbour budget (default budget is 96)
 const SPEED_PAIR_CAP = 200000;   // option 4: pairs per tick, shared evenly across alive particles
+// option 6: laws that act on odd solver ticks only (information category
+// minus HISTORY, plus signal exchange and telepathy).
+export const SPEED_SOCIAL_LAWS = Object.freeze([
+  'COMMS', 'TELEPATHY', 'MEMORY', 'PATTERN', 'STIGMERGY', 'SIGNAL_BOOST', 'LEARN', 'SYMBOL', 'METRIC',
+  'PREDICT', 'CODE', 'PROTOCOL', 'FEEDBACK', 'LANGUAGE', 'CULTURE', 'NAVIGATION', 'ENCRYPTION',
+]);
+const SPEED_SOCIAL_INDEXES = SPEED_SOCIAL_LAWS.map((n) => LAW_INDEXES[n]).filter((i) => i !== undefined);
+let _activeSocialSkip = new Uint8Array(0);
 const MID_RANGE = 200;           // mid distance tier (v8.17)
 const SPEED_MID_RANGE = 120;     // option 3: narrower mid tier (= the default COMMS NEIGHBORHOOD_RADIUS)
 const ACCR_PARTNER_SLOTS = [
@@ -428,6 +436,16 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     active = _activeCache;
     _synCache = syn;
     _activeLo = lo; _activeHi = hi; _activeEx = ex; _activeQu = qu; _activePe = pe;
+  }
+  // D-034 speed option 6 (off by default; changes results): on even solver
+  // ticks the social/information laws are switched off for this tick only.
+  // Synergies still come from the full law state. _solveTick was advanced
+  // above, so the first tick after a reset (1) runs them.
+  if ((_solveTick & 1) === 0 && speedOption(runtimeConfig.worldParams, 'SPEED_SOCIAL_HALF')) {
+    if (_activeSocialSkip.length !== active.length) _activeSocialSkip = new Uint8Array(active.length);
+    _activeSocialSkip.set(active);
+    for (let k = 0; k < SPEED_SOCIAL_INDEXES.length; k++) _activeSocialSkip[SPEED_SOCIAL_INDEXES[k]] = 0;
+    active = _activeSocialSkip;
   }
 
   // World parameters (WORLD panel sliders) — read live from runtimeConfig.

@@ -212,6 +212,7 @@
         "tests/unit/provenance.test.js",
         "tests/unit/quantumMacro.test.js",
         "tests/unit/quantumStateMachine.test.js",
+        "tests/unit/speedOptions.test.js",
         "tests/unit/stateBudgets.test.js",
         "tests/unit/structures.test.js",
         "tests/unit/synergyCache.test.js",
@@ -425,6 +426,7 @@
         "tests/unit/multiplex.test.js",
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/relationshipExplorer.test.js",
+        "tests/unit/speedOptions.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
@@ -2499,6 +2501,7 @@
         "tests/unit/lawCategories.test.js",
         "tests/unit/multiplexIsolation.test.js",
         "tests/unit/solverReset.test.js",
+        "tests/unit/speedOptions.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [
