@@ -51,3 +51,17 @@ The other 8 scenarios (`none`, `all-laws`, `category-mechanics`, which includes 
 | `default-tidal-bloom-params` | `a0bd3b350bda…` | `4ccaed96ba4e…` |
 
 The other 10 scenarios are unchanged.
+
+## 2026-10-09: MIND floors the pair distance at 0.01 (D-035)
+
+**Bug.** `applyMind` (law 37) returned `signalBoost = 0.01 × synergy / sqrt(distSq)`. For two same-species particles at exactly the same position (distSq 0) that is Infinity, and SIGNAL went to Infinity. Later steps then turned it into NaN (Infinity − Infinity, 0 × Infinity). The NaN hunt found this as the first non-finite write with FAST on (tick 3–5 at 1k, 2.5k and 10k), once the GENOTYPE fix was in.
+
+**Fix.** The distance is floored at 0.01, as COMMS already does (`1 / max(dist, 0.01)`). The boost is unchanged for pairs further apart than 0.01.
+
+**Fixture impact.** Three scenarios change. The floor applied 1 time in `default-tidal-bloom`, 378 times in `all-laws` (12 exact zeros) and 190 times in `default-tidal-bloom-params` (9 exact zeros), over 30 ticks. Offspring counts are unchanged (0).
+
+| Scenario | Previous hash (after GENOTYPE fix) | New hash |
+|---|---|---|
+| `default-tidal-bloom` | `1bfffe1464de…` | `964e85bd6fc1…` |
+| `all-laws` | `39d69ef19f3b…` | `c2db070d1864…` |
+| `default-tidal-bloom-params` | `4ccaed96ba4e…` | `1b6560e2d4cc…` |

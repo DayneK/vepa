@@ -47,3 +47,17 @@ describe('D-035 seeded repro: 200 particles × 120 ticks', () => {
     }, 60000);
   }
 });
+
+describe('D-035 MIND with coincident particles', () => {
+  it('a same-species pair at distance 0 gives a finite signal boost', async () => {
+    const { applyMind } = await import('../../src/physics/laws.js');
+    const laws = createLawState(); lawSet(laws, LAW_INDEXES.MIND);
+    const view = new Float32Array(PARTICLE_STRIDE * 2);
+    view[S.SPECIES_ID] = 2; view[PARTICLE_STRIDE + S.SPECIES_ID] = 2;
+    const e = applyMind(laws, view, 0, PARTICLE_STRIDE, 0, 1);
+    expect(Number.isFinite(e.signalBoost)).toBe(true);
+    expect(e.signalBoost).toBeCloseTo(1, 6); // 0.01 × 1 / 0.01
+    // Unchanged away from 0: distance 10 → 0.001.
+    expect(applyMind(laws, view, 0, PARTICLE_STRIDE, 100, 1).signalBoost).toBeCloseTo(0.001, 9);
+  });
+});

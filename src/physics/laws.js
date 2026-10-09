@@ -1260,7 +1260,7 @@ export function applyMind(lawState, view, iBase, jBase, distSq, synergy) {
   // D-035: coincident same-species pairs (distSq 0, e.g. a newborn on its
   // parent) gave 1/0 = Infinity signal, which later turned into NaN. Floor the
   // distance at 0.01 like COMMS does.
-  const invDist = 1 / Math.sqrt(distSq);
+  const invDist = 1 / Math.max(Math.sqrt(distSq), 0.01);
   return { ax: 0, ay: 0, az: 0, signalBoost: strength * invDist };
 }
 
