@@ -142,6 +142,7 @@ export function formatValue(v, step) {
  * @param {string} [opts.title] hover title for the label
  * @param {(value:number, state:object)=>void} [opts.onChange] fired on user change
  * @param {'lin'|'log'} [opts.initialMode] override the default scale
+ * @param {string} [opts.maxLabel] text shown instead of the number at the top end (e.g. 'OFF')
  * @returns {{el:HTMLElement, setValue:(v:number, o?:object)=>void, getValue:()=>number}}
  */
 export function createSliderRow(opts = {}) {
@@ -155,6 +156,7 @@ export function createSliderRow(opts = {}) {
     title = '',
     onChange = () => {},
     initialMode,
+    maxLabel = '',
   } = opts;
 
   const state = {
@@ -177,7 +179,7 @@ export function createSliderRow(opts = {}) {
       <button type="button" class="sc-bound sc-min" title="Long-press to edit minimum">${formatShort(state.baseMin)}</button>
       <input type="range" class="sc-input" min="0" max="${SLIDER_STEPS}" step="1" value="0" />
       <button type="button" class="sc-bound sc-max" title="Long-press to edit maximum">${formatShort(state.baseMax)}</button>
-      <span class="sc-value">${formatValue(state.value, step)}</span>
+      <span class="sc-value">${maxLabel && state.value >= max ? escapeHtml(maxLabel) : formatValue(state.value, step)}</span>
       <button type="button" class="sc-mode" title="Toggle linear / logarithmic scale">${state.mode.toUpperCase()}</button>
       <button type="button" class="sc-zoom" title="Precision zoom: hold the slider still to magnify around your finger. Click to reset.">1×</button>
     </div>
@@ -215,7 +217,7 @@ export function createSliderRow(opts = {}) {
     const p = positionForValue(state.value, win, state.mode);
     input.value = String(Math.round(p * SLIDER_STEPS));
     const effStep = state.step / ZOOM_FACTORS[state.level];
-    valueEl.textContent = formatValue(state.value, effStep);
+    valueEl.textContent = maxLabel && state.value >= state.baseMax ? maxLabel : formatValue(state.value, effStep);
   }
 
   function applyValue(v, { emit = true, snap = true } = {}) {

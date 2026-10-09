@@ -5,7 +5,7 @@
  */
 import { LAW_INDEXES, LAW_CATEGORIES, LAW_COUNT, LAW_SPECTRUM, LAW_HUE_BY_INDEX, LAW_SAT_BY_INDEX, LAW_HELP_DB } from '../constants.js';
 import { isSet, set as setLaw, clear as clearLaw, toggle as toggleLaw } from '../state/lawState.js';
-import { WORLD_PARAM_DEFS } from '../state/worldParams.js';
+import { WORLD_PARAM_DEFS, SPEED_SLIDER_KEYS, SPEED_FAST_PRESET, worldParamDef } from '../state/worldParams.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
 import { createSliderRow } from './sliderControl.js';
 import { MECHANICS_ICONS } from './mechanicsIcons.js';
@@ -520,7 +520,7 @@ const WORLD_PARAM_GROUPS = (() => {
     if (!groupMap.has(d.group)) groupMap.set(d.group, new Map());
     const subMap = groupMap.get(d.group);
     if (!subMap.has(d.subgroup)) subMap.set(d.subgroup, []);
-    subMap.get(d.subgroup).push({ key: d.key, label: d.label, min: d.min, max: d.max, default: d.default, step: d.step });
+    subMap.get(d.subgroup).push({ key: d.key, label: d.label, min: d.min, max: d.max, default: d.default, step: d.step, maxLabel: d.maxLabel || '' });
   }
   const groups = [];
   for (const [label, subMap] of groupMap) {
@@ -544,6 +544,12 @@ function renderWorldSliders(container, bus) {
       html += `<div class="sub-accordion-section${si === 0 ? ' open' : ''}">`;
       html += `<div class="sub-accordion-header" data-subacc="${gi}-${si}"><span class="arrow">▶</span>${sub.label}</div>`;
       html += '<div class="sub-accordion-body">';
+      if (sub.label === 'SPEED') {
+        // D-036: FAST is a preset that moves the speed sliders; DEFAULTS puts
+        // them back to the results-identical values.
+        html += '<div class="speed-presets"><button type="button" class="btn speed-preset" data-speed-preset="fast" title="Set the speed sliders to the FAST values (changes results)">FAST</button>'
+          + '<button type="button" class="btn speed-preset" data-speed-preset="defaults" title="Put the speed sliders back to their defaults (results-identical)">DEFAULTS</button></div>';
+      }
       for (const p of sub.params) {
         html += `<div data-slider-slot="${p.key}"></div>`;
       }
@@ -554,6 +560,16 @@ function renderWorldSliders(container, bus) {
 
   html += '</div>';
   container.innerHTML = html;
+
+  container.querySelectorAll('[data-speed-preset]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const fast = btn.dataset.speedPreset === 'fast';
+      for (const key of SPEED_SLIDER_KEYS) {
+        bus.emit('world:paramChanged', { key, value: fast ? SPEED_FAST_PRESET[key] : worldParamDef(key).default });
+      }
+      bus.emit('world:paramsRestored');
+    });
+  });
 
   // Accordion toggle
   container.querySelectorAll('.accordion-header').forEach((header) => {
@@ -581,6 +597,7 @@ function renderWorldSliders(container, bus) {
       default: p.default,
       value: runtimeConfig.worldParams?.[p.key] ?? p.default,
       key: p.key,
+      maxLabel: p.maxLabel || '',
       title: `${p.label} (${p.key})`,
       onChange: (value) => bus.emit('world:paramChanged', { key: p.key, value }),
     });

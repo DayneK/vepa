@@ -21,7 +21,7 @@ because none of the body below is written by hand.
 | Sub-tab | Module | What it displays | Controls |
 | --- | --- | --- | --- |
 | ⚖️ LAWS | `src/ui/lawPanel.js`<br>196 lines | The law switchboard: 136 physics, biology, chemistry, thermodynamic, metaphysical, electromagnetic, information and quantum laws across nine categories. | `button` |
-| 🌍 WORLD | `src/ui/worldPanel.js`<br>701 lines | World parameters, presets and the network panel: size, physics tuning, epoch length and thresholds. | `button`, `input`, 3 slider controls |
+| 🌍 WORLD | `src/ui/worldPanel.js`<br>718 lines | World parameters, presets and the network panel: size, physics tuning, epoch length and thresholds. | `button`, `input`, 3 slider controls |
 | 🦠 SPECIES | `src/ui/speciesPanel.js`<br>251 lines | Per-species genome: the 64 DNA parameters that drive morphology, behaviour and reproduction. | `button`, 3 slider controls |
 | 🎛️ SETTINGS | `src/ui/settingsPanel.js`<br>273 lines | Runtime and renderer options: backend selection, performance knobs and display preferences. | `button`, `select`, 4 slider controls |
 
@@ -352,7 +352,7 @@ what runs when a panel constructor returns early.
 | --- | --- | --- | --- | --- | --- |
 | 1–8 | `setupTabSwitching`<br>`setupDrawerMinimize`<br>`setupDrawerHideShow`<br>`setupDrawerResize`<br>`setupDrawerZoom`<br>`setupDrawerSwipe`<br>`setupToolbarControls`<br>`setupKeyboardShortcuts` | `src/ui/ui.js`<br><sub>chrome, tabs, shortcuts</sub> | `#drawer-container`<br>`#top-toolbar` | `sim:paused` | `sim:chaos`, `sim:hardReset`, `sim:restart`, `sim:togglePause` |
 | 9 | `createHUD` | `ui/hud.js` | `#hud-particles`<br>`#hud-population-count`<br>`#hud-tick` | `physics:tick`, `sim:metrics`, `stats:update` | — |
-| 10 | `createWorldPanel` | `ui/worldPanel.js` | `#world-params` | `law:sync`, `law:toggled`, `world:paramsRestored` | `law:sync`, `law:toggled`, `narrative:system`, `world:paramChanged` |
+| 10 | `createWorldPanel` | `ui/worldPanel.js` | `#world-params` | `law:sync`, `law:toggled`, `world:paramsRestored` | `law:sync`, `law:toggled`, `narrative:system`, `world:paramChanged`, `world:paramsRestored` |
 | 11 | `createIntelPanel` | `ui/intelPanel.js` | `#intel-dashboard` | `cluster:detected`, `goal:applied`, `lineage:branch`, `lineage:death`, `timeline:cleared`, `timeline:restored`, `timeline:snapshot` | `timeline:clear`, `timeline:record`, `timeline:scrubTo` |
 | 12 | `createSpeciesPanel` | `ui/speciesPanel.js` | `#species-list` | `dna:changed`, `dna:sync`, `physics:tick`, `species:sync` | `dna:changed`, `dna:sync`, `narrative:system`, `species:aboutToChange`, `species:changed` |
 | 13 | `createDNAAnalytics` | `ui/dnaAnalytics.js` | `#dna-analytics` | `physics:tick` | — |
@@ -379,7 +379,7 @@ point of listing them: a panel-to-panel edge is often also a command.
 - 2 commands also reach something else:
   `law:toggled` → `engines/narrativeEngine.js`.
   `narrative:system` → `core/logQueue.js`.
-- **5 exchanged panel to panel**, with the orchestrator out of the path.
+- **6 exchanged panel to panel**, with the orchestrator out of the path.
 
 #### Push: simulation → panel
 
@@ -409,7 +409,7 @@ point of listing them: a panel-to-panel edge is often also a command.
 | `world:imported` | `main.js:1156` | `savePanel.js` |
 | `world:listResponse` | `main.js:1137` | `savePanel.js` |
 | `world:loaded` | `main.js:1120` | `savePanel.js` |
-| `world:paramsRestored` | `main.js:1047` | `worldPanel.js` |
+| `world:paramsRestored` | `main.js:1047`<br>`worldPanel.js:570` | `worldPanel.js` |
 | `world:saved` | `main.js:1113` | `savePanel.js` |
 | `world:undoState` | `main.js:997`<br>`savePanel.js:340` | `savePanel.js` |
 
@@ -450,13 +450,14 @@ point of listing them: a panel-to-panel edge is often also a command.
 
 #### Inside the layer
 
-5 events are delivered straight from one module to
+6 events are delivered straight from one module to
 another inside `src/ui/`, with no orchestrator hop on that edge:
 
 - `dna:changed` — dnaPanel.js, speciesPanel.js → speciesPanel.js.
 - `dna:sync` — speciesPanel.js → dnaPanel.js, speciesPanel.js.
 - `law:sync` — worldPanel.js → lawPanel.js, worldPanel.js.
 - `law:toggled` — lawPanel.js, tooltip.js, worldPanel.js → tooltip.js, worldPanel.js.
+- `world:paramsRestored` — worldPanel.js → worldPanel.js.
 - `world:undoState` — savePanel.js → savePanel.js.
 
 ### The shared kernel
@@ -471,7 +472,7 @@ every entry is one behaviour that would otherwise be a second implementation.
 | `ui/html.js`<br><sub>40 lines</sub> | HTML escaping for the drawer's string-built markup | `analyticsPanel.js`, `civilizationPanel.js`, `ecoPanel.js`, `helpOverlay.js`, `launchModal.js`, `lawInspectorPanel.js`, `narrativePanel.js`, `sliderControl.js` | shared |
 | `ui/camera.js`<br><sub>300 lines</sub> | 3D Camera + Touch/Mouse Controls | `main.js`, `multiplex/multiplex.js`, `render/pixiRenderer.js`, `render/renderer.js`, `settingsPanel.js`, `ui.js` | shared |
 | `ui/analyticsPanel.js`<br><sub>109 lines</sub> | Analytics panel shell | `civilizationPanel.js`, `ecoPanel.js`, `groupAnalytics.js`, `intelPanel.js` | shared |
-| `ui/sliderControl.js`<br><sub>426 lines</sub> | Enhanced slider control | `dnaPanel.js`, `settingsPanel.js`, `speciesPanel.js`, `worldPanel.js` | shared |
+| `ui/sliderControl.js`<br><sub>428 lines</sub> | Enhanced slider control | `dnaPanel.js`, `settingsPanel.js`, `speciesPanel.js`, `worldPanel.js` | shared |
 | `ui/mechanicsIcons.js`<br><sub>16 lines</sub> | Icons for the slate Mechanics laws (indices 128-135) | `tooltip.js`, `worldPanel.js` | shared |
 | `ui/settingsTabs.js`<br><sub>59 lines</sub> | D-028 — shared tab strip for settings panels (CHAOS MULTIPLEX setup screen | `multiplex/multiplexUI.js`, `chaosMenu.js` | shared |
 | `ui/tooltipDismiss.js`<br><sub>106 lines</sub> | Tooltip dismissal bus | `helpOverlay.js`, `paramHelp.js` | shared |
@@ -491,11 +492,15 @@ recommendation — a wire with nothing on the end of it may be a dormant feature
 a seam for something not built yet, or a genuine omission, and the code does not
 say which.
 
-**8 subscriptions with no producer.** A listener whose event is
+**12 subscriptions with no producer.** A listener whose event is
 never sent, on either dispatch channel.
 
 | Event | Subscribed at |
 | --- | --- |
+| `SPEED_NARROW_MID`<br><sub>orchestrator</sub> | `state/worldParams.js:322` |
+| `SPEED_NEAR_SYMBIOSIS`<br><sub>orchestrator</sub> | `state/worldParams.js:324` |
+| `SPEED_PAIR_CAP`<br><sub>orchestrator</sub> | `state/worldParams.js:323` |
+| `SPEED_SOCIAL_HALF`<br><sub>orchestrator</sub> | `state/worldParams.js:325` |
 | `epoch:list`<br><sub>orchestrator</sub> | `main.js:1388` |
 | `epoch:restore`<br><sub>orchestrator</sub> | `main.js:1391` |
 | `group:declare`<br><sub>orchestrator</sub> | `main.js:1311` |
