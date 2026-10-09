@@ -252,3 +252,97 @@ Multiplex Full fidelity (20 sims × 2,500, worker pool), ticks/s per sim:
 bonded % as the behaviour cost); raw CSVs and the scripts are beside them.
 Stacked FAST plus EXPENSIVE EVERY 2: 2.4× at 2.5k, 3.1× at 10k; everything
 aggressive: 3.8× / 7.0×, but bonded % falls from 99/84 to 4/3.
+
+## D-038: FIDELITY selector, RENDER RESOLUTION, final lever audit
+
+### FIDELITY (replaces the FAST button)
+
+PERFORMANCE › SPEED now starts with `FIDELITY: HIGH | MEDIUM | LOW` (CUSTOM
+shows when the sliders match none) and DEFAULTS (= HIGH). The multiplex GRID &
+PERF tab has the same FIDELITY select; it moves the shared world speed sliders
+and LAW COUNT. Code: `SPEED_FIDELITY_LEVELS`, `fidelityPreset`, `fidelityOf`,
+`SPEED_LOW_PRESET`, `FIDELITY_LAW_COUNT` in `src/state/worldParams.js`.
+
+| Slider | HIGH (default) | MEDIUM (= old FAST) | LOW |
+|---|---|---|---|
+| Neighbour limit / particle | 96 | 48 | 16 |
+| Mid range | 200 | 120 | 60 |
+| Near / contact range | 30 | 30 | 20 |
+| Pair budget / particle / tick | OFF (512) | 20 | 8 |
+| Symbiosis & parasite range | ANY (600) | 30 | 10 |
+| Social & info every N | 1 | 2 | 4 |
+| Expensive laws every N | 1 | 1 | 4 |
+| Multiplex LAW COUNT | 136 | 136 | 16 (light set) |
+
+HIGH reproduces the normal solver bit for bit (golden 13/13; bench:solver
+hashes unchanged). LOW was picked from the D-037 sweeps plus a 150-tick health
+run (`/workspace/out/fidelity-bench/health-150ticks.csv`): no NaN, every
+particle and all 5 species alive, bonds still form (87% at 2.5k, 55% at 10k
+after 150 ticks, vs 99/98% at HIGH). Two milder candidates (neighbour 24, pair
+budget 12) kept more bonds (85–92% at 10k) but were 30–45% slower.
+
+What LOW gives up: each particle sees at most 16 neighbours and evaluates 8
+pairs per tick, so forces are coarse and many weak long-range interactions are
+dropped; mid-range laws stop at 60 and contact at 20; symbiosis/parasite only
+act within 10; social/information laws and the eight costliest laws (incl.
+BOND) run every 4th tick at the same per-tick strength (so ~¼ of their effect).
+Bonded structures form much more slowly (11% / 4% bonded after 30 ticks at
+2.5k / 10k vs 99% / 95% at HIGH) and the energy budget differs (mean energy
+~75 vs ~32–53 at HIGH after 150 ticks, because fewer interactions spend it). In
+the multiplex, LOW also keeps only the 16 light-set laws in the previews.
+
+Full HIGH/MEDIUM/LOW bench (solver at 100 … 50k, headless browser, multiplex,
+memory): `/workspace/out/fidelity-bench/README.md` and `fidelity-bench.png`.
+
+### RENDER RESOLUTION (MAX PIXEL RATIO) and DRAW EVERY N FRAMES — new, render-only
+
+`RENDER_MAX_DPR`, PERFORMANCE › SPEED, 1–2, step 0.25, default 2 (= the
+renderer's existing cap, unchanged). Caps the particle canvas pixel ratio;
+never touches the simulation; saved with the world; never varied by multiplex;
+not part of FIDELITY. Headless Chrome with NO GPU (SwiftShader), screen DPR 2:
+
+| Particles | 2 (default) | 1.5 | 1 |
+|---|---|---|---|
+| 2,500 fps | 34.4 | 45.3 (1.32×) | 58.2 (1.69×) |
+| 10,000 fps | 11.9 | 14.9 (1.25×) | 20.5 (1.72×) |
+
+Software rasterisation exaggerates fill cost; on a real GPU the gain will be
+smaller, and there is none on a screen whose pixel ratio is already 1.
+
+### Final audit: are there more levers?
+
+| Lever | Verdict |
+|---|---|
+| Render resolution (pixel-ratio cap) | ADDED (above): ≥25% fps on a DPR-2 screen in the no-GPU bench. |
+| Draw every Nth frame | ADDED: `RENDER_EVERY` (DRAW EVERY N FRAMES, 1–4, default 1 = unchanged, render-only, saved, never varied by multiplex). No-GPU bench, 1280×800 DPR 1: at 2,500 particles sim ticks/s 1.80 → 2.20 (N=2, +22%) → 2.39 (N=3, +33%) because the skipped drawing frees CPU the worker shares; at 10,000 the sim rate stayed 1.20 (worker-bound) and only the main thread got idle time. Motion is choppier, so it is off by default. |
+| Max drawn particles | Not added. It hides particles (not visually identical) and the pixel-ratio test shows the canvas cost here is mostly pixel fill (DPR 2 → 1 gave 1.7×; 1280×800 → 640×400 gave 1.5×), which RENDER RESOLUTION already addresses without hiding anything. Not measured separately (no per-particle draw cap exists to toggle). |
+| Glow/halo, trails | None to cut: halos only on collapsed stars, no trails (D-037). |
+| PixiJS (WebGL) backend | Already a launch setting (renderBackend); not benchmarkable without a GPU. |
+| Multiplex workers / frame budget / LAW COUNT | Already controls; FIDELITY LOW now sets LAW COUNT 16 (19.3 vs 0.74 ticks/s per sim at HIGH). |
+| FIELD interval, substeps, grid cell size, max bonds, per-category cadence | Skipped in D-037 (<5% or already a control). |
+
+So beyond RENDER RESOLUTION and DRAW EVERY N FRAMES, no lever with a measured
+≥5% gain remains that does not duplicate an existing control or hide what the
+user sees. Remaining speed would need structural work (e.g. a GPU solver path,
+SIMD/WebAssembly pair loop, or Barnes–Hut for long-range forces), not a slider.
+
+### Cumulative chart v2 (3 interleaved repeats, error bars)
+
+`/workspace/out/speed-charts/cumulative-v2.png` (+ `cumulative-v2-raw.csv`,
+`cumulative-v2-summary.csv`). Every stage has a deterministic hash, which
+separates noise from real effects:
+
+- Pure noise (identical hash = identical computation): at 2.5k "aggressive:
+  neighbour 24" equals the stage before (pair budget 20 already caps below 24);
+  at 10k "+ pair budget 12" equals "neighbour 24" (the adaptive neighbour limit
+  at 10k is already 12). The 4.49 → 4.39 "dip" at 10k is therefore noise.
+- Noise (min–max ranges overlap): 2.5k "+ mid range 120" (2.06 → 1.78,
+  1.61–2.27), 2.5k "+ pair budget 20", 10k "+ social every 2", 10k
+  "+ near range 20".
+- Small real dips (ranges do not overlap, about 3–6%): 2.5k "+ symbiosis 10"
+  (3.04 → 2.94) and 2.5k "+ near range 20" (3.69 → 3.48). Here the pair
+  budget (12) is already the binding limit, so narrowing a range saves no pair
+  work but still adds a distance test per pair and changes the simulated state
+  (different hash, bonded % 6.6 → 3.9), which moves pairs between the cheaper
+  mid tier and the dearer near tier. That is option-overlap overhead: once the
+  budget binds, the range sliders cost a little instead of saving.
