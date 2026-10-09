@@ -78,9 +78,12 @@ if (argv[0] === '--child') {
   for (let t = 0; t < TICKS; t++) { const t0 = performance.now(); step(); times.push(performance.now() - t0); }
   h.update(Buffer.from(view.buffer, 0, COUNT * PARTICLE_STRIDE * 4));
   times.sort((a, b) => a - b);
-  let alive = 0; const sp = new Set();
-  for (let i = 0; i < COUNT * 2; i++) { const b = i * PARTICLE_STRIDE; if (view[b + S.DEAD] < 0.5 && view[b + S.MASS] > 0) { alive++; sp.add(view[b + S.SPECIES_ID]); } }
-  process.stdout.write(JSON.stringify({ medMs: times[times.length >> 1], hash: h.digest('hex').slice(0, 16), born, alive, species: sp.size }) + '\n');
+  let alive = 0, bonded = 0, energy = 0, nanEnergy = 0; const sp = new Set();
+  for (let i = 0; i < COUNT * 2; i++) {
+    const b = i * PARTICLE_STRIDE;
+    if (view[b + S.DEAD] < 0.5 && view[b + S.MASS] > 0) { alive++; sp.add(view[b + S.SPECIES_ID]); const e = view[b + S.ENERGY]; if (Number.isFinite(e)) energy += e; else nanEnergy++; if (view[b + S.BOND_PARTNER_1] >= 0) bonded++; }
+  }
+  process.stdout.write(JSON.stringify({ medMs: times[times.length >> 1], hash: h.digest('hex').slice(0, 16), born, alive, species: sp.size, bonded, meanEnergy: +(energy / Math.max(1, alive - nanEnergy)).toFixed(2), nanEnergy }) + '\n');
   process.exit(0);
 }
 
@@ -109,7 +112,7 @@ for (const variant of variants) {
     }
     meds.sort((a, b) => a - b);
     const med = meds[meds.length >> 1];
-    sizesOut[n] = { medMsPerTick: +med.toFixed(2), ticksPerSec: +(1000 / med).toFixed(2), runsMs: meds.map((v) => +v.toFixed(1)), hash: [...hashes].join(','), deterministic: hashes.size === 1, alive: last.alive, species: last.species, born: last.born };
+    sizesOut[n] = { medMsPerTick: +med.toFixed(2), ticksPerSec: +(1000 / med).toFixed(2), runsMs: meds.map((v) => +v.toFixed(1)), hash: [...hashes].join(','), deterministic: hashes.size === 1, alive: last.alive, species: last.species, born: last.born, bonded: last.bonded, meanEnergy: last.meanEnergy, nanEnergy: last.nanEnergy };
     if (!quiet) console.log(`${String(n).padStart(6)} particles: ${sizesOut[n].ticksPerSec.toFixed(2).padStart(7)} ticks/s  (median ${med.toFixed(1)} ms/tick; runs ${sizesOut[n].runsMs.join(' / ')})  hash ${sizesOut[n].hash}  alive ${last.alive} species ${last.species}`);
   }
   if (variants.length === 1) out.sizes = sizesOut; else (out.variants ||= {})[variant] = sizesOut;

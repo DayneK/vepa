@@ -24,7 +24,7 @@ The generator scanned `376` files from active repository inputs. Individual modu
 | [bench/multiplex-render.mjs](../../../bench/multiplex-render.mjs) | benchmark | 70 | 0 | 1 | 0 |
 | [bench/results/renderer-benchmark.json](../../../bench/results/renderer-benchmark.json) | benchmark | 253 | 0 | 0 | 0 |
 | [bench/shard-worker-node.mjs](../../../bench/shard-worker-node.mjs) | benchmark | 10 | 0 | 1 | 0 |
-| [bench/solver-tps.mjs](../../../bench/solver-tps.mjs) | benchmark | 120 | 0 | 4 | 3 |
+| [bench/solver-tps.mjs](../../../bench/solver-tps.mjs) | benchmark | 123 | 0 | 4 | 3 |
 | [bench/solver.bench.mjs](../../../bench/solver.bench.mjs) | benchmark | 587 | 0 | 6 | 10 |
 | [bench/worker-bench-worker.mjs](../../../bench/worker-bench-worker.mjs) | benchmark | 79 | 0 | 7 | 0 |
 | [index.html](../../../index.html) | repository | 226 | 0 | 0 | 1 |
