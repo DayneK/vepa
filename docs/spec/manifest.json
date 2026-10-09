@@ -9,11 +9,11 @@
     "bench",
     "public"
   ],
-  "sourceFileCount": 377,
+  "sourceFileCount": 379,
   "sourceAreas": {
-    "benchmark": 9,
+    "benchmark": 10,
     "repository": 7,
-    "application": 47,
+    "application": 48,
     "state": 40,
     "simulation": 33,
     "ui": 30,

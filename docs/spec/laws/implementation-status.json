@@ -329,6 +329,7 @@
         "tests/unit/lawImplementedBy.test.js",
         "tests/unit/multiplex.test.js",
         "tests/unit/priorityLawSemantics.test.js",
+        "tests/unit/speedLawCount.test.js",
         "tests/unit/speedOptions.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js"
@@ -427,6 +428,7 @@
         "tests/unit/multiplex.test.js",
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/relationshipExplorer.test.js",
+        "tests/unit/speedLawCount.test.js",
         "tests/unit/speedOptions.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js"
@@ -592,6 +594,7 @@
         "tests/unit/relativity.test.js",
         "tests/unit/signal.test.js",
         "tests/unit/solverReset.test.js",
+        "tests/unit/speedLawCount.test.js",
         "tests/unit/speedOptions.test.js",
         "tests/unit/stateBudgets.test.js",
         "tests/unit/stellar.test.js",
@@ -3678,6 +3681,7 @@
         "tests/unit/priorityLawSemantics.test.js",
         "tests/unit/provenance.test.js",
         "tests/unit/quantumStateMachine.test.js",
+        "tests/unit/speedOptions.test.js",
         "tests/unit/structureFormation.test.js"
       ],
       "relationshipTypes": [

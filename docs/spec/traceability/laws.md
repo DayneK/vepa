@@ -11,13 +11,13 @@
 | 4 | [COLL](../laws/physics/004_COLL.md) | physics | 2 | 9 | 25 | LAW_HELP_DB |
 | 5 | [ACCR](../laws/physics/005_ACCR.md) | physics | 1 | 6 | 6 | LAW_HELP_DB |
 | 6 | [PLANETARY](../laws/physics/006_PLANETARY.md) | physics | 1 | 5 | 5 | LAW_HELP_DB |
-| 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 20 | LAW_HELP_DB |
+| 7 | [LIFE](../laws/biology/007_LIFE.md) | biology | 2 | 3 | 21 | LAW_HELP_DB |
 | 8 | [GLOW](../laws/biology/008_GLOW.md) | biology | 2 | 3 | 3 | LAW_HELP_DB |
 | 9 | [AFFINITY](../laws/biology/009_AFFINITY.md) | biology | 1 | 2 | 7 | LAW_HELP_DB |
-| 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 14 | LAW_HELP_DB |
+| 10 | [REPRO](../laws/biology/010_REPRO.md) | biology | 2 | 4 | 15 | LAW_HELP_DB |
 | 11 | [TRACK](../laws/biology/011_TRACK.md) | biology | 1 | 3 | 1 | LAW_HELP_DB |
 | 12 | [SENESCENCE](../laws/biology/012_SENESCENCE.md) | biology | 0 | 1 | 3 | LAW_HELP_DB |
-| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 3 | 14 | 82 | LAW_HELP_DB |
+| 13 | [ENERGY](../laws/biology/013_ENERGY.md) | biology | 3 | 14 | 83 | LAW_HELP_DB |
 | 14 | [RADIATION](../laws/biology/014_RADIATION.md) | biology | 1 | 2 | 4 | LAW_HELP_DB |
 | 15 | [GENOTYPE](../laws/biology/015_GENOTYPE.md) | biology | 2 | 3 | 4 | LAW_HELP_DB |
 | 16 | [PHENOTYPE](../laws/biology/016_PHENOTYPE.md) | biology | 2 | 2 | 1 | LAW_HELP_DB |
@@ -132,7 +132,7 @@
 | 125 | [WAVEFUNCTION](../laws/quantum/125_WAVEFUNCTION.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 126 | [HYPERPLANE](../laws/quantum/126_HYPERPLANE.md) | quantum | 1 | 1 | 1 | LAW_HELP_DB |
 | 127 | [ANTIMATTER](../laws/quantum/127_ANTIMATTER.md) | quantum | 1 | 2 | 3 | LAW_HELP_DB |
-| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 5 | 13 | LAW_HELP_DB |
+| 128 | [CONTACT](../laws/mechanics/128_CONTACT.md) | mechanics | 1 | 5 | 14 | LAW_HELP_DB |
 | 129 | [MOMENTUM](../laws/mechanics/129_MOMENTUM.md) | mechanics | 1 | 3 | 6 | LAW_HELP_DB |
 | 130 | [WRAP](../laws/mechanics/130_WRAP.md) | mechanics | 3 | 5 | 12 | LAW_HELP_DB |
 | 131 | [TORQUE](../laws/mechanics/131_TORQUE.md) | mechanics | 1 | 3 | 5 | LAW_HELP_DB |
