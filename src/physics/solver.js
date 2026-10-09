@@ -120,6 +120,25 @@ import {
 import { createSynergyCache } from './synergy.js';
 import { compatibilityForViewsInto, createCompatibilityScratch, meetsCompatibility } from './relationshipCompatibility.js';
 const _pairCompatScratch = createCompatibilityScratch();
+// PERF-3: per-pair compatibility, computed lazily at first use within a pair
+// and reused for the rest of that pair (exactly the old closure's semantics),
+// without allocating closures per pair. Reset at the top of every pair.
+let _pairCompatValid = false;
+function pairCompat(view, iBase, jBase) {
+  if (!_pairCompatValid) {
+    compatibilityForViewsInto(view, iBase, jBase, runtimeConfig.worldParams || {}, _pairCompatScratch);
+    _pairCompatValid = true;
+  }
+  return _pairCompatScratch;
+}
+// Requirement tables, hoisted from per-call literals. meetsCompatibility walks
+// them with for…in, so key order and values are kept exactly as they were.
+const REQ_STRUCTURAL = Object.freeze({ physical: 0.2, geometric: 0.2 });
+const REQ_ALLOY = Object.freeze({ physical: 0.15, energetic: 0.1 });
+const REQ_CRYSTALLIZATION = Object.freeze({ physical: 0.25, geometric: 0.35 });
+const REQ_PREDATION = Object.freeze({ behavioral: 0.05, resource: 0.05 });
+const REQ_SYMBIOSIS = Object.freeze({ resource: 0.2, behavioral: 0.2 });
+const REQ_PARASITE = Object.freeze({ resource: 0.05 });
 import { applyAlloy, adjoinParticles, maintainAdjoinedPair, isBondedPair, isAccretionPair } from './mergePhysics.js';
 import { applyTide, applyFriction, applyHorizon, applyRadiationPressure, applyMassInertia, applyField } from './lawgroups/physicsLaws.js';
 import { applyContactCorrection, applyCollisionImpulse, applyMomentum, applyTorque, applyConstraint, applyFragmentation, applyTopology, applyAdhesion, applyWrapBoundary } from './lawgroups/mechanicsLaws.js';
@@ -718,18 +737,10 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       // Relationship laws share one multidimensional eligibility vector. It
       // is computed lazily so worlds without joining/biological laws retain
       // the allocation-free pairwise path.
-      let pairCompatibility = null;
-      const getPairCompatibility = () => {
-        if (!pairCompatibility) {
-          // MX-20: allocation-free, bit-identical; the scratch is reused per pair.
-          pairCompatibility = compatibilityForViewsInto(view, iBase, jBase, runtimeConfig.worldParams || {}, _pairCompatScratch);
-        }
-        return pairCompatibility;
-      };
-      const structuralCompatibility = () => meetsCompatibility(getPairCompatibility(), {
-        physical: 0.2,
-        geometric: 0.2,
-      });
+      // PERF-3: no per-pair closures or requirement literals (they were ~2
+      // closures + up to 6 objects per pair per tick of GC); the lazy,
+      // compute-once-per-pair semantics are unchanged (see pairCompat()).
+      _pairCompatValid = false;
 
       // ── Distance-tier fidelity (v8.17) ──
       const near = dist < 30;
@@ -774,7 +785,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
         const contactOn = active[LAW_INDEXES.CONTACT];
         const accrOn = active[LAW_INDEXES.ACCR];
         const existingAdjoined = accrOn && isAccretionPair(view, iBase, jBase, stride);
-        const canAccrete = !accrOn || existingAdjoined || structuralCompatibility();
+        const canAccrete = !accrOn || existingAdjoined || meetsCompatibility(pairCompat(view, iBase, jBase), REQ_STRUCTURAL);
 
         // ACCR proximity-dwell bookkeeping: reset the timer whenever the
         // tracked partner leaves overlap range so "very close proximity"
@@ -940,7 +951,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       // ── Polymer (contact) ──
 
-      if (near && active[LAW_INDEXES.POLYMER] && structuralCompatibility()) {
+      if (near && active[LAW_INDEXES.POLYMER] && meetsCompatibility(pairCompat(view, iBase, jBase), REQ_STRUCTURAL)) {
         const polySynergy = syn[LAW_INDEXES.POLYMER];
         applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, polySynergy, stride);
       }
@@ -949,7 +960,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       // ── Bond (contact) ──
 
-      if (near && active[LAW_INDEXES.BOND] && structuralCompatibility()) {
+      if (near && active[LAW_INDEXES.BOND] && meetsCompatibility(pairCompat(view, iBase, jBase), REQ_STRUCTURAL)) {
         const bondSynergy = syn[LAW_INDEXES.BOND];
         const bondForce = applyBond(lawState, view, iBase, jBase, stride, dx, dy, dz, dist, bondSynergy, nCount);
         if (bondForce) {
@@ -965,10 +976,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       // ── Alloy (contact) ──
 
-      if (near && active[LAW_INDEXES.ALLOY] && meetsCompatibility(getPairCompatibility(), {
-        physical: 0.15,
-        energetic: 0.1,
-      })) {
+      if (near && active[LAW_INDEXES.ALLOY] && meetsCompatibility(pairCompat(view, iBase, jBase), REQ_ALLOY)) {
         const alloySynergy = syn[LAW_INDEXES.ALLOY];
         applyAlloy(lawState, view, iBase, jBase, stride, dist, alloySynergy);
       }
@@ -1051,10 +1059,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       }
 
       // ── Crystallization (near) ──
-      if (near && active[LAW_INDEXES.CRYSTALLIZATION] && meetsCompatibility(getPairCompatibility(), {
-        physical: 0.25,
-        geometric: 0.35,
-      })) {
+      if (near && active[LAW_INDEXES.CRYSTALLIZATION] && meetsCompatibility(pairCompat(view, iBase, jBase), REQ_CRYSTALLIZATION)) {
         const crysSynergy = syn[LAW_INDEXES.CRYSTALLIZATION];
         const crysForce = applyCrystallization(lawState, view, iBase, jBase, dx, dy, dz, dist, crysSynergy);
         if (crysForce) {
@@ -1087,10 +1092,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       }
 
       // ── Predation (mid-range pursuit) ──
-      if (mid && active[LAW_INDEXES.PREDATION] && meetsCompatibility(getPairCompatibility(), {
-        behavioral: 0.05,
-        resource: 0.05,
-      })) {
+      if (mid && active[LAW_INDEXES.PREDATION] && meetsCompatibility(pairCompat(view, iBase, jBase), REQ_PREDATION)) {
         const predForce = applyPredation(iBase, jBase, stride, dx, dy, dz, dist, prng);
         if (predForce) {
           ax += predForce.ax;
@@ -1301,13 +1303,8 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       }
 
       // Biology
-      if (active[LAW_INDEXES.SYMBIOSIS] && meetsCompatibility(getPairCompatibility(), {
-        resource: 0.2,
-        behavioral: 0.2,
-      })) applySymbiosis(view, iBase, jBase, 0.5);
-      if (active[LAW_INDEXES.PARASITE] && meetsCompatibility(getPairCompatibility(), {
-        resource: 0.05,
-      })) applyParasite(view, iBase, jBase, 0.5);
+      if (active[LAW_INDEXES.SYMBIOSIS] && meetsCompatibility(pairCompat(view, iBase, jBase), REQ_SYMBIOSIS)) applySymbiosis(view, iBase, jBase, 0.5);
+      if (active[LAW_INDEXES.PARASITE] && meetsCompatibility(pairCompat(view, iBase, jBase), REQ_PARASITE)) applyParasite(view, iBase, jBase, 0.5);
 
       // Chemistry
       if (active[LAW_INDEXES.ELECTROLYSIS]) applyElectrolysis(view, iBase, jBase, 0.5);
