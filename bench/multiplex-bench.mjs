@@ -9,6 +9,7 @@
 //   node bench/multiplex-bench.mjs --speed-matrix       # Full fidelity: sliders at defaults / each at its FAST value / FAST, and LAW COUNT points (D-036)
 //   node bench/multiplex-bench.mjs --presets --speed fast # presets with the world speed sliders at FAST (or KEY=V,KEY=V)
 //   node bench/multiplex-bench.mjs --law-counts 136,96,48,16 --json   # LAW COUNT sweep, Full fidelity (D-037)
+//   node bench/multiplex-bench.mjs --fidelity --json   # FIDELITY HIGH / MEDIUM / LOW, Full fidelity (D-038)
 //   options: --seconds 4  --warmup 1  --workers N  --field-legacy  --json  --md
 //
 // Real-time loop: a 60 fps frame clock calls frameMultiplex() each frame
@@ -31,7 +32,8 @@ const { createLawState, set: setLaw } = await import('../src/state/lawState.js')
 const { createDNABuffer, loadDefaults, getDNAFloat } = await import('../src/dna/dnaBuffer.js');
 const { TIDAL_BLOOM } = await import('../src/state/defaultPresets.js');
 const { runtimeConfig } = await import('../src/state/runtimeConfig.js');
-const { createWorldParams, SPEED_SLIDER_KEYS, SPEED_FAST_PRESET, worldParamDef, clampWorldParam } = await import('../src/state/worldParams.js');
+const WP = await import('../src/state/worldParams.js');
+const { createWorldParams, SPEED_SLIDER_KEYS, SPEED_FAST_PRESET, worldParamDef, clampWorldParam } = WP;
 const mxMod = await import('../src/multiplex/multiplex.js');
 const { SplitMix32 } = await import('../src/core/prng.js');
 const { createShardPool, defaultPoolSize } = await import('../src/multiplex/shardPool.js');
@@ -72,7 +74,7 @@ const BASE_WP = { ...runtimeConfig.worldParams };
 function speedParams(variant) {
   const wp = { ...BASE_WP };
   if (!variant || variant === 'none') return wp;
-  const set = variant === 'fast' || variant === 'all' ? SPEED_FAST_PRESET : Object.fromEntries(variant.split(',').map((kv) => kv.split('=')).map(([k, v]) => [k, Number(v)]));
+  const set = ['high', 'medium', 'low'].includes(variant) ? WP.fidelityPreset(variant.toUpperCase()) : variant === 'fast' || variant === 'all' ? WP.SPEED_FAST_PRESET : Object.fromEntries(variant.split(',').map((kv) => kv.split('=')).map(([k, v]) => [k, Number(v)]));
   for (const [k, v] of Object.entries(set)) {
     if (!SPEED_SLIDER_KEYS.includes(k)) throw new Error(`unknown speed slider ${k}`);
     wp[k] = clampWorldParam(k, v);
@@ -134,6 +136,10 @@ if (has('legacy')) {
   const SHARDS = +arg('shards', 20), POP = +arg('pop', 2500);
   const cols = Math.ceil(Math.sqrt(SHARDS)), rows = Math.ceil(SHARDS / cols);
   cases.push(['legacy-lockstep', { cols, rows, particlesPerSim: POP, tickMode: 'frame', useWorkers: false }]);
+} else if (has('fidelity')) {
+  // D-038: FIDELITY presets in Full fidelity (LOW also sets LAW COUNT 16).
+  const ff = mxMod.applyMultiplexPreset({}, 'full-fidelity');
+  for (const lv of WP.SPEED_FIDELITY_LEVELS) cases.push([`Full fidelity FIDELITY ${lv}`, { ...ff, lawCount: WP.FIDELITY_LAW_COUNT[lv] }, lv === 'HIGH' ? 'none' : lv.toLowerCase()]);
 } else if (arg('law-counts', null)) {
   // D-037: LAW COUNT sweep (Full fidelity), e.g. --law-counts 136,96,48,16,1
   const ff = mxMod.applyMultiplexPreset({}, 'full-fidelity');

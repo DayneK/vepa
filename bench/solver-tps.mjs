@@ -14,6 +14,7 @@
 //   node bench/solver-tps.mjs --json                # machine-readable
 //   node bench/solver-tps.mjs --laws all            # every law on (stress)
 //   node bench/solver-tps.mjs --speed PAIRWISE_BUDGET=48[,KEY=V…]|fast  # D-036 speed sliders
+//   node bench/solver-tps.mjs --speed high|medium|low  # D-038 FIDELITY presets
 //   node bench/solver-tps.mjs --speed-matrix        # defaults, each slider at its FAST value alone, FAST
 //   node bench/solver-tps.mjs --sweep SPEED_MID_RANGE=200/120/60   # one slider at several values
 // Each run also reports the alive particle count and alive species at the end
@@ -39,14 +40,14 @@ if (argv[0] === '--child') {
   const { PARTICLE_STRIDE, STRIDE_INDEXES: S, DNA_RANGES, LAW_INDEXES, WORLD_SIZE } = await import('../src/constants.js');
   const { createLawState, set: setLaw } = await import('../src/state/lawState.js');
   const { createDNABuffer, loadDefaults, setDNAFloat, getDNAFloat } = await import('../src/dna/dnaBuffer.js');
-  const { solve, drainOffspring, resetOffspringRing } = await import('../src/physics/solver.js');
+  const { solve, drainOffspring, resetOffspringRing, getNonFiniteRepairCount } = await import('../src/physics/solver.js');
   const { TIDAL_BLOOM } = await import('../src/state/defaultPresets.js');
   const { runtimeConfig } = await import('../src/state/runtimeConfig.js');
   const wp = await import('../src/state/worldParams.js');
   const WORLD = WORLD_SIZE;
   runtimeConfig.worldParams = { ...wp.createWorldParams(), ...(TIDAL_BLOOM.worldParams || {}) };
   if (SPEED) {
-    const set = SPEED === 'fast' || SPEED === 'all' ? wp.SPEED_FAST_PRESET : Object.fromEntries(SPEED.split(',').map((kv) => kv.split('=')).map(([k, v]) => [k, Number(v)]));
+    const set = ['high', 'medium', 'low'].includes(SPEED) ? wp.fidelityPreset(SPEED.toUpperCase()) : SPEED === 'fast' || SPEED === 'all' ? wp.SPEED_FAST_PRESET : Object.fromEntries(SPEED.split(',').map((kv) => kv.split('=')).map(([k, v]) => [k, Number(v)]));
     for (const [k, v] of Object.entries(set)) {
       if (!wp.SPEED_SLIDER_KEYS.includes(k) || !Number.isFinite(v)) { console.error(`unknown speed slider ${k}=${v}`); process.exit(2); }
       runtimeConfig.worldParams[k] = wp.clampWorldParam(k, v);
@@ -84,7 +85,7 @@ if (argv[0] === '--child') {
     const b = i * PARTICLE_STRIDE;
     if (view[b + S.DEAD] < 0.5 && view[b + S.MASS] > 0) { alive++; sp.add(view[b + S.SPECIES_ID]); const e = view[b + S.ENERGY]; if (Number.isFinite(e)) energy += e; else nanEnergy++; if (view[b + S.BOND_PARTNER_1] >= 0) bonded++; }
   }
-  process.stdout.write(JSON.stringify({ medMs: times[times.length >> 1], hash: h.digest('hex').slice(0, 16), born, alive, species: sp.size, bonded, meanEnergy: +(energy / Math.max(1, alive - nanEnergy)).toFixed(2), nanEnergy }) + '\n');
+  process.stdout.write(JSON.stringify({ medMs: times[times.length >> 1], hash: h.digest('hex').slice(0, 16), born, alive, species: sp.size, bonded, meanEnergy: +(energy / Math.max(1, alive - nanEnergy)).toFixed(2), nanEnergy, nanRepairs: getNonFiniteRepairCount(), rssMB: +(process.memoryUsage().rss / 1048576).toFixed(1), heapMB: +(process.memoryUsage().heapUsed / 1048576).toFixed(1), bufferMB: +(view.byteLength / 1048576).toFixed(2) }) + '\n');
   process.exit(0);
 }
 
@@ -117,7 +118,7 @@ for (const variant of variants) {
     }
     meds.sort((a, b) => a - b);
     const med = meds[meds.length >> 1];
-    sizesOut[n] = { medMsPerTick: +med.toFixed(2), ticksPerSec: +(1000 / med).toFixed(2), runsMs: meds.map((v) => +v.toFixed(1)), hash: [...hashes].join(','), deterministic: hashes.size === 1, alive: last.alive, species: last.species, born: last.born, bonded: last.bonded, meanEnergy: last.meanEnergy, nanEnergy: last.nanEnergy };
+    sizesOut[n] = { medMsPerTick: +med.toFixed(2), ticksPerSec: +(1000 / med).toFixed(2), runsMs: meds.map((v) => +v.toFixed(1)), hash: [...hashes].join(','), deterministic: hashes.size === 1, alive: last.alive, species: last.species, born: last.born, bonded: last.bonded, meanEnergy: last.meanEnergy, nanEnergy: last.nanEnergy, nanRepairs: last.nanRepairs, rssMB: last.rssMB, heapMB: last.heapMB, bufferMB: last.bufferMB };
     if (!quiet) console.log(`${String(n).padStart(6)} particles: ${sizesOut[n].ticksPerSec.toFixed(2).padStart(7)} ticks/s  (median ${med.toFixed(1)} ms/tick; runs ${sizesOut[n].runsMs.join(' / ')})  hash ${sizesOut[n].hash}  alive ${last.alive} species ${last.species}`);
   }
   if (variants.length === 1) out.sizes = sizesOut; else (out.variants ||= {})[variant] = sizesOut;
