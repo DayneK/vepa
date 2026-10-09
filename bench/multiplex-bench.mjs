@@ -8,6 +8,7 @@
 //   node bench/multiplex-bench.mjs --legacy --shards 20 --pop 2500   # old lock-step stepMultiplex timing
 //   node bench/multiplex-bench.mjs --speed-matrix       # Full fidelity: sliders at defaults / each at its FAST value / FAST, and LAW COUNT points (D-036)
 //   node bench/multiplex-bench.mjs --presets --speed fast # presets with the world speed sliders at FAST (or KEY=V,KEY=V)
+//   node bench/multiplex-bench.mjs --law-counts 136,96,48,16 --json   # LAW COUNT sweep, Full fidelity (D-037)
 //   options: --seconds 4  --warmup 1  --workers N  --field-legacy  --json  --md
 //
 // Real-time loop: a 60 fps frame clock calls frameMultiplex() each frame
@@ -133,6 +134,10 @@ if (has('legacy')) {
   const SHARDS = +arg('shards', 20), POP = +arg('pop', 2500);
   const cols = Math.ceil(Math.sqrt(SHARDS)), rows = Math.ceil(SHARDS / cols);
   cases.push(['legacy-lockstep', { cols, rows, particlesPerSim: POP, tickMode: 'frame', useWorkers: false }]);
+} else if (arg('law-counts', null)) {
+  // D-037: LAW COUNT sweep (Full fidelity), e.g. --law-counts 136,96,48,16,1
+  const ff = mxMod.applyMultiplexPreset({}, 'full-fidelity');
+  for (const n of arg('law-counts', '').split(',').map(Number)) cases.push([`Full fidelity LAW COUNT ${n}`, { ...ff, lawCount: n }, 'none']);
 } else if (has('speed-matrix')) {
   const ff = mxMod.applyMultiplexPreset({}, 'full-fidelity');
   const fastAlone = Object.entries(SPEED_FAST_PRESET).filter(([k, v]) => v !== worldParamDef(k).default).map(([k, v]) => `${k}=${v}`);
