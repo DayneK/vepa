@@ -84,3 +84,20 @@ describe('option 3: narrow mid range (120)', () => {
     expect(on.hash).toBe(off.hash);
   });
 });
+
+describe('option 4: pair cap per tick (200k)', () => {
+  it('shares the cap evenly: with 5,000 alive each particle sees at most 40 pairs', () => {
+    const perI = new Map();
+    const probe = (kind, view, iBase) => { if (kind === 'pair') perI.set(iBase, (perI.get(iBase) || 0) + 1); };
+    runSpeedWorld({ count: 5000, spread: 300, ticks: 1, params: { SPEED_PAIR_CAP: 1, QUALITY_MODE: 0 }, probe });
+    expect(Math.max(...perI.values())).toBeLessThanOrEqual(40);
+    perI.clear();
+    runSpeedWorld({ count: 5000, spread: 300, ticks: 1, params: { QUALITY_MODE: 0 }, probe });
+    expect(Math.max(...perI.values())).toBeGreaterThan(40);
+  });
+  it('does not bite in a small world (cap ÷ 400 = 500 > the normal limit)', () => {
+    const off = runSpeedWorld({ count: 400, spread: 60, ticks: 3 });
+    const on = runSpeedWorld({ count: 400, spread: 60, ticks: 3, params: { SPEED_PAIR_CAP: 1 } });
+    expect(on.hash).toBe(off.hash);
+  });
+});

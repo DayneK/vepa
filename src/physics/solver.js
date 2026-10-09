@@ -186,6 +186,7 @@ const MAX_FORCE = 50.0;
 const DEFAULT_MAX_INTERACTIONS = 500; // live override: WP.MAX_INTERACTIONS
 // D-034 speed options (PERFORMANCE › SPEED world params; all off by default).
 const SPEED_NEIGHBOR_LIMIT = 48; // option 2: per-particle neighbour budget (default budget is 96)
+const SPEED_PAIR_CAP = 200000;   // option 4: pairs per tick, shared evenly across alive particles
 const MID_RANGE = 200;           // mid distance tier (v8.17)
 const SPEED_MID_RANGE = 120;     // option 3: narrower mid tier (= the default COMMS NEIGHBORHOOD_RADIUS)
 const ACCR_PARTNER_SLOTS = [
@@ -506,10 +507,12 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
   clear(grid);
 
+  let gridAlive = 0;
   for (let i = 0; i < particleCount; i++) {
     const base = i * stride;
     if (view[base + S.DEAD] >= 0.5) continue; // skip dead/soul
     if (view[base + S.MASS] <= 0) continue;
+    gridAlive++;
 
     const px = view[base + S.POS_X];
     const py = view[base + S.POS_Y];
@@ -519,6 +522,13 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       insert(grid, i, px, py, pz, worldSize);
     }
   }
+
+  // D-034 speed option 4 (off by default; changes results): a per-tick pair
+  // cap shared evenly — each particle gets cap ÷ alive neighbours (≥ 8),
+  // never more than the normal limit. Applies to the main pair loop only.
+  const pairLimit = speedOption(WP, 'SPEED_PAIR_CAP')
+    ? Math.min(maxInteractions, Math.max(8, Math.floor(SPEED_PAIR_CAP / Math.max(1, gridAlive))))
+    : maxInteractions;
 
   // ── Phase 2: Compute time dilation per particle ──
   // v4.6.29: gravitational time dilation — the grid snapshot from Phase 1
@@ -741,7 +751,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     // v8.17: solo-gravity BH skips the neighbour gather entirely — the octree
     // query above already produced the full gravitational acceleration.
     const nCount = bhSoloGravity ? 0 : getNeighbors(grid, px, py, pz, worldSize, nb, neighborCap);
-    const limit = Math.min(nCount, maxInteractions);
+    const limit = Math.min(nCount, pairLimit);
 
     // v8.16: save neighbor list + count so the bond/polymer writeback block
     // can skip the redundant second getNeighbors call.
