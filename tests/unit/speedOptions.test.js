@@ -101,3 +101,18 @@ describe('option 4: pair cap per tick (200k)', () => {
     expect(on.hash).toBe(off.hash);
   });
 });
+
+describe('option 5: nearby-only SYMBIOSIS & PARASITE', () => {
+  it('changes a world where SYMBIOSIS pairs are far apart', () => {
+    const laws = ['SYMBIOSIS', 'PARASITE', 'LIFE', 'ENERGY'];
+    const off = runSpeedWorld({ count: 300, spread: 400, laws });
+    const on = runSpeedWorld({ count: 300, spread: 400, laws, params: { SPEED_NEAR_SYMBIOSIS: 1 } });
+    expect(on.hash).not.toBe(off.hash);
+  });
+  it('is identical when neither law is on', () => {
+    const laws = ['GRAV', 'DRAG', 'LIFE', 'ENERGY', 'COMMS'];
+    const off = runSpeedWorld({ count: 300, spread: 400, laws, ticks: 3 });
+    const on = runSpeedWorld({ count: 300, spread: 400, laws, ticks: 3, params: { SPEED_NEAR_SYMBIOSIS: 1 } });
+    expect(on.hash).toBe(off.hash);
+  });
+});

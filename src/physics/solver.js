@@ -465,6 +465,9 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   }
   // D-034 speed option 3 (off by default; changes results): narrower mid tier.
   const midRange = speedOption(WP, 'SPEED_NARROW_MID') ? SPEED_MID_RANGE : MID_RANGE;
+  // D-034 speed option 5 (off by default; changes results): SYMBIOSIS and
+  // PARASITE act only on near pairs (< 30, the bonding laws' contact tier).
+  const symbiosisAnyRange = !speedOption(WP, 'SPEED_NEAR_SYMBIOSIS');
   const neighborCap = Math.max(24, Math.round(WP.NEIGHBOR_BUF ?? DEFAULT_NEIGHBOR_BUF));
   const autoTune = (WP.AUTO_TUNE ?? 1) !== 0;
   const gridDim = autoTune
@@ -1366,8 +1369,8 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       }
 
       // Biology
-      if (active[LAW_INDEXES.SYMBIOSIS] && pairMeets(view, iBase, jBase, REQ_SYMBIOSIS)) applySymbiosis(view, iBase, jBase, 0.5);
-      if (active[LAW_INDEXES.PARASITE] && pairMeets(view, iBase, jBase, REQ_PARASITE)) applyParasite(view, iBase, jBase, 0.5);
+      if (active[LAW_INDEXES.SYMBIOSIS] && (symbiosisAnyRange || near) && pairMeets(view, iBase, jBase, REQ_SYMBIOSIS)) applySymbiosis(view, iBase, jBase, 0.5);
+      if (active[LAW_INDEXES.PARASITE] && (symbiosisAnyRange || near) && pairMeets(view, iBase, jBase, REQ_PARASITE)) applyParasite(view, iBase, jBase, 0.5);
 
       // Chemistry
       if (active[LAW_INDEXES.ELECTROLYSIS]) applyElectrolysis(view, iBase, jBase, 0.5);

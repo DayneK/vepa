@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_23.test.js](../../../../tests/audit/batch_23.test.js)
+- Tests: [tests/audit/batch_23.test.js](../../../../tests/audit/batch_23.test.js), [tests/unit/speedOptions.test.js](../../../../tests/unit/speedOptions.test.js)
 - Audits: [docs/audit/laws/a3/all_category_docs.md](../../../audit/laws/a3/all_category_docs.md), [docs/audit/laws/a3/all_stage_1.md](../../../audit/laws/a3/all_stage_1.md), [docs/audit/laws/a3/all_stage_2.md](../../../audit/laws/a3/all_stage_2.md), [docs/audit/laws/a3/all_stage_3.md](../../../audit/laws/a3/all_stage_3.md), [docs/audit/laws/a3/audit_progress.md](../../../audit/laws/a3/audit_progress.md), [docs/audit/laws/a3/biology.md](../../../audit/laws/a3/biology.md), [docs/audit/laws/a3/mega_law_audit_ensemble.md](../../../audit/laws/a3/mega_law_audit_ensemble.md), [docs/audit/laws/a3/stage-1/89_PARASITE.md](../../../audit/laws/a3/stage-1/89_PARASITE.md), [docs/audit/laws/a3/stage-2/89_PARASITE.md](../../../audit/laws/a3/stage-2/89_PARASITE.md), [docs/audit/laws/a3/stage-3/89_PARASITE.md](../../../audit/laws/a3/stage-3/89_PARASITE.md)
 
 ## Interpretation boundary

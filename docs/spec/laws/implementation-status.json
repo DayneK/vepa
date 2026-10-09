@@ -44,6 +44,7 @@
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/physics.test.js",
         "tests/unit/priorityLawSemantics.test.js",
+        "tests/unit/speedOptions.test.js",
         "tests/unit/stateBudgets.test.js",
         "tests/unit/strideWriteContract.test.js",
         "tests/unit/synergyCache.test.js",
@@ -86,6 +87,7 @@
         "tests/unit/multiplexScheduler.test.js",
         "tests/unit/pairScalarParity.test.js",
         "tests/unit/priorityLawSemantics.test.js",
+        "tests/unit/speedOptions.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
       "relationshipTypes": [
@@ -325,6 +327,7 @@
         "tests/unit/lawImplementedBy.test.js",
         "tests/unit/multiplex.test.js",
         "tests/unit/priorityLawSemantics.test.js",
+        "tests/unit/speedOptions.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
@@ -585,6 +588,7 @@
         "tests/unit/relativity.test.js",
         "tests/unit/signal.test.js",
         "tests/unit/solverReset.test.js",
+        "tests/unit/speedOptions.test.js",
         "tests/unit/stateBudgets.test.js",
         "tests/unit/stellar.test.js",
         "tests/unit/synergyCache.test.js",
@@ -1663,6 +1667,7 @@
         "tests/audit/params_batch_18.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/signal.test.js",
+        "tests/unit/speedOptions.test.js",
         "tests/unit/synergyCache.test.js",
         "tests/unit/tidalBloom.test.js"
       ],
@@ -2674,7 +2679,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_23.test.js",
-        "tests/unit/multiplexScheduler.test.js"
+        "tests/unit/multiplexScheduler.test.js",
+        "tests/unit/speedOptions.test.js"
       ],
       "relationshipTypes": [
         "reads",
@@ -2700,7 +2706,8 @@
         "src/physics/solver.js"
       ],
       "testFiles": [
-        "tests/audit/batch_23.test.js"
+        "tests/audit/batch_23.test.js",
+        "tests/unit/speedOptions.test.js"
       ],
       "relationshipTypes": [
         "reads",
