@@ -19,7 +19,7 @@ The generator scanned `376` files from active repository inputs. Individual modu
 | Path | Area | Lines | Exports | Imports | Law refs |
 | --- | --- | --- | --- | --- | --- |
 | [bench/backend-compare.mjs](../../../bench/backend-compare.mjs) | benchmark | 164 | 5 | 4 | 0 |
-| [bench/multiplex-bench.mjs](../../../bench/multiplex-bench.mjs) | benchmark | 150 | 0 | 2 | 3 |
+| [bench/multiplex-bench.mjs](../../../bench/multiplex-bench.mjs) | benchmark | 169 | 0 | 2 | 3 |
 | [bench/multiplex-node-pool.mjs](../../../bench/multiplex-node-pool.mjs) | benchmark | 13 | 1 | 1 | 0 |
 | [bench/multiplex-render.mjs](../../../bench/multiplex-render.mjs) | benchmark | 70 | 0 | 1 | 0 |
 | [bench/results/renderer-benchmark.json](../../../bench/results/renderer-benchmark.json) | benchmark | 253 | 0 | 0 | 0 |
