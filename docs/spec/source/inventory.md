@@ -2,16 +2,16 @@
 
 # Source: Inventory
 
-The generator scanned `372` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `373` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
 | Application | 47 | 206 | 489 |
 | Benchmark | 9 | 6 | 16 |
 | Repository | 7 | 2 | 4 |
-| Simulation | 33 | 242 | 381 |
+| Simulation | 33 | 250 | 381 |
 | State | 40 | 328 | 537 |
-| Testing | 206 | 39 | 798 |
+| Testing | 207 | 39 | 799 |
 | Ui | 30 | 113 | 385 |
 
 ## Module list
@@ -99,10 +99,10 @@ The generator scanned `372` files from active repository inputs. Individual modu
 | [src/physics/octree.js](../../../src/physics/octree.js) | simulation | 399 | 5 | 0 | 0 |
 | [src/physics/pairGeometry.js](../../../src/physics/pairGeometry.js) | simulation | 41 | 1 | 1 | 0 |
 | [src/physics/quantumStateMachine.js](../../../src/physics/quantumStateMachine.js) | simulation | 63 | 5 | 2 | 6 |
-| [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 399 | 8 | 2 | 9 |
+| [src/physics/relationshipCompatibility.js](../../../src/physics/relationshipCompatibility.js) | simulation | 518 | 16 | 2 | 9 |
 | [src/physics/relationshipExplorer.js](../../../src/physics/relationshipExplorer.js) | simulation | 205 | 8 | 3 | 5 |
 | [src/physics/relationshipState.js](../../../src/physics/relationshipState.js) | simulation | 167 | 9 | 1 | 0 |
-| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2064 | 15 | 22 | 134 |
+| [src/physics/solver.js](../../../src/physics/solver.js) | simulation | 2088 | 15 | 22 | 134 |
 | [src/physics/spatialGrid.js](../../../src/physics/spatialGrid.js) | simulation | 130 | 6 | 1 | 0 |
 | [src/physics/structureFormation.js](../../../src/physics/structureFormation.js) | simulation | 43 | 3 | 1 | 3 |
 | [src/physics/synergy.js](../../../src/physics/synergy.js) | simulation | 311 | 2 | 2 | 46 |
@@ -323,6 +323,7 @@ The generator scanned `372` files from active repository inputs. Individual modu
 | [tests/unit/laws.test.js](../../../tests/unit/laws.test.js) | testing | 93 | 0 | 2 | 0 |
 | [tests/unit/lawsets.test.js](../../../tests/unit/lawsets.test.js) | testing | 29 | 0 | 3 | 0 |
 | [tests/unit/lawsSingleton.test.js](../../../tests/unit/lawsSingleton.test.js) | testing | 93 | 0 | 4 | 2 |
+| [tests/unit/lazyPairCompat.test.js](../../../tests/unit/lazyPairCompat.test.js) | testing | 69 | 0 | 4 | 1 |
 | [tests/unit/livingWorld.test.js](../../../tests/unit/livingWorld.test.js) | testing | 248 | 0 | 9 | 1 |
 | [tests/unit/logPanel.test.js](../../../tests/unit/logPanel.test.js) | testing | 254 | 0 | 5 | 1 |
 | [tests/unit/mechanics.test.js](../../../tests/unit/mechanics.test.js) | testing | 119 | 0 | 3 | 4 |

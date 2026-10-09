@@ -35,7 +35,7 @@ export function inspectBondGraph(view, n, stride) {
 export function solverStageOrder(solverSource) {
   const at = (re) => { const m = re.exec(solverSource); return m ? m.index : -1; };
   return {
-    BOND: at(/active\[LAW_INDEXES\.BOND\]\s*&&\s*meetsCompatibility\(pairCompat\(view, iBase, jBase\), REQ_STRUCTURAL\)/),
+    BOND: at(/active\[LAW_INDEXES\.BOND\]\s*&&\s*pairMeets\(view, iBase, jBase, REQ_STRUCTURAL\)/),
     CONSTRAINT: at(/active\[LAW_INDEXES\.CONSTRAINT\]\s*&&\s*isBondedPair\(/),
     TOPOLOGY: at(/if \(active\[LAW_INDEXES\.TOPOLOGY\]\)/),
   };

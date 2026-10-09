@@ -396,3 +396,122 @@ function compatibilityForViewsIntoGeneric(view, iBase, jBase, world, out) {
   out.overall = clamp01(weighted * (sameSpecies ? 1 : interaction));
   return out;
 }
+
+// ── Lazy per-dimension pair compatibility (PERF-7) ────────────────────────
+// The solver only ever asks threshold questions of five dimensions (physical,
+// energetic, geometric, resource, behavioral) and never reads genetic,
+// reproductive or overall (meetsCompatibility's overall gate is `overall < 0`,
+// which a clamp01 result never satisfies). So instead of computing the whole
+// vector at a pair's first query, snapshot the pair's raw inputs at that same
+// moment and evaluate each dimension on first use from the snapshot. Each
+// dimension is the same expression, in the same order, over the same input
+// values as compatibilityForViewsInto(), so every answer is bit-identical —
+// only the unused dimensions and the 1/7-power are no longer computed.
+// Snapshot fields keep the raw view values (undefined/NaN included).
+export const LAZY_PAIR_COMPAT_SUPPORTED = !GENETIC_LOCI_CACHED && [
+  D.SPECIES_AFFINITY, D.STIFFNESS, D.ELASTICITY, D.ENERGY_EFFICIENCY, D.SYMMETRY, D.BOND_ANGLE,
+  D.CONDUCTIVITY, D.HEAT_OUTPUT, D.SIGNAL_RESP, D.MEMORY_DECAY, D.PREDATION_BIAS,
+].every((d) => d < CACHE_LEN);
+
+const LZ_SNAP = 1, LZ_PHYS = 2, LZ_ENER = 4, LZ_GEOM = 8, LZ_RES = 16, LZ_BEH = 32, LZ_AFF = 64, LZ_RAD = 128, LZ_EFF = 256;
+
+/** Reusable state for the lazy pair path; call lazyPairReset() per pair. */
+export function createLazyPairCompat() {
+  return {
+    flags: 0,
+    sameSpecies: false,
+    aE: 0, bE: 0, aR: 0, bR: 0,
+    aAff: 0, bAff: 0, aStiff: 0, bStiff: 0, aEl: 0, bEl: 0, aEff: 0, bEff: 0,
+    aSym: 0, bSym: 0, aAng: 0, bAng: 0, aCond: 0, bCond: 0, aHeat: 0, bHeat: 0,
+    aSig: 0, bSig: 0, aMem: 0, bMem: 0, aPred: 0, bPred: 0,
+    speciesAffinity: 0, radiusSim: 0, effSim: 0,
+    physical: 0, energetic: 0, geometric: 0, resource: 0, behavioral: 0,
+  };
+}
+
+/** Snapshot the pair's inputs (once per pair; no-op after the first call). */
+export function lazyPairSnapshot(view, iBase, jBase, z) {
+  if (z.flags & LZ_SNAP) return;
+  const ad = iBase + DC, bd = jBase + DC;
+  z.sameSpecies = view[iBase + S.SPECIES_ID] === view[jBase + S.SPECIES_ID];
+  z.aE = view[iBase + S.ENERGY]; z.bE = view[jBase + S.ENERGY];
+  z.aR = view[iBase + S.RADIUS]; z.bR = view[jBase + S.RADIUS];
+  z.aAff = view[ad + D.SPECIES_AFFINITY]; z.bAff = view[bd + D.SPECIES_AFFINITY];
+  z.aStiff = view[ad + D.STIFFNESS]; z.bStiff = view[bd + D.STIFFNESS];
+  z.aEl = view[ad + D.ELASTICITY]; z.bEl = view[bd + D.ELASTICITY];
+  z.aEff = view[ad + D.ENERGY_EFFICIENCY]; z.bEff = view[bd + D.ENERGY_EFFICIENCY];
+  z.aSym = view[ad + D.SYMMETRY]; z.bSym = view[bd + D.SYMMETRY];
+  z.aAng = view[ad + D.BOND_ANGLE]; z.bAng = view[bd + D.BOND_ANGLE];
+  z.aCond = view[ad + D.CONDUCTIVITY]; z.bCond = view[bd + D.CONDUCTIVITY];
+  z.aHeat = view[ad + D.HEAT_OUTPUT]; z.bHeat = view[bd + D.HEAT_OUTPUT];
+  z.aSig = view[ad + D.SIGNAL_RESP]; z.bSig = view[bd + D.SIGNAL_RESP];
+  z.aMem = view[ad + D.MEMORY_DECAY]; z.bMem = view[bd + D.MEMORY_DECAY];
+  z.aPred = view[ad + D.PREDATION_BIAS]; z.bPred = view[bd + D.PREDATION_BIAS];
+  z.flags = LZ_SNAP;
+}
+
+function lzAffinity(z) {
+  if (!(z.flags & LZ_AFF)) { z.speciesAffinity = clamp01(0.5 + average(z.aAff, z.bAff) * 0.5); z.flags |= LZ_AFF; }
+  return z.speciesAffinity;
+}
+function lzRadius(z) {
+  if (!(z.flags & LZ_RAD)) { z.radiusSim = simC(z.aR, z.bR, Math.max(z.aR || 1, z.bR || 1, 1)); z.flags |= LZ_RAD; }
+  return z.radiusSim;
+}
+function lzEff(z) {
+  if (!(z.flags & LZ_EFF)) { z.effSim = simC(z.aEff, z.bEff, 10); z.flags |= LZ_EFF; }
+  return z.effSim;
+}
+export function lazyPhysical(z) {
+  if (!(z.flags & LZ_PHYS)) {
+    z.physical = c01(
+      simC(z.aStiff, z.bStiff, 5) * 0.45 +
+      simC(z.aEl, z.bEl, 1) * 0.25 +
+      lzRadius(z) * 0.2 +
+      (z.sameSpecies ? 0.1 : 0),
+    );
+    z.flags |= LZ_PHYS;
+  }
+  return z.physical;
+}
+export function lazyEnergetic(z) {
+  if (!(z.flags & LZ_ENER)) {
+    z.energetic = c01(simC(z.aE, z.bE, 200) * 0.55 + lzEff(z) * 0.45);
+    z.flags |= LZ_ENER;
+  }
+  return z.energetic;
+}
+export function lazyGeometric(z) {
+  if (!(z.flags & LZ_GEOM)) {
+    z.geometric = c01(
+      simC(z.aSym, z.bSym, 2) * 0.35 +
+      circularSimilarity(z.aAng, z.bAng) * 0.35 +
+      lzRadius(z) * 0.3,
+    );
+    z.flags |= LZ_GEOM;
+  }
+  return z.geometric;
+}
+export function lazyResource(z) {
+  if (!(z.flags & LZ_RES)) {
+    z.resource = c01(
+      lzEff(z) * 0.45 +
+      simC(z.aCond, z.bCond, 1) * 0.25 +
+      simC(z.aHeat, z.bHeat, 1) * 0.3,
+    );
+    z.flags |= LZ_RES;
+  }
+  return z.resource;
+}
+export function lazyBehavioral(z) {
+  if (!(z.flags & LZ_BEH)) {
+    z.behavioral = c01(
+      simC(z.aSig, z.bSig, 2) * 0.35 +
+      simC(z.aMem, z.bMem, 0.1) * 0.25 +
+      simC(z.aPred, z.bPred, 20) * 0.2 +
+      lzAffinity(z) * 0.2,
+    );
+    z.flags |= LZ_BEH;
+  }
+  return z.behavioral;
+}

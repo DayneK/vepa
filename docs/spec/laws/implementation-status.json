@@ -569,6 +569,7 @@
         "tests/unit/lawgroupsEmInfoMeta.test.js",
         "tests/unit/lawgroupsPhysicsThermo.test.js",
         "tests/unit/lawgroupsQuantum.test.js",
+        "tests/unit/lazyPairCompat.test.js",
         "tests/unit/livingWorld.test.js",
         "tests/unit/multiplex.test.js",
         "tests/unit/multiplexIsolation.test.js",
