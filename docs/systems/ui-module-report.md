@@ -497,10 +497,10 @@ never sent, on either dispatch channel.
 
 | Event | Subscribed at |
 | --- | --- |
-| `SPEED_NARROW_MID`<br><sub>orchestrator</sub> | `state/worldParams.js:322` |
-| `SPEED_NEAR_SYMBIOSIS`<br><sub>orchestrator</sub> | `state/worldParams.js:324` |
-| `SPEED_PAIR_CAP`<br><sub>orchestrator</sub> | `state/worldParams.js:323` |
-| `SPEED_SOCIAL_HALF`<br><sub>orchestrator</sub> | `state/worldParams.js:325` |
+| `SPEED_NARROW_MID`<br><sub>orchestrator</sub> | `state/worldParams.js:326` |
+| `SPEED_NEAR_SYMBIOSIS`<br><sub>orchestrator</sub> | `state/worldParams.js:328` |
+| `SPEED_PAIR_CAP`<br><sub>orchestrator</sub> | `state/worldParams.js:327` |
+| `SPEED_SOCIAL_HALF`<br><sub>orchestrator</sub> | `state/worldParams.js:329` |
 | `epoch:list`<br><sub>orchestrator</sub> | `main.js:1388` |
 | `epoch:restore`<br><sub>orchestrator</sub> | `main.js:1391` |
 | `group:declare`<br><sub>orchestrator</sub> | `main.js:1311` |
