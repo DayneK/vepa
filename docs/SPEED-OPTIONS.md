@@ -186,3 +186,69 @@ an Infinity signal for coincident particles. Both are fixed at the source, and
 a final solver guard now repairs and counts any non-finite ENERGY, SIGNAL,
 MEMORY or TEMPERATURE. The tables above were measured before the fix; see
 docs/GOLDEN-REBASELINE.md for the re-recorded hashes.
+
+## D-037: more speed controls, re-measured ranking, charts
+
+### New slider: EXPENSIVE LAWS EVERY N TICKS (`SPEED_EXPENSIVE_EVERY`)
+
+PERFORMANCE › SPEED, 1–16, default 1 (= every tick, results-identical: golden
+13/13 and the bench:solver default hashes 300 `aff5b975305d4974`, 1k
+`8d8c0ad7a9ce5201`, 2.5k `39917ba618ded639`, 10k `af40cf9839ec09d7` unchanged).
+Above 1 the eight costliest non-social laws (`SPEED_EXPENSIVE_LAWS` in
+`src/physics/solver.js`: BOND, CAPACITANCE, SUPERCONDUCTIVITY, COMPRESSION,
+CRYSTALLIZATION, MAGNETISM, MELT, AUTOCATALYSIS — the top eight in both the
+D-036 and D-037 leave-one-out benches) act on the first tick after a reset and
+then every Nth tick, the same scheme as SOCIAL & INFO EVERY N. Saved with the
+world; never varied by multiplex param variation; not part of FAST (FAST keeps
+its D-036 results). Tests: `tests/unit/speedExpensive.test.js`.
+
+The legacy `EXPENSIVE_LAW_CADENCE` param was never read by the solver. It was
+not wired because existing saves and multiplex param variation already hold
+random values for it (wiring it would silently change those worlds); its help
+text now says it is unused.
+
+bench:solver, TIDAL_BLOOM (has BOND, CRYSTALLIZATION, AUTOCATALYSIS on), 10
+ticks, 1 run per point, speed-up vs default (bonded % at the end):
+
+| N | 2,500 | 10,000 |
+|---|---|---|
+| 1 (default) | 1.00× (99%) | 1.00× (84%) |
+| 2 | 2.00× (92%) | 1.17× (65%) |
+| 4 | 2.42× (58%) | 1.21× (40%) |
+| 8 | 2.85× (24%) | 1.24× (25%) |
+| 16 | 3.37× (6%) | 1.35× (10%) |
+
+Cost: bonds form and hold less (BOND is the costliest law), so bonded % falls fast above 2.
+
+### Candidates measured and not added (gain < 5% or already a control)
+
+| Candidate | Verdict |
+|---|---|
+| FIELD update interval | Skipped: `advanceFields` costs 0.37 ms per tick (dim 16) against ~280 ms/tick at 2.5k, ≤0.15%. |
+| Substeps | Skipped: `SUBSTEPS` in main.js is dead (one solve per frame, DT 0.25); time scale is already TIME › SIM SPEED; multiplex already has SUBSTEPS. |
+| Grid cell size | Already a control: PERFORMANCE › GRID › GRID RESOLUTION with AUTO-TUNE. |
+| Max bonds per particle | Skipped: bonds use three fixed partner slots; CHEMISTRY › POLYMER LIMIT already exists. No loop to cap. |
+| Per-category cadence | Covered by SOCIAL & INFO EVERY N and EXPENSIVE EVERY N; in the D-037 law-cost run, 90 of 136 laws read as ≤0 ms (noise), so other categories have no measurable cost to skip. |
+| Render: glow/halo, trails | Skipped: halos are drawn only for collapsed stars and there are no motion trails; eco mode (no halos, no grid) already exists for previews. |
+| Render: draw every Nth frame, max drawn particles | Not measured: needs real-GPU frame timing; headless Chrome here is software-rendered. |
+| Multiplex tick budget / workers | Already controls: FRAME BUDGET (ms) and the worker pool; `workerCount` 0 = one per spare core, the maximum, so no default-preserving gain. |
+
+### Law-cost re-measured (quiet box) and LAW COUNT ranking
+
+`node bench/law-cost.mjs --count 1000 --ticks 15 --reps 2` at load ~1 (all-laws
+base 141 ms/tick; raw output in `/workspace/out/speed-charts/law-cost-d037.json`).
+The light set (first 16) is unchanged, so LAW COUNT 16 and 136 give the same
+results as before; the order after 16 changed, so other LAW COUNT values change.
+Multiplex Full fidelity (20 sims × 2,500, worker pool), ticks/s per sim:
+
+| LAW COUNT | 136 | 112 | 96 | 64 | 48 | 32 | 16 | 8 | 1 |
+|---|---|---|---|---|---|---|---|---|---|
+| ticks/s per sim | 0.66 | 1.30 | 1.33 | 1.83 | 3.45 | 3.58 | 3.86 | 5.22 | 13.1 |
+
+### Charts
+
+`/workspace/out/speed-charts/individual.png` (each slider swept alone) and
+`cumulative.png` (sliders stacked at FAST values, then aggressive values, with
+bonded % as the behaviour cost); raw CSVs and the scripts are beside them.
+Stacked FAST plus EXPENSIVE EVERY 2: 2.4× at 2.5k, 3.1× at 10k; everything
+aggressive: 3.8× / 7.0×, but bonded % falls from 99/84 to 4/3.
