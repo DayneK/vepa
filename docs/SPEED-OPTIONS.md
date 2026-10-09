@@ -104,9 +104,12 @@ FAST leave particles with 2–4x more energy at 2,500 because fewer pairwise
 drains run. Over longer runs that is likely to show up as different survival
 and reproduction.
 
-**Finding:** in several on-runs at 1,000 particles, some alive particles end
-with NaN energy (15 of 962 with option 3). The options only skip existing law
-calls, so this is an existing NaN path in a law's energy arithmetic that the
-altered trajectory reaches. The solver's NaN guard covers position, velocity
-and mass but not energy. It is not fixed here, to keep the off path
-bit-identical. It needs a separate look.
+**Finding (fixed by D-035, 9 Oct):** in several on-runs at 1,000 particles,
+some alive particles ended with NaN energy (15 of 962 with option 3). It was
+not caused by the options: the same world had 64 particles with non-finite
+fields with every option off. Two laws were at fault. GENOTYPE let somatic
+DNA drift out of range (MEMORY_DECAY below 0 → NaN from `pow`), and MIND gave
+an Infinity signal for coincident particles. Both are fixed at the source, and
+a final solver guard now repairs and counts any non-finite ENERGY, SIGNAL,
+MEMORY or TEMPERATURE. The tables above were measured before the fix; see
+docs/GOLDEN-REBASELINE.md for the re-recorded hashes.
