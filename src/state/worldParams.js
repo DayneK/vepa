@@ -297,6 +297,40 @@ export const SPEED_FAST_PRESET = Object.freeze({
   SPEED_EXPENSIVE_EVERY: 1,
 });
 
+/**
+ * D-038 FIDELITY presets (PERFORMANCE › SPEED selector). HIGH = every slider
+ * at its default (the pre-option solver, results-identical); MEDIUM = the
+ * D-036 FAST values; LOW = the fastest settings that still keep a working sim
+ * in the D-037/D-038 sweeps (no NaN, all particles and species alive, bonds
+ * still form). See docs/SPEED-OPTIONS.md for what LOW gives up.
+ */
+export const SPEED_FIDELITY_LEVELS = Object.freeze(['HIGH', 'MEDIUM', 'LOW']);
+export const SPEED_LOW_PRESET = Object.freeze({
+  PAIRWISE_BUDGET: 16,
+  SPEED_MID_RANGE: 60,
+  SPEED_NEAR_RANGE: 20,
+  SPEED_PAIR_BUDGET: 8,
+  SPEED_SYMBIOSIS_RANGE: 10,
+  SPEED_SOCIAL_EVERY: 4,
+  SPEED_EXPENSIVE_EVERY: 4,
+});
+/** Multiplex LAW COUNT that goes with each fidelity level (136 = every law). */
+export const FIDELITY_LAW_COUNT = Object.freeze({ HIGH: 136, MEDIUM: 136, LOW: 16 });
+/** Slider values for a fidelity level ('HIGH' | 'MEDIUM' | 'LOW'). */
+export function fidelityPreset(level) {
+  if (level === 'MEDIUM') return SPEED_FAST_PRESET;
+  if (level === 'LOW') return SPEED_LOW_PRESET;
+  return Object.freeze(Object.fromEntries(SPEED_SLIDER_KEYS.map((k) => [k, DEF_BY_KEY.get(k).default])));
+}
+/** Which level the current sliders match, or 'CUSTOM'. */
+export function fidelityOf(params) {
+  for (const level of SPEED_FIDELITY_LEVELS) {
+    const preset = fidelityPreset(level);
+    if (SPEED_SLIDER_KEYS.every((k) => speedValue(params, k) === preset[k])) return level;
+  }
+  return 'CUSTOM';
+}
+
 /** Slider value, or its default when absent / non-finite. */
 export function speedValue(params, key) {
   const def = DEF_BY_KEY.get(key);
