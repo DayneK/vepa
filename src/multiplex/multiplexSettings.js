@@ -5,13 +5,14 @@
 // ============================================================================
 import { MULTIPLEX_PRESETS, TICK_MODES, MULTIPLEX_DEFAULTS } from './multiplex.js';
 import { sanitizeLawNames } from './previewLaws.js';
+import { sanitizeLawCount, LIGHT_LAW_COUNT } from './lawRanking.js';
 
 export const MULTIPLEX_SETTINGS_KEY = 'vepa-multiplex-settings';
 export const PERSISTED_KEYS = Object.freeze([
   'preset', 'cols', 'rows', 'particlesPerSim', 'populationPercent', 'lawTier', 'lightLaws',
   'tickMode', 'ticksPerSecond', 'frameBudgetMs', 'useWorkers', 'workerCount',
   'refillToCap', // D-030
-  'fullFidelityLight', // D-034 option 1
+  'lawCount', // D-036 (replaces the D-034 fullFidelityLight checkbox)
 ]);
 export const PARTICLES_PER_SIM_MIN = 125;
 export const PARTICLES_PER_SIM_MAX = 2500;
@@ -41,7 +42,9 @@ export function sanitizeMultiplexSettings(raw) {
   if (r.frameBudgetMs !== undefined) out.frameBudgetMs = clamp(r.frameBudgetMs, 1, 14, d.frameBudgetMs);
   if (r.useWorkers !== undefined) out.useWorkers = r.useWorkers !== false;
   if (r.refillToCap !== undefined) out.refillToCap = r.refillToCap !== false;
-  if (r.fullFidelityLight !== undefined) out.fullFidelityLight = r.fullFidelityLight === true;
+  if (r.lawCount !== undefined) out.lawCount = sanitizeLawCount(r.lawCount);
+  // D-034 → D-036: "Full fidelity · light laws" on = the 16-law light set.
+  else if (r.fullFidelityLight === true) out.lawCount = LIGHT_LAW_COUNT;
   if (r.workerCount !== undefined) out.workerCount = Math.round(clamp(r.workerCount, 0, 16, 0));
   return out;
 }

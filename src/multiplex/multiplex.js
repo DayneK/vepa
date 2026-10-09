@@ -23,6 +23,7 @@ import { createWorldParams, clampWorldParam, isSpeedParam } from '../state/world
 import { runtimeConfig } from '../state/runtimeConfig.js';
 import { solve, drainOffspring, createSolverContext, enterSolverContext } from '../physics/solver.js';
 import { DEFAULT_LIGHT_LAWS, lawMaskFor, applyLawMask } from './previewLaws.js';
+import { lawCountMask, sanitizeLawCount } from './lawRanking.js';
 import { createRenderer, renderFrame, resize as resizeRenderer } from '../render/renderer.js';
 import { initCamera } from '../ui/camera.js';
 import { SplitMix32 } from '../core/prng.js';
@@ -38,7 +39,7 @@ export const MULTIPLEX_DEFAULTS = {
   randomizeParams: true,   // perturb world-param (law-tuning) knobs between shards
   variation: 0.5,
   deriveMode: 'clone', // 'clone' | 'spawn'
-  fullFidelityLight: false,  // D-034 speed option 1: the Full fidelity preset uses the light law set (changes results; off = full laws)
+  lawCount: LAW_COUNT,       // D-036 LAW COUNT slider (1–136): full-tier sims solve with their laws ∩ the top-N of LAW_PRIORITY (136 = all, unchanged)
   refillToCap: true,         // D-030: Clone-mode iterate tops every new shard back up to its refill target (see refillTargetFor)
   autoIterate: false,        // regenerate all shards every autoIterateInterval ticks
   autoIterateInterval: 400,  // ticks between auto-iterations
@@ -133,9 +134,6 @@ export function applyMultiplexPreset(config, presetId) {
   const p = MULTIPLEX_PRESETS[presetId];
   if (!p) return { ...config };
   const { label, note, ...knobs } = p;
-  // D-034 option 1: Full fidelity keeps its grid and population but solves
-  // with the light law set when the user has opted in (default off).
-  if (presetId === 'full-fidelity' && config && config.fullFidelityLight === true) knobs.lawTier = 'light';
   return { ...config, ...knobs, preset: presetId };
 }
 
@@ -392,7 +390,14 @@ function shardStepParams(mx, dt, simSpeed) {
 
 /** Law set the solver sees for a shard: its own, or ∩ the light preview set. */
 function solveLawsFor(mx, shard) {
-  if ((mx.config && mx.config.lawTier) !== 'light') return shard.laws;
+  if ((mx.config && mx.config.lawTier) !== 'light') {
+    // D-036 LAW COUNT: below 136, keep only the top-N laws of LAW_PRIORITY.
+    const n = sanitizeLawCount(mx.config && mx.config.lawCount);
+    if (n >= LAW_COUNT) return shard.laws;
+    if (!mx._countMask || mx._countMaskN !== n) { mx._countMask = lawCountMask(n); mx._countMaskN = n; }
+    if (!shard.solveLaws) shard.solveLaws = createLawState();
+    return applyLawMask(shard.laws, mx._countMask, shard.solveLaws);
+  }
   if (!mx._lightMask || mx._lightMaskKey !== mx.config.lightLaws) {
     mx._lightMask = lawMaskFor(mx.config.lightLaws || DEFAULT_LIGHT_LAWS);
     mx._lightMaskKey = mx.config.lightLaws;

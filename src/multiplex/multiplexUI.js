@@ -31,8 +31,18 @@ import {
   openMultiplexHelp,
   closeMultiplexHelp,
 } from './multiplexHelp.js';
-import { MAX_PARTICLES } from '../constants.js';
+import { MAX_PARTICLES, LAW_COUNT } from '../constants.js';
 import { DEFAULT_LIGHT_LAWS, sanitizeLawNames } from './previewLaws.js';
+import { sanitizeLawCount, LIGHT_LAW_COUNT } from './lawRanking.js';
+
+/** D-036: LAW COUNT readout ("136 · ALL", "16 · LIGHT SET", "40"). */
+function showLawCount(modal) {
+  const input = modal.querySelector('#mpx-law-count');
+  const out = modal.querySelector('#mpx-law-count-value');
+  if (!input || !out) return;
+  const n = sanitizeLawCount(input.value);
+  out.textContent = n >= LAW_COUNT ? `${n} · ALL` : n === LIGHT_LAW_COUNT ? `${n} · LIGHT SET` : String(n);
+}
 import { createShardPool, browserSpawn, defaultPoolSize } from './shardPool.js';
 import { loadMultiplexSettings, saveMultiplexSettings, PARTICLES_PER_SIM_MIN, PARTICLES_PER_SIM_MAX } from './multiplexSettings.js';
 import { formatMetric, numberOr } from './metricFormat.js';
@@ -243,10 +253,12 @@ export function createMultiplexController(bus, getSource, applyShard) {
               <select id="mpx-law-tier"><option value="full">Full</option><option value="light">Light</option></select>
               <button id="mpx-light-reset" class="mpx-btn" type="button" title="Restore the default light set">RESET</button>
             </div>
-            <div class="mpx-set-row" data-mpx-help="fullFidelityLight">
-              <label class="mpx-check"><input id="mpx-ff-light" type="checkbox"><span>FULL FIDELITY · LIGHT LAWS</span></label>
+            <div class="mpx-set-row" data-mpx-help="lawCount">
+              <span class="mpx-set-label">LAW COUNT</span>
+              <input id="mpx-law-count" type="range" min="1" max="${LAW_COUNT}" step="1" value="${LAW_COUNT}">
+              <span class="mpx-set-value" id="mpx-law-count-value">${LAW_COUNT} · ALL</span>
             </div>
-            <span class="settings-hint">Speed option, off by default. CHANGES RESULTS: the Full fidelity preset solves with the light law set instead of each sim's full laws.</span>
+            <span class="settings-hint">Speed slider for Full laws (Full fidelity). ${LAW_COUNT} = every law (default). Fewer = only the top-ranked laws act in the previews: CHANGES RESULTS. 16 = the light set.</span>
             <div class="mpx-set-row settings-row-stack" data-mpx-help="lightLaws">
               <span class="settings-hint">Light law set (used only when PREVIEW LAWS is Light)</span>
               <textarea id="mpx-light-laws" rows="2" spellcheck="false" style="width:100%;font:inherit;font-size:10px" aria-label="Light law set"></textarea>
@@ -652,11 +664,8 @@ export function createMultiplexController(bus, getSource, applyShard) {
         q(id).addEventListener('input', markCustom);
         q(id).addEventListener('change', markCustom);
       }
-      // D-034 option 1: the Full fidelity light-laws switch re-applies the
-      // preset's law tier when Full fidelity is selected (stays on the preset).
-      q('#mpx-ff-light').addEventListener('change', () => {
-        if (preset.value === 'full-fidelity') q('#mpx-law-tier').value = q('#mpx-ff-light').checked ? 'light' : 'full';
-      });
+      // D-036 LAW COUNT: a speed slider, not a preset knob (stays on the preset).
+      q('#mpx-law-count').addEventListener('input', () => showLawCount(modal));
       q('#mpx-light-reset').addEventListener('click', () => { q('#mpx-light-laws').value = DEFAULT_LIGHT_LAWS.join(' '); markCustom(); });
     }
 
@@ -716,7 +725,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
         ticksPerSecond: Math.max(0.5, Math.min(240, parseFloat(q('#mpx-tps').value) || 30)),
         frameBudgetMs: Math.max(1, Math.min(14, parseFloat(q('#mpx-budget').value) || 8)),
         useWorkers: q('#mpx-workers').checked,
-        fullFidelityLight: q('#mpx-ff-light').checked,
+        lawCount: sanitizeLawCount(q('#mpx-law-count').value),
       };
     };
     modal._fit = fit;
@@ -758,7 +767,8 @@ export function createMultiplexController(bus, getSource, applyShard) {
     const derive = modal.querySelector(`input[name="mpx-derive"][value="${c.deriveMode || 'clone'}"]`);
     if (derive) derive.checked = true;
     check('#mpx-refill', c.refillToCap !== false);
-    check('#mpx-ff-light', c.fullFidelityLight === true);
+    setVal('#mpx-law-count', sanitizeLawCount(c.lawCount));
+    showLawCount(modal);
     setPct('#mpx-pop-scale', '#mpx-pop-scale-value', c.populationScale ?? 1);
     { const pp = modal.querySelector('#mpx-pop-percent'); if (pp) pp.value = String(c.populationPercent ?? 0); }
     setVal('#mpx-seed', c.seed || 0);

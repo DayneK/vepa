@@ -137,11 +137,11 @@ export const MULTIPLEX_HELP_DB = {
     hint: 'Solver sub-steps per shard tick (1–8).',
     explanation: 'Each shard tick runs the solver this many times with a smaller time step. Higher substeps integrate physics more finely (stable fast worlds) but multiply the per-tick cost across every shard.',
   },
-  fullFidelityLight: {
+  lawCount: {
     section: 'setup',
-    title: 'FULL FIDELITY · LIGHT LAWS',
-    hint: 'Speed option (off by default). Changes results.',
-    explanation: 'When on, the Full fidelity preset keeps its 20 × 2,500 grid but solves each sim with the light law set (PREVIEW LAWS = Light) instead of its full laws, so sims tick several times faster. This CHANGES RESULTS: the dropped laws (pairwise social, information and chemistry) do not act in the previews, so populations and structures differ from a full-law run. The sims’ real law sets are unchanged, so fitness, export and copy-to-world still see every law. Off = Full fidelity uses full laws (the default). Deterministic for a given seed. Saved with your multiplex settings.',
+    title: 'LAW COUNT',
+    hint: 'Speed slider, 1–136 (default 136 = every law). Below 136 it changes results.',
+    explanation: 'How many laws the previews solve with when PREVIEW LAWS is Full (the Full fidelity preset). At 136 every sim uses its own full law set, exactly as before. Lower values keep only the top-N laws of a fixed priority ranking (each sim still only runs laws it has on): first the 16-law light set, ordered so life, energy and reproduction come first, then the remaining 120 laws from cheapest to most expensive, as measured by removing each law from a 1,000-particle all-laws world. So 16 = the light set, and each step above it adds the next-cheapest law. Anything below 136 CHANGES RESULTS: the dropped laws do not act in the previews. Below about 3 the sims have no LIFE/ENERGY/REPRO and only drift. The sims\u2019 real law sets are unchanged, so fitness, export and copy-to-world still see every law. Deterministic for a given seed. Saved with your multiplex settings. The full ranking is in src/multiplex/lawRanking.js and docs/SPEED-OPTIONS.md.',
   },
   refillToCap: {
     section: 'setup',
