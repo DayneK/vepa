@@ -195,11 +195,12 @@ export const SPEED_SOCIAL_LAWS = Object.freeze([
 const SPEED_SOCIAL_INDEXES = SPEED_SOCIAL_LAWS.map((n) => LAW_INDEXES[n]).filter((i) => i !== undefined);
 let _activeSocialSkip = new Uint8Array(0);
 // D-037 EXPENSIVE LAWS EVERY N TICKS (world param SPEED_EXPENSIVE_EVERY,
-// default 1 = every tick, results-identical). The eight laws that cost the
-// most per tick in the D-036 leave-one-out bench (bench/law-cost.mjs). The
-// list is fixed so the setting stays deterministic if the ranking is re-run.
+// default 1 = every tick, results-identical). The eight non-social laws with
+// the highest per-tick cost in BOTH leave-one-out benches (bench/law-cost.mjs,
+// D-036 busy box and D-037 quiet box; the lower of the two readings ranks).
+// The list is fixed so the setting stays deterministic if the ranking is re-run.
 export const SPEED_EXPENSIVE_LAWS = Object.freeze([
-  'BOND', 'CAPACITANCE', 'COMPRESSION', 'SUPERCONDUCTIVITY', 'SOUL_LAW', 'AUTOCATALYSIS', 'MELT', 'RADIATION_PRESSURE',
+  'BOND', 'CAPACITANCE', 'SUPERCONDUCTIVITY', 'COMPRESSION', 'CRYSTALLIZATION', 'MAGNETISM', 'MELT', 'AUTOCATALYSIS',
 ]);
 const SPEED_EXPENSIVE_INDEXES = SPEED_EXPENSIVE_LAWS.map((n) => LAW_INDEXES[n]).filter((i) => i !== undefined);
 const ACCR_PARTNER_SLOTS = [
