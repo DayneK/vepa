@@ -13,6 +13,10 @@
 //   node bench/solver-tps.mjs --sizes 1000 --runs 5 --ticks 40
 //   node bench/solver-tps.mjs --json                # machine-readable
 //   node bench/solver-tps.mjs --laws all            # every law on (stress)
+//   node bench/solver-tps.mjs --speed SPEED_NEIGHBORS_48[,KEY…]|all   # D-034 speed options on
+//   node bench/solver-tps.mjs --speed-matrix        # off, each speed option alone, all combined
+// Each run also reports the alive particle count and alive species at the end
+// (a quick read on how much a results-changing option alters the sim).
 //
 // Load matters: the report includes the 1-minute load average at start and end.
 import { spawnSync } from 'node:child_process';
@@ -26,6 +30,7 @@ const SELF = fileURLToPath(import.meta.url);
 
 if (argv[0] === '--child') {
   const COUNT = Number(argv[1]); const TICKS = Number(argv[2]); const WARM = Number(argv[3]); const LAWS = argv[4];
+  const SPEED = argv[5] && argv[5] !== 'none' ? argv[5] : '';
   const SPECIES = 5;
   let s = 0x9e3779b9 ^ COUNT;
   const rng = () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
@@ -39,6 +44,13 @@ if (argv[0] === '--child') {
   const wp = await import('../src/state/worldParams.js');
   const WORLD = WORLD_SIZE;
   runtimeConfig.worldParams = { ...wp.createWorldParams(), ...(TIDAL_BLOOM.worldParams || {}) };
+  if (SPEED) {
+    const keys = SPEED === 'all' ? wp.SPEED_PARAM_KEYS : SPEED.split(',');
+    for (const k of keys) {
+      if (!wp.SPEED_PARAM_KEYS.includes(k)) { console.error(`unknown speed option ${k}`); process.exit(2); }
+      runtimeConfig.worldParams[k] = 1;
+    }
+  }
   const view = new Float32Array(COUNT * 2 * PARTICLE_STRIDE);
   const dna = createDNABuffer(); loadDefaults(dna, DNA_RANGES);
   for (let sp = 0; sp < SPECIES; sp++) for (let d = 0; d < 42; d++) {
@@ -66,7 +78,9 @@ if (argv[0] === '--child') {
   for (let t = 0; t < TICKS; t++) { const t0 = performance.now(); step(); times.push(performance.now() - t0); }
   h.update(Buffer.from(view.buffer, 0, COUNT * PARTICLE_STRIDE * 4));
   times.sort((a, b) => a - b);
-  process.stdout.write(JSON.stringify({ medMs: times[times.length >> 1], hash: h.digest('hex').slice(0, 16), born }) + '\n');
+  let alive = 0; const sp = new Set();
+  for (let i = 0; i < COUNT * 2; i++) { const b = i * PARTICLE_STRIDE; if (view[b + S.DEAD] < 0.5 && view[b + S.MASS] > 0) { alive++; sp.add(view[b + S.SPECIES_ID]); } }
+  process.stdout.write(JSON.stringify({ medMs: times[times.length >> 1], hash: h.digest('hex').slice(0, 16), born, alive, species: sp.size }) + '\n');
   process.exit(0);
 }
 
@@ -77,18 +91,28 @@ const ticksFor = (n) => Number(arg('--ticks', n >= 10000 ? 12 : n >= 2500 ? 20 :
 const warm = Number(arg('--warm', 5));
 const load0 = loadavg()[0];
 const out = { node: process.version, cpus: cpus().length, laws: lawsMode, runs, load1Start: +load0.toFixed(2), sizes: {} };
-for (const n of sizes) {
-  const meds = []; const hashes = new Set();
-  for (let r = 0; r < runs; r++) {
-    const res = spawnSync(process.execPath, [SELF, '--child', String(n), String(ticksFor(n)), String(warm), lawsMode], { encoding: 'utf8', maxBuffer: 1 << 20 });
-    if (res.status !== 0) { console.error(res.stderr); process.exit(1); }
-    const j = JSON.parse(res.stdout.trim().split('\n').pop());
-    meds.push(j.medMs); hashes.add(j.hash + '/' + j.born);
+const { SPEED_PARAM_KEYS } = await import('../src/state/worldParams.js');
+const speedArg = arg('--speed', '');
+const variants = argv.includes('--speed-matrix') ? ['none', ...SPEED_PARAM_KEYS, 'all'] : [speedArg || 'none'];
+out.speed = variants.length === 1 ? variants[0] : variants;
+const quiet = argv.includes('--json');
+for (const variant of variants) {
+  const sizesOut = {};
+  if (variants.length > 1 && !quiet) console.log(`speed: ${variant}`);
+  for (const n of sizes) {
+    const meds = []; const hashes = new Set(); let last = null;
+    for (let r = 0; r < runs; r++) {
+      const res = spawnSync(process.execPath, [SELF, '--child', String(n), String(ticksFor(n)), String(warm), lawsMode, variant], { encoding: 'utf8', maxBuffer: 1 << 20 });
+      if (res.status !== 0) { console.error(res.stderr); process.exit(1); }
+      const j = JSON.parse(res.stdout.trim().split('\n').pop());
+      meds.push(j.medMs); hashes.add(j.hash + '/' + j.born); last = j;
+    }
+    meds.sort((a, b) => a - b);
+    const med = meds[meds.length >> 1];
+    sizesOut[n] = { medMsPerTick: +med.toFixed(2), ticksPerSec: +(1000 / med).toFixed(2), runsMs: meds.map((v) => +v.toFixed(1)), hash: [...hashes].join(','), deterministic: hashes.size === 1, alive: last.alive, species: last.species, born: last.born };
+    if (!quiet) console.log(`${String(n).padStart(6)} particles: ${sizesOut[n].ticksPerSec.toFixed(2).padStart(7)} ticks/s  (median ${med.toFixed(1)} ms/tick; runs ${sizesOut[n].runsMs.join(' / ')})  hash ${sizesOut[n].hash}  alive ${last.alive} species ${last.species}`);
   }
-  meds.sort((a, b) => a - b);
-  const med = meds[meds.length >> 1];
-  out.sizes[n] = { medMsPerTick: +med.toFixed(2), ticksPerSec: +(1000 / med).toFixed(2), runsMs: meds.map((v) => +v.toFixed(1)), hash: [...hashes].join(','), deterministic: hashes.size === 1 };
-  if (!argv.includes('--json')) console.log(`${String(n).padStart(6)} particles: ${out.sizes[n].ticksPerSec.toFixed(2).padStart(7)} ticks/s  (median ${med.toFixed(1)} ms/tick; runs ${out.sizes[n].runsMs.join(' / ')})  hash ${out.sizes[n].hash}`);
+  if (variants.length === 1) out.sizes = sizesOut; else (out.variants ||= {})[variant] = sizesOut;
 }
 out.load1End = +loadavg()[0].toFixed(2);
 if (argv.includes('--json')) console.log(JSON.stringify(out, null, 2));

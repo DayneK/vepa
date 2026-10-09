@@ -142,6 +142,10 @@ export const WORLD_PARAM_DEFS = [
   { key: 'TARGET_FPS', label: 'TARGET FPS', min: 15, max: 60, default: 60, step: 15, group: 'PERFORMANCE', subgroup: 'QUALITY' },
   { key: 'PAIRWISE_BUDGET', label: 'PAIRWISE BUDGET / PARTICLE', min: 8, max: 500, default: 96, step: 8, group: 'PERFORMANCE', subgroup: 'QUALITY' },
   { key: 'EXPENSIVE_LAW_CADENCE', label: 'EXPENSIVE LAW CADENCE', min: 1, max: 12, default: 1, step: 1, group: 'PERFORMANCE', subgroup: 'QUALITY' },
+  // ── PERFORMANCE › SPEED (D-034) ── results-changing speed options, all off
+  // by default (0 = off, 1 = on). Off is bit-identical to the pre-option
+  // solver. See SPEED_PARAM_KEYS / speedOption() below and docs/SPEED-OPTIONS.md.
+  { key: 'SPEED_NEIGHBORS_48', label: 'NEIGHBOUR LIMIT 48', min: 0, max: 1, default: 0, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
 
   // ── TIME (v8.6 D.2 — Deep Time & Epochs) ──
   { key: 'TIME_SPEED', label: 'TIME SPEED', min: 0.1, max: 10, default: 1, step: 0.1, group: 'TIME', subgroup: 'TIME' },
@@ -250,6 +254,20 @@ export function spawnCaps(state) {
     hardCap: Math.min(Math.round(clampWorldParam('PARTICLE_COUNT', state.PARTICLE_COUNT)), MAX_PARTICLES),
     softCap: Math.min(Math.round(clampWorldParam('MAX_POP', state.MAX_POP)), MAX_PARTICLES),
   };
+}
+
+/**
+ * D-034 speed options (PERFORMANCE › SPEED). Each is a 0/1 world param, off by
+ * default and saved with the world. They change results when on, so they are
+ * never varied by multiplex param perturbation, and a save that predates them
+ * loads with them off.
+ */
+export const SPEED_PARAM_KEYS = Object.freeze(['SPEED_NEIGHBORS_48']);
+const SPEED_KEY_SET = new Set(SPEED_PARAM_KEYS);
+export function isSpeedParam(key) { return SPEED_KEY_SET.has(key); }
+/** True when speed option `key` is on (value ≥ 0.5). */
+export function speedOption(params, key) {
+  return !!params && Number(params[key]) >= 0.5;
 }
 
 export function worldParamDef(key) {

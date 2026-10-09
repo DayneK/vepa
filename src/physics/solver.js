@@ -118,6 +118,7 @@ import {
   setLawModuleState,
 } from './laws.js';
 import { createSynergyCache } from './synergy.js';
+import { speedOption } from '../state/worldParams.js';
 import {
   compatibilityForViewsInto, createCompatibilityScratch, meetsCompatibility,
   LAZY_PAIR_COMPAT_SUPPORTED, createLazyPairCompat, lazyPairSnapshot,
@@ -183,6 +184,8 @@ import { ensureFields, fieldsEnabled, advanceFields, sampleFieldForces, wellForc
 
 const MAX_FORCE = 50.0;
 const DEFAULT_MAX_INTERACTIONS = 500; // live override: WP.MAX_INTERACTIONS
+// D-034 speed options (PERFORMANCE › SPEED world params; all off by default).
+const SPEED_NEIGHBOR_LIMIT = 48; // option 2: per-particle neighbour budget (default budget is 96)
 const ACCR_PARTNER_SLOTS = [
   STRIDE_INDEXES.BOND_PARTNER_1,
   STRIDE_INDEXES.BOND_PARTNER_2,
@@ -449,9 +452,14 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   const populationScale = Math.max(1, Math.sqrt(Math.max(1, particleCount) / 2500));
   const frameScale = 60 / targetFps;
   const adaptiveInteractions = Math.round(qualityBudget * frameScale / populationScale);
-  const maxInteractions = qualityMode
+  let maxInteractions = qualityMode
     ? Math.max(8, Math.min(configuredInteractions, adaptiveInteractions))
     : configuredInteractions;
+  // D-034 speed option 2 (off by default; changes results): halve the
+  // per-particle neighbour budget, 48 instead of 96, scaled like the default.
+  if (speedOption(WP, 'SPEED_NEIGHBORS_48')) {
+    maxInteractions = Math.min(maxInteractions, Math.max(8, Math.round(SPEED_NEIGHBOR_LIMIT * frameScale / populationScale)));
+  }
   const neighborCap = Math.max(24, Math.round(WP.NEIGHBOR_BUF ?? DEFAULT_NEIGHBOR_BUF));
   const autoTune = (WP.AUTO_TUNE ?? 1) !== 0;
   const gridDim = autoTune

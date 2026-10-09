@@ -20,7 +20,7 @@ import {
   MAX_SPECIES,
   STRIDE_INDEXES,
 } from '../constants.js';
-import { clampWorldParam } from './worldParams.js';
+import { clampWorldParam, SPEED_PARAM_KEYS } from './worldParams.js';
 
 export const WORLD_SAVE_FORMAT = 'vepa-world-save';
 export const WORLD_SAVE_VERSION = 1;
@@ -259,6 +259,8 @@ export function restoreWorldState(state, target = {}) {
     for (const key of Object.keys(state.worldParams)) {
       target.worldParams[key] = clampWorldParam(key, state.worldParams[key]);
     }
+    // D-034: a save that predates the speed options loads with them off.
+    for (const key of SPEED_PARAM_KEYS) if (!(key in state.worldParams)) target.worldParams[key] = 0;
   }
   if (target.runtime && state.runtime) {
     for (const key of Object.keys(state.runtime)) {

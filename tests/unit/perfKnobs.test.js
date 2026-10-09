@@ -6,7 +6,8 @@ describe('Performance knobs — WORLD_PARAM_DEFS', () => {
   const perfDefs = WORLD_PARAM_DEFS.filter((d) => d.group === 'PERFORMANCE');
 
   it('exposes a dedicated PERFORMANCE accordion group', () => {
-    expect(perfDefs.length).toBe(9);
+    // 9 classic knobs; the D-034 speed options live in their own SPEED subgroup.
+    expect(perfDefs.filter((d) => d.subgroup !== 'SPEED').length).toBe(9);
   });
 
   it('defines the solver knobs with classic defaults', () => {

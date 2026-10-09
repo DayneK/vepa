@@ -19,7 +19,7 @@ import { createParticleBuffer } from '../state/particleBuffer.js';
 import { createDNABuffer, getDNAFloat, setDNAFloat } from '../dna/dnaBuffer.js';
 import { createLawState, getActiveCount } from '../state/lawState.js';
 import { createSpeciationEngine, updateSpeciation } from '../engines/speciation.js';
-import { createWorldParams, clampWorldParam } from '../state/worldParams.js';
+import { createWorldParams, clampWorldParam, isSpeedParam } from '../state/worldParams.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
 import { solve, drainOffspring, createSolverContext, enterSolverContext } from '../physics/solver.js';
 import { DEFAULT_LIGHT_LAWS, lawMaskFor, applyLawMask } from './previewLaws.js';
@@ -1600,6 +1600,9 @@ function applyVariation(shard, config) {
   if (config.randomizeParams !== false && paramV > 0 && shard.worldParams) {
     const keys = Object.keys(shard.worldParams);
     for (const key of keys) {
+      // D-034: speed options are user choices, never varied (and skipping
+      // them before the draw keeps the variation stream unchanged).
+      if (isSpeedParam(key)) continue;
       if (prng.next() < v * paramV * 0.35) {
         const cur = shard.worldParams[key];
         const span = Math.max(Math.abs(cur) * 0.5, 0.05);
