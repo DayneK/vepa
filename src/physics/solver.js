@@ -143,6 +143,11 @@ const REQ_CRYSTALLIZATION = Object.freeze({ physical: 0.25, geometric: 0.35 });
 const REQ_PREDATION = Object.freeze({ behavioral: 0.05, resource: 0.05 });
 const REQ_SYMBIOSIS = Object.freeze({ resource: 0.2, behavioral: 0.2 });
 const REQ_PARASITE = Object.freeze({ resource: 0.05 });
+// PERF-8: last FIELD result and the exact inputs it was computed from.
+// Invalidated at the start of every solve() (a different buffer may reuse
+// the same base offsets). NaN inputs never compare equal, so they recompute.
+let _fieldBase = -1, _fieldPx = 0, _fieldPy = 0, _fieldPz = 0, _fieldK = 0, _fieldHalf = 0;
+let _fieldAx = 0, _fieldAy = 0, _fieldAz = 0;
 // PERF-7: the same six threshold questions, answered from a per-pair snapshot
 // taken at the pair's first query (the moment the full vector used to be
 // computed), evaluating only the dimensions asked about. Each check is
@@ -473,6 +478,8 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   // Reusable DNA cache array (avoids allocation per particle)
   const dnaI = new Array(42);
   const _dnaJ = new Array(42);
+
+  _fieldBase = -1; // PERF-8: FIELD cache never spans solve() calls
 
   // Per-law timing: start the tick clock if bench mode is active.
   if (_benchMode) {
@@ -1293,8 +1300,18 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
         if (f) { ax += f.ax; ay += f.ay; az += f.az; }
       }
       if (active[LAW_INDEXES.FIELD]) {
-        const f = applyField(view, iBase, halfWorld, halfWorld, halfWorld, 0.02 * syn[LAW_INDEXES.FIELD]);
-        ax += f.ax; ay += f.ay; az += f.az;
+        // PERF-8: FIELD depends only on particle i (its position, the centre
+        // and k), yet runs once per pair. Reuse the last result while every
+        // input is exactly the same (a CONTACT correction that moves i
+        // re-keys it); same function, same inputs → same values.
+        const kField = 0.02 * syn[LAW_INDEXES.FIELD];
+        const fpx = view[iBase + S.POS_X], fpy = view[iBase + S.POS_Y], fpz = view[iBase + S.POS_Z];
+        if (_fieldBase !== iBase || _fieldPx !== fpx || _fieldPy !== fpy || _fieldPz !== fpz || _fieldK !== kField || _fieldHalf !== halfWorld) {
+          const f = applyField(view, iBase, halfWorld, halfWorld, halfWorld, kField);
+          _fieldAx = f.ax; _fieldAy = f.ay; _fieldAz = f.az;
+          _fieldBase = iBase; _fieldPx = fpx; _fieldPy = fpy; _fieldPz = fpz; _fieldK = kField; _fieldHalf = halfWorld;
+        }
+        ax += _fieldAx; ay += _fieldAy; az += _fieldAz;
       }
 
       // Slate Mechanics
