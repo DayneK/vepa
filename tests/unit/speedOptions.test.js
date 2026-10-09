@@ -71,3 +71,16 @@ describe('speed options: saved with the world (D-034)', async () => {
     for (const k of SPEED_PARAM_KEYS) expect(live[k], k).toBe(0);
   });
 });
+
+describe('option 3: narrow mid range (120)', () => {
+  it('changes a world with pairs 120–200 apart', () => {
+    const off = runSpeedWorld({ count: 300, spread: 600 });
+    const on = runSpeedWorld({ count: 300, spread: 600, params: { SPEED_NARROW_MID: 1 } });
+    expect(on.hash).not.toBe(off.hash);
+  });
+  it('is identical while every pair stays within 120 (cube side 60: max distance ≈ 104)', () => {
+    const off = runSpeedWorld({ count: 200, spread: 60, ticks: 3 });
+    const on = runSpeedWorld({ count: 200, spread: 60, ticks: 3, params: { SPEED_NARROW_MID: 1 } });
+    expect(on.hash).toBe(off.hash);
+  });
+});

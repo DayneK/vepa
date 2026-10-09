@@ -146,6 +146,7 @@ export const WORLD_PARAM_DEFS = [
   // by default (0 = off, 1 = on). Off is bit-identical to the pre-option
   // solver. See SPEED_PARAM_KEYS / speedOption() below and docs/SPEED-OPTIONS.md.
   { key: 'SPEED_NEIGHBORS_48', label: 'NEIGHBOUR LIMIT 48', min: 0, max: 1, default: 0, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
+  { key: 'SPEED_NARROW_MID', label: 'NARROW MID RANGE (120)', min: 0, max: 1, default: 0, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
 
   // ── TIME (v8.6 D.2 — Deep Time & Epochs) ──
   { key: 'TIME_SPEED', label: 'TIME SPEED', min: 0.1, max: 10, default: 1, step: 0.1, group: 'TIME', subgroup: 'TIME' },
@@ -262,7 +263,7 @@ export function spawnCaps(state) {
  * never varied by multiplex param perturbation, and a save that predates them
  * loads with them off.
  */
-export const SPEED_PARAM_KEYS = Object.freeze(['SPEED_NEIGHBORS_48']);
+export const SPEED_PARAM_KEYS = Object.freeze(['SPEED_NEIGHBORS_48', 'SPEED_NARROW_MID']);
 const SPEED_KEY_SET = new Set(SPEED_PARAM_KEYS);
 export function isSpeedParam(key) { return SPEED_KEY_SET.has(key); }
 /** True when speed option `key` is on (value ≥ 0.5). */

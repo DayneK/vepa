@@ -186,6 +186,8 @@ const MAX_FORCE = 50.0;
 const DEFAULT_MAX_INTERACTIONS = 500; // live override: WP.MAX_INTERACTIONS
 // D-034 speed options (PERFORMANCE › SPEED world params; all off by default).
 const SPEED_NEIGHBOR_LIMIT = 48; // option 2: per-particle neighbour budget (default budget is 96)
+const MID_RANGE = 200;           // mid distance tier (v8.17)
+const SPEED_MID_RANGE = 120;     // option 3: narrower mid tier (= the default COMMS NEIGHBORHOOD_RADIUS)
 const ACCR_PARTNER_SLOTS = [
   STRIDE_INDEXES.BOND_PARTNER_1,
   STRIDE_INDEXES.BOND_PARTNER_2,
@@ -460,6 +462,8 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   if (speedOption(WP, 'SPEED_NEIGHBORS_48')) {
     maxInteractions = Math.min(maxInteractions, Math.max(8, Math.round(SPEED_NEIGHBOR_LIMIT * frameScale / populationScale)));
   }
+  // D-034 speed option 3 (off by default; changes results): narrower mid tier.
+  const midRange = speedOption(WP, 'SPEED_NARROW_MID') ? SPEED_MID_RANGE : MID_RANGE;
   const neighborCap = Math.max(24, Math.round(WP.NEIGHBOR_BUF ?? DEFAULT_NEIGHBOR_BUF));
   const autoTune = (WP.AUTO_TUNE ?? 1) !== 0;
   const gridDim = autoTune
@@ -783,7 +787,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       // ── Distance-tier fidelity (v8.17) ──
       const near = dist < 30;
-      const mid = dist < 200;
+      const mid = dist < midRange;
 
       // ── Gravity ──
       // 'bh' engine: gravity was already applied above from the octree
