@@ -137,6 +137,12 @@ export const MULTIPLEX_HELP_DB = {
     hint: 'Solver sub-steps per shard tick (1–8).',
     explanation: 'Each shard tick runs the solver this many times with a smaller time step. Higher substeps integrate physics more finely (stable fast worlds) but multiply the per-tick cost across every shard.',
   },
+  fidelity: {
+    section: 'setup',
+    title: 'FIDELITY',
+    hint: 'HIGH (default) / MEDIUM / LOW speed preset. MEDIUM and LOW CHANGE RESULTS.',
+    explanation: 'One switch for the speed settings. It moves the world speed sliders (shared with SETUP \u203a WORLD \u203a PERFORMANCE \u203a SPEED, so the main world changes too) and LAW COUNT. HIGH = every speed slider at its default and LAW COUNT 136: exactly the normal results. MEDIUM = the old FAST values, LAW COUNT 136. LOW = the fastest settings that still keep a working sim, plus LAW COUNT 16 (the light set): far faster, but neighbours, ranges and the costly and social laws are cut, so structures form more slowly and look different. Moving any of those sliders yourself shows Custom. See docs/SPEED-OPTIONS.md.',
+  },
   lawCount: {
     section: 'setup',
     title: 'LAW COUNT',

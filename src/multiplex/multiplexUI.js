@@ -34,6 +34,17 @@ import {
 import { MAX_PARTICLES, LAW_COUNT } from '../constants.js';
 import { DEFAULT_LIGHT_LAWS, sanitizeLawNames } from './previewLaws.js';
 import { sanitizeLawCount, LIGHT_LAW_COUNT } from './lawRanking.js';
+import { SPEED_FIDELITY_LEVELS, SPEED_SLIDER_KEYS, FIDELITY_LAW_COUNT, fidelityPreset, fidelityOf } from '../state/worldParams.js';
+import { runtimeConfig } from '../state/runtimeConfig.js';
+
+/** D-038: which FIDELITY level the world speed sliders + LAW COUNT match. */
+function syncMpxFidelity(modal) {
+  const sel = modal.querySelector('#mpx-fidelity');
+  const input = modal.querySelector('#mpx-law-count');
+  if (!sel || !input) return;
+  const level = fidelityOf(runtimeConfig.worldParams);
+  sel.value = level !== 'CUSTOM' && sanitizeLawCount(input.value) === FIDELITY_LAW_COUNT[level] ? level : 'CUSTOM';
+}
 
 /** D-036: LAW COUNT readout ("136 · ALL", "16 · LIGHT SET", "40"). */
 function showLawCount(modal) {
@@ -252,6 +263,11 @@ export function createMultiplexController(bus, getSource, applyShard) {
               <span class="mpx-set-label">PREVIEW LAWS</span>
               <select id="mpx-law-tier"><option value="full">Full</option><option value="light">Light</option></select>
               <button id="mpx-light-reset" class="mpx-btn" type="button" title="Restore the default light set">RESET</button>
+            </div>
+            <div class="mpx-set-row" data-mpx-help="fidelity">
+              <span class="mpx-set-label">FIDELITY</span>
+              <select id="mpx-fidelity"><option value="CUSTOM">Custom</option>${SPEED_FIDELITY_LEVELS.map((lv) => `<option value="${lv}">${lv[0]}${lv.slice(1).toLowerCase()}</option>`).join('')}</select>
+              <span class="mpx-set-value">HIGH = all laws, full results</span>
             </div>
             <div class="mpx-set-row" data-mpx-help="lawCount">
               <span class="mpx-set-label">LAW COUNT</span>
@@ -665,7 +681,21 @@ export function createMultiplexController(bus, getSource, applyShard) {
         q(id).addEventListener('change', markCustom);
       }
       // D-036 LAW COUNT: a speed slider, not a preset knob (stays on the preset).
-      q('#mpx-law-count').addEventListener('input', () => showLawCount(modal));
+      q('#mpx-law-count').addEventListener('input', () => { showLawCount(modal); syncMpxFidelity(modal); });
+      // D-038 FIDELITY: sets the world speed sliders (shared with SETUP ›
+      // WORLD › PERFORMANCE › SPEED) and LAW COUNT (LOW = the 16-law light set).
+      q('#mpx-fidelity').addEventListener('change', () => {
+        const level = q('#mpx-fidelity').value;
+        if (!SPEED_FIDELITY_LEVELS.includes(level)) return;
+        const preset = fidelityPreset(level);
+        if (bus) {
+          for (const key of SPEED_SLIDER_KEYS) bus.emit('world:paramChanged', { key, value: preset[key] });
+          bus.emit('world:paramsRestored');
+        }
+        q('#mpx-law-count').value = String(FIDELITY_LAW_COUNT[level]);
+        showLawCount(modal);
+        syncMpxFidelity(modal);
+      });
       q('#mpx-light-reset').addEventListener('click', () => { q('#mpx-light-laws').value = DEFAULT_LIGHT_LAWS.join(' '); markCustom(); });
     }
 
@@ -769,6 +799,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
     check('#mpx-refill', c.refillToCap !== false);
     setVal('#mpx-law-count', sanitizeLawCount(c.lawCount));
     showLawCount(modal);
+    syncMpxFidelity(modal);
     setPct('#mpx-pop-scale', '#mpx-pop-scale-value', c.populationScale ?? 1);
     { const pp = modal.querySelector('#mpx-pop-percent'); if (pp) pp.value = String(c.populationPercent ?? 0); }
     setVal('#mpx-seed', c.seed || 0);
