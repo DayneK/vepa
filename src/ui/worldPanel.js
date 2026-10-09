@@ -5,7 +5,7 @@
  */
 import { LAW_INDEXES, LAW_CATEGORIES, LAW_COUNT, LAW_SPECTRUM, LAW_HUE_BY_INDEX, LAW_SAT_BY_INDEX, LAW_HELP_DB } from '../constants.js';
 import { isSet, set as setLaw, clear as clearLaw, toggle as toggleLaw } from '../state/lawState.js';
-import { WORLD_PARAM_DEFS, SPEED_SLIDER_KEYS, SPEED_FAST_PRESET, worldParamDef } from '../state/worldParams.js';
+import { WORLD_PARAM_DEFS, SPEED_SLIDER_KEYS, SPEED_FIDELITY_LEVELS, fidelityPreset, fidelityOf, worldParamDef } from '../state/worldParams.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
 import { createSliderRow } from './sliderControl.js';
 import { MECHANICS_ICONS } from './mechanicsIcons.js';
@@ -200,6 +200,24 @@ export function createWorldPanel(bus, lawStateObj) {
   bus.on('world:paramsRestored', () => {
     if (params) renderWorldSliders(params, bus);
   });
+}
+
+const FIDELITY_TITLES = {
+  HIGH: 'HIGH: every speed slider at its default; full results (same as DEFAULTS)',
+  MEDIUM: 'MEDIUM: the old FAST values; about 2-3x faster; CHANGES RESULTS',
+  LOW: 'LOW: fastest settings that keep a working sim; CHANGES RESULTS (see help)',
+};
+
+/** D-038: highlight the FIDELITY level the speed sliders match, else CUSTOM. */
+function syncFidelity(container) {
+  const level = fidelityOf(runtimeConfig.worldParams);
+  container.querySelectorAll('[data-fidelity]').forEach((b) => {
+    const on = b.dataset.fidelity === level;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-checked', on ? 'true' : 'false');
+  });
+  const custom = container.querySelector('.speed-fidelity-custom');
+  if (custom) custom.hidden = level !== 'CUSTOM';
 }
 
 /**
@@ -545,10 +563,14 @@ function renderWorldSliders(container, bus) {
       html += `<div class="sub-accordion-header" data-subacc="${gi}-${si}"><span class="arrow">▶</span>${sub.label}</div>`;
       html += '<div class="sub-accordion-body">';
       if (sub.label === 'SPEED') {
-        // D-036: FAST is a preset that moves the speed sliders; DEFAULTS puts
-        // them back to the results-identical values.
-        html += '<div class="speed-presets"><button type="button" class="btn speed-preset" data-speed-preset="fast" title="Set the speed sliders to the FAST values (changes results)">FAST</button>'
-          + '<button type="button" class="btn speed-preset" data-speed-preset="defaults" title="Put the speed sliders back to their defaults (results-identical)">DEFAULTS</button></div>';
+        // D-038: FIDELITY selector (replaces FAST). HIGH = every slider at its
+        // default (results-identical), MEDIUM = the old FAST values, LOW = the
+        // fastest settings that keep a working sim. DEFAULTS = HIGH.
+        html += '<div class="speed-presets" role="radiogroup" aria-label="Fidelity preset">'
+          + '<span class="speed-fidelity-label">FIDELITY</span>'
+          + SPEED_FIDELITY_LEVELS.map((lv) => `<button type="button" class="btn speed-preset" role="radio" aria-checked="false" data-fidelity="${lv}" title="${FIDELITY_TITLES[lv]}">${lv}</button>`).join('')
+          + '<span class="speed-fidelity-custom" hidden>CUSTOM</span>'
+          + '<button type="button" class="btn speed-preset speed-preset-defaults" data-speed-preset="defaults" title="Put the speed sliders back to their defaults (= HIGH, results-identical)">DEFAULTS</button></div>';
       }
       for (const p of sub.params) {
         html += `<div data-slider-slot="${p.key}"></div>`;
@@ -561,15 +583,18 @@ function renderWorldSliders(container, bus) {
   html += '</div>';
   container.innerHTML = html;
 
-  container.querySelectorAll('[data-speed-preset]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const fast = btn.dataset.speedPreset === 'fast';
-      for (const key of SPEED_SLIDER_KEYS) {
-        bus.emit('world:paramChanged', { key, value: fast ? SPEED_FAST_PRESET[key] : worldParamDef(key).default });
-      }
-      bus.emit('world:paramsRestored');
-    });
+  const applyFidelity = (level) => {
+    const preset = fidelityPreset(level);
+    for (const key of SPEED_SLIDER_KEYS) bus.emit('world:paramChanged', { key, value: preset[key] });
+    bus.emit('world:paramsRestored');
+  };
+  container.querySelectorAll('[data-fidelity]').forEach((btn) => {
+    btn.addEventListener('click', () => applyFidelity(btn.dataset.fidelity));
   });
+  container.querySelectorAll('[data-speed-preset="defaults"]').forEach((btn) => {
+    btn.addEventListener('click', () => applyFidelity('HIGH'));
+  });
+  syncFidelity(container);
 
   // Accordion toggle
   container.querySelectorAll('.accordion-header').forEach((header) => {
@@ -599,7 +624,10 @@ function renderWorldSliders(container, bus) {
       key: p.key,
       maxLabel: p.maxLabel || '',
       title: `${p.label} (${p.key})`,
-      onChange: (value) => bus.emit('world:paramChanged', { key: p.key, value }),
+      onChange: (value) => {
+        bus.emit('world:paramChanged', { key: p.key, value });
+        if (SPEED_SLIDER_KEYS.includes(p.key)) syncFidelity(container);
+      },
     });
     slot.replaceWith(row.el);
   });
