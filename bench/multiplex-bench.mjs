@@ -124,6 +124,8 @@ if (has('legacy')) {
   if (doPresets) for (const id of Object.keys(mxMod.MULTIPLEX_PRESETS)) {
     if (only && only !== id) continue;
     cases.push([`preset ${mxMod.MULTIPLEX_PRESETS[id].label}`, mxMod.applyMultiplexPreset({}, id)]);
+    // D-034 option 1: Full fidelity with its light-laws switch on.
+    if (id === 'full-fidelity') cases.push(['preset Full fidelity + light laws', mxMod.applyMultiplexPreset({ fullFidelityLight: true }, id)]);
   }
   if (doGrid) for (const perSim of [125, 500, 1000, 2500]) for (const lawTier of ['light', 'full'])
     for (const [tickMode, useWorkers, extra] of [['frame', true, {}], ['adaptive', true, {}], ['adaptive', false, { frameBudgetMs: 8 }], ['fixed', true, { ticksPerSecond: 15 }]]) {

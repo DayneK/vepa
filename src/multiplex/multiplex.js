@@ -38,6 +38,7 @@ export const MULTIPLEX_DEFAULTS = {
   randomizeParams: true,   // perturb world-param (law-tuning) knobs between shards
   variation: 0.5,
   deriveMode: 'clone', // 'clone' | 'spawn'
+  fullFidelityLight: false,  // D-034 speed option 1: the Full fidelity preset uses the light law set (changes results; off = full laws)
   refillToCap: true,         // D-030: Clone-mode iterate tops every new shard back up to its refill target (see refillTargetFor)
   autoIterate: false,        // regenerate all shards every autoIterateInterval ticks
   autoIterateInterval: 400,  // ticks between auto-iterations
@@ -132,6 +133,9 @@ export function applyMultiplexPreset(config, presetId) {
   const p = MULTIPLEX_PRESETS[presetId];
   if (!p) return { ...config };
   const { label, note, ...knobs } = p;
+  // D-034 option 1: Full fidelity keeps its grid and population but solves
+  // with the light law set when the user has opted in (default off).
+  if (presetId === 'full-fidelity' && config && config.fullFidelityLight === true) knobs.lawTier = 'light';
   return { ...config, ...knobs, preset: presetId };
 }
 

@@ -2,7 +2,7 @@
 
 # Source: Inventory
 
-The generator scanned `373` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `374` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ The generator scanned `373` files from active repository inputs. Individual modu
 | Repository | 7 | 2 | 4 |
 | Simulation | 33 | 250 | 381 |
 | State | 40 | 328 | 537 |
-| Testing | 207 | 39 | 799 |
+| Testing | 208 | 39 | 799 |
 | Ui | 30 | 113 | 385 |
 
 ## Module list
@@ -19,7 +19,7 @@ The generator scanned `373` files from active repository inputs. Individual modu
 | Path | Area | Lines | Exports | Imports | Law refs |
 | --- | --- | --- | --- | --- | --- |
 | [bench/backend-compare.mjs](../../../bench/backend-compare.mjs) | benchmark | 164 | 5 | 4 | 0 |
-| [bench/multiplex-bench.mjs](../../../bench/multiplex-bench.mjs) | benchmark | 148 | 0 | 2 | 3 |
+| [bench/multiplex-bench.mjs](../../../bench/multiplex-bench.mjs) | benchmark | 150 | 0 | 2 | 3 |
 | [bench/multiplex-node-pool.mjs](../../../bench/multiplex-node-pool.mjs) | benchmark | 13 | 1 | 1 | 0 |
 | [bench/multiplex-render.mjs](../../../bench/multiplex-render.mjs) | benchmark | 70 | 0 | 1 | 0 |
 | [bench/results/renderer-benchmark.json](../../../bench/results/renderer-benchmark.json) | benchmark | 253 | 0 | 0 | 0 |
@@ -67,10 +67,10 @@ The generator scanned `373` files from active repository inputs. Individual modu
 | [src/engines/worldEvents.js](../../../src/engines/worldEvents.js) | application | 80 | 1 | 0 | 3 |
 | [src/main.js](../../../src/main.js) | application | 2059 | 0 | 52 | 14 |
 | [src/multiplex/metricFormat.js](../../../src/multiplex/metricFormat.js) | application | 26 | 3 | 0 | 0 |
-| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1888 | 39 | 12 | 8 |
-| [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 550 | 7 | 0 | 6 |
-| [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 65 | 7 | 2 | 0 |
-| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 1040 | 1 | 8 | 3 |
+| [src/multiplex/multiplex.js](../../../src/multiplex/multiplex.js) | application | 1892 | 39 | 12 | 8 |
+| [src/multiplex/multiplexHelp.js](../../../src/multiplex/multiplexHelp.js) | application | 556 | 7 | 0 | 6 |
+| [src/multiplex/multiplexSettings.js](../../../src/multiplex/multiplexSettings.js) | application | 67 | 7 | 2 | 0 |
+| [src/multiplex/multiplexUI.js](../../../src/multiplex/multiplexUI.js) | application | 1051 | 1 | 8 | 3 |
 | [src/multiplex/previewLaws.js](../../../src/multiplex/previewLaws.js) | application | 57 | 4 | 2 | 16 |
 | [src/multiplex/shardPool.js](../../../src/multiplex/shardPool.js) | application | 52 | 3 | 0 | 0 |
 | [src/multiplex/shardWorker.js](../../../src/multiplex/shardWorker.js) | application | 8 | 0 | 1 | 0 |
@@ -365,6 +365,7 @@ The generator scanned `373` files from active repository inputs. Individual modu
 | [tests/unit/solverReset.test.js](../../../tests/unit/solverReset.test.js) | testing | 67 | 0 | 6 | 3 |
 | [tests/unit/spawnDistribution.test.js](../../../tests/unit/spawnDistribution.test.js) | testing | 24 | 0 | 4 | 0 |
 | [tests/unit/specHelpCoverage.test.js](../../../tests/unit/specHelpCoverage.test.js) | testing | 30 | 0 | 5 | 0 |
+| [tests/unit/speedFullFidelityLight.test.js](../../../tests/unit/speedFullFidelityLight.test.js) | testing | 36 | 0 | 4 | 0 |
 | [tests/unit/stateBudgets.test.js](../../../tests/unit/stateBudgets.test.js) | testing | 33 | 0 | 4 | 5 |
 | [tests/unit/stellar.test.js](../../../tests/unit/stellar.test.js) | testing | 281 | 0 | 5 | 2 |
 | [tests/unit/strideWriteContract.test.js](../../../tests/unit/strideWriteContract.test.js) | testing | 22 | 0 | 3 | 2 |

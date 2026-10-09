@@ -137,6 +137,12 @@ export const MULTIPLEX_HELP_DB = {
     hint: 'Solver sub-steps per shard tick (1–8).',
     explanation: 'Each shard tick runs the solver this many times with a smaller time step. Higher substeps integrate physics more finely (stable fast worlds) but multiply the per-tick cost across every shard.',
   },
+  fullFidelityLight: {
+    section: 'setup',
+    title: 'FULL FIDELITY · LIGHT LAWS',
+    hint: 'Speed option (off by default). Changes results.',
+    explanation: 'When on, the Full fidelity preset keeps its 20 × 2,500 grid but solves each sim with the light law set (PREVIEW LAWS = Light) instead of its full laws, so sims tick several times faster. This CHANGES RESULTS: the dropped laws (pairwise social, information and chemistry) do not act in the previews, so populations and structures differ from a full-law run. The sims’ real law sets are unchanged, so fitness, export and copy-to-world still see every law. Off = Full fidelity uses full laws (the default). Deterministic for a given seed. Saved with your multiplex settings.',
+  },
   refillToCap: {
     section: 'setup',
     title: 'REFILL TO CAP',

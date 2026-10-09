@@ -243,6 +243,10 @@ export function createMultiplexController(bus, getSource, applyShard) {
               <select id="mpx-law-tier"><option value="full">Full</option><option value="light">Light</option></select>
               <button id="mpx-light-reset" class="mpx-btn" type="button" title="Restore the default light set">RESET</button>
             </div>
+            <div class="mpx-set-row" data-mpx-help="fullFidelityLight">
+              <label class="mpx-check"><input id="mpx-ff-light" type="checkbox"><span>FULL FIDELITY · LIGHT LAWS</span></label>
+            </div>
+            <span class="settings-hint">Speed option, off by default. CHANGES RESULTS: the Full fidelity preset solves with the light law set instead of each sim's full laws.</span>
             <div class="mpx-set-row settings-row-stack" data-mpx-help="lightLaws">
               <span class="settings-hint">Light law set (used only when PREVIEW LAWS is Light)</span>
               <textarea id="mpx-light-laws" rows="2" spellcheck="false" style="width:100%;font:inherit;font-size:10px" aria-label="Light law set"></textarea>
@@ -648,6 +652,11 @@ export function createMultiplexController(bus, getSource, applyShard) {
         q(id).addEventListener('input', markCustom);
         q(id).addEventListener('change', markCustom);
       }
+      // D-034 option 1: the Full fidelity light-laws switch re-applies the
+      // preset's law tier when Full fidelity is selected (stays on the preset).
+      q('#mpx-ff-light').addEventListener('change', () => {
+        if (preset.value === 'full-fidelity') q('#mpx-law-tier').value = q('#mpx-ff-light').checked ? 'light' : 'full';
+      });
       q('#mpx-light-reset').addEventListener('click', () => { q('#mpx-light-laws').value = DEFAULT_LIGHT_LAWS.join(' '); markCustom(); });
     }
 
@@ -707,6 +716,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
         ticksPerSecond: Math.max(0.5, Math.min(240, parseFloat(q('#mpx-tps').value) || 30)),
         frameBudgetMs: Math.max(1, Math.min(14, parseFloat(q('#mpx-budget').value) || 8)),
         useWorkers: q('#mpx-workers').checked,
+        fullFidelityLight: q('#mpx-ff-light').checked,
       };
     };
     modal._fit = fit;
@@ -748,6 +758,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
     const derive = modal.querySelector(`input[name="mpx-derive"][value="${c.deriveMode || 'clone'}"]`);
     if (derive) derive.checked = true;
     check('#mpx-refill', c.refillToCap !== false);
+    check('#mpx-ff-light', c.fullFidelityLight === true);
     setPct('#mpx-pop-scale', '#mpx-pop-scale-value', c.populationScale ?? 1);
     { const pp = modal.querySelector('#mpx-pop-percent'); if (pp) pp.value = String(c.populationPercent ?? 0); }
     setVal('#mpx-seed', c.seed || 0);
