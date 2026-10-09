@@ -5,6 +5,7 @@ import { createLawState, set as lawSet } from '../../src/state/lawState.js';
 import { applyGenotypeMutation, writeSomaticLocus } from '../../src/physics/laws.js';
 import { setLawClockMs } from '../../src/physics/laws.js';
 import { runSpeedWorld } from '../helpers/speedWorld.js';
+import { SPEED_FAST_PRESET } from '../../src/state/worldParams.js';
 
 function seq(seed) { let s = seed >>> 0; return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; }
 
@@ -38,7 +39,7 @@ describe('D-035 GENOTYPE keeps somatic DNA in range', () => {
 // Before D-035 each of these ended with 5–11 non-finite fields (NaN SIGNAL /
 // ENERGY on live particles); see docs/GOLDEN-REBASELINE.md.
 describe('D-035 seeded repro: 200 particles × 120 ticks', () => {
-  for (const [label, params] of [['all speed options off', {}], ['narrow mid range', { SPEED_NARROW_MID: 1 }], ['FAST', { SPEED_FAST: 1 }]]) {
+  for (const [label, params] of [['all speed sliders at defaults', {}], ['narrow mid range', { SPEED_MID_RANGE: 120 }], ['FAST', SPEED_FAST_PRESET]]) {
     it(`${label}: no particle ends with a non-finite field`, () => {
       const { view } = runSpeedWorld({ count: 200, ticks: 120, seed: 11, spread: 400, params });
       let bad = 0;

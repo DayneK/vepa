@@ -118,7 +118,7 @@ import {
   setLawModuleState,
 } from './laws.js';
 import { createSynergyCache } from './synergy.js';
-import { speedOption } from '../state/worldParams.js';
+import { speedValue, speedUnlimited } from '../state/worldParams.js';
 import {
   compatibilityForViewsInto, createCompatibilityScratch, meetsCompatibility,
   LAZY_PAIR_COMPAT_SUPPORTED, createLazyPairCompat, lazyPairSnapshot,
@@ -184,19 +184,16 @@ import { ensureFields, fieldsEnabled, advanceFields, sampleFieldForces, wellForc
 
 const MAX_FORCE = 50.0;
 const DEFAULT_MAX_INTERACTIONS = 500; // live override: WP.MAX_INTERACTIONS
-// D-034 speed options (PERFORMANCE › SPEED world params; all off by default).
-const SPEED_NEIGHBOR_LIMIT = 48; // option 2: per-particle neighbour budget (default budget is 96)
-const SPEED_PAIR_CAP = 200000;   // option 4: pairs per tick, shared evenly across alive particles
-// option 6: laws that act on odd solver ticks only (information category
-// minus HISTORY, plus signal exchange and telepathy).
+// D-034/D-036 speed sliders (PERFORMANCE › SPEED world params; every default
+// reproduces the pre-option solver). SOCIAL & INFO LAWS EVERY N TICKS gates
+// these laws: the information category minus HISTORY, plus signal exchange
+// and telepathy.
 export const SPEED_SOCIAL_LAWS = Object.freeze([
   'COMMS', 'TELEPATHY', 'MEMORY', 'PATTERN', 'STIGMERGY', 'SIGNAL_BOOST', 'LEARN', 'SYMBOL', 'METRIC',
   'PREDICT', 'CODE', 'PROTOCOL', 'FEEDBACK', 'LANGUAGE', 'CULTURE', 'NAVIGATION', 'ENCRYPTION',
 ]);
 const SPEED_SOCIAL_INDEXES = SPEED_SOCIAL_LAWS.map((n) => LAW_INDEXES[n]).filter((i) => i !== undefined);
 let _activeSocialSkip = new Uint8Array(0);
-const MID_RANGE = 200;           // mid distance tier (v8.17)
-const SPEED_MID_RANGE = 120;     // option 3: narrower mid tier (= the default COMMS NEIGHBORHOOD_RADIUS)
 const ACCR_PARTNER_SLOTS = [
   STRIDE_INDEXES.BOND_PARTNER_1,
   STRIDE_INDEXES.BOND_PARTNER_2,
@@ -452,7 +449,11 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   // ticks the social/information laws are switched off for this tick only.
   // Synergies still come from the full law state. _solveTick was advanced
   // above, so the first tick after a reset (1) runs them.
-  if ((_solveTick & 1) === 0 && speedOption(runtimeConfig.worldParams, 'SPEED_SOCIAL_HALF')) {
+  // D-036 SOCIAL & INFO LAWS EVERY N TICKS (default 1 = every tick): the laws
+  // act on the first tick after a reset and every Nth tick after it. N = 2
+  // is exactly the D-034 "every 2nd tick" option (odd solver ticks).
+  const socialEvery = Math.max(1, Math.round(speedValue(runtimeConfig.worldParams, 'SPEED_SOCIAL_EVERY')));
+  if (socialEvery > 1 && (_solveTick - 1) % socialEvery !== 0) {
     if (_activeSocialSkip.length !== active.length) _activeSocialSkip = new Uint8Array(active.length);
     _activeSocialSkip.set(active);
     for (let k = 0; k < SPEED_SOCIAL_INDEXES.length; k++) _activeSocialSkip[SPEED_SOCIAL_INDEXES[k]] = 0;
@@ -484,19 +485,18 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
   const populationScale = Math.max(1, Math.sqrt(Math.max(1, particleCount) / 2500));
   const frameScale = 60 / targetFps;
   const adaptiveInteractions = Math.round(qualityBudget * frameScale / populationScale);
-  let maxInteractions = qualityMode
+  // D-036: PAIRWISE_BUDGET is the SPEED group's NEIGHBOUR LIMIT slider
+  // (8–512, default 96).
+  const maxInteractions = qualityMode
     ? Math.max(8, Math.min(configuredInteractions, adaptiveInteractions))
     : configuredInteractions;
-  // D-034 speed option 2 (off by default; changes results): halve the
-  // per-particle neighbour budget, 48 instead of 96, scaled like the default.
-  if (speedOption(WP, 'SPEED_NEIGHBORS_48')) {
-    maxInteractions = Math.min(maxInteractions, Math.max(8, Math.round(SPEED_NEIGHBOR_LIMIT * frameScale / populationScale)));
-  }
-  // D-034 speed option 3 (off by default; changes results): narrower mid tier.
-  const midRange = speedOption(WP, 'SPEED_NARROW_MID') ? SPEED_MID_RANGE : MID_RANGE;
-  // D-034 speed option 5 (off by default; changes results): SYMBIOSIS and
-  // PARASITE act only on near pairs (< 30, the bonding laws' contact tier).
-  const symbiosisAnyRange = !speedOption(WP, 'SPEED_NEAR_SYMBIOSIS');
+  // D-036 distance tiers (defaults 30 and 200, the v8.17 values).
+  const nearRange = speedValue(WP, 'SPEED_NEAR_RANGE');
+  const midRange = speedValue(WP, 'SPEED_MID_RANGE');
+  // D-036 SYMBIOSIS & PARASITE RANGE: ANY (the top end, default) = no
+  // distance gate, as before; otherwise only pairs closer than this.
+  const symbiosisAnyRange = speedUnlimited(WP, 'SPEED_SYMBIOSIS_RANGE');
+  const symbiosisRange = speedValue(WP, 'SPEED_SYMBIOSIS_RANGE');
   const neighborCap = Math.max(24, Math.round(WP.NEIGHBOR_BUF ?? DEFAULT_NEIGHBOR_BUF));
   const autoTune = (WP.AUTO_TUNE ?? 1) !== 0;
   const gridDim = autoTune
@@ -539,12 +539,10 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
   clear(grid);
 
-  let gridAlive = 0;
   for (let i = 0; i < particleCount; i++) {
     const base = i * stride;
     if (view[base + S.DEAD] >= 0.5) continue; // skip dead/soul
     if (view[base + S.MASS] <= 0) continue;
-    gridAlive++;
 
     const px = view[base + S.POS_X];
     const py = view[base + S.POS_Y];
@@ -555,12 +553,14 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     }
   }
 
-  // D-034 speed option 4 (off by default; changes results): a per-tick pair
-  // cap shared evenly — each particle gets cap ÷ alive neighbours (≥ 8),
-  // never more than the normal limit. Applies to the main pair loop only.
-  const pairLimit = speedOption(WP, 'SPEED_PAIR_CAP')
-    ? Math.min(maxInteractions, Math.max(8, Math.floor(SPEED_PAIR_CAP / Math.max(1, gridAlive))))
-    : maxInteractions;
+  // D-036 PAIR BUDGET / PARTICLE / TICK (OFF at the top end, default): each
+  // particle walks at most this many neighbour-list entries in the main pair
+  // loop, never more than the neighbour limit. Pairs are counted per
+  // particle: an i–j pair is visited once from i's loop and once from j's,
+  // and the particle's own entry in the list uses one slot.
+  const pairLimit = speedUnlimited(WP, 'SPEED_PAIR_BUDGET')
+    ? maxInteractions
+    : Math.min(maxInteractions, Math.max(8, Math.round(speedValue(WP, 'SPEED_PAIR_BUDGET'))));
 
   // ── Phase 2: Compute time dilation per particle ──
   // v4.6.29: gravitational time dilation — the grid snapshot from Phase 1
@@ -828,7 +828,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       _lazyPair.flags = 0;
 
       // ── Distance-tier fidelity (v8.17) ──
-      const near = dist < 30;
+      const near = dist < nearRange;
       const mid = dist < midRange;
 
       // ── Gravity ──
@@ -1398,8 +1398,8 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       }
 
       // Biology
-      if (active[LAW_INDEXES.SYMBIOSIS] && (symbiosisAnyRange || near) && pairMeets(view, iBase, jBase, REQ_SYMBIOSIS)) applySymbiosis(view, iBase, jBase, 0.5);
-      if (active[LAW_INDEXES.PARASITE] && (symbiosisAnyRange || near) && pairMeets(view, iBase, jBase, REQ_PARASITE)) applyParasite(view, iBase, jBase, 0.5);
+      if (active[LAW_INDEXES.SYMBIOSIS] && (symbiosisAnyRange || dist < symbiosisRange) && pairMeets(view, iBase, jBase, REQ_SYMBIOSIS)) applySymbiosis(view, iBase, jBase, 0.5);
+      if (active[LAW_INDEXES.PARASITE] && (symbiosisAnyRange || dist < symbiosisRange) && pairMeets(view, iBase, jBase, REQ_PARASITE)) applyParasite(view, iBase, jBase, 0.5);
 
       // Chemistry
       if (active[LAW_INDEXES.ELECTROLYSIS]) applyElectrolysis(view, iBase, jBase, 0.5);

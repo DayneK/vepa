@@ -6,8 +6,8 @@ describe('Performance knobs — WORLD_PARAM_DEFS', () => {
   const perfDefs = WORLD_PARAM_DEFS.filter((d) => d.group === 'PERFORMANCE');
 
   it('exposes a dedicated PERFORMANCE accordion group', () => {
-    // 9 classic knobs; the D-034 speed options live in their own SPEED subgroup.
-    expect(perfDefs.filter((d) => d.subgroup !== 'SPEED').length).toBe(9);
+    // 9 classic knobs (PAIRWISE_BUDGET is also the D-036 NEIGHBOUR LIMIT, so it sits in SPEED).
+    expect(perfDefs.filter((d) => d.subgroup !== 'SPEED' || d.key === 'PAIRWISE_BUDGET').length).toBe(9);
   });
 
   it('defines the solver knobs with classic defaults', () => {

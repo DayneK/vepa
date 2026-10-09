@@ -13,8 +13,9 @@
 //   node bench/solver-tps.mjs --sizes 1000 --runs 5 --ticks 40
 //   node bench/solver-tps.mjs --json                # machine-readable
 //   node bench/solver-tps.mjs --laws all            # every law on (stress)
-//   node bench/solver-tps.mjs --speed SPEED_NEIGHBORS_48[,KEY…]|all   # D-034 speed options on
-//   node bench/solver-tps.mjs --speed-matrix        # off, each speed option alone, all combined
+//   node bench/solver-tps.mjs --speed PAIRWISE_BUDGET=48[,KEY=V…]|fast  # D-036 speed sliders
+//   node bench/solver-tps.mjs --speed-matrix        # defaults, each slider at its FAST value alone, FAST
+//   node bench/solver-tps.mjs --sweep SPEED_MID_RANGE=200/120/60   # one slider at several values
 // Each run also reports the alive particle count and alive species at the end
 // (a quick read on how much a results-changing option alters the sim).
 //
@@ -45,10 +46,10 @@ if (argv[0] === '--child') {
   const WORLD = WORLD_SIZE;
   runtimeConfig.worldParams = { ...wp.createWorldParams(), ...(TIDAL_BLOOM.worldParams || {}) };
   if (SPEED) {
-    const keys = SPEED === 'all' ? wp.SPEED_PARAM_KEYS : SPEED.split(',');
-    for (const k of keys) {
-      if (!wp.SPEED_PARAM_KEYS.includes(k)) { console.error(`unknown speed option ${k}`); process.exit(2); }
-      runtimeConfig.worldParams[k] = 1;
+    const set = SPEED === 'fast' || SPEED === 'all' ? wp.SPEED_FAST_PRESET : Object.fromEntries(SPEED.split(',').map((kv) => kv.split('=')).map(([k, v]) => [k, Number(v)]));
+    for (const [k, v] of Object.entries(set)) {
+      if (!wp.SPEED_SLIDER_KEYS.includes(k) || !Number.isFinite(v)) { console.error(`unknown speed slider ${k}=${v}`); process.exit(2); }
+      runtimeConfig.worldParams[k] = wp.clampWorldParam(k, v);
     }
   }
   const view = new Float32Array(COUNT * 2 * PARTICLE_STRIDE);
@@ -94,9 +95,13 @@ const ticksFor = (n) => Number(arg('--ticks', n >= 10000 ? 12 : n >= 2500 ? 20 :
 const warm = Number(arg('--warm', 5));
 const load0 = loadavg()[0];
 const out = { node: process.version, cpus: cpus().length, laws: lawsMode, runs, load1Start: +load0.toFixed(2), sizes: {} };
-const { SPEED_PARAM_KEYS } = await import('../src/state/worldParams.js');
+const { SPEED_FAST_PRESET, worldParamDef } = await import('../src/state/worldParams.js');
 const speedArg = arg('--speed', '');
-const variants = argv.includes('--speed-matrix') ? ['none', ...SPEED_PARAM_KEYS, 'all'] : [speedArg || 'none'];
+const sweepArg = arg('--sweep', '');
+const fastAlone = Object.entries(SPEED_FAST_PRESET).filter(([k, v]) => v !== worldParamDef(k).default).map(([k, v]) => `${k}=${v}`);
+const variants = argv.includes('--speed-matrix') ? ['none', ...fastAlone, 'fast']
+  : sweepArg ? sweepArg.split('=')[1].split('/').map((v) => `${sweepArg.split('=')[0]}=${v}`)
+  : [speedArg || 'none'];
 out.speed = variants.length === 1 ? variants[0] : variants;
 const quiet = argv.includes('--json');
 for (const variant of variants) {

@@ -140,17 +140,21 @@ export const WORLD_PARAM_DEFS = [
   { key: 'NEIGHBOR_BUF', label: 'NEIGHBOR BUFFER', min: 24, max: 32768, default: 2000, step: 8, group: 'PERFORMANCE', subgroup: 'INTERACTIONS' },
   { key: 'QUALITY_MODE', label: 'ADAPTIVE QUALITY', min: 0, max: 1, default: 1, step: 1, group: 'PERFORMANCE', subgroup: 'QUALITY' }, // 1 = scale pair budget as population grows
   { key: 'TARGET_FPS', label: 'TARGET FPS', min: 15, max: 60, default: 60, step: 15, group: 'PERFORMANCE', subgroup: 'QUALITY' },
-  { key: 'PAIRWISE_BUDGET', label: 'PAIRWISE BUDGET / PARTICLE', min: 8, max: 500, default: 96, step: 8, group: 'PERFORMANCE', subgroup: 'QUALITY' },
+  // D-036: the per-particle neighbour limit IS the speed group's neighbour
+  // slider (default 96 = unchanged). It keeps its place in this list so the
+  // multiplex parameter-variation stream (which walks keys in order) is unchanged.
+  { key: 'PAIRWISE_BUDGET', label: 'NEIGHBOUR LIMIT / PARTICLE', min: 8, max: 512, default: 96, step: 8, group: 'PERFORMANCE', subgroup: 'SPEED' },
   { key: 'EXPENSIVE_LAW_CADENCE', label: 'EXPENSIVE LAW CADENCE', min: 1, max: 12, default: 1, step: 1, group: 'PERFORMANCE', subgroup: 'QUALITY' },
-  // ── PERFORMANCE › SPEED (D-034) ── results-changing speed options, all off
-  // by default (0 = off, 1 = on). Off is bit-identical to the pre-option
-  // solver. See SPEED_PARAM_KEYS / speedOption() below and docs/SPEED-OPTIONS.md.
-  { key: 'SPEED_NEIGHBORS_48', label: 'NEIGHBOUR LIMIT 48', min: 0, max: 1, default: 0, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
-  { key: 'SPEED_NARROW_MID', label: 'NARROW MID RANGE (120)', min: 0, max: 1, default: 0, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
-  { key: 'SPEED_PAIR_CAP', label: 'PAIR CAP / TICK (200K)', min: 0, max: 1, default: 0, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
-  { key: 'SPEED_NEAR_SYMBIOSIS', label: 'NEARBY-ONLY SYMBIOSIS & PARASITE', min: 0, max: 1, default: 0, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
-  { key: 'SPEED_SOCIAL_HALF', label: 'SOCIAL & INFO LAWS EVERY 2ND TICK', min: 0, max: 1, default: 0, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
-  { key: 'SPEED_FAST', label: 'FAST (ALL SPEED OPTIONS)', min: 0, max: 1, default: 0, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
+  // ── PERFORMANCE › SPEED (D-034 options, sliders since D-036) ── each
+  // default equals the pre-option solver exactly (golden + bench:solver hashes
+  // unchanged); moving a slider away from its default changes results. A
+  // `maxLabel` marks a top end that means "no limit". See SPEED_PARAM_KEYS,
+  // SPEED_FAST_PRESET and docs/SPEED-OPTIONS.md.
+  { key: 'SPEED_MID_RANGE', label: 'MID RANGE (DISTANCE)', min: 30, max: 600, default: 200, step: 5, group: 'PERFORMANCE', subgroup: 'SPEED' },
+  { key: 'SPEED_NEAR_RANGE', label: 'NEAR / CONTACT RANGE (DISTANCE)', min: 10, max: 60, default: 30, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
+  { key: 'SPEED_PAIR_BUDGET', label: 'PAIR BUDGET / PARTICLE / TICK', min: 8, max: 512, default: 512, step: 1, maxLabel: 'OFF', group: 'PERFORMANCE', subgroup: 'SPEED' },
+  { key: 'SPEED_SYMBIOSIS_RANGE', label: 'SYMBIOSIS & PARASITE RANGE', min: 10, max: 600, default: 600, step: 5, maxLabel: 'ANY', group: 'PERFORMANCE', subgroup: 'SPEED' },
+  { key: 'SPEED_SOCIAL_EVERY', label: 'SOCIAL & INFO LAWS EVERY N TICKS', min: 1, max: 16, default: 1, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
 
   // ── TIME (v8.6 D.2 — Deep Time & Epochs) ──
   { key: 'TIME_SPEED', label: 'TIME SPEED', min: 0.1, max: 10, default: 1, step: 0.1, group: 'TIME', subgroup: 'TIME' },
@@ -262,21 +266,66 @@ export function spawnCaps(state) {
 }
 
 /**
- * D-034 speed options (PERFORMANCE › SPEED). Each is a 0/1 world param, off by
- * default and saved with the world. They change results when on, so they are
- * never varied by multiplex param perturbation, and a save that predates them
- * loads with them off.
+ * D-034/D-036 speed sliders (PERFORMANCE › SPEED). Each default equals the
+ * pre-option solver; other values change results. They are user choices, so
+ * multiplex param perturbation never varies them (PAIRWISE_BUDGET, the
+ * neighbour limit, predates them and keeps its old perturbation behaviour).
  */
-export const SPEED_PARAM_KEYS = Object.freeze(['SPEED_NEIGHBORS_48', 'SPEED_NARROW_MID', 'SPEED_PAIR_CAP', 'SPEED_NEAR_SYMBIOSIS', 'SPEED_SOCIAL_HALF', 'SPEED_FAST']);
+export const SPEED_PARAM_KEYS = Object.freeze(['SPEED_MID_RANGE', 'SPEED_NEAR_RANGE', 'SPEED_PAIR_BUDGET', 'SPEED_SYMBIOSIS_RANGE', 'SPEED_SOCIAL_EVERY']);
+/** Every slider in the SPEED group, neighbour limit included. */
+export const SPEED_SLIDER_KEYS = Object.freeze(['PAIRWISE_BUDGET', ...SPEED_PARAM_KEYS]);
 const SPEED_KEY_SET = new Set(SPEED_PARAM_KEYS);
 export function isSpeedParam(key) { return SPEED_KEY_SET.has(key); }
+
 /**
- * True when speed option `key` is on (value ≥ 0.5), or when the FAST bundle
- * (SPEED_FAST) is on, which turns every speed option on.
+ * FAST preset: the values the D-034 FAST bundle used. The old 200,000
+ * pairs-per-tick world cap has no exact per-particle form; 20 pairs per
+ * particle is what it gave at 10,000 particles (the size it was aimed at), so
+ * FAST reproduces the old bundle exactly there and is stricter (and about 2x
+ * faster) below 10k, where the old cap never bit. See docs/SPEED-OPTIONS.md.
  */
-export function speedOption(params, key) {
-  if (!params) return false;
-  return Number(params[key]) >= 0.5 || Number(params.SPEED_FAST) >= 0.5;
+export const SPEED_FAST_PRESET = Object.freeze({
+  PAIRWISE_BUDGET: 48,
+  SPEED_MID_RANGE: 120,
+  SPEED_NEAR_RANGE: 30,
+  SPEED_PAIR_BUDGET: 20,
+  SPEED_SYMBIOSIS_RANGE: 30,
+  SPEED_SOCIAL_EVERY: 2,
+});
+
+/** Slider value, or its default when absent / non-finite. */
+export function speedValue(params, key) {
+  const def = DEF_BY_KEY.get(key);
+  const v = params ? Number(params[key]) : NaN;
+  return Number.isFinite(v) ? v : def.default;
+}
+
+/** True when a slider with a `maxLabel` sits at its "no limit" top end. */
+export function speedUnlimited(params, key) {
+  return speedValue(params, key) >= DEF_BY_KEY.get(key).max;
+}
+
+/** D-034 on/off flags, replaced by the D-036 sliders. */
+export const LEGACY_SPEED_FLAGS = Object.freeze(['SPEED_NEIGHBORS_48', 'SPEED_NARROW_MID', 'SPEED_PAIR_CAP', 'SPEED_NEAR_SYMBIOSIS', 'SPEED_SOCIAL_HALF', 'SPEED_FAST']);
+
+/**
+ * Convert D-034 on/off speed flags (saves from 9 Oct 2026) into slider
+ * values, in place, and drop the flags. A flag that was on (or FAST) sets its
+ * slider to the FAST preset value; a flag that was off leaves the slider at
+ * whatever the params already hold. Returns `params`.
+ */
+export function migrateSpeedParams(params) {
+  if (!params) return params;
+  const on = (k) => Number(params[k]) >= 0.5 || Number(params.SPEED_FAST) >= 0.5;
+  if (LEGACY_SPEED_FLAGS.some((k) => k in params)) {
+    if (on('SPEED_NEIGHBORS_48')) params.PAIRWISE_BUDGET = Math.min(speedValue(params, 'PAIRWISE_BUDGET'), SPEED_FAST_PRESET.PAIRWISE_BUDGET);
+    if (on('SPEED_NARROW_MID')) params.SPEED_MID_RANGE = SPEED_FAST_PRESET.SPEED_MID_RANGE;
+    if (on('SPEED_PAIR_CAP')) params.SPEED_PAIR_BUDGET = SPEED_FAST_PRESET.SPEED_PAIR_BUDGET;
+    if (on('SPEED_NEAR_SYMBIOSIS')) params.SPEED_SYMBIOSIS_RANGE = SPEED_FAST_PRESET.SPEED_SYMBIOSIS_RANGE;
+    if (on('SPEED_SOCIAL_HALF')) params.SPEED_SOCIAL_EVERY = SPEED_FAST_PRESET.SPEED_SOCIAL_EVERY;
+    for (const k of LEGACY_SPEED_FLAGS) delete params[k];
+  }
+  return params;
 }
 
 export function worldParamDef(key) {
