@@ -600,6 +600,7 @@
         "tests/unit/signal.test.js",
         "tests/unit/solverReset.test.js",
         "tests/unit/speedExpensive.test.js",
+        "tests/unit/speedFidelity.test.js",
         "tests/unit/speedLawCount.test.js",
         "tests/unit/speedOptions.test.js",
         "tests/unit/stateBudgets.test.js",

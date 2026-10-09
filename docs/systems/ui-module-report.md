@@ -373,7 +373,7 @@ point of listing them: a panel-to-panel edge is often also a command.
 
 - **27 push in** — produced outside `src/ui/`, consumed by a panel. These are the numbers a panel
   displays, and they arrive without the panel asking.
-- **30 commands out** — sent by a panel, answered outside `src/ui/`. 28 of the 30 are
+- **31 commands out** — sent by a panel, answered outside `src/ui/`. 29 of the 31 are
   answered by `src/main.js` and nothing else, so a panel never reaches an engine,
   a state module or the worker by name.
 - 2 commands also reach something else:
@@ -385,33 +385,33 @@ point of listing them: a panel-to-panel edge is often also a command.
 
 | Event | Produced by | Panel |
 | --- | --- | --- |
-| `civilization:analytics` | `main.js:1887` | `civilizationPanel.js` |
+| `civilization:analytics` | `main.js:1903` | `civilizationPanel.js` |
 | `cluster:detected` | `engines/insightEngine.js:70` | `intelPanel.js` |
-| `dna:sync` | `main.js:579`<br>`speciesPanel.js:166` | `dnaPanel.js`, `speciesPanel.js` |
-| `eco:analytics` | `main.js:1875` | `ecoPanel.js` |
-| `goal:applied` | `main.js:1468` | `intelPanel.js` |
-| `groups:analytics` | `main.js:1872` | `groupAnalytics.js` |
-| `law:sync` | `main.js:580`<br>`worldPanel.js:427` | `lawPanel.js`, `worldPanel.js` |
+| `dna:sync` | `main.js:581`<br>`speciesPanel.js:166` | `dnaPanel.js`, `speciesPanel.js` |
+| `eco:analytics` | `main.js:1891` | `ecoPanel.js` |
+| `goal:applied` | `main.js:1484` | `intelPanel.js` |
+| `groups:analytics` | `main.js:1888` | `groupAnalytics.js` |
+| `law:sync` | `main.js:582`<br>`worldPanel.js:427` | `lawPanel.js`, `worldPanel.js` |
 | `lineage:branch` | `engines/lineageTracker.js:91` | `intelPanel.js` |
 | `lineage:death` | `engines/lineageTracker.js:126` | `intelPanel.js` |
 | `narrative:batch` | `core/logQueue.js:48` | `narrativePanel.js` |
 | `physics:tick` | `main.js:365` | `dnaAnalytics.js`, `hud.js`, `speciesPanel.js` |
-| `preset:loaded` | `main.js:1086` | `presetPanel.js` |
-| `preset:stateResponse` | `main.js:1061` | `presetPanel.js` |
-| `sim:metrics` | `main.js:1870` | `hud.js` |
-| `sim:paused` | `main.js:603` | `ui.js` |
-| `species:sync` | `main.js:578` | `speciesPanel.js` |
-| `timeline:cleared` | `main.js:1485` | `intelPanel.js` |
-| `timeline:restored` | `main.js:1477` | `intelPanel.js` |
-| `timeline:snapshot` | `engines/timelineEngine.js:72`<br>`main.js:1617` | `intelPanel.js` |
-| `world:compareResponse` | `main.js:1169` | `savePanel.js` |
-| `world:exported` | `main.js:1149` | `savePanel.js` |
-| `world:imported` | `main.js:1156` | `savePanel.js` |
-| `world:listResponse` | `main.js:1137` | `savePanel.js` |
-| `world:loaded` | `main.js:1120` | `savePanel.js` |
-| `world:paramsRestored` | `main.js:1047`<br>`multiplex/multiplexUI.js:693`<br>`worldPanel.js:589` | `worldPanel.js` |
-| `world:saved` | `main.js:1113` | `savePanel.js` |
-| `world:undoState` | `main.js:997`<br>`savePanel.js:340` | `savePanel.js` |
+| `preset:loaded` | `main.js:1088` | `presetPanel.js` |
+| `preset:stateResponse` | `main.js:1063` | `presetPanel.js` |
+| `sim:metrics` | `main.js:1886` | `hud.js` |
+| `sim:paused` | `main.js:605` | `ui.js` |
+| `species:sync` | `main.js:580` | `speciesPanel.js` |
+| `timeline:cleared` | `main.js:1501` | `intelPanel.js` |
+| `timeline:restored` | `main.js:1493` | `intelPanel.js` |
+| `timeline:snapshot` | `engines/timelineEngine.js:72`<br>`main.js:1633` | `intelPanel.js` |
+| `world:compareResponse` | `main.js:1171` | `savePanel.js` |
+| `world:exported` | `main.js:1151` | `savePanel.js` |
+| `world:imported` | `main.js:1158` | `savePanel.js` |
+| `world:listResponse` | `main.js:1139` | `savePanel.js` |
+| `world:loaded` | `main.js:1122` | `savePanel.js` |
+| `world:paramsRestored` | `main.js:1049`<br>`multiplex/multiplexUI.js:693`<br>`worldPanel.js:589` | `worldPanel.js` |
+| `world:saved` | `main.js:1115` | `savePanel.js` |
+| `world:undoState` | `main.js:999`<br>`savePanel.js:340` | `savePanel.js` |
 
 #### Command: panel → orchestrator
 
@@ -442,6 +442,7 @@ point of listing them: a panel-to-panel edge is often also a command.
 | `world:list` | `savePanel.js` | `main.js` |
 | `world:load` | `savePanel.js` | `main.js` |
 | `world:paramChanged` | `worldPanel.js` | `main.js` |
+| `world:paramsRestored` | `worldPanel.js` | `main.js` |
 | `world:redo` | `savePanel.js` | `main.js` |
 | `world:remove` | `savePanel.js` | `main.js` |
 | `world:save` | `savePanel.js` | `main.js` |
@@ -497,16 +498,16 @@ never sent, on either dispatch channel.
 
 | Event | Subscribed at |
 | --- | --- |
-| `SPEED_NARROW_MID`<br><sub>orchestrator</sub> | `state/worldParams.js:360` |
-| `SPEED_NEAR_SYMBIOSIS`<br><sub>orchestrator</sub> | `state/worldParams.js:362` |
-| `SPEED_PAIR_CAP`<br><sub>orchestrator</sub> | `state/worldParams.js:361` |
-| `SPEED_SOCIAL_HALF`<br><sub>orchestrator</sub> | `state/worldParams.js:363` |
-| `epoch:list`<br><sub>orchestrator</sub> | `main.js:1388` |
-| `epoch:restore`<br><sub>orchestrator</sub> | `main.js:1391` |
-| `group:declare`<br><sub>orchestrator</sub> | `main.js:1311` |
+| `SPEED_NARROW_MID`<br><sub>orchestrator</sub> | `state/worldParams.js:365` |
+| `SPEED_NEAR_SYMBIOSIS`<br><sub>orchestrator</sub> | `state/worldParams.js:367` |
+| `SPEED_PAIR_CAP`<br><sub>orchestrator</sub> | `state/worldParams.js:366` |
+| `SPEED_SOCIAL_HALF`<br><sub>orchestrator</sub> | `state/worldParams.js:368` |
+| `epoch:list`<br><sub>orchestrator</sub> | `main.js:1390` |
+| `epoch:restore`<br><sub>orchestrator</sub> | `main.js:1393` |
+| `group:declare`<br><sub>orchestrator</sub> | `main.js:1313` |
 | `preset:refresh`<br><sub>panel</sub> | `presetPanel.js:178` |
-| `sim:pause`<br><sub>orchestrator</sub> | `main.js:1204` |
-| `sim:resume`<br><sub>orchestrator</sub> | `main.js:1205` |
+| `sim:pause`<br><sub>orchestrator</sub> | `main.js:1206` |
+| `sim:resume`<br><sub>orchestrator</sub> | `main.js:1207` |
 | `species:info`<br><sub>panel</sub> | `dnaPanel.js:175` |
 | `stats:update`<br><sub>panel</sub> | `hud.js:158` |
 
