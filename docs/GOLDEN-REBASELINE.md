@@ -35,3 +35,19 @@ To reproduce the legacy hash:
 | `default-tidal-bloom-params` | `fafed453f83a…` | `a0bd3b350bda…` |
 
 The other 8 scenarios (`none`, `all-laws`, `category-mechanics`, which includes WRAP, and the five remaining categories) are unchanged. Upstream ships no golden fixture, so there were no upstream references to adopt; this re-record is the upstream behaviour change, recorded locally. Full previous list: `tests/fixtures/golden-parity.json` at `e8bce6a`.
+
+## 2026-10-09: GENOTYPE keeps somatic DNA inside its declared ranges (D-035)
+
+**Bug.** `applyGenotypeMutation` (law 48) random-walked a particle's DNA cache (somatic drift, epigenetic drift, gene flow, transposon jump) with no clamp. Loci drifted outside `DNA_RANGES`; `MEMORY_DECAY` (0.9–1) went negative, and the SIGNAL/MEMORY decay step's `Math.pow(MEMORY_DECAY, dt)` then returned NaN. NaN spread to SIGNAL and, through signal costs, to ENERGY. This is the "15 alive particles with NaN energy" seen with option 3 at 1,000 × 600, but it is not option-specific: the seeded 200 × 120 world in `tests/unit/nanEnergy.test.js` had 7 non-finite fields with every speed option off.
+
+**Fix.** Every GENOTYPE write now goes through `writeSomaticLocus`, which clamps to the locus's `DNA_RANGES` and keeps the old value if the result is non-finite.
+
+**Fixture impact.** Only the three scenarios with GENOTYPE on change. Within their 30 ticks the clamp fired about 2,500 times per scenario across 30+ loci (most often locus 27 and locus 40, MEMORY_DECAY, about 280–370 times each). Offspring counts are unchanged (0).
+
+| Scenario | Previous hash | New hash |
+|---|---|---|
+| `default-tidal-bloom` | `104721a8fb53…` | `1bfffe1464de…` |
+| `all-laws` | `288ccae7eb99…` | `39d69ef19f3b…` |
+| `default-tidal-bloom-params` | `a0bd3b350bda…` | `4ccaed96ba4e…` |
+
+The other 10 scenarios are unchanged.

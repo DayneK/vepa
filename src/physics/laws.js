@@ -1257,6 +1257,9 @@ export function applyMind(lawState, view, iBase, jBase, distSq, synergy) {
   if (speciesI !== speciesJ) return null;
 
   const strength = 0.01 * synergy;
+  // D-035: coincident same-species pairs (distSq 0, e.g. a newborn on its
+  // parent) gave 1/0 = Infinity signal, which later turned into NaN. Floor the
+  // distance at 0.01 like COMMS does.
   const invDist = 1 / Math.sqrt(distSq);
   return { ax: 0, ay: 0, az: 0, signalBoost: strength * invDist };
 }
@@ -1756,6 +1759,19 @@ export function applyTrackingBehavior(lawState, view, iBase, jBase, dx, dy, dz, 
 // ============================================================================
 // 48. GENOTYPE — DNA mutation from environmental stress
 // ============================================================================
+/**
+ * D-035: write a somatic DNA-cache locus, kept inside the locus's declared
+ * DNA_RANGES and never non-finite (a non-finite result keeps the old value).
+ * GENOTYPE's drift used to random-walk loci out of range — e.g. MEMORY_DECAY
+ * (0.9–1) below zero, which made SIGNAL decay's pow(MEMORY_DECAY, dt) NaN.
+ */
+export function writeSomaticLocus(view, base, idx, value) {
+  const at = base + S.DNA_CACHE_START + idx;
+  if (!Number.isFinite(value)) return;
+  const r = DNA_RANGES[idx];
+  view[at] = r ? clamp(value, r.min, r.max) : value;
+}
+
 export function applyGenotypeMutation(lawState, view, base, dt, synergy, prng, dnaBuffer) {
   if (!isSet(lawState, LAW_INDEXES.GENOTYPE)) return;
   const mutationRate = view[base + S.DNA_CACHE_START + 12];
@@ -1815,16 +1831,13 @@ export function applyGenotypeMutation(lawState, view, base, dt, synergy, prng, d
       * (1 - geneSilencing * 0.4);
     const perturb = ((perturbHash - Math.floor(perturbHash)) * 2.0 - 1.0)
       * mutationRate * 0.05 * varScale * (0.5 + codonBias);
-    const newVal = view[base + dnaStart + dnaIdx] + perturb;
-    if (Number.isFinite(newVal)) {
-      view[base + dnaStart + dnaIdx] = newVal;
-    }
+    writeSomaticLocus(view, base, dnaIdx, view[base + dnaStart + dnaIdx] + perturb);
 
     // Epigenetic drift — extra non-heritable noise on the cache.
     if ((epigeneticDrift + epigeneticRate) > 0 && prng && prng() < 0.5) {
       const epiIdx = Math.abs(Math.floor(Math.sin(base * 91.7 + m * 173.1) * 43758.5453)) % 42;
       const epiNoise = (prng() - 0.5) * (epigeneticDrift + epigeneticRate * 2) * 2;
-      view[base + dnaStart + epiIdx] += epiNoise;
+      writeSomaticLocus(view, base, epiIdx, view[base + dnaStart + epiIdx] + epiNoise);
     }
 
     // Gene flow — horizontal transfer of a foreign gene into the cache.
@@ -1832,14 +1845,14 @@ export function applyGenotypeMutation(lawState, view, base, dt, synergy, prng, d
       const otherSpecies = (Math.floor(prng() * 63) >= speciesId) ? (Math.floor(prng() * 63) + 1) : Math.floor(prng() * 63);
       const r = DNA_RANGES[dnaIdx] || { min: -1, max: 1 };
       const foreign = readSpeciesDNAParam(dnaBuffer, otherSpecies, dnaIdx);
-      view[base + dnaStart + dnaIdx] += (foreign - view[base + dnaStart + dnaIdx]) * 0.1;
+      writeSomaticLocus(view, base, dnaIdx, view[base + dnaStart + dnaIdx] + (foreign - view[base + dnaStart + dnaIdx]) * 0.1);
     }
 
     // Transposon jump — TRANSPOSON_RATE: a mobile element leaps to a random
     // locus with a larger, directionally-biased perturbation.
     if (prng && prng() < transposonRate * 0.05) {
       const jumpIdx = Math.abs(Math.floor(Math.sin(base * 137.9 + m * 219.7) * 43758.5453)) % 42;
-      view[base + dnaStart + jumpIdx] += (prng() - 0.5) * mutationRate * 0.2 * (0.5 + codonBias);
+      writeSomaticLocus(view, base, jumpIdx, view[base + dnaStart + jumpIdx] + (prng() - 0.5) * mutationRate * 0.2 * (0.5 + codonBias));
     }
   }
 

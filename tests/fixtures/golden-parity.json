@@ -10,11 +10,11 @@
       "offspring": 0
     },
     "default-tidal-bloom": {
-      "sha256": "104721a8fb539891f4660e86113a7006fb3cf73e072c4a935d55dbc80129dfdd",
+      "sha256": "1bfffe1464de0381704c5dac81f13f42dfce2e91ad6a4d0865a02193731711ca",
       "offspring": 0
     },
     "all-laws": {
-      "sha256": "288ccae7eb99733122e4f3da0bdedd5a11677267152f136ef07aacc66381a822",
+      "sha256": "39d69ef19f3b4715c1df9fbc1eabd35acf5313328cd2060ea444c032794f4f95",
       "offspring": 0
     },
     "category-physics": {
@@ -54,7 +54,7 @@
       "offspring": 0
     },
     "default-tidal-bloom-params": {
-      "sha256": "a0bd3b350bdadc132b9a2eef38c869b9a81719d4b471499631c8da23a5552c9b",
+      "sha256": "4ccaed96ba4e4874962a209d4e3c79ef589a81df3137a91a379b1c1b70d2a754",
       "offspring": 0
     }
   }
