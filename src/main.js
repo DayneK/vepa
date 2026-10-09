@@ -536,6 +536,8 @@ async function boot() {
     // path remains the immediate fallback if GPU initialization fails.
     renderer = await createRendererAsync(canvas, MAX_PARTICLES, {
         backend: runtimeConfig.renderBackend,
+        // D-038 RENDER RESOLUTION (MAX PIXEL RATIO), default 2 = unchanged.
+        maxDpr: worldParams?.RENDER_MAX_DPR ?? 2,
     });
     resizeRenderer(renderer);
     if (renderer.requestedBackend === 'pixi' && renderer.mode !== 'pixi') {
@@ -1413,6 +1415,8 @@ function setDNAFromProfile(species, profile) {
         bus.emit('narrative:system', { text: text || 'The narrative acts.' });
     });
 
+    // D-038: a restored world may carry its own RENDER RESOLUTION.
+    bus.on('world:paramsRestored', () => applyRenderMaxDpr());
     bus.on('world:paramChanged', ({ key, value }) => {
         worldParams = applyWorldParam(worldParams, key, value);
         runtimeConfig.worldParams = worldParams;
@@ -1440,6 +1444,9 @@ function setDNAFromProfile(species, profile) {
             case 'RECOVERY_THRESHOLD':
                 if (epochEngine) epochEngine.cfg.recoveryThreshold = worldParams.RECOVERY_THRESHOLD;
                 break;
+            case 'RENDER_MAX_DPR':
+                applyRenderMaxDpr();
+                break;
             case 'PARTICLE_COUNT':
             case 'MAX_POP':
                         break;
@@ -1447,6 +1454,14 @@ function setDNAFromProfile(species, profile) {
         bus.emit('world:paramApplied', { key, value });
     });
 
+}
+
+/** D-038: apply RENDER RESOLUTION (canvas pixel-ratio cap, 1–2) to the live renderer. */
+function applyRenderMaxDpr() {
+    if (!renderer || renderer.mode === 'pixi') return;
+    const v = Number(runtimeConfig.worldParams?.RENDER_MAX_DPR);
+    renderer.maxDpr = Number.isFinite(v) ? Math.max(1, Math.min(2, v)) : 2;
+    resizeRenderer(renderer);
 }
 
 let lastFrameTime = 0, frameCount = 0, fps = 0;

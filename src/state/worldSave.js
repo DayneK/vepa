@@ -20,7 +20,7 @@ import {
   MAX_SPECIES,
   STRIDE_INDEXES,
 } from '../constants.js';
-import { clampWorldParam, SPEED_PARAM_KEYS, SPEED_SLIDER_KEYS, migrateSpeedParams, worldParamDef } from './worldParams.js';
+import { clampWorldParam, SPEED_PARAM_KEYS, SPEED_SLIDER_KEYS, RENDER_PARAM_KEYS, migrateSpeedParams, worldParamDef } from './worldParams.js';
 
 export const WORLD_SAVE_FORMAT = 'vepa-world-save';
 export const WORLD_SAVE_VERSION = 1;
@@ -261,7 +261,7 @@ export function restoreWorldState(state, target = {}) {
     }
     // D-036: a save that predates the speed sliders loads them at their
     // defaults (= the pre-option solver); D-034 on/off flags become slider values.
-    for (const key of SPEED_PARAM_KEYS) if (!(key in state.worldParams)) target.worldParams[key] = worldParamDef(key).default;
+    for (const key of [...SPEED_PARAM_KEYS, ...RENDER_PARAM_KEYS]) if (!(key in state.worldParams)) target.worldParams[key] = worldParamDef(key).default;
     migrateSpeedParams(target.worldParams);
     for (const key of SPEED_SLIDER_KEYS) target.worldParams[key] = clampWorldParam(key, target.worldParams[key]);
   }
