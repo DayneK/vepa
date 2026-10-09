@@ -1465,6 +1465,7 @@ function applyRenderMaxDpr() {
 }
 
 let lastFrameTime = 0, frameCount = 0, fps = 0;
+let _renderFrameNo = 0;
 let perfFrameMs = 0, perfTickMs = 0, perfRenderMs = 0;
 const PERF_EMA = 0.15;
 function emaPerf(prev, next) { return prev + (next - prev) * PERF_EMA; }
@@ -2055,8 +2056,10 @@ function renderLoop(now) {
 
     } // end if (!paused)
 
-    // Render (always, even when paused)
-    if (renderer && particleBuffer) {
+    // Render (always, even when paused). D-038 DRAW EVERY N FRAMES (default 1).
+    _renderFrameNo++;
+    const drawEvery = Math.max(1, Math.round(Number(runtimeConfig.worldParams?.RENDER_EVERY) || 1));
+    if (renderer && particleBuffer && (drawEvery === 1 || _renderFrameNo % drawEvery === 0)) {
         const renderStart = performance.now();
         renderer.paused = paused;
         syncSprites(renderer, particleView, particleCount, PARTICLE_STRIDE, worldSize, lawState);

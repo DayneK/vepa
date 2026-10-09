@@ -159,6 +159,7 @@ export const WORLD_PARAM_DEFS = [
   { key: 'SPEED_EXPENSIVE_EVERY', label: 'EXPENSIVE LAWS EVERY N TICKS', min: 1, max: 16, default: 1, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
   // D-038: render-side only (canvas pixel ratio cap); never changes sim results; not part of FIDELITY.
   { key: 'RENDER_MAX_DPR', label: 'RENDER RESOLUTION (MAX PIXEL RATIO)', min: 1, max: 2, default: 2, step: 0.25, group: 'PERFORMANCE', subgroup: 'SPEED' },
+  { key: 'RENDER_EVERY', label: 'DRAW EVERY N FRAMES', min: 1, max: 4, default: 1, step: 1, group: 'PERFORMANCE', subgroup: 'SPEED' },
 
   // ── TIME (v8.6 D.2 — Deep Time & Epochs) ──
   { key: 'TIME_SPEED', label: 'TIME SPEED', min: 0.1, max: 10, default: 1, step: 0.1, group: 'TIME', subgroup: 'TIME' },
@@ -279,7 +280,7 @@ export const SPEED_PARAM_KEYS = Object.freeze(['SPEED_MID_RANGE', 'SPEED_NEAR_RA
 /** Every slider in the SPEED group, neighbour limit included. */
 export const SPEED_SLIDER_KEYS = Object.freeze(['PAIRWISE_BUDGET', ...SPEED_PARAM_KEYS]);
 /** D-038: render settings saved with the world but never varied by multiplex. */
-export const RENDER_PARAM_KEYS = Object.freeze(['RENDER_MAX_DPR']);
+export const RENDER_PARAM_KEYS = Object.freeze(['RENDER_MAX_DPR', 'RENDER_EVERY']);
 const SPEED_KEY_SET = new Set([...SPEED_PARAM_KEYS, ...RENDER_PARAM_KEYS]);
 export function isSpeedParam(key) { return SPEED_KEY_SET.has(key); }
 
