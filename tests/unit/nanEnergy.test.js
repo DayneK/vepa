@@ -61,3 +61,26 @@ describe('D-035 MIND with coincident particles', () => {
     expect(applyMind(laws, view, 0, PARTICLE_STRIDE, 100, 1).signalBoost).toBeCloseTo(0.001, 9);
   });
 });
+
+describe('D-035 final non-finite guard', () => {
+  it('repairs NaN/Infinity ENERGY, SIGNAL, MEMORY and TEMPERATURE and counts them', async () => {
+    const { solve, resetSolverState, getNonFiniteRepairCount } = await import('../../src/physics/solver.js');
+    const { createDNABuffer } = await import('../../src/dna/dnaBuffer.js');
+    resetSolverState(0);
+    const view = new Float32Array(PARTICLE_STRIDE * 4);
+    for (let i = 0; i < 2; i++) {
+      const b = i * PARTICLE_STRIDE;
+      view[b + S.POS_X] = 50 + i * 20; view[b + S.POS_Y] = 50; view[b + S.POS_Z] = 50;
+      view[b + S.MASS] = 1; view[b + S.RADIUS] = 1; view[b + S.ENERGY] = 10;
+      for (const k of ['BOND_PARTNER_1', 'BOND_PARTNER_2', 'BOND_PARTNER_3', 'BOND_PARTNER_4']) view[b + S[k]] = -1;
+    }
+    view[S.ENERGY] = NaN; view[S.SIGNAL] = Infinity; view[S.MEMORY] = -Infinity; view[S.TEMPERATURE] = NaN;
+    const laws = createLawState(); lawSet(laws, LAW_INDEXES.DRAG); // zero laws = hard freeze, so turn one on
+    solve(view, 2, PARTICLE_STRIDE, laws, createDNABuffer(), 200, 1 / 60, seq(1));
+    for (const k of ['ENERGY', 'SIGNAL', 'MEMORY', 'TEMPERATURE']) expect(view[S[k]]).toBe(0);
+    expect(view[PARTICLE_STRIDE + S.ENERGY]).toBe(10);
+    expect(getNonFiniteRepairCount()).toBe(4);
+    resetSolverState(0);
+    expect(getNonFiniteRepairCount()).toBe(0);
+  });
+});

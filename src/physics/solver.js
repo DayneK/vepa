@@ -375,8 +375,19 @@ export function resetSolverClock(tick = 0) { _solveTick = Math.max(0, Math.floor
  * the tick clock) to a fresh context's. World restart uses this so the
  * main-thread fallback starts as clean as a restarted physics worker does.
  */
+/**
+ * D-035 last-resort guard: how many particle fields the solver had to repair
+ * because they were non-finite at the end of a tick (position/velocity/mass
+ * via the NaN guard, plus ENERGY, SIGNAL, MEMORY, TEMPERATURE). Should stay 0;
+ * a rising count means a law is producing NaN/Infinity again.
+ */
+let _nonFiniteRepairs = 0;
+export function getNonFiniteRepairCount() { return _nonFiniteRepairs; }
+export function resetNonFiniteRepairCount() { _nonFiniteRepairs = 0; }
+
 export function resetSolverState(tick = 0) {
   applyContextState(null);
+  _nonFiniteRepairs = 0;
   _solveTick = Math.max(0, Math.floor(tick) || 0);
 }
 /** Current solver tick clock (number of solve() calls since the last reset). */
@@ -1890,6 +1901,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
       vy = 0;
       vz = 0;
       mass = 1.0;
+      _nonFiniteRepairs++;
     }
 
     // ── Write back to buffer ──
@@ -2078,6 +2090,14 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     applyExothermic(lawState, view, iBase,
       localTimeStep, syn[LAW_INDEXES.EXOTHERMIC]);
 
+    // ── D-035 final guard: no non-finite ENERGY/SIGNAL/MEMORY/TEMPERATURE
+    // leaves the tick (renderer gradients and multiplex deltas read them).
+    // A repaired value is reset to 0 and counted; the laws are fixed at the
+    // source, so this should never fire.
+    if (!Number.isFinite(view[iBase + S.ENERGY])) { view[iBase + S.ENERGY] = 0; _nonFiniteRepairs++; }
+    if (!Number.isFinite(view[iBase + S.SIGNAL])) { view[iBase + S.SIGNAL] = 0; _nonFiniteRepairs++; }
+    if (!Number.isFinite(view[iBase + S.MEMORY])) { view[iBase + S.MEMORY] = 0; _nonFiniteRepairs++; }
+    if (!Number.isFinite(view[iBase + S.TEMPERATURE])) { view[iBase + S.TEMPERATURE] = 0; _nonFiniteRepairs++; }
   }
 
   // FIELD-ONCE (default, D-016): advance the medium exactly once per solve.
