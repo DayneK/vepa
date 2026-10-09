@@ -1,4 +1,59 @@
-# Speed options (D-034)
+# Speed sliders (D-036, replacing the D-034 on/off options)
+
+Since D-036 the speed options are sliders in PERFORMANCE › SPEED (world
+params, saved with the world). The multiplex law count is a slider in the
+GRID & PERF tab, saved with the multiplex settings. Every default reproduces
+the pre-option solver bit for bit: golden is 13/13 and the `bench:solver`
+hashes are unchanged (1k `8d8c0ad7a9ce5201`, 2.5k `39917ba618ded639`, 10k
+`af40cf9839ec09d7`). Away from the default, results change. **FAST** and
+**DEFAULTS** are buttons that move the sliders. Saves that use the D-034 on/off
+flags load as the matching slider values.
+
+| Slider | Gem asked | Implemented | Default | FAST | Why this range |
+|---|---|---|---|---|---|
+| Multiplex LAW COUNT | 1–136 | 1–136, linear | 136 (all) | (16 = light set) | As asked. Ranking: the light set first (LIFE, ENERGY, REPRO leading, so small counts still live), then the other laws cheapest-first by leave-one-out cost (`bench/law-cost.mjs`, `src/multiplex/lawRanking.js`). Below 3 there is no life. |
+| NEIGHBOUR LIMIT (`PAIRWISE_BUDGET`) | 4–256, default 96 | **8–512**, step 8, log | 96 | 48 | It is the existing per-particle pair budget, so no duplicate knob. Old saves hold up to 500, and clumps can exceed 256 neighbours. Below about 24, bonding collapses (10k: 8,846 bonded at 96, 5,228 at 24, 246 at 8) and 8 is no faster than 16, so the floor stays 8. |
+| PAIR BUDGET / particle / tick | 1,000–100,000 world (current 200,000) | **per particle 8–511, OFF at 512**, log | OFF | 20 | Per particle as asked on 6:08 PM. 4 is no faster than 8 and leaves half the bonds. |
+| MID RANGE | default 200 | **30–600**, step 5 | 200 | 120 | Floor = the near tier. Neighbours come only from the 27 surrounding grid cells (one cell is about 167 units up to about 2,400 particles, 105 at 10k), so nothing is gathered beyond about 2 cells. Speed gain appears only at 10k (×1.22 at 120, ×1.31 at 60). |
+| NEAR / CONTACT RANGE (new) | "other distance thresholds" | **10–60** | 30 | 30 | The only other solver-level distance gate (contact, chemistry, bonds, heat). ×1.2–1.35 at 10, but about 3–9% fewer bonds. Law-internal radii (MIND 200, COMMS DNA radius, etc.) stay internal. |
+| SYMBIOSIS & PARASITE RANGE | yes | **10–595, ANY at 600** | ANY | 30 | Gain is small (×1.0–1.1). |
+| SOCIAL & INFO every N ticks | 1–100 | **1–16** | 1 | 2 | The gain flattens by 4 (×1.33–1.55) and is the same at 8, 16 and 100. Strength is not compensated, so above 8 the laws are nearly off. |
+
+**Pairs are counted per particle.** The main loop walks each particle's own
+neighbour list, so an i–j pair is visited once from i and once from j. The
+particle's own list entry also uses one slot. The old 200,000-pairs-per-tick
+cap was therefore 200,000 directed visits, shared as cap ÷ alive per
+particle. At 10,000 particles that is 20 per particle; FAST uses 20, which
+reproduces the old FAST hash exactly at 10k (`c49a3979170d5928`). Below 10k
+the old cap never bit (200,000 ÷ 2,500 = 80 > 48). New FAST is therefore
+stricter there: about 1.9x (1k) and 2.2x (2.5k) faster than the old FAST, with
+2–3% fewer bonded particles.
+
+Bench points (`bench:solver --sweep KEY=a/b/c`, one run each, ticks/s, ×
+vs defaults; defaults 11.1 / 3.59 / 1.73 at 1k / 2.5k / 10k):
+
+| Setting | 1k | 2.5k | 10k | bonded at 10k (default 8,846) |
+|---|---|---|---|---|
+| NEIGHBOUR LIMIT 48 | ×1.59 | ×1.77 | ×1.84 | 8,189 |
+| NEIGHBOUR LIMIT 24 | ×2.61 | ×3.08 | ×3.99 | 5,228 |
+| NEIGHBOUR LIMIT 16 | ×3.81 | ×4.41 | ×4.85 | 1,905 |
+| NEIGHBOUR LIMIT 192 / 512 | ×0.87 | ×0.82 / 0.79 | ×0.83 | 8,929 / 8,832 |
+| PAIR BUDGET 48 | ×1.63 | ×1.79 | ×1.12 (identical hash: 48 ≥ the 10k limit) | 8,846 |
+| PAIR BUDGET 20 | ×2.97 | ×3.93 | ×2.13 | 7,601 |
+| PAIR BUDGET 8 | ×4.65 | ×6.09 | ×5.24 | 1,905 |
+| MID RANGE 120 / 60 | ×1.02 / 1.02 | ×1.02 / 1.02 | ×1.22 / 1.31 | ≈ same |
+| NEAR RANGE 10 | ×1.25 | ×1.35 | ×1.18 | 8,078 |
+| SYMBIOSIS RANGE 30 | ×1.01 | ×1.00 | ×1.11 | ≈ same |
+| SOCIAL EVERY 2 / 4 / 8 / 16 | ×1.16 / 1.33 / 1.34 / 1.33 | ×1.15 / 1.36 / 1.44 / 1.45 | ×1.23 / 1.55 / 1.49 / 1.47 | ≈ same |
+| FAST | ×3.14 | ×4.03 | ×3.27 | 7,606 |
+
+Alive (all) and species (5) do not change in these short runs. Mean energy
+rises by 1–3 with the stronger settings, because fewer pairwise drains run.
+
+The sections below describe the original D-034 on/off options and their
+measurements, kept for history.
+
+## Original D-034 options (history)
 
 Six switches trade fidelity for speed. **Every one is off by default and
 changes results when on.** With all of them off the solver is bit-identical to
