@@ -136,3 +136,16 @@ describe('option 6: social & information laws every 2nd tick', async () => {
     expect(on.hash).toBe(off.hash);
   });
 });
+
+describe('FAST bundle', () => {
+  it('is exactly every speed option on', () => {
+    const fast = runSpeedWorld({ count: 400, spread: 300, ticks: 4, params: { SPEED_FAST: 1 } });
+    const each = runSpeedWorld({ count: 400, spread: 300, ticks: 4, params: Object.fromEntries(SPEED_PARAM_KEYS.filter((k) => k !== 'SPEED_FAST').map((k) => [k, 1])) });
+    const off = runSpeedWorld({ count: 400, spread: 300, ticks: 4 });
+    expect(fast.hash).toBe(each.hash);
+    expect(fast.hash).not.toBe(off.hash);
+  });
+  it('turns every option on in speedOption()', () => {
+    for (const k of SPEED_PARAM_KEYS) expect(speedOption({ SPEED_FAST: 1 }, k), k).toBe(true);
+  });
+});

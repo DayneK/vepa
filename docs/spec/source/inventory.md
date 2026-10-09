@@ -147,7 +147,7 @@ The generator scanned `376` files from active repository inputs. Individual modu
 | [src/state/systemFoundation.js](../../../src/state/systemFoundation.js) | state | 71 | 4 | 0 | 1 |
 | [src/state/systemLifecycle.js](../../../src/state/systemLifecycle.js) | state | 465 | 23 | 3 | 1 |
 | [src/state/systemVariants.js](../../../src/state/systemVariants.js) | state | 119 | 7 | 1 | 1 |
-| [src/state/worldParams.js](../../../src/state/worldParams.js) | state | 324 | 11 | 2 | 66 |
+| [src/state/worldParams.js](../../../src/state/worldParams.js) | state | 329 | 11 | 2 | 66 |
 | [src/state/worldSave.js](../../../src/state/worldSave.js) | state | 645 | 20 | 5 | 3 |
 | [src/ui/analyticsPanel.js](../../../src/ui/analyticsPanel.js) | ui | 109 | 3 | 1 | 1 |
 | [src/ui/camera.js](../../../src/ui/camera.js) | ui | 300 | 6 | 0 | 0 |
@@ -167,7 +167,7 @@ The generator scanned `376` files from active repository inputs. Individual modu
 | [src/ui/lawPanel.js](../../../src/ui/lawPanel.js) | ui | 196 | 1 | 2 | 1 |
 | [src/ui/mechanicsIcons.js](../../../src/ui/mechanicsIcons.js) | ui | 16 | 1 | 0 | 8 |
 | [src/ui/narrativePanel.js](../../../src/ui/narrativePanel.js) | ui | 329 | 4 | 2 | 1 |
-| [src/ui/paramHelp.js](../../../src/ui/paramHelp.js) | ui | 521 | 6 | 3 | 92 |
+| [src/ui/paramHelp.js](../../../src/ui/paramHelp.js) | ui | 522 | 6 | 3 | 92 |
 | [src/ui/presetPanel.js](../../../src/ui/presetPanel.js) | ui | 182 | 1 | 4 | 0 |
 | [src/ui/savePanel.js](../../../src/ui/savePanel.js) | ui | 343 | 2 | 1 | 1 |
 | [src/ui/settingsPanel.js](../../../src/ui/settingsPanel.js) | ui | 273 | 1 | 7 | 1 |
@@ -367,7 +367,7 @@ The generator scanned `376` files from active repository inputs. Individual modu
 | [tests/unit/spawnDistribution.test.js](../../../tests/unit/spawnDistribution.test.js) | testing | 24 | 0 | 4 | 0 |
 | [tests/unit/specHelpCoverage.test.js](../../../tests/unit/specHelpCoverage.test.js) | testing | 30 | 0 | 5 | 0 |
 | [tests/unit/speedFullFidelityLight.test.js](../../../tests/unit/speedFullFidelityLight.test.js) | testing | 36 | 0 | 4 | 0 |
-| [tests/unit/speedOptions.test.js](../../../tests/unit/speedOptions.test.js) | testing | 139 | 0 | 4 | 10 |
+| [tests/unit/speedOptions.test.js](../../../tests/unit/speedOptions.test.js) | testing | 152 | 0 | 4 | 10 |
 | [tests/unit/stateBudgets.test.js](../../../tests/unit/stateBudgets.test.js) | testing | 33 | 0 | 4 | 5 |
 | [tests/unit/stellar.test.js](../../../tests/unit/stellar.test.js) | testing | 281 | 0 | 5 | 2 |
 | [tests/unit/strideWriteContract.test.js](../../../tests/unit/strideWriteContract.test.js) | testing | 22 | 0 | 3 | 2 |
