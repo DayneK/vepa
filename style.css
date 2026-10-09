@@ -503,6 +503,23 @@ body {
 .law-cat-bulk[data-bulk="off"]:hover,
 .law-cat-bulk:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
 .law-cat-bulk[data-bulk="off"]:hover { border-color: var(--accent-red); color: var(--accent-red); }
+/* D-037: SPEED group FAST / DEFAULTS preset buttons */
+.speed-presets { display: flex; gap: 6px; margin: 4px 0 8px; }
+.speed-preset {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+.speed-preset:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+.speed-preset[data-speed-preset="fast"] { color: var(--accent-blue); }
+@media (pointer: coarse) { .speed-preset { min-height: 44px; } }
 @media (pointer: coarse) {
     .law-search-clear, .law-cat-bulk, .law-search-row input[type="search"] { min-height: 44px; }
 }
@@ -3497,6 +3514,11 @@ body {
        is a layout problem; it is answered with widths, not with smaller type. */
     .sc-label { min-width: 84px; }
     .sc-dna .sc-label { min-width: 96px; }
+    /* D-037: long labels (e.g. NEAR / CONTACT RANGE (DISTANCE)) pushed the
+       value and LOG/1x chips off-screen on phones. Give the label its own line
+       so the track, value and chips always fit. */
+    .sc-controls { flex-wrap: wrap; row-gap: 2px; }
+    .sc-controls > .sc-label { flex: 1 0 100%; white-space: normal; }
     .sc-bound, .sc-mode, .sc-zoom { height: 20px; min-width: 26px; }
     .sc-input { height: 4px; }
     .sc-input::-webkit-slider-thumb, .sc-input::-moz-range-thumb { width: 18px; height: 18px; }

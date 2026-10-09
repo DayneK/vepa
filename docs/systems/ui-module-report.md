@@ -55,8 +55,8 @@ because none of the body below is written by hand.
 
 **Visual characteristics.**
 
-- 6 CSS rules target its own classes.
-- Type runs from 9px to 11px (9 / 11px). Floors are enforced by `tests/unit/typeScale.test.js`.
+- 8 CSS rules target its own classes.
+- Type runs from 9px to 11px (9 / 10 / 11px). Floors are enforced by `tests/unit/typeScale.test.js`.
 - Layout: `display: flex`.
 - Accents: `rgba(255, 255, 255, 0.05)`; `var(--accent-gold)`; `hsl(210 7% 55% / 0.30)`.
 
