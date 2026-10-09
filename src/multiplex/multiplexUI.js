@@ -267,7 +267,7 @@ export function createMultiplexController(bus, getSource, applyShard) {
             <div class="mpx-set-row" data-mpx-help="fidelity">
               <span class="mpx-set-label">FIDELITY</span>
               <select id="mpx-fidelity"><option value="CUSTOM">Custom</option>${SPEED_FIDELITY_LEVELS.map((lv) => `<option value="${lv}">${lv[0]}${lv.slice(1).toLowerCase()}</option>`).join('')}</select>
-              <span class="mpx-set-value">HIGH = all laws, full results</span>
+              <span class="mpx-set-value">MEDIUM / LOW change results</span>
             </div>
             <div class="mpx-set-row" data-mpx-help="lawCount">
               <span class="mpx-set-label">LAW COUNT</span>

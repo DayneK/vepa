@@ -21,7 +21,7 @@ because none of the body below is written by hand.
 | Sub-tab | Module | What it displays | Controls |
 | --- | --- | --- | --- |
 | ⚖️ LAWS | `src/ui/lawPanel.js`<br>196 lines | The law switchboard: 136 physics, biology, chemistry, thermodynamic, metaphysical, electromagnetic, information and quantum laws across nine categories. | `button` |
-| 🌍 WORLD | `src/ui/worldPanel.js`<br>718 lines | World parameters, presets and the network panel: size, physics tuning, epoch length and thresholds. | `button`, `input`, 3 slider controls |
+| 🌍 WORLD | `src/ui/worldPanel.js`<br>746 lines | World parameters, presets and the network panel: size, physics tuning, epoch length and thresholds. | `button`, `input`, 3 slider controls |
 | 🦠 SPECIES | `src/ui/speciesPanel.js`<br>251 lines | Per-species genome: the 64 DNA parameters that drive morphology, behaviour and reproduction. | `button`, 3 slider controls |
 | 🎛️ SETTINGS | `src/ui/settingsPanel.js`<br>273 lines | Runtime and renderer options: backend selection, performance knobs and display preferences. | `button`, `select`, 4 slider controls |
 
@@ -55,7 +55,7 @@ because none of the body below is written by hand.
 
 **Visual characteristics.**
 
-- 8 CSS rules target its own classes.
+- 11 CSS rules target its own classes.
 - Type runs from 9px to 11px (9 / 10 / 11px). Floors are enforced by `tests/unit/typeScale.test.js`.
 - Layout: `display: flex`.
 - Accents: `rgba(255, 255, 255, 0.05)`; `var(--accent-gold)`; `hsl(210 7% 55% / 0.30)`.
@@ -391,7 +391,7 @@ point of listing them: a panel-to-panel edge is often also a command.
 | `eco:analytics` | `main.js:1875` | `ecoPanel.js` |
 | `goal:applied` | `main.js:1468` | `intelPanel.js` |
 | `groups:analytics` | `main.js:1872` | `groupAnalytics.js` |
-| `law:sync` | `main.js:580`<br>`worldPanel.js:409` | `lawPanel.js`, `worldPanel.js` |
+| `law:sync` | `main.js:580`<br>`worldPanel.js:427` | `lawPanel.js`, `worldPanel.js` |
 | `lineage:branch` | `engines/lineageTracker.js:91` | `intelPanel.js` |
 | `lineage:death` | `engines/lineageTracker.js:126` | `intelPanel.js` |
 | `narrative:batch` | `core/logQueue.js:48` | `narrativePanel.js` |
@@ -409,7 +409,7 @@ point of listing them: a panel-to-panel edge is often also a command.
 | `world:imported` | `main.js:1156` | `savePanel.js` |
 | `world:listResponse` | `main.js:1137` | `savePanel.js` |
 | `world:loaded` | `main.js:1120` | `savePanel.js` |
-| `world:paramsRestored` | `main.js:1047`<br>`worldPanel.js:570` | `worldPanel.js` |
+| `world:paramsRestored` | `main.js:1047`<br>`multiplex/multiplexUI.js:693`<br>`worldPanel.js:589` | `worldPanel.js` |
 | `world:saved` | `main.js:1113` | `savePanel.js` |
 | `world:undoState` | `main.js:997`<br>`savePanel.js:340` | `savePanel.js` |
 
@@ -497,10 +497,10 @@ never sent, on either dispatch channel.
 
 | Event | Subscribed at |
 | --- | --- |
-| `SPEED_NARROW_MID`<br><sub>orchestrator</sub> | `state/worldParams.js:326` |
-| `SPEED_NEAR_SYMBIOSIS`<br><sub>orchestrator</sub> | `state/worldParams.js:328` |
-| `SPEED_PAIR_CAP`<br><sub>orchestrator</sub> | `state/worldParams.js:327` |
-| `SPEED_SOCIAL_HALF`<br><sub>orchestrator</sub> | `state/worldParams.js:329` |
+| `SPEED_NARROW_MID`<br><sub>orchestrator</sub> | `state/worldParams.js:360` |
+| `SPEED_NEAR_SYMBIOSIS`<br><sub>orchestrator</sub> | `state/worldParams.js:362` |
+| `SPEED_PAIR_CAP`<br><sub>orchestrator</sub> | `state/worldParams.js:361` |
+| `SPEED_SOCIAL_HALF`<br><sub>orchestrator</sub> | `state/worldParams.js:363` |
 | `epoch:list`<br><sub>orchestrator</sub> | `main.js:1388` |
 | `epoch:restore`<br><sub>orchestrator</sub> | `main.js:1391` |
 | `group:declare`<br><sub>orchestrator</sub> | `main.js:1311` |
