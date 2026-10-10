@@ -6,6 +6,9 @@
 
 ## Relationship to `PLAN.md`
 
+> This document is a product roadmap and acceptance target, not a statement that these capabilities are currently implemented. Treat every unchecked item as proposed until verified against the code and evidence.
+
+
 `PLAN.md` is chiefly an implementation ledger: it records shipped milestones, code paths, historical validation and the project’s completed audit/remediation work. This roadmap is a broader product and acceptance target. It overlaps with the existing plan on a deterministic physics foundation, modular laws, multiplexing, civilisation systems, history, persistence, architecture and testing, but makes the desired progression and release evidence much more explicit.
 
 The main difference is status: milestones recorded as implemented in `PLAN.md` are not automatically evidence that the stronger acceptance criteria below are met. The roadmap requires per-transition evidence, clear distinctions among observed/derived/inferred claims, replay and recovery guarantees, experimental isolation, explicit privacy defaults, and operational proof for hosted-world economics and rollback. Items not demonstrated by the implementation should remain roadmap targets rather than being represented as shipped. Keep `PLAN.md` as the historical implementation plan; use this document as the product direction and acceptance framework.

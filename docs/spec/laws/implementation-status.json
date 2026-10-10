@@ -27,6 +27,7 @@
         "tests/unit/auditSignoff.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/computeEngines.test.js",
+        "tests/unit/launchModal.test.js",
         "tests/unit/lawGating.test.js",
         "tests/unit/lawGraph.test.js",
         "tests/unit/multiplex.test.js",
@@ -128,6 +129,7 @@
         "tests/audit/params_batch_17.test.js",
         "tests/audit/params_batch_18.test.js",
         "tests/unit/fields.test.js",
+        "tests/unit/lawCategories.test.js",
         "tests/unit/lawGating.test.js"
       ],
       "relationshipTypes": [],
@@ -1035,6 +1037,7 @@
       "testFiles": [
         "tests/audit/batch_10.test.js",
         "tests/unit/codex.test.js",
+        "tests/unit/launchModal.test.js",
         "tests/unit/synergyCache.test.js"
       ],
       "relationshipTypes": [],
@@ -1879,6 +1882,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_19.test.js",
+        "tests/unit/civilizationSequelWiring.test.js",
         "tests/unit/codex.test.js",
         "tests/unit/dataPanels.test.js",
         "tests/unit/synergyCache.test.js"
@@ -2974,7 +2978,8 @@
       ],
       "testFiles": [
         "tests/audit/batch_32.test.js",
-        "tests/unit/exoticMatter.test.js"
+        "tests/unit/exoticMatter.test.js",
+        "tests/unit/launchModal.test.js"
       ],
       "relationshipTypes": [],
       "relationshipMetadataComplete": false,
@@ -3000,6 +3005,7 @@
         "tests/e2e/runtime-acceptance.spec.js",
         "tests/unit/auditSignoff.test.js",
         "tests/unit/backendArchitecture.test.js",
+        "tests/unit/lawGrid.test.js",
         "tests/unit/mechanicsArchitecture.test.js",
         "tests/unit/provenance.test.js"
       ],
@@ -3029,7 +3035,8 @@
         "tests/audit/batch_02.test.js",
         "tests/audit/batch_22.test.js",
         "tests/audit/params_batch_11.test.js",
-        "tests/unit/backendArchitecture.test.js"
+        "tests/unit/backendArchitecture.test.js",
+        "tests/unit/lawGrid.test.js"
       ],
       "relationshipTypes": [
         "synergizesWith",
@@ -3058,7 +3065,10 @@
         "tests/audit/batch_01.test.js",
         "tests/audit/params_batch_09.test.js",
         "tests/unit/backendArchitecture.test.js",
+        "tests/unit/lawCategories.test.js",
+        "tests/unit/lawGrid.test.js",
         "tests/unit/mechanics.test.js",
+        "tests/unit/worldSave.test.js",
         "tests/unit/wrapLaw.test.js"
       ],
       "relationshipTypes": [
