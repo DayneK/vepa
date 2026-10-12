@@ -85,7 +85,7 @@ The product roadmap has explicit acceptance targets that are not all equivalent 
 
 ## Verification record
 
-- Source baseline: v9.3.4 candidate on `main`, based on HEAD `34d5592` (`chore(roadmap): preserve roadmap baseline and track evidence-gated progress`); pre-release branch `backup/pre-v934-release-20261012`. This continuation adds uniform full-height spawn Z, removes GROUND_HEIGHT, clarifies Chaos granularity, and stages ordinary DNA slider edits.
+- Source baseline: v9.3.4 release commit `534cfdb` on `main`, based on `34d5592` (`chore(roadmap): preserve roadmap baseline and track evidence-gated progress`); tag `v9.3.4` pushed to `origin`; pre-release branch `backup/pre-v934-release-20261012`. This release adds uniform full-height spawn Z, removes GROUND_HEIGHT, clarifies Chaos granularity, and stages ordinary DNA slider edits.
 - Verification: focused spawn/Chaos/DNA tests pass (5 files, 29 tests); full Vitest passes (144 files, 1,571 tests); `npm run syntax-check` passes; `npm run repository:check` passes (spec 180 files, 136 laws, ontology/provenance/signoff and UI report); `npm run build` passes with existing >500 kB chunk warning; `git diff --check` passes.
 - Real-browser status: not verified; Chromium cannot load host library `libglib-2.0.so.0`.
-- Current production before this candidate: `https://v5.freebuff.app/`; candidate commit/tag/push/deploy status pending.
+- Deployment: Freebuff `https://v5.freebuff.app/` reports `active` after this release (static Vite, 118 files, zero unresolved build errors). Hosting status does not expose the source commit hash; browser acceptance remains unverified.

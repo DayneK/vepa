@@ -7,7 +7,8 @@
 - `fix(spawn)`: remove the misleading GROUND_HEIGHT world control; initial particles and later background spawns now draw Z uniformly across `[0, WORLD_SIZE)`, independent of XY shape/centre bias. This does not add a physical floor.
 - `docs`: clarify that Chaos WORLD_SIZE samples one of 20 outcomes (50, 60, …, 240 units; 10-unit increments), distinct from the 100-unit WORLD slider step; update spawn/ground documentation.
 - `feat(dna)`: stage ordinary DNA slider edits from both DNA panels as session-only proposals, visible with species/parameter details and applied only after confirmed restart; preset/roster/autonomous genome writers remain outside staging.
-- Verification: targeted spawn/Chaos/DNA tests 5 files / 29 tests pass; full Vitest suite 144 files / 1,571 tests pass; `npm run syntax-check`, generated-spec/repository/signoff/UI-report checks, and `git diff --check` pass. `npm run build` succeeds with the existing large-chunk warning. Freebuff deploy preflight is clean. Real-browser acceptance is not claimed; Chromium cannot launch because host library `libglib-2.0.so.0` is unavailable. Release commit/tag/push and deployment status pending.
+- Verification: targeted spawn/Chaos/DNA tests 5 files / 29 tests pass; full Vitest suite 144 files / 1,571 tests pass; `npm run syntax-check`, generated-spec/repository/signoff/UI-report checks, and `git diff --check` pass. `npm run build` succeeds with the existing large-chunk warning. Freebuff deploy preflight is clean. Real-browser acceptance is not claimed; Chromium cannot launch because host library `libglib-2.0.so.0` is unavailable.
+- **Delivery:** release commit `534cfdb` and tag `v9.3.4` pushed to `origin`; Freebuff `https://v5.freebuff.app/` reports deployment state `active` (static Vite, 118 files, no unresolved build errors). Hosting status does not expose a source commit hash.
 
 
 ## [4.9.36] - 2026-10-12 → 9.3.3
