@@ -1,6 +1,6 @@
 # Implementation Plan: VEPA4 — Integrated Intelligence
 
-**Date**: 2026-10-12 | **Status**: v9.3.3 release candidate; delivery state is recorded in `CHANGELOG.md` | **Spec**: `SPEC.md`
+**Date**: 2026-10-12 | **Status**: v9.3.3 local release commit/tag; concurrent roadmap merge and remote branch push pending | **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
 > (current release candidate `9.3.3`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits

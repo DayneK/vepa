@@ -57,7 +57,7 @@ npm run systems:bundle # Regenerate the hierarchical concatenated systems atlas
 
 Deployment URLs are snapshots, not separate product versions, and may not be built from the same commit:
 
-- **Canonical source:** this repository root; check `CHANGELOG.md` for the current release commit, tag and deploy record.
+- **Canonical source:** this repository root; check `CHANGELOG.md` for the current release commit, tag and deploy record. v9.3.3 is locally committed/tagged; concurrent remote roadmap commits are being integrated before branch push and deployment.
 - **Current production target:** `https://v5.freebuff.app/`.
 - **`vepa-seven.vercel.app`:** a later, feature-rich historical deployment
   associated with the v8.16-era line. It is useful for comparison and recovery,

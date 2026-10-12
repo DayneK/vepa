@@ -1,6 +1,6 @@
 # RB Roadmap Progress — 2026-10-12
 
-**Authority:** `MASTER_SPEC.md` is a proposed architecture, subordinate to the accepted `VEPA_Roadmap_v4-5.md` decisions it cites. That accepted source file is not present in this checkout; do not infer approval for new product decisions. This tracker reports evidence in the current tree, not completion by documentation or compilation alone.
+**Authority:** `VEPA_Roadmap_v4-5.md` (now present at repository root) contains the accepted product decisions and controls where earlier RB proposal text differs. `docs/ROADMAP_V4.md` is a companion acceptance target; `docs/spec/rb/MASTER_SPEC.md` remains a proposed architecture subordinate to both. This tracker reports evidence in the current tree, not completion by documentation or compilation alone.
 
 ## Summary
 
@@ -70,8 +70,21 @@ A section is checked only when its listed outcome and relevant verification evid
 - [ ] Verify deterministic replay, numerical stability/conservation where applicable, save migrations, performance workload matrix, browser smoke and rollback.
 - [ ] Update this tracker only with source/test/browser evidence; then sync release docs and version markers before an authorized release.
 
+## Accepted roadmap crosswalk
+
+The product roadmap has explicit acceptance targets that are not all equivalent to RB sections. Current evidence supports these limited check-offs:
+
+- [x] **Starter setup foundation:** five named starter scenarios and deterministic text-to-seed retention are implemented and covered by `tests/unit/roadmapLaunchFoundation.test.js`; preset preview/custom-save behavior still needs evidence.
+- [ ] **Global restart-only configuration:** law edits and selected WORLD edits stage, but ordinary DNA, full preset loads, selective Chaos, autonomous actions and some compute settings are still live paths; proposed configuration provenance/replay is incomplete.
+- [ ] **Physics sandbox / emergence ladder acceptance:** unit/audit coverage is broad, but end-to-end reproducible rung transitions and real-browser evidence have not been established.
+- [ ] **Save, migration, recovery and replay acceptance:** current save/undo surfaces exist, but the roadmap's full configuration/event provenance, migration, corruption recovery and replay-compatibility guarantees remain unverified.
+- [ ] **Mobile-first tutorial and spoiler-safe progression:** no verified sub-two-minute tutorial or progression-spoiler gate is present in the evidence reviewed.
+- [ ] **GPU-rendered 3D and visual acceptance:** current Canvas2D/Pixi visualization is not the accepted GPU 3D direction; mobile/browser fallback behavior is not accepted yet.
+- [ ] **Experimental isolation, privacy/unlisted sharing and hosted operations:** mark unverified/not implemented pending feature-specific evidence; do not claim hosted economies, rollback, security or privacy acceptance from the architecture proposal.
+
 ## Verification record
 
 - Source baseline inspected: working tree v9.3.3, 2026-10-12; no real-browser result is available in the current handoff (prior run was blocked by missing `libglib-2.0.so.0`).
 - Current production deployment before this task: `https://v5.freebuff.app/` (Freebuff status active; not evidence that v9.3.3 is deployed).
+- Commit candidate: `2e6027a` (local `main`, tag `v9.3.3`); push/rebase integration and deployment remain pending verification.
 - Record actual commands, counts, browser result, commit and deployment identity here only after rerunning them for this delivery.
