@@ -1,10 +1,29 @@
 # Implementation Plan: VEPA4 — Integrated Intelligence
 
-**Date**: 2026-10-07 | **Status**: v9.3.0 deployed; v9.3.1 population/UI task is an uncommitted working-tree update | **Spec**: `SPEC.md`
+**Date**: 2026-10-12 | **Status**: v9.3.3 release candidate; delivery state is recorded in `CHANGELOG.md` | **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
-> (current `9.3.1`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
+> (current release candidate `9.3.3`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
 > Conventional Commits 1.0.0 — see `AGENTS.md` §10.4.
+
+## Roadmap progress
+
+Evidence-based RB sections 00–11 and actionable P0–P4 worklists are maintained in [`docs/spec/rb/ROADMAP_PROGRESS.md`](docs/spec/rb/ROADMAP_PROGRESS.md). No RB section is complete end-to-end: GPU-rendered 3D, complete restart-only configuration, modular extraction, and real-browser acceptance remain outstanding. Completed launch/catalog/schema/law-test groundwork is listed separately there and is not counted as completing an RB module.
+
+## Current task — contact, structures and full Chaos (2026-10-11)
+
+- Final radius-aware contact projection resolves overlaps independently of force-neighbor budgets, including coincident centers, large radii and wrapped seams; bounded iterations are not an overpacking or continuous-collision guarantee.
+- POLYMER spring output is now integrated, surface-resting forces support structure, ACCR maintenance uses final radii, and ADHESION no longer attracts through contact.
+- Default Chaos stages random laws, physical world settings and all 64 species DNA traits, adopting them together during restart; performance controls are retained.
+- Law-grid/legacy-panel edits, category bulk commands and law-set loads are restart-staged with visible proposals and discard. Full presets, ordinary DNA edits, selective chaos and autonomous control paths remain unfinished.
+- 143 files / 1,567 tests pass. Browser acceptance is not claimed.
+
+## Current task — bounded WORLD restart staging (2026-10-11)
+
+- WORLD slider proposals are validated/clamped and coalesced separately from live parameters; live/proposed details, discard and confirmed restart are available.
+- The restart coordinator stops compute before adopting proposals and respawning. Existing restart undo captures one pre-restart world. Restore clears proposals; pending values are session-only and not saved.
+- Remaining: stage ordinary DNA edits, full preset loads and other physics-affecting control paths; define complete transaction/provenance/save contracts; preserve original launch/replay configuration. GPU 3D, tutorial/progression, save migrations, replay verification and no-silent-solver-adaptation requirements are not complete.
+- Build verified for the requested release delivery; real-browser verification remains blocked by missing `libglib-2.0.so.0`.
 
 ## Current task — population ceiling and launch comparison controls (2026-10-07)
 

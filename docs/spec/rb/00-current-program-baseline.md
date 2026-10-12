@@ -1,12 +1,12 @@
 # 00 — Current program baseline
 
-**Status:** observed baseline, not a target architecture. Evidence snapshot: `main` at `2f8ca03`; clean at inspection. Runtime truth remains the source tree.
+**Status:** historical observed baseline, not a target architecture. Evidence snapshot: `main` at `2f8ca03` (v9.3.0); it was clean at that inspection. It predates the v9.3.1 commit and later changes; runtime truth remains the current source tree.
 
 ## Product and visual language
 
 VEPA4 is a vanilla ESM browser simulation packaged by Vite. The page is a full-viewport, dark neon-noir petri dish: `body.theme-sanguine`, near-black background and translucent panels, compact monospace labels, red as the active setup accent, cyan/blue/gold/green highlights, thin borders, small glows, and color-coded law tiles. `index.html` layers an atmospheric `#bg-canvas`, live `#sim-canvas`, and pointer-enabled UI. A 36px top toolbar carries pause, population/species/tick telemetry, chaos/restart, undo, and help. The bottom drawer defaults to at most 50vh and contains SETUP, SAVES, DATA; Setup nests LAWS, WORLD, SPECIES, SETTINGS; Data nests intelligence, DNA, logs, groups, ecology, civilization. Drawer resize/hide/minimize/zoom, keyboard tabs, tooltips/help, responsive touch affordances, analytical canvases, and accordion controls are part of the observable UI contract—not decorative extras.
 
-Laws are shown as spectrum-coded icon tiles with list/compact variants, category filtering, search, and help/details. World settings are grouped into dense accordions with enhanced sliders (bounds, linear/log choice, snap, precision zoom). Species has a roster and trait accordion. Canvas2D is the reference renderer; PixiJS is optional with Canvas2D fallback. Preserve visual hierarchy, active/inactive states, status feedback, keyboard behavior, touch targets, and responsive drawer composition in any parity milestone.
+Laws are shown as spectrum-coded icon tiles with list/compact variants, category filtering, search, and help/details. World settings are grouped into dense accordions with enhanced sliders (bounds, linear/log choice, snap, precision zoom). Species has a roster and trait accordion. Current implementation uses Canvas2D with optional PixiJS and Canvas2D fallback; the accepted roadmap selects GPU-rendered 3D as the product direction, which is not yet implemented. Preserve visual hierarchy, active/inactive states, status feedback, keyboard behavior, touch targets, and responsive drawer composition in any parity milestone.
 
 ## Functional inventory / hard contracts
 
@@ -18,5 +18,7 @@ Laws are shown as spectrum-coded icon tiles with list/compact variants, category
 - Saves carry particle/DNA/law/world/runtime state and some ontology state; older formats/optional fields exist. Round-trip and compatibility behavior must remain explicit.
 
 ## Target parity gate
+
+The accepted roadmap governs target behavior: GPU-rendered 3D is the selected presentation direction; law and physics-parameter edits take effect only on new-world start or explicit restart, never mid-run; experimental features remain isolated to separate experimental worlds/saves; and performance degradation cannot silently change simulation state or outcomes.
 
 Before replacing a boundary, characterize current boot/launch scenarios, panel states, controls/events, law toggles, preset outcomes, renderer output, snapshots/undo, worker fallback, and representative deterministic worlds. Retain screenshot/interaction fixtures where feasible, golden state summaries, and API/event tests. A “faithful mimic” means all accepted user-visible flows and save/config contracts pass these gates; pixel identity is not inferred from a successful build. See `MASTER_SPEC.md` for proposed migration and acceptance gates.

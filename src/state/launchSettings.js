@@ -19,6 +19,17 @@ export const LAUNCH_STORAGE_KEY = 'vepa-launch-settings';
 export const LAUNCH_PRESETS_STORAGE_KEY = 'vepa-launch-presets';
 const MAX_CUSTOM_LAUNCH_PRESETS = 12;
 
+/** Stable FNV-1a text-to-seed mapping; text is preserved exactly as entered. */
+export function deriveTextSeed(text) {
+  const source = String(text ?? '');
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < source.length; index += 1) {
+    hash ^= source.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return { text: source, seed: ((hash >>> 0) % 2147483647) + 1 };
+}
+
 function variantOf(base, id, name, blurb, worldParams, options = {}) {
   return {
     id,
@@ -164,8 +175,34 @@ const CRYSTAL_TIDE = variantOf(TIDAL_BLOOM, 'CRYSTAL_TIDE', 'CRYSTAL TIDE',
   { worldSize: 1500, INITIAL_POP: 620, MAX_POP: 5000, TIDAL_SCALE: 2.4, FIELD_THERMAL: 1.1, FIELD_DIFFUSION: 0.08, CONVECTION_RATE: 1.4, CRYSTAL_LATTICE: 2.2, POLYMER_LIMIT: 7, BOND_STRENGTH: 1.8, MUTATION_RATE: 0.65, SPAWN_RATE: 0.6 },
   { category: 'Chemistry', playstyle: 'Slow construction', objective: 'Observe chemical complexity and bonded structures persist.', laws: ['GRAV', 'DRAG', 'COLL', 'BOND', 'TIDE', 'FIELD', 'HEAT', 'COLD', 'CONVECTION', 'PHASE_RADIATION', 'LATENT_HEAT', 'EQUILIBRIUM', 'CATALYSIS_LAW', 'SOLVATION', 'POLYMER', 'CRYSTALLIZATION', 'OXIDATION', 'AUTOCATALYSIS', 'LIFE', 'ENERGY', 'REPRO', 'COMMS'] });
 
+// Roadmap starter set: named entry points into the existing, validated launch pipeline.
+const PRIMORDIAL_SOUP = variantOf(TIDAL_BLOOM, 'PRIMORDIAL_SOUP', 'PRIMORDIAL SOUP',
+  'A gentle warm substrate with a small founder population: start at the beginning and watch simple interactions accumulate.',
+  { worldSize: 1500, INITIAL_POP: 350, MAX_POP: 2400, FIELD_THERMAL: 0.45, FIELD_INFO: 0.15, MUTATION_RATE: 0.8, SPAWN_RATE: 0.5 },
+  { category: 'Starter worlds', playstyle: 'First principles', objective: 'Watch a sparse, warm dish build complexity from simple beginnings.', laws: ['GRAV', 'DRAG', 'COLL', 'FIELD', 'HEAT', 'LIFE', 'ENERGY', 'REPRO', 'COMMS'] });
+const HEAD_START = variantOf(TIDAL_BLOOM, 'HEAD_START', 'HEAD START',
+  'A well-populated, energetic ecology with generous resources and active reproduction, ready to develop immediately.',
+  { worldSize: 1050, INITIAL_POP: 1400, MAX_POP: 9000, FIELD_THERMAL: 0.8, MUTATION_RATE: 1.2, SPAWN_RATE: 5, REPRODUCTION_THRESHOLD: 24 },
+  { category: 'Starter worlds', playstyle: 'Fast emergence', objective: 'Begin with a thriving population and follow its first turning points.' });
+const PEACEFUL_WORLD = variantOf(TIDAL_BLOOM, 'PEACEFUL', 'PEACEFUL',
+  'A spacious, low-pressure world tuned for observation, slow growth and coexistence.',
+  { worldSize: 2200, INITIAL_POP: 420, MAX_POP: 2800, GLOBAL_G: 0.25, FIELD_THERMAL: 0.25, MUTATION_RATE: 0.35, SPAWN_RATE: 0.3 },
+  { category: 'Starter worlds', playstyle: 'Quiet observation', objective: 'Give populations room to find stable niches without a harsh selection pressure.', laws: ['GRAV', 'DRAG', 'COLL', 'FIELD', 'HEAT', 'LIFE', 'ENERGY', 'REPRO', 'COMMS', 'AFFINITY', 'CULTURE'] });
+const CHAOS_WORLD = variantOf(PRIME_DEFAULT, 'CHAOS', 'CHAOS',
+  'A dense, high-energy dish with strong gravity, rapid mutation and broad interaction for unpredictable outcomes.',
+  { worldSize: 700, INITIAL_POP: 1800, MAX_POP: 9500, GLOBAL_G: 4.5, FIELD_THERMAL: 2.2, MUTATION_RATE: 3.5, SPAWN_RATE: 12, ENTROPY: 1.5 },
+  { category: 'Starter worlds', playstyle: 'Unstable experiment', objective: 'Explore how a crowded, turbulent ecology responds to strong environmental pressure.' });
+
+
 /** Built-in presets offered before the world exists. */
+export const ROADMAP_STARTER_PRESET_IDS = Object.freeze(['PRIMORDIAL_SOUP', 'HEAD_START', 'ASHEN_FRONT', 'PEACEFUL', 'CHAOS']);
+
 export const BUILTIN_LAUNCH_PRESETS = Object.freeze([
+  PRIMORDIAL_SOUP,
+  HEAD_START,
+  ASHEN_FRONT,
+  PEACEFUL_WORLD,
+  CHAOS_WORLD,
   {
     id: 'TIDAL_BLOOM',
     name: 'TIDAL BLOOM',
@@ -180,11 +217,14 @@ export const BUILTIN_LAUNCH_PRESETS = Object.freeze([
   SOLAR_FORGE,
   QUIET_ORBIT,
   QUANTUM_GARDEN,
-  ASHEN_FRONT,
   SIGNAL_ARCHIPELAGO,
   STARFALL,
   CRYSTAL_TIDE,
 ]);
+
+export const ROADMAP_STARTER_PRESETS = Object.freeze(ROADMAP_STARTER_PRESET_IDS
+  .map((id) => BUILTIN_LAUNCH_PRESETS.find((preset) => preset.id === id))
+  .filter(Boolean));
 
 /** The preset used when nothing has been chosen, or when storage is unusable. */
 export const DEFAULT_LAUNCH_PRESET_ID = 'TIDAL_BLOOM';
@@ -295,6 +335,7 @@ export function defaultLaunchSettings() {
     speciesNames: null,
     parameterOverrides: {},
     launchSeed: null,
+    launchSeedText: '',
     founderEra: 'newborn',
     renderBackend: 'canvas2d',
     computeEngine: 'gpu',
@@ -338,10 +379,12 @@ export function normaliseLaunchSettings(raw) {
     if (field.key in raw) out[field.key] = raw[field.key] === null && field.kind === 'range' && field.worldParamKey
       ? null : coerceField(field, raw[field.key], base[field.key]);
   }
+  if (typeof raw.launchSeedText === 'string') out.launchSeedText = raw.launchSeedText;
   if (raw.launchSeed !== null && raw.launchSeed !== undefined && raw.launchSeed !== '') {
     const seed = Number(raw.launchSeed);
     out.launchSeed = Number.isFinite(seed) ? Math.max(1, Math.min(2147483647, Math.trunc(seed))) : null;
   }
+  if (out.launchSeedText) out.launchSeed = deriveTextSeed(out.launchSeedText).seed;
   if (typeof raw.founderEra === 'string' && ['newborn', 'established', 'ancient'].includes(raw.founderEra)) out.founderEra = raw.founderEra;
   if (Array.isArray(raw.laws)) {
     const validLaws = new Set(Object.keys(LAW_INDEXES));

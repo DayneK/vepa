@@ -20,9 +20,9 @@
 | Tier | Content |
 | --- | --- |
 | HINT | Hard contact prevents particle overlap. |
-| EXPLANATION | Contact applies a mass-weighted positional correction when surfaces interpenetrate. |
+| EXPLANATION | Contact applies a mass-weighted positional correction when surfaces interpenetrate, including stationary coincident centers. The solver projects final surface radii after motion and growth. |
 | SYSTEM | Overlap produces a bounded position correction; CONTACT never applies restitution or changes velocity. |
-| ADVANCED | The geometric contact primitive complements COLL, whose separate responsibility is impact impulse. |
+| ADVANCED | The geometric contact primitive complements COLL, whose separate responsibility is impact impulse. Final contact uses a radius-aware broadphase outside force budgets; eight bounded iterations can leave residual overlap under overpacking. Ghost worlds without hard-contact or structural laws remain pass-through. |
 
 ## Implementation evidence
 
@@ -30,7 +30,7 @@
 
 ## Verification evidence
 
-- Tests: [tests/audit/batch_22.test.js](tests/audit/batch_22.test.js), [tests/e2e/runtime-acceptance.spec.js](tests/e2e/runtime-acceptance.spec.js), [tests/unit/auditSignoff.test.js](tests/unit/auditSignoff.test.js), [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js), [tests/unit/mechanicsArchitecture.test.js](tests/unit/mechanicsArchitecture.test.js), [tests/unit/provenance.test.js](tests/unit/provenance.test.js)
+- Tests: [tests/audit/batch_22.test.js](tests/audit/batch_22.test.js), [tests/e2e/runtime-acceptance.spec.js](tests/e2e/runtime-acceptance.spec.js), [tests/unit/auditSignoff.test.js](tests/unit/auditSignoff.test.js), [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js), [tests/unit/chaosSettings.test.js](tests/unit/chaosSettings.test.js), [tests/unit/contactStructures.test.js](tests/unit/contactStructures.test.js), [tests/unit/lawGrid.test.js](tests/unit/lawGrid.test.js), [tests/unit/mechanicsArchitecture.test.js](tests/unit/mechanicsArchitecture.test.js), [tests/unit/provenance.test.js](tests/unit/provenance.test.js)
 - Audits: No filename-matched audit record found.
 
 ## Interpretation boundary

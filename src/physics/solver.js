@@ -16,6 +16,7 @@ import { runtimeConfig } from '../state/runtimeConfig.js';
 import { isAlive } from '../state/particleBuffer.js';
 import { isSet } from '../state/lawState.js';
 import { createGrid, clear, insert, getNeighbors } from './spatialGrid.js';
+import { resolveParticleContacts } from './contactConstraints.js';
 // v8.17 — Barnes–Hut long-range gravity engine (opt-in via runtimeConfig.gravEngine)
 import { createOctree, buildOctree, octreeGravity } from './octree.js';
 import { fmmGravity } from './fmm.js';
@@ -714,7 +715,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
         // means continuous contact, not a sum of separate grazes.
         if (accrOn && canAccrete) {
           const dwellPartner = view[iBase + S.PARTNER_ID] || -1;
-          if (dwellPartner === j && !(overlap > 0 && dist > 0.01)) {
+          if (dwellPartner === j && !(overlap >= -0.001 && dist > 0.01)) {
             view[iBase + S.MITOSIS_TIMER] = 0;
             view[iBase + S.PARTNER_ID] = -1;
           }
@@ -725,7 +726,7 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
           view[iBase + S.VEL_Z] - view[jBase + S.VEL_Z],
         );
         const sweptContact = collOn && relativeSpeedNow * localTimeStep >= Math.max(0, dist - (r1 + r2));
-        if ((overlap > 0 || sweptContact) && (dist > 0.01 || (collOn && relativeSpeedNow > 0))) {
+        if ((overlap > 0 || sweptContact || (accrOn && overlap >= -0.001)) && (dist > 0.01 || (collOn && relativeSpeedNow > 0))) {
           // Collision normal (i → j)
           const invDist = dist > 0.01 ? 1.0 / dist : 0;
           const rvxForNormal = view[iBase + S.VEL_X] - view[jBase + S.VEL_X];
@@ -874,7 +875,10 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
 
       if (near && active[LAW_INDEXES.POLYMER] && structuralCompatibility()) {
         const polySynergy = syn[LAW_INDEXES.POLYMER];
-        applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, polySynergy, stride);
+        const polymerForce = applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, polySynergy, stride);
+        ax += polymerForce.ax;
+        ay += polymerForce.ay;
+        az += polymerForce.az;
       }
 
 
@@ -1776,12 +1780,12 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
           const sI = view[iBase + S.SPECIES_ID];
           const sB = view[bPtr + S.SPECIES_ID];
           const aff = dnaI[DNA_INDEXES.SPECIES_AFFINITY] || 0;
-          if ((sI === sB && aff >= 0) || (sI !== sB && aff < 0)) {
+          if (isBondedPair(view, iBase, bPtr, stride) && ((sI === sB && aff >= 0) || (sI !== sB && aff < 0))) {
             // BOND_ANGLE DNA (31): favoured cluster geometry — wider angles
             // reach farther, so the equilibrium bond distance stretches.
             const bondAngle = dnaI[DNA_INDEXES.BOND_ANGLE] || 0;
             const angleScale = 1 + Math.min(1, Math.abs(bondAngle) / 120);
-            const eqDist = ((dnaI[DNA_INDEXES.BASE_RADIUS] || 5) * 2.5 + (view[bPtr + S.DNA_CACHE_START + DNA_INDEXES.BASE_RADIUS] || 5) * 2.5) * angleScale;
+            const eqDist = (rA + rB) * 1.1 * angleScale;
             if (bd > eqDist && bd > 0.1) {
               const stiffness = dnaI[DNA_INDEXES.STIFFNESS] || 0.5;
               const pull = (bd - eqDist) * stiffness * 0.15;
@@ -1923,6 +1927,30 @@ export function solve(particleBuffer, particleCount, stride, lawState, dnaBuffer
     applyExothermic(lawState, view, iBase,
       localTimeStep, syn[LAW_INDEXES.EXOTHERMIC]);
 
+  }
+
+  // Refresh persistent ACCR seams against final radii, not pre-growth sizes.
+  if (active[LAW_INDEXES.ACCR]) {
+    for (let i = 0; i < particleCount; i++) {
+      const a = i * stride;
+      if (view[a + S.DEAD] >= 0.5 || !(view[a + S.MASS] > 0)) continue;
+      for (const slot of ACCR_PARTNER_SLOTS) {
+        const j = Math.trunc(view[a + slot]);
+        if (j <= i || j >= particleCount) continue;
+        const b = j * stride;
+        if (view[b + S.DEAD] < 0.5 && view[b + S.MASS] > 0 && isAccretionPair(view, a, b, stride)) {
+          maintainAdjoinedPair(view, a, b);
+        }
+      }
+    }
+  }
+
+  // Resolve hard matter after ALL motion, transformations and radius growth.
+  // Structural seams do not exempt living bodies from surface exclusion;
+  // actual absorption/fusion marks the consumed endpoint dead and is skipped.
+  if (active[LAW_INDEXES.CONTACT] || active[LAW_INDEXES.COLL] || active[LAW_INDEXES.ACCR]
+    || active[LAW_INDEXES.BOND] || active[LAW_INDEXES.POLYMER] || active[LAW_INDEXES.ADHESION]) {
+    resolveParticleContacts(view, particleCount, stride, worldSize, !!active[LAW_INDEXES.WRAP]);
   }
 
   // ── History — advance the memory-field clock once per solve ──

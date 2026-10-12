@@ -40,18 +40,23 @@ describe('Batch 12 — DNA.BASE_RADIUS / DNA.ELASTICITY / DNA.BOND_ANGLE / DNA.P
   it('BOND_ANGLE: wider angle preference stretches the equilibrium bond distance (BOND)', () => {
     const run = (bondAngle) => {
       const { view, dna } = makeWorld(2, (v, d, b) => {
+        v[b + S.DNA_CACHE_START + 8] = 1;
+        v[b + S.DNA_CACHE_START + 29] = 5;
+        v[b + S.RADIUS] = 5;
+        v[b + S.BOND_COUNT] = 1;
+        v[b + S.BOND_PARTNER_1] = b === 0 ? 1 : 0;
         if (b === 0) {
           v[b + S.POS_X] = 990;
           v[b + S.DNA_CACHE_START + 31] = bondAngle; // BOND_ANGLE
         } else {
-          v[b + S.POS_X] = 1020; // 30 apart: under the wide-angle equilibrium, over the default one
+          v[b + S.POS_X] = 1002; // stretched ordinary bond; wider geometry prefers a longer surface spacing
         }
       });
       const laws = lawsWith(LAW_INDEXES.BOND, LAW_INDEXES.BUOYANCY);
       for (let t = 0; t < 5; t++) solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, 1.0, () => 0.5);
       return view[S.POS_X];
     };
-    // angle 360 → equilibrium 50 > 30 → repelled apart; angle 0 → equilibrium 25 < 30 → pulled together
+    // Wider angles increase the surface-based target and reduce the bond's inward correction.
     expect(run(360)).toBeLessThan(run(0));
   });
 

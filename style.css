@@ -1,3 +1,5 @@
+.pending-law { outline: 1px dashed var(--text-primary); outline-offset: -3px; }
+
 :root {
     --bg-primary: #0a0a0f;
     --bg-secondary: #12121a;
@@ -4257,6 +4259,22 @@ input[type='range']:focus-visible::-moz-range-thumb {
   line-height: 1.5;
 }
 .launch-note-remember { margin-top: 16px; }
+
+.world-pending-notice {
+  margin: 8px 0 14px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-gold);
+  background: rgba(0, 0, 0, .25);
+  color: var(--text-primary);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.world-pending-notice p { margin: 0 0 8px; }
+.world-pending-notice ul { max-height: 160px; overflow: auto; padding-left: 18px; overflow-wrap: anywhere; }
+.world-pending-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.world-pending-actions button { min-height: 44px; padding: 8px 12px; font: inherit; }
+.world-pending-actions button:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
 
 .launch-footer {
   display: flex;

@@ -25,6 +25,13 @@ The solver owns law gating, ordering, accumulation, integration, clamping, lifec
 
 Pairwise functions should use the shared minimum-image geometry contract. Hot-loop callers may use scalar calculations equivalent to `src/physics/pairGeometry.js` when allocation avoidance is demonstrated and covered by parity tests.
 
+## Contact/structure correction — working tree v9.3.3
+
+- CONTACT remains geometric; COLL remains velocity response. Final hard-sphere projection runs after motion, radius growth and absorption under CONTACT/COLL/ACCR/BOND/POLYMER/ADHESION, without truncated force-neighbor budgets. Deterministic coincident-center normals and mass shares preserve pair centers. Eight iterations can retain residual penetration in overpacked worlds; this is discrete, not continuous collision detection.
+- POLYMER spring output is integrated, rest distance is at least combined radii, mutual links honor POLYMER_LIMIT up to six slots. BOND geometry uses symmetric radius-based angle spacing, and equilibrium correction is restricted to linked pairs.
+- ADHESION closes surface gaps with normal damping and separates penetration instead of attracting through surfaces. ACCR seams are maintained against final radii; consumed/dead bodies are excluded from projection.
+- Evidence: `tests/unit/contactStructures.test.js`, existing law audits and `tests/audit/params_batch_12.test.js`. No scientific-fidelity or browser-visual guarantee.
+
 ## 4. Evidence levels
 
 | Level | Meaning |

@@ -6,7 +6,7 @@
  * a search box, a live per-category count, and an ON/OFF pair on each category
  * header.
  *
- * The bulk path deliberately toggles through the same `law:toggled` emit a
+ * The bulk path deliberately toggles through the same `law:editRequested` emit a
  * manual tap uses — a bulk path of its own would be a second way for the
  * worker and the grid to disagree, which is the exact failure the dead-INERTIA
  * audit was written to prevent.
@@ -18,6 +18,7 @@ import { EventBus } from '../../src/core/eventBus.js';
 import { LAW_INDEXES, LAW_CATEGORIES, LAW_COUNT } from '../../src/constants.js';
 import { createLawState, isSet, set as setLaw } from '../../src/state/lawState.js';
 import { createWorldPanel } from '../../src/ui/worldPanel.js';
+import { wirePendingLaws } from '../../src/state/pendingLaws.js';
 
 const CATEGORIES = ['physics', 'biology', 'chemistry', 'thermodynamics', 'metaphysics',
   'electromagnetism', 'information', 'quantum', 'mechanics'];
@@ -49,14 +50,16 @@ describe('the LAWS grid', () => {
   let bus;
   let laws;
   let emits;
+  let pending;
 
   beforeEach(() => {
     doc = installDom();
     mount(doc);
     bus = new EventBus();
     emits = [];
-    bus.on('law:toggled', (p) => emits.push(p));
+    bus.on('law:editRequested', (p) => emits.push(p));
     laws = createLawState();
+    pending = wirePendingLaws(bus, { getLive: () => laws });
     createWorldPanel(bus, laws);
   });
 
@@ -79,11 +82,14 @@ describe('the LAWS grid', () => {
       .querySelector('[data-cat-row="quantum"] .law-cat-bulk[data-bulk="on"]');
     onAll.dispatch('click', {});
 
-    for (const idx of LAW_CATEGORIES.quantum.laws) expect(isSet(laws, idx), String(idx)).toBe(true);
+    for (const idx of LAW_CATEGORIES.quantum.laws) expect(isSet(laws, idx), String(idx)).toBe(false);
+    expect(doc.getElementById('law-grid').querySelectorAll('.pending-law')).toHaveLength(LAW_CATEGORIES.quantum.laws.length);
     expect(emits).toHaveLength(1);
     expect(emits[0]).toMatchObject({ category: 'quantum', active: true, changed: LAW_CATEGORIES.quantum.laws.length });
     expect(doc.getElementById('law-grid').querySelector('[data-cat-row="quantum"]')
       .querySelector('.law-cat-count').textContent).toBe(`${LAW_CATEGORIES.quantum.laws.length}/${LAW_CATEGORIES.quantum.laws.length}`);
+    pending.commit();
+    for (const idx of LAW_CATEGORIES.quantum.laws) expect(isSet(laws, idx)).toBe(true);
   });
 
   it('reports an explicit no-op when the only visible bulk match is WRAP', () => {
@@ -122,6 +128,9 @@ describe('the LAWS grid', () => {
     expect(visibleTiles(doc).map((tile) => tile.dataset.name)).toEqual(['contact']);
     expect(onVisible.textContent).toBe('ON 1');
     onVisible.dispatch('click', {});
+    expect(isSet(laws, LAW_INDEXES.CONTACT)).toBe(false);
+    expect(doc.querySelector(`[data-law="${LAW_INDEXES.CONTACT}"]`).classList.contains('pending-law')).toBe(true);
+    pending.commit();
     expect(isSet(laws, LAW_INDEXES.CONTACT)).toBe(true);
     expect(isSet(laws, LAW_INDEXES.MOMENTUM)).toBe(false);
     expect(emits.at(-1)).toMatchObject({ category: 'mechanics', targetCount: 1, changed: 1 });
@@ -138,6 +147,8 @@ describe('the LAWS grid', () => {
       .querySelector('[data-cat-row="biology"] .law-cat-bulk[data-bulk="off"]')
       .dispatch('click', {});
 
+    for (const idx of LAW_CATEGORIES.biology.laws) expect(isSet(laws, idx), String(idx)).toBe(true);
+    pending.commit();
     for (const idx of LAW_CATEGORIES.biology.laws) expect(isSet(laws, idx), String(idx)).toBe(false);
     expect(emits.at(-1)).toMatchObject({ category: 'biology', active: false });
   });
@@ -223,6 +234,9 @@ describe('the LAWS grid', () => {
     let prevented = false;
     input.dispatch('keydown', { key: 'Enter', preventDefault: () => { prevented = true; } });
     expect(prevented).toBe(true);
+    expect(isSet(laws, LAW_INDEXES.SUPERPOSITION)).toBe(false);
+    expect(emits.at(-1).changes).toEqual([{ lawIndex: LAW_INDEXES.SUPERPOSITION, active: true }]);
+    pending.commit();
     expect(isSet(laws, LAW_INDEXES.SUPERPOSITION)).toBe(true);
   });
 });

@@ -347,7 +347,8 @@ function setupToolbarControls(bus) {
     });
   }
 
-  // Tap = randomize and respawn; hold = open the full Chaos Multiplex modal.
+  // Tap = randomize laws, physical WORLD settings and all species DNA, then
+  // restart once to adopt them. Hold = open the Chaos Multiplex modal.
   if (chaosBtn) {
     let chaosPressTimer = null;
     let chaosLongPressed = false;
@@ -410,7 +411,7 @@ function showHelpDrone() {
       <div class="help-drone-body">
         <p class="help-drone-lead">Tap actions are on the left; hold actions are on the right. Enable the drone to make any UI element explain itself.</p>
         <div class="help-drone-mapping">
-          <div><strong>TAP</strong><span>▶ / ⏸ pause or resume</span><span>🔄 restart population</span><span>☢️ randomize laws and DNA</span><span>↶ undo last world change</span><span>🧬 graph double-click expand / shrink</span></div>
+          <div><strong>TAP</strong><span>▶ / ⏸ pause or resume</span><span>🔄 restart population</span><span>☢️ randomize laws, WORLD and all species DNA</span><span>↶ undo last world change</span><span>🧬 graph double-click expand / shrink</span></div>
           <div><strong>HOLD</strong><span>🔄 full reset and reload</span><span>☢️ open Chaos Settings</span><span>Any tab or sub-tab: what it is for</span><span>Any graph or readout: what it measures</span><span>Parameter labels: range and tuning</span></div>
         </div>
         <button class="help-drone-enable" type="button">ENABLE DRONE</button>

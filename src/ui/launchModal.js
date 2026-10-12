@@ -30,6 +30,7 @@ import {
   launchValueToPosition,
   normaliseLaunchSettings,
   saveCustomLaunchPreset,
+  deriveTextSeed,
 } from '../state/launchSettings.js';
 import { escapeHtml as esc } from './html.js';
 import { LAW_CATEGORIES, LAW_HELP_DB, LAW_INDEXES } from '../constants.js';
@@ -145,7 +146,8 @@ function advancedPanelsHtml(entry, settings) {
       <div class="launch-tab-panel" data-panel="parameters" hidden><p class="launch-note">Edit only what you mean to change. Untouched values inherit from the selected preset.</p><div class="launch-panel-tools"><strong>World parameter overrides</strong><button type="button" data-act="reset-parameters">RESET ALL</button></div>${filter}${parameterPickerHtml(entry, settings)}</div>
       <div class="launch-tab-panel" data-panel="species" hidden><p class="launch-note">Choose which of this world's distinct founder genomes enter the initial population.</p>${speciesPickerHtml(entry, settings)}</div>
       <div class="launch-tab-panel" data-panel="launch" hidden><p class="launch-note">These are initializer controls, not live world sliders. Seeded worlds reproduce their initial random sequence.</p>
-        <div class="launch-seed-row"><label for="launch-seed">REPRODUCIBLE WORLD SEED</label><input type="number" id="launch-seed" min="1" max="2147483647" step="1" value="${settings.launchSeed ?? ''}" placeholder="Fresh each launch"><button type="button" data-act="random-seed">ROLL SEED</button></div>
+        <div class="launch-seed-row"><label for="launch-seed-text">WORLD NAME OR TEXT SEED</label><input type="text" id="launch-seed-text" maxlength="120" value="${esc(settings.launchSeedText)}" placeholder="A text seed, e.g. quiet blue dawn"><span class="launch-seed-derived" data-seed-result>${settings.launchSeedText ? `Seed ${settings.launchSeed}` : ''}</span></div>
+        <div class="launch-seed-row"><label for="launch-seed">NUMERIC SEED</label><input type="number" id="launch-seed" min="1" max="2147483647" step="1" value="${settings.launchSeed ?? ''}" placeholder="Fresh each launch"><button type="button" data-act="random-seed">ROLL SEED</button></div>
         ${fieldHtml(LAUNCH_FIELDS.find((field) => field.key === 'founderEra'), settings.founderEra, entry, settings)}
       </div>`;
 }
@@ -504,9 +506,13 @@ export function showLaunchModal(options = {}) {
       }
       if (act && act.dataset.act === 'random-seed') {
         const seed = globalThis.crypto?.getRandomValues ? globalThis.crypto.getRandomValues(new Uint32Array(1))[0] : Date.now();
-        settings = { ...settings, launchSeed: Math.max(1, seed % 2147483647) };
+        settings = { ...settings, launchSeed: Math.max(1, seed % 2147483647), launchSeedText: '' };
         const seedInput = overlay.querySelector('#launch-seed');
+        const textInput = overlay.querySelector('#launch-seed-text');
+        const result = overlay.querySelector('[data-seed-result]');
         if (seedInput) seedInput.value = settings.launchSeed;
+        if (textInput) textInput.value = '';
+        if (result) result.textContent = '';
         return;
       }
       if (act && act.dataset.act === 'launch') {
@@ -570,9 +576,23 @@ export function showLaunchModal(options = {}) {
         settings = { ...settings, [number.dataset.key]: number.value === '' ? null : (field ? Number(number.value) : null) };
         return;
       }
+      const textSeed = event.target.closest('#launch-seed-text');
+      if (textSeed) {
+        const derived = textSeed.value ? deriveTextSeed(textSeed.value) : null;
+        settings = { ...settings, launchSeedText: textSeed.value, launchSeed: derived?.seed ?? null };
+        const seedInput = overlay.querySelector('#launch-seed');
+        const result = overlay.querySelector('[data-seed-result]');
+        if (seedInput) seedInput.value = derived?.seed ?? '';
+        if (result) result.textContent = derived ? `Seed ${derived.seed}` : '';
+        return;
+      }
       const seed = event.target.closest('#launch-seed');
       if (seed) {
-        settings = { ...settings, launchSeed: seed.value === '' ? null : Number(seed.value) };
+        settings = { ...settings, launchSeed: seed.value === '' ? null : Number(seed.value), launchSeedText: '' };
+        const textInput = overlay.querySelector('#launch-seed-text');
+        const result = overlay.querySelector('[data-seed-result]');
+        if (textInput) textInput.value = '';
+        if (result) result.textContent = '';
         return;
       }
       const param = event.target.closest('[data-param]');

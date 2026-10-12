@@ -4,6 +4,8 @@
 
 ## Target module model
 
+The accepted roadmap selects GPU-rendered 3D as the rendering direction; current Canvas2D/Pixi surfaces are implementation facts and migration/parity inputs, not the target rendering choice. Performance degradation may simplify only explicitly designated visual layers and must never silently alter simulation state, laws, events or deterministic progression. Physics-affecting law/parameter edits are staged until a new world or explicit restart.
+
 The UI package provides shell/navigation, viewport, top-bar/HUD, LAWS, WORLD settings, SPECIES/DNA settings, SETTINGS, SAVES, DATA analytics, help, and accessibility primitives as separable modules. Each panel owns its DOM subtree and subscriptions, consumes read models, and dispatches commands; it cannot mutate solver buffers or law masks directly. Shared CSS tokens preserve the near-black Sanguine/neon style, spectrum law colors, fine border/glow language, layered canvases, compact drawer, and responsive touch/keyboard behavior. A parity theme can iterate separately only after captured visual fixtures and actual browser checks exist.
 
 ## Easy/Advanced settings behavior

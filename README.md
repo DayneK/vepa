@@ -5,7 +5,7 @@
 ## Versioning & Commits
 
 - **Product:** **VEPA4**; versions use **`major.minor.build`** (npm-semver-native) —
-  current: **9.3.1** (legacy label `4.9.34`). Retroactive mapping of the v4 line:
+  current version: **9.3.3** (legacy label `4.9.36`; release/deployment state is in `CHANGELOG.md`). Retroactive mapping of the v4 line:
   old `4.M.N` → `M.N.0`; see `CHANGELOG.md` and `AGENTS.md` §10.4.
 - **Commits:** [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
   — `<type>(<scope>): <description>`, release commits `chore(release): v7.0.0`,
@@ -18,9 +18,19 @@ Lineage, Goal, Timeline) are now wired into the simulation loop, the
 communication DNA group drives real physics, and predation is restored as an
 explicit law.
 
+## Surface contact and full Chaos (working tree v9.3.3)
+
+Hard matter/structural laws now run a radius-aware contact pass after motion and growth. Polymer springs are consumed, adhesion closes surface gaps rather than pulling through bodies, and ACCR retains separate edge-to-edge grains. Bounded iterations can retain residual penetration under extreme packing; projected 3D spheres and visual scaling can still overlap on screen. Turning off all hard-contact/structural laws retains ghost behavior.
+
+Tap **Chaos** to randomize laws, physical WORLD settings and all 64 traits of each active species, then restart with the batch. Performance budgets are preserved; population/space/time sampling is bounded. Hold opens the existing selective/multiplex menu. This is not completion of the full restart-only/replay roadmap.
+
 ## Systems implementation substrate
 
 The 48 roadmap variants (A–D across twelve systems) now share `src/state/systemVariants.js` and the bounded lifecycle substrate. Implementation proceeds deterministically as A→B→C→D per system, with a predecessor-gated integration seam between each adjacent variant. The second stagger materializes those 47 seams as typed, durable relationship records with save/restore support. The third stagger validates and materializes a connected 48-node topology over that relationship layer; the fourth adds bounded deterministic replay trajectories and evolutionary regime summaries. This keeps evidence, relationship, explicit-system, and discovery work composable without duplicating registries.
+
+The launch designer includes five named roadmap starter worlds (primordial soup, head start, harsh world, peaceful, chaos) and accepts free-form text as a deterministic seed, retaining the original text alongside its derived number. This is a limited launch-foundation increment, not completion of the RB roadmap; GPU-rendered 3D, complete law/DNA/configuration staging, save migration and replay verification remain roadmap work.
+
+WORLD sliders now stage session-only proposals: inspect the live → proposed list, DISCARD to keep the current world, or APPLY & RESTART to adopt them while replacing the population. Pause/resume does not apply edits; restore/undo clears proposals. Current-world saves exclude proposals. Law-grid toggles, category bulk commands and law-set loads now also stage with pending tiles/details and independent discard. DNA edits, full preset loads, selective chaos, narrative/goal actions and compute settings remain legacy live paths, so global restart-only physics is not complete. Preview readiness passed; real-browser verification is blocked by a missing Chromium host library.
 
 ## Quick Start
 
@@ -47,7 +57,7 @@ npm run systems:bundle # Regenerate the hierarchical concatenated systems atlas
 
 Deployment URLs are snapshots, not separate product versions, and may not be built from the same commit:
 
-- **Canonical source:** this repository root, currently VEPA4 **9.3.0**.
+- **Canonical source:** this repository root; check `CHANGELOG.md` for the current release commit, tag and deploy record.
 - **Current production target:** `https://v5.freebuff.app/`.
 - **`vepa-seven.vercel.app`:** a later, feature-rich historical deployment
   associated with the v8.16-era line. It is useful for comparison and recovery,
@@ -62,7 +72,7 @@ Integrated Intelligence”** and `vepa-seven` reported **“VEPA4 — Integrated
 Intelligence”**. This confirms separate deployed snapshots, not two different
 products. Deployment parity should be verified after each production release.
 
-The Freebuff static hosting target is authoritative for current deploy status; the historical Vercel/Pages URLs above are retained for reference. GitHub Pages previously deployed via `.github/workflows/deploy.yml` (base `/vepa/vepar/`); that workflow was archived with the legacy trees on 2026-08-10.
+The Freebuff static hosting target is authoritative for current deploy status; the historical Vercel/Pages URLs above are retained for reference. Track RB status in [`docs/spec/rb/ROADMAP_PROGRESS.md`](docs/spec/rb/ROADMAP_PROGRESS.md): only evidence-complete roadmap sections are checked; proposal text, generated specs, and DOM-stub tests are not runtime acceptance. GitHub Pages previously deployed via `.github/workflows/deploy.yml` (base `/vepa/vepar/`); that workflow was archived with the legacy trees on 2026-08-10.
 
 ### Run from anywhere
 

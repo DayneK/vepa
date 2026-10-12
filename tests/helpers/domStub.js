@@ -302,7 +302,31 @@ export function makeEl(tagName = 'div', doc = null) {
       return child;
     },
     remove() { if (this.parentElement) this.parentElement.removeChild(this); },
-    insertAdjacentElement() {},
+    replaceWith(replacement) {
+      const parent = this.parentElement;
+      if (!parent || replacement === this) return;
+      if (replacement.parentElement) replacement.remove();
+      const index = parent.children.indexOf(this);
+      parent.children.splice(index, 1, replacement);
+      replacement.parentElement = parent;
+      replacement.ownerDocument = parent.ownerDocument;
+      this.parentElement = null;
+    },
+    insertAdjacentElement(position, element) {
+      if (position === 'beforeend') return this.appendChild(element);
+      if (position === 'afterbegin') { this.prepend(element); return element; }
+      if (position !== 'beforebegin' && position !== 'afterend') {
+        throw new Error(`domStub: unsupported insertAdjacentElement position "${position}"`);
+      }
+      const parent = this.parentElement;
+      if (!parent) return null;
+      if (element.parentElement) element.remove();
+      const index = parent.children.indexOf(this) + (position === 'afterend' ? 1 : 0);
+      parent.children.splice(index, 0, element);
+      element.parentElement = parent;
+      element.ownerDocument = parent.ownerDocument;
+      return element;
+    },
     /**
      * `insertAdjacentHTML('beforeend', html)`.
      *

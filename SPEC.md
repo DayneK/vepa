@@ -1,7 +1,17 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.3.1 | **Date**: 2026-10-07 | **Base**: VEPA4 integrated intelligence
+**Version**: 9.3.3 | **Date**: 2026-10-11 | **Base**: VEPA4 integrated intelligence
 **Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
+
+## Working-tree Update (v9.3.3 — 2026-10-11)
+
+The solver performs mass-weighted, deterministic discrete contact projection after all radius/motion updates using a radius-aware broadphase independent of force budgets. CONTACT/COLL/ACCR/BOND/POLYMER/ADHESION enable this exclusion; dead absorbed endpoints are skipped. Eight bounded iterations are not a full dense-packing or continuous-collision guarantee. POLYMER output feeds integration with radius-safe rest spacing; ADHESION restores surface gaps; ACCR seams use final radii. Ordinary bonds remain distinct from absorption.
+
+Default Chaos samples physical world values and 64 species genome traits through canonical schemas/codec, preserves performance budgets, and adopts them after compute stops on restart. Law UI requests stage validated boolean overrides outside the live five-word mask. WRAP belongs to WORLD TOROIDAL; pending law details/discard and all-stage restart are explicit. Saves still capture live configuration, not proposals. Full preset loads, direct DNA edits, selective chaos and autonomous actions remain outside global staging.
+
+## Working-tree Update (v9.3.2 — 2026-10-11)
+
+WORLD `world:paramChanged` requests now stage in `pendingWorldParams.js` without writing `runtimeConfig`, solver state, worker CONFIG, or current-world saves. The UI shows live/proposed values and discard/restart actions. The session coordinator commits after worker stop and before respawn, with the existing pre-restart undo snapshot. Restore clears session proposals. Laws/DNA, preset loads, autonomous actions and backend settings still bypass this bounded path; global restart-only configuration is not implemented. Browser acceptance remains blocked by missing Chromium host libraries.
 
 ## Working-tree Update (v9.3.1 — 2026-10-07)
 
@@ -12,6 +22,10 @@
 
 - Adds the parameter/law atlas (`docs/systems/parameter-law-atlas.html`) and a launch designer that supports a 10,000 initial-population target while warning that runtime depends on device and configuration.
 - Records the partial second-pass UI implementation and its outstanding acceptance gaps; it does not assert full-overhaul completion or browser verification.
+
+## RB Roadmap Tracking
+
+`docs/spec/rb/ROADMAP_PROGRESS.md` is the evidence-based checklist for proposed RB sections 00–11 and the ordered P0–P4 work queues. No RB section is marked complete end-to-end as of the v9.3.3 working-tree candidate. The tracker separates implemented groundwork from partial restart staging and open target work; real-browser acceptance, full configuration staging, modular extraction and GPU-rendered 3D remain incomplete. Update its checks only when the stated evidence gate passes.
 
 ## Problem Statement
 

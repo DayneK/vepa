@@ -11,9 +11,9 @@ Keep a thin `app-shell` responsible for DOM/canvas hosts, module registration, c
 - Boot order is explicit: capability probe → load/normalize launch profile → create world state → initialize compute session → create renderer → mount panels → start clocks. A failure in optional launch UI, GPU, Pixi, worker, or cloud transport must reach a usable documented fallback.
 - Modules register through a versioned manifest declaring ID/version, owned state, public ports, capabilities, dependencies, startup/disposal, and optional UI mounts. The composition root rejects duplicate ownership, missing dependencies, incompatible contracts, and cycles before starting.
 - Modules receive narrow interfaces (`WorldReadModel`, `WorldCommands`, `TickSource`, `RendererPort`, `EventPort`, persistence ports); no importing mutable singleton `runtimeConfig` across package boundaries in the target. The legacy adapter may wrap it temporarily.
-- Events are typed/versioned envelopes with session ID, sequence/tick, timestamp, origin and payload. Commands are validated, acknowledged/rejected, idempotent where retried, and never imply state change before authoritative acknowledgement.
+- Events are typed/versioned envelopes with session ID, sequence/tick, timestamp, origin and payload. Commands are validated, acknowledged/rejected, idempotent where retried, and never imply state change before authoritative acknowledgement. Physics-affecting law/parameter edits stage as configuration and take effect only on new-world start or explicit restart; no mid-run mutation is allowed.
 - Lifecycle owns one authoritative world session and disposes listeners, workers, transport, timers, renderers, and cached views on reset/restore/unmount. Repeated boot or panel recreation must not stack listeners.
-- Existing launch preset, seed, SIM pause/restart/chaos, law/world/DNA changes, HUD, narrative, undo and save flows are parity fixtures.
+- Existing launch preset, seed, SIM pause/restart/chaos, law/world/DNA changes, HUD, narrative, undo and save flows are parity fixtures. Preserve law/world/DNA edit affordances while ensuring physics-affecting changes are staged and applied only after restart, as required by the accepted roadmap.
 
 ## Extraction order
 

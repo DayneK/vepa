@@ -9,6 +9,9 @@ import { WORLD_SIZE, PARTICLE_STRIDE, MAX_PARTICLES, MAX_SPECIES, DEFAULT_PARTIC
 import { createParticleBuffer, setX, setY, setVelocity, setMass, setSpeciesId, setEnergy } from './state/particleBuffer.js';
 import { createLawState, set as lawSet, clear as lawClear, serialize as serializeLawState, getActiveCount as getLawCount } from './state/lawState.js';
 import { runtimeConfig } from './state/runtimeConfig.js';
+import { wirePendingWorldParams } from './state/pendingWorldParams.js';
+import { wirePendingLaws } from './state/pendingLaws.js';
+import { randomizeChaosSettings } from './state/chaosSettings.js';
 import { createWorldParams, applyWorldParam, spawnCaps, syncWrapLaw, syncToroidalParam } from './state/worldParams.js';
 import { sampleSpawnPosition, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from './spawn/distribution.js';
 import { createDNABuffer, loadDefaults, getDNAFloat } from './dna/dnaBuffer.js';
@@ -172,8 +175,6 @@ runtimeConfig.worldParams = worldParams;
 const saveStore = createWorldSaveStore();
 const undoRing = createUndoRing();
 let undoEnabled = true;
-let lastParamSnapshotAt = 0;
-const PARAM_SNAPSHOT_DEBOUNCE = 1200;
 let spawnRate = worldParams.SPAWN_RATE;
 let spawnAccumulator = 0;
 let DEFAULT_LAWS = DEFAULT_PRESET.laws;
@@ -976,15 +977,14 @@ function setDNAFromProfile(species, profile) {
         bus.emit('preset:loaded', { name: String(name || '') });
     });
     bus.on('species:aboutToChange', () => commitAutoSnapshot());
-    bus.on('world:paramChanged', () => {
-        if (!undoEnabled) return;
-        const now = Date.now();
-        if (now - lastParamSnapshotAt < PARAM_SNAPSHOT_DEBOUNCE) return;
-        if (multiplexController && multiplexController.isActive()) return;
-        if (particleCount <= 0) return;
-        lastParamSnapshotAt = now;
-        undoRing.commit(currentWorldState());
-        emitUndoState();
+    // Proposed slider edits do not consume world undo entries. Restart already
+    // captures one pre-restart snapshot for the entire batch.
+    let pendingChaosDNA = null;
+    bus.on('world:restored', () => { pendingChaosDNA = null; });
+    const pendingLaws = wirePendingLaws(bus, { getLive: () => lawState });
+    const pendingWorldParams = wirePendingWorldParams(bus, {
+        getLive: () => worldParams,
+        apply: applyWorldParameter,
     });
     bus.on('sim:hardReset', () => {
         if (particleCount <= 0) return;
@@ -1096,6 +1096,21 @@ function setDNAFromProfile(species, profile) {
     bus.on('sim:restart', (opts = {}) => {
         const restartWorker = !!physicsWorker;
         stopPhysicsWorker();
+        // No CONFIG or tick can observe half of the staged batch: the worker
+        // is stopped and will be initialized only after all values are adopted.
+        if (pendingChaosDNA) {
+            dnaBuffer.set(pendingChaosDNA);
+            pendingChaosDNA = null;
+        }
+        const appliedLaws = pendingLaws.commit();
+        const applied = pendingWorldParams.commit();
+        if (appliedLaws.length) bus.emit('narrative:system', {
+            text: `Restart applied ${appliedLaws.length} staged law changes.`,
+        });
+        if (applied.length) bus.emit('narrative:system', {
+            text: `Restart applied ${applied.length} staged world parameter${applied.length === 1 ? '' : 's'}.`,
+        });
+        spawnAccumulator = 0;
         prng = new PRNG(launchSettings?.launchSeed ?? Date.now());
         WORKER_SEED = launchSettings?.launchSeed ?? (Date.now() | 0);
         particleView.fill(0);
@@ -1106,6 +1121,7 @@ function setDNAFromProfile(species, profile) {
         paused = false;
         resetIntelligence();
         bus.emit('species:sync', { count: speciesCount });
+        bus.emit('dna:sync');
         logDebug('simulation restarted');
         console.log('[VEPA v3] Simulation restarted');
         resetCamera();
@@ -1124,46 +1140,23 @@ function setDNAFromProfile(species, profile) {
     });
 
     bus.on('sim:chaos', () => {
-        const shuffled = [];
-        for (let i = 0; i < LAW_COUNT; i++) shuffled.push(i);
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        const randomized = randomizeChaosSettings(worldParams, dnaBuffer, speciesCount, prng);
+        pendingChaosDNA = randomized.dna;
+        bus.emit('world:discardPending');
+        bus.emit('law:discardPending');
+        for (const [key, value] of Object.entries(randomized.worldParams)) {
+            if (value !== worldParams[key]) bus.emit('world:paramChanged', { key, value });
         }
-
-        const groups = 3 + Math.floor(Math.random() * 3); // 3-5 groups
-        const groupSize = Math.ceil(LAW_COUNT / groups);
-        const intensity = 0.3 + Math.random() * 0.7;
-
-        for (let i = 0; i < LAW_COUNT; i++) lawClear(lawState, i);
-
-        for (let g = 0; g < groups; g++) {
-            const start = g * groupSize;
-            const end = Math.min(start + groupSize, LAW_COUNT);
-            const actProb = 0.4 + Math.random() * 0.6;
-            if (Math.random() > 0.3) { // 70% chance group activates
-                for (let j = start; j < end; j++) {
-                    if (Math.random() < actProb) {
-                        lawSet(lawState, shuffled[j]);
-                    }
-                }
-            }
+        const changes = [];
+        for (let lawIndex = 0; lawIndex < LAW_COUNT; lawIndex++) {
+            if (lawIndex === LAW_INDEXES.WRAP) continue;
+            changes.push({ lawIndex, active: lawIndex === LAW_INDEXES.CONTACT || prng.next() < 0.5 });
         }
-
-        for (let s = 0; s < speciesCount; s++) {
-            for (let p = 0; p < 42; p++) {
-                if (Math.random() > 0.85) {
-                    const r = DNA_RANGES[p];
-                    const val = r.min + Math.random() * (r.max - r.min);
-                    dnaBuffer[s * 64 + p] = quantizeDNA(val, r.min, r.max);
-                }
-            }
-        }
-
-        const active = getLawCount(lawState);
-        logDebug(`chaos multiplexed: ${groups} groups, ${active} laws, ${Math.round(intensity*100)}% intensity`, 'warn');
-        bus.emit('law:sync');
-        bus.emit('narrative:system', { text: `Chaos multiplexed: ${groups} groups, ${active} laws, ${Math.round(intensity*100)}% intensity` });
+        bus.emit('law:editRequested', { changes });
+        logDebug('chaos: randomized laws, world settings and all species DNA for restart', 'warn');
+        bus.emit('narrative:system', {
+            text: 'Chaos randomized laws, physical WORLD parameters and all 64 traits of each species. Performance budgets are preserved. Restart adopts the batch.',
+        });
     });
 
     bus.on('sim:chaosClear', () => {
@@ -1300,7 +1293,7 @@ function setDNAFromProfile(species, profile) {
         bus.emit('narrative:system', { text: text || 'The narrative acts.' });
     });
 
-    bus.on('world:paramChanged', ({ key, value }) => {
+    function applyWorldParameter({ key, value }) {
         worldParams = applyWorldParam(worldParams, key, value);
         runtimeConfig.worldParams = worldParams;
         if (key === 'TOROIDAL' && syncWrapLaw(worldParams, lawState)) {
@@ -1331,8 +1324,8 @@ function setDNAFromProfile(species, profile) {
             case 'MAX_POP':
                         break;
         }
-        bus.emit('world:paramApplied', { key, value });
-    });
+        bus.emit('world:paramApplied', { key, value: worldParams[key] });
+    }
 
 }
 

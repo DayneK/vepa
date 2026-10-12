@@ -4,11 +4,12 @@
  * world parameter sliders grouped into accordion sections.
  */
 import { LAW_INDEXES, LAW_CATEGORIES, LAW_COUNT, LAW_SPECTRUM, LAW_HUE_BY_INDEX, LAW_SAT_BY_INDEX, LAW_HELP_DB } from '../constants.js';
-import { isSet, set as setLaw, clear as clearLaw, toggle as toggleLaw } from '../state/lawState.js';
+import { isSet } from '../state/lawState.js';
 import { WORLD_PARAM_DEFS } from '../state/worldParams.js';
 import { runtimeConfig } from '../state/runtimeConfig.js';
 import { createSliderRow } from './sliderControl.js';
 import { MECHANICS_ICONS } from './mechanicsIcons.js';
+import { escapeHtml } from './html.js';
 
 // Law icon symbols (matching v2 aesthetic)
 const LAW_ICONS = {
@@ -100,6 +101,8 @@ export const LAW_SET_PRESETS = [
 ];
 
 const LAW_SET_STORAGE = 'vepa.lawsets.v1';
+const proposedLaws = new WeakMap();
+const displayedLaw = (state, index) => proposedLaws.get(state)?.get(index) ?? isSet(state, index);
 
 function loadSavedLawSets() {
   try {
@@ -130,6 +133,27 @@ export function createWorldPanel(bus, lawStateObj) {
   const grid = document.getElementById('law-grid');
   const params = document.getElementById('world-params');
   if (!grid) return;
+  proposedLaws.set(lawStateObj, new Map());
+  const lawNotice = document.createElement('section');
+  lawNotice.className = 'world-pending-notice';
+  lawNotice.setAttribute('aria-label', 'Law restart changes');
+  lawNotice.innerHTML = '<p>Law edits are proposals until restart. Lit tiles and counts show proposed settings; pending tiles are outlined. WRAP uses WORLD TOROIDAL.</p><p data-law-pending-status role="status" aria-live="polite">No staged law changes.</p><ul data-law-pending-details></ul><div class="world-pending-actions"><button type="button" data-law-pending-restart disabled>APPLY & RESTART</button><button type="button" data-law-pending-discard disabled>DISCARD LAWS</button></div>';
+  grid.insertAdjacentElement('beforebegin', lawNotice);
+  lawNotice.querySelector('[data-law-pending-restart]').addEventListener('click', () => {
+    if (window.confirm('Apply ALL staged law and WORLD changes and restart? This replaces the current population.')) bus.emit('sim:restart');
+  });
+  lawNotice.querySelector('[data-law-pending-discard]').addEventListener('click', () => bus.emit('law:discardPending'));
+  bus.on('law:pending', ({ changes }) => {
+    proposedLaws.set(lawStateObj, new Map(changes.map(({ lawIndex, active }) => [lawIndex, active])));
+    lawNotice.querySelector('[data-law-pending-status]').textContent = changes.length
+      ? `${changes.length} law change${changes.length === 1 ? '' : 's'} pending — restart required.` : 'No staged law changes.';
+    lawNotice.querySelector('[data-law-pending-details]').innerHTML = changes.map(({ label, liveValue, active }) =>
+      `<li>${escapeHtml(label)}: ${liveValue ? 'ON' : 'OFF'} → ${active ? 'ON' : 'OFF'}</li>`).join('');
+    lawNotice.querySelector('[data-law-pending-restart]').disabled = !changes.length;
+    lawNotice.querySelector('[data-law-pending-discard]').disabled = !changes.length;
+    renderLawGrid(grid, lawStateObj, bus);
+  });
+  bus.emit('law:pendingRequested');
 
   // ── Category filter buttons + exclusive view-mode group ──
   const filterRow = document.querySelector('.category-filter-row');
@@ -188,8 +212,30 @@ export function createWorldPanel(bus, lawStateObj) {
   setupLawSets(grid, bus, lawStateObj);
 
   // ── Build world parameter sliders (accordion groups) ──
+  const pendingValues = new Map();
   if (params) {
-    renderWorldSliders(params, bus);
+    const notice = document.createElement('section');
+    notice.className = 'world-pending-notice';
+    notice.setAttribute('aria-label', 'World parameter restart changes');
+    notice.innerHTML = '<p>WORLD and law edits are staged until restart. Pausing does not apply them. DNA still uses the legacy live-edit path.</p><p data-pending-status role="status" aria-live="polite">No staged world changes.</p><ul data-pending-details></ul><div class="world-pending-actions"><button type="button" data-pending-restart disabled>APPLY & RESTART</button><button type="button" data-pending-discard disabled>DISCARD</button></div>';
+    params.insertAdjacentElement('beforebegin', notice);
+    notice.querySelector('[data-pending-restart]').addEventListener('click', () => {
+      if (window.confirm('Apply ALL staged WORLD and law changes and restart? This replaces the current population.')) bus.emit('sim:restart');
+    });
+    notice.querySelector('[data-pending-discard]').addEventListener('click', () => bus.emit('world:discardPending'));
+    bus.on('world:paramsPending', ({ changes }) => {
+      pendingValues.clear();
+      for (const change of changes) pendingValues.set(change.key, change.value);
+      notice.querySelector('[data-pending-status]').textContent = changes.length
+        ? `${changes.length} world change${changes.length === 1 ? '' : 's'} pending — restart required.`
+        : 'No staged world changes.';
+      notice.querySelector('[data-pending-details]').innerHTML = changes.map(({ key, label, liveValue, value }) =>
+        `<li>${escapeHtml(label)} (${escapeHtml(key)}): ${liveValue} → ${value}</li>`).join('');
+      notice.querySelector('[data-pending-restart]').disabled = !changes.length;
+      notice.querySelector('[data-pending-discard]').disabled = !changes.length;
+    });
+    renderWorldSliders(params, bus, pendingValues);
+    bus.emit('world:pendingRequested');
   }
 
   // ── Listen for law sync ──
@@ -198,7 +244,7 @@ export function createWorldPanel(bus, lawStateObj) {
   // World-state restore (v7.6) — re-render the sliders so their positions
   // match the restored params (values are read live at render time).
   bus.on('world:paramsRestored', () => {
-    if (params) renderWorldSliders(params, bus);
+    if (params) renderWorldSliders(params, bus, pendingValues);
   });
 }
 
@@ -232,7 +278,7 @@ function renderLawGrid(grid, lawStateObj, bus) {
     const centerHue = band.grey ? band.hue : Math.round(band.center * 3.6);
     const catSat = band.grey ? band.sat : null;
     let onCount = 0;
-    for (const idx of cat.laws) if (isSet(lawStateObj, idx)) onCount += 1;
+    for (const idx of cat.laws) if (displayedLaw(lawStateObj, idx)) onCount += 1;
     html += `<div class="law-cat-row" data-cat-row="${catName}">`;
     // The count answers "what is on?" without counting lit tiles, and bulk
     // controls act on visible matches only (with WRAP excluded explicitly).
@@ -245,18 +291,19 @@ function renderLawGrid(grid, lawStateObj, bus) {
     for (const idx of cat.laws) {
       const name = LAW_NAME_BY_IDX[idx] || `LAW_${idx}`;
       const icon = LAW_ICONS[name] || '?';
-      const active = isSet(lawStateObj, idx);
+      const active = displayedLaw(lawStateObj, idx);
       const catClass = 'cat-' + catName;
       const hue = LAW_HUE_BY_INDEX[idx] !== undefined ? LAW_HUE_BY_INDEX[idx] : centerHue;
-      const selectedClass = idx === selectedLawIdx ? ' selected' : '';
+      const selectedClass = (idx === selectedLawIdx ? ' selected' : '')
+        + (proposedLaws.get(lawStateObj)?.has(idx) ? ' pending-law' : '');
       const searchText = `data-name="${name.toLowerCase()}"`;
       if (isWordMode) {
         html += `<button class="law-btn ${catClass}${active ? ' active' : ''}${selectedClass}" ${searchText} `
-              + `style="--law-h:${hue};--law-s:${LAW_SAT_BY_INDEX[idx] ?? 85}" data-law="${idx}" title="${name}">`
+              + `style="--law-h:${hue};--law-s:${LAW_SAT_BY_INDEX[idx] ?? 85}" data-law="${idx}" aria-pressed="${active}" title="${name}${proposedLaws.get(lawStateObj)?.has(idx) ? ' — pending restart' : ''}"${idx === LAW_INDEXES.WRAP ? ' disabled aria-label="WRAP — use WORLD TOROIDAL"' : ''}>`
               + `<span class="tog-icon">${icon}</span><span class="tog-name">${name}</span></button>`;
       } else {
         html += `<button class="sq-toggle ${catClass}${active ? ' active' : ''}${selectedClass}" ${searchText} `
-              + `style="--law-h:${hue};--law-s:${LAW_SAT_BY_INDEX[idx] ?? 85}" data-law="${idx}" title="${name}">`
+              + `style="--law-h:${hue};--law-s:${LAW_SAT_BY_INDEX[idx] ?? 85}" data-law="${idx}" aria-pressed="${active}" title="${name}${proposedLaws.get(lawStateObj)?.has(idx) ? ' — pending restart' : ''}"${idx === LAW_INDEXES.WRAP ? ' disabled aria-label="WRAP — use WORLD TOROIDAL"' : ''}>`
               + `<span class="tog-icon">${icon}</span><span class="tog-name">${name}</span></button>`;
       }
     }
@@ -271,15 +318,9 @@ function renderLawGrid(grid, lawStateObj, bus) {
   grid.querySelectorAll('.sq-toggle, .law-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.dataset.law, 10);
-      toggleLaw(lawStateObj, idx);
-      const nowActive = isSet(lawStateObj, idx);
-      btn.classList.toggle('active', nowActive);
+      if (idx === LAW_INDEXES.WRAP) return;
       setSelectedLaw(idx);
-      bus.emit('law:toggled', {
-        lawIndex: idx,
-        active: nowActive,
-        state: nowActive ? 1 : 0,
-      });
+      bus.emit('law:editRequested', { changes: [{ lawIndex: idx, active: !displayedLaw(lawStateObj, idx) }] });
     });
   });
 
@@ -298,28 +339,17 @@ function renderLawGrid(grid, lawStateObj, bus) {
         .map((tile) => Number(tile.dataset.law));
       const excluded = visibleIndexes.filter((idx) => idx === LAW_INDEXES.WRAP);
       const targetIndexes = visibleIndexes.filter((idx) => idx !== LAW_INDEXES.WRAP);
-      let changed = 0;
-      for (const idx of targetIndexes) {
-        if (isSet(lawStateObj, idx) === wantOn) continue;
-        if (wantOn) setLaw(lawStateObj, idx);
-        else clearLaw(lawStateObj, idx);
-        changed += 1;
-      }
-      if (changed) {
-        renderLawGrid(grid, lawStateObj, bus);
-        bus.emit('law:toggled', {
-          category: btn.dataset.cat,
-          active: wantOn,
-          state: wantOn ? 1 : 0,
-          changed,
-          targetCount: targetIndexes.length,
-          excluded: excluded.map(() => 'WRAP'),
-        });
-      }
+      const changes = targetIndexes.filter((idx) => displayedLaw(lawStateObj, idx) !== wantOn)
+        .map((lawIndex) => ({ lawIndex, active: wantOn }));
+      const changed = changes.length;
+      if (changed) bus.emit('law:editRequested', {
+        changes, category: btn.dataset.cat, active: wantOn, changed,
+        targetCount: targetIndexes.length, excluded: excluded.map(() => 'WRAP'),
+      });
       const scope = `${targetIndexes.length} visible target${targetIndexes.length === 1 ? '' : 's'}`;
       const exception = excluded.length ? ' WRAP boundary mode was preserved.' : '';
       bus.emit('narrative:system', {
-        text: `${btn.dataset.cat}: ${changed ? (wantOn ? 'enabled' : 'disabled') : 'unchanged'} ${scope}; ${changed} changed.${exception}`,
+        text: `${btn.dataset.cat}: ${changed ? (wantOn ? 'staged ON for' : 'staged OFF for') : 'unchanged'} ${scope}; ${changed} changed.${exception}`,
       });
     });
   });
@@ -345,7 +375,7 @@ function setupLawSets(grid, bus, lawStateObj) {
   const saveBtn = document.createElement('button');
   saveBtn.className = 'law-set-btn law-set-icon';
   saveBtn.textContent = '💾';
-  saveBtn.title = 'Save current laws to the selected set';
+  saveBtn.title = 'Save proposed law settings to the selected set (does not apply them)';
   host.append(selectorBtn, loadBtn, saveBtn);
 
   // Dropdown: one row per set, 1/4-size law icons in a single line.
@@ -392,7 +422,7 @@ function setupLawSets(grid, bus, lawStateObj) {
   const activeLawIndexes = () => {
     const laws = [];
     for (let i = 0; i < LAW_COUNT; i++) {
-      if (isSet(lawStateObj, i)) laws.push(i);
+      if (displayedLaw(lawStateObj, i)) laws.push(i);
     }
     return laws;
   };
@@ -402,11 +432,12 @@ function setupLawSets(grid, bus, lawStateObj) {
   };
 
   const applyPreset = (preset) => {
-    for (let i = 0; i < LAW_COUNT; i++) clearLaw(lawStateObj, i);
-    for (const idx of preset.laws) setLaw(lawStateObj, idx);
-    currentName = preset.name;
+    const enabled = new Set(preset.laws);
+    bus.emit('law:editRequested', { changes: Array.from({ length: LAW_COUNT }, (_, lawIndex) => ({
+      lawIndex, active: enabled.has(lawIndex),
+    })).filter(({ lawIndex }) => lawIndex !== LAW_INDEXES.WRAP) });
+    currentName = preset.name + ' (PROPOSED)';
     updateSelector();
-    bus.emit('law:sync');
   };
 
   const renderDropdown = () => {
@@ -502,7 +533,7 @@ function setupLawSets(grid, bus, lawStateObj) {
   cancelBtn.addEventListener('click', () => editor.classList.add('hidden'));
 
   // Manual law edits return the label to CUSTOM
-  bus.on('law:toggled', () => {
+  bus.on('law:pending', () => {
     currentName = 'CUSTOM';
     updateSelector();
   });
@@ -532,7 +563,7 @@ const WORLD_PARAM_GROUPS = (() => {
   return groups;
 })();
 
-function renderWorldSliders(container, bus) {
+function renderWorldSliders(container, bus, pendingValues = new Map()) {
   let html = '<div class="main-accordion">';
 
   WORLD_PARAM_GROUPS.forEach((group, gi) => {
@@ -579,7 +610,7 @@ function renderWorldSliders(container, bus) {
       max: p.max,
       step: p.step,
       default: p.default,
-      value: runtimeConfig.worldParams?.[p.key] ?? p.default,
+      value: pendingValues.get(p.key) ?? runtimeConfig.worldParams?.[p.key] ?? p.default,
       key: p.key,
       title: `${p.label} (${p.key})`,
       onChange: (value) => bus.emit('world:paramChanged', { key: p.key, value }),

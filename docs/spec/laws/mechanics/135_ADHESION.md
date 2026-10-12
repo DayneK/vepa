@@ -20,9 +20,9 @@
 | Tier | Content |
 | --- | --- |
 | HINT | Adhesion lets nearby surfaces remain joined. |
-| EXPLANATION | Close particles receive a bounded attractive force supporting adjoined structures. |
-| SYSTEM | Near-contact distance error becomes attraction. |
-| ADVANCED | Unlike ACCR, it does not merge mass. |
+| EXPLANATION | Nearby separated surfaces receive a damped, mass-weighted closing force; penetrating surfaces receive separation rather than inward attraction. |
+| SYSTEM | Within r1+r2+2, the positive surface gap becomes attraction plus relative-normal damping. At contact the inward force vanishes; overlap uses contact correction. |
+| ADVANCED | Unlike ALLOY absorption, it does not merge mass or remove identity. ACCR also retains separate adjoining grains; ADHESION alone does not create persistent bond slots. |
 
 ## Implementation evidence
 
@@ -31,7 +31,7 @@
 ## Verification evidence
 
 - Tests: [tests/audit/batch_22.test.js](tests/audit/batch_22.test.js), [tests/unit/backendArchitecture.test.js](tests/unit/backendArchitecture.test.js)
-- Audits: No filename-matched audit record found.
+- Audits: [docs/audit/contact-structures-2026-10-11.md](docs/audit/contact-structures-2026-10-11.md)
 
 ## Interpretation boundary
 

@@ -1,8 +1,33 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.36] - 2026-10-12 → 9.3.3
+
+**Release scope:** contact/structure corrections, full default Chaos sampling, restart-staged law-panel edits, WORLD restart staging, launch-foundation groundwork and RB roadmap tracking.
+
+- `fix(physics)`: end-of-tick radius-aware hard contact separates living spheres after motion, radius growth and transformations, including coincident centers and toroidal seams. Contact gathering is independent of truncated force budgets/cell caps. Mass-weighted positional projection preserves pair centers; COLL remains the separate impact response.
+- `fix(structures)`: consume previously ignored POLYMER spring forces, use surface-safe polymer rest lengths and schema bond limits, maintain ACCR seams against final radii, restrict BOND equilibrium correction to linked particles, and stop ADHESION pulling through surfaces. BOND_ANGLE scales symmetric radius-based spacing. Absorbed/dead bodies are excluded; ACCR keeps separate edge-to-edge grains.
+- `feat(chaos)`: default tap randomizes laws, physical WORLD settings and every active species' 64 DNA traits using SplitMix32, then adopts the proposed batch after stopping compute during restart. Performance budgets remain unchanged; population/space/time have explicit bounded sampling. CONTACT stays enabled in default Chaos.
+- `feat(laws)`: pending law-grid/legacy-panel edits, visible category bulk commands and law-set loads no longer mutate the live mask; pending tiles/details, discard and confirmed restart share the WORLD restart boundary. WRAP stays owned by WORLD TOROIDAL. Full presets, ordinary DNA edits, selective chaos and autonomous actions remain legacy paths.
+- `docs/spec/rb/ROADMAP_PROGRESS.md` now records verified groundwork, partial coverage, unchecked end-to-end RB sections 00–11, and prioritized P0–P4 todos; `AGENTS.md`/`GEMINI.md` require evidence-based status updates.
+- Verification: 143 files / 1,567 tests pass. Accretion audits now assert final surface radii; BOND_ANGLE audit uses an actual stiff bonded pair instead of unrelated neighbor attraction. Syntax, generated-spec/repository/UI-report checks and whitespace checks pass. Production build succeeds with one large-chunk warning. No physical-fidelity, frame-rate, continuous-collision or browser-acceptance claim. Bounded projection can leave residual penetration in overpacked worlds; 3D screen projection/visual size scaling can still make disjoint spheres look overlapped. Real-browser verification was unavailable because Chromium cannot load host library `libglib-2.0.so.0`.
+- **Delivery:** release commit/tag and push recorded after creation; Freebuff deployment URL/status will be recorded in a post-deploy ledger follow-up.
+
+## [4.9.35] - 2026-10-11 → 9.3.2
+
+**v9.3.2 WORLD staging changes are included in v9.3.3 above.**
+
+- `feat(world)`: WORLD sliders stage validated, coalesced session-only overrides instead of changing live physics. A pending list shows live → proposed values, supports discard, and offers confirmed APPLY & RESTART.
+- Restart stops the worker before adopting the batch, updates world-size/spawn/time/epoch consumers, then respawns and initializes compute. Pausing does not apply proposals; restore/undo clears them. Existing restart undo captures the pre-restart world rather than adding entries on every slider edit.
+- Scope is deliberately partial: law/DNA toggles, preset configuration loads, narrative/goal changes, compute settings and adaptive solver policies were not in the v9.3.2 slice; law UI and default Chaos staging are included with v9.3.3, while ordinary DNA/preset/autonomous paths remain outstanding. Pending values are not saved and do not change launch defaults.
+- Real-browser interaction/visual verification remains unavailable because Chromium cannot load host library `libglib-2.0.so.0`; no browser acceptance claimed.
+- Pre-existing launch-foundation and RB specification changes were preserved. No law kernel behavior changed.
+
 ## [4.9.34] - 2026-10-07 → 9.3.1
 
 **Working-tree update (not released or deployed).**
+
+- Added the five roadmap starter scenarios to the launch catalog and deterministic text-to-seed input that retains the exact text and derived numeric seed in remembered launch settings.
+- This is a launch-foundation slice only; the accepted RB roadmap remains incomplete and this update is not a release or deployment.
 
 - Reduced the active particle-pool ceiling and world/launch population caps from 100,000 to 10,000; adjusted the renderer benchmark workload accordingly while preserving previously recorded benchmark results.
 - Replaced preset-card COMPARE text with compact, stateful ⇄ icon buttons that retain accessible labels and comparison behavior.

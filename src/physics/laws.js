@@ -929,7 +929,8 @@ export function applyChemistry(lawState, view, iBase, jBase, distSq, synergy) {
 // ============================================================================
 export function applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, synergy, stride) {
   if (!isSet(lawState, LAW_INDEXES.POLYMER)) return { ax: 0, ay: 0, az: 0 };
-  if (dist > 25) return { ax: 0, ay: 0, az: 0 };
+  const surfaceDistance = Math.max(0, view[iBase + S.RADIUS]) + Math.max(0, view[jBase + S.RADIUS]);
+  if (dist > Math.max(25, surfaceDistance + 10 * synergy)) return { ax: 0, ay: 0, az: 0 };
 
   // Batch-06 confirmation ("match documentation"): up to 6 bonds per particle
   // (BOND_PARTNER_1..6), tracked mutually — when i chains to j, j chains back
@@ -951,7 +952,8 @@ export function applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, syn
   // particles (0-1 bonds) bond eagerly, well-connected particles (3+) are
   // avoided, so POLYMER grows linear chains instead of cross-linked webs.
   const chainBias = jBondCount <= 1 ? 1.0 : (jBondCount >= 3 ? 0.25 : 0.5);
-  if (!alreadyBonded && bondCount < 6 && jBondCount < 6 && dist < 10 * synergy * chainBias) {
+  const limit = Math.max(2, Math.min(6, Math.round(worldParams().POLYMER_LIMIT ?? 6)));
+  if (!alreadyBonded && bondCount < limit && jBondCount < limit && dist < Math.max(surfaceDistance * 1.1, 10 * synergy * chainBias)) {
     const iSlot = BOND_SLOTS.find((slot) => view[iBase + slot] < 0);
     const jSlot = BOND_SLOTS.find((slot) => view[jBase + slot] < 0);
     // Register both sides only when both sides have capacity. A polymer seam
@@ -968,7 +970,7 @@ export function applyPolymer(lawState, view, iBase, jBase, dx, dy, dz, dist, syn
   // forms this law is only a candidate selector, not a global attraction.
   if (accretionLink || !alreadyBonded || dist < 0.1) return { ax: 0, ay: 0, az: 0 };
   const stiffness = 0.02 * synergy;
-  const restLen = 4.0;
+  const restLen = Math.max(4.0, surfaceDistance);
   const displacement = dist - restLen;
   const forceMag = stiffness * displacement;
   const invDist = 1.0 / dist;
@@ -1334,7 +1336,10 @@ export function applyBond(lawState, view, iBase, jBase, stride, dx, dy, dz, dist
   const r1 = view[iBase + S.RADIUS];
   const r2 = view[jBase + S.RADIUS];
   if (!Number.isFinite(r1) || !Number.isFinite(r2)) return null;
-  const restLength = (r1 + r2) * 1.1; // slight buffer to avoid overlap
+  const angleI = view[iBase + S.DNA_CACHE_START + D.BOND_ANGLE] || 0;
+  const angleJ = view[jBase + S.DNA_CACHE_START + D.BOND_ANGLE] || 0;
+  const angleScale = 1 + Math.min(1, (Math.abs(angleI) + Math.abs(angleJ)) / 240);
+  const restLength = (r1 + r2) * 1.1 * angleScale; // surface-based spacing, symmetric geometry preference
   // Molecular bonds are short-range: they form within ~2x the rest length
   // (extended by local density) and break when stretched beyond that, instead
   // of holding forever.

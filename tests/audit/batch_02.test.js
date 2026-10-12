@@ -99,7 +99,7 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
     expect(view[S.COLOR_R]).toBe(255);
     expect(view[PARTICLE_STRIDE + S.COLOR_B]).toBe(255);
     const separation = view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X];
-    expect(Math.abs(separation)).toBeCloseTo(1.2, 2); // r1 + r2
+    expect(Math.abs(separation)).toBeCloseTo(view[S.RADIUS] + view[PARTICLE_STRIDE + S.RADIUS], 2); // final mass-grown surface radii
     expect(view[S.MASS] + view[PARTICLE_STRIDE + S.MASS]).toBeCloseTo(total, 5);
   });
 
@@ -115,7 +115,7 @@ describe('Batch 02 — COLL / ACCR / PLANETARY / LIFE (indices 4-7)', () => {
     const laws = createLawState();
     set(laws, LAW_INDEXES.ACCR);
     solve(view, 2, PARTICLE_STRIDE, laws, dna, WORLD, DT, rng);
-    expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeCloseTo(1.2, 2);
+    expect(view[PARTICLE_STRIDE + S.POS_X] - view[S.POS_X]).toBeCloseTo(view[S.RADIUS] + view[PARTICLE_STRIDE + S.RADIUS], 2);
     expect(view[S.MASS]).toBe(1.5);
     expect(view[PARTICLE_STRIDE + S.MASS]).toBe(1.5);
   });

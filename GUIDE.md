@@ -11,6 +11,15 @@ For implementation-level inspection, use the generated [`docs/spec/`](./docs/spe
 
 ---
 
+## WORLD/law edits and restart (working tree v9.3.3)
+
+WORLD sliders edit a proposed configuration, not the active simulation. The pending list shows each live and proposed value. Choose **DISCARD** to abandon the proposals or **APPLY & RESTART** and confirm to replace the population using them. The toolbar restart also adopts pending WORLD values. Pause/resume alone does not apply them. World restore/undo clears pending values; current-world saves and launch defaults do not include them. Law tiles, category ON/OFF and law-set loads also stage; outlined tiles and the law pending list show proposed states, not active physics. DISCARD LAWS clears only law proposals; APPLY & RESTART on either surface adopts all staged laws and WORLD values. WRAP is changed via WORLD TOROIDAL. Ordinary DNA edits, full preset loads, selective chaos and autonomous tuning remain legacy live paths; full restart-only configuration remains unfinished.
+
+Tap **Chaos** to randomize laws, physical world settings and all 64 traits per active species, then restart. Performance budgets remain unchanged, and population/space/time sampling is bounded. Holding Chaos retains its selective/multiplex controls.
+
+### Surfaces and structures
+CONTACT/COLL or structural laws enforce discrete end-of-tick sphere exclusion, including exact-center overlaps and radius growth. POLYMER springs use at least the sum of radii; ADHESION closes surface gaps without pulling inward at contact. ACCR forms separate adjoining grains; actual ALLOY absorption removes the consumed body. Dense overpacking can exceed the bounded projection solver, and 3D projection or visual-size scaling can still look overlapped on screen. This is not continuous collision detection or a guarantee of physical fidelity.
+
 ## 1. The Trinity of Structure
 
 Stable macro-structures are rarely the result of a single parameter. They emerge from the "Golden Ratios" between three core pillars:

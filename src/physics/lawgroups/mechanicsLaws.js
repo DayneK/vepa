@@ -11,7 +11,12 @@ const mass = (view, base) => Math.max(0.001, Number.isFinite(view[base + S.MASS]
 
 export function applyContactCorrection(view, i, j, dx, dy, dz, dist, maxCorrection = Infinity) {
   const overlap = (view[i + S.RADIUS] || 0) + (view[j + S.RADIUS] || 0) - dist;
-  if (overlap <= 0 || dist <= 1e-6) return null;
+  if (overlap <= 0) return null;
+  if (dist <= 1e-6) {
+    const sign = i < j ? -1 : 1;
+    const share = Math.min(overlap, maxCorrection) * mass(view, j) / (mass(view, i) + mass(view, j));
+    return { x: sign * share, y: 0, z: 0 };
+  }
   const mi = mass(view, i), mj = mass(view, j);
   const share = Math.min(overlap, maxCorrection) * mj / (mi + mj);
   const inv = 1 / dist;
@@ -138,10 +143,16 @@ export function applyTopology(view, i, j, dx, dy, dz, dist, k = 0.01) {
 }
 
 export function applyAdhesion(view, i, j, dx, dy, dz, dist, k = 0.015) {
-  const contact = (view[i + S.RADIUS] || 0) + (view[j + S.RADIUS] || 0) + 2;
+  const surface = (view[i + S.RADIUS] || 0) + (view[j + S.RADIUS] || 0);
+  const contact = surface + 2;
   if (dist > contact) return null;
+  if (dist <= surface) return applyContact(view, i, j, dx, dy, dz, dist, k);
   const inv = 1 / Math.max(dist, 1e-6);
-  const force = (contact - dist) * k;
+  // Adhesion closes the surface gap, never attracts through another body.
+  const dv = ((view[j + S.VEL_X] || 0) - (view[i + S.VEL_X] || 0)) * dx * inv
+    + ((view[j + S.VEL_Y] || 0) - (view[i + S.VEL_Y] || 0)) * dy * inv
+    + ((view[j + S.VEL_Z] || 0) - (view[i + S.VEL_Z] || 0)) * dz * inv;
+  const force = ((dist - surface) * k + dv * Math.sqrt(k)) * mass(view, j) / (mass(view, i) + mass(view, j));
   return { ax: clamp(dx * inv * force), ay: clamp(dy * inv * force), az: clamp(dz * inv * force) };
 }
 
