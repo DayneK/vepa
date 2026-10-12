@@ -23,8 +23,29 @@ describe('default full Chaos settings', () => {
       expect(first.worldParams[def.key]).toBeLessThanOrEqual(def.max);
       if (def.group === 'PERFORMANCE') expect(first.worldParams[def.key]).toBe(world[def.key]);
     }
+    expect(first.worldParams.WORLD_SIZE).toBeGreaterThanOrEqual(50);
+    expect(first.worldParams.WORLD_SIZE).toBeLessThanOrEqual(240);
+    const worldSizeStep = WORLD_PARAM_DEFS.find(({ key }) => key === 'WORLD_SIZE').step;
+    expect(worldSizeStep).toBe(100);
+    for (let seed = 1; seed <= 32; seed++) {
+      const size = randomizeChaosSettings(world, dna, 0, new SplitMix32(seed)).worldParams.WORLD_SIZE;
+      expect(size).toBeGreaterThanOrEqual(50);
+      expect(size).toBeLessThanOrEqual(240);
+      expect((size - 50) % 10).toBe(0);
+    }
+    expect(first.worldParams.PARTICLE_COUNT).toBeGreaterThanOrEqual(100);
+    expect(first.worldParams.PARTICLE_COUNT).toBeLessThanOrEqual(300);
+    expect(first.worldParams.MAX_POP).toBeLessThanOrEqual(300);
+    expect(first.worldParams.INITIAL_POP).toBeLessThanOrEqual(120);
+    expect(WORLD_PARAM_DEFS.find(({ key }) => key === 'WORLD_SIZE').max).toBe(20000);
+    expect(WORLD_PARAM_DEFS.find(({ key }) => key === 'PARTICLE_COUNT').max).toBe(10000);
     expect(first.worldParams.INITIAL_POP).toBeLessThanOrEqual(first.worldParams.MAX_POP);
     expect(first.worldParams.MAX_POP).toBeLessThanOrEqual(first.worldParams.PARTICLE_COUNT);
+    const upperBoundSample = randomizeChaosSettings(world, dna, 0, { next: () => 0.999 });
+    expect(upperBoundSample.worldParams.WORLD_SIZE).toBe(240);
+    expect(upperBoundSample.worldParams.PARTICLE_COUNT).toBe(300);
+    expect(upperBoundSample.worldParams.MAX_POP).toBe(300);
+    expect(upperBoundSample.worldParams.INITIAL_POP).toBeLessThanOrEqual(120);
     for (let s = 0; s < 5; s++) for (let p = 0; p < DNA_COUNT; p++) {
       const value = readDNAParam(first.dna, s, p);
       expect(value).toBeGreaterThanOrEqual(DNA_RANGES[p].min);

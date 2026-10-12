@@ -4,7 +4,7 @@
  * Mirrors v2 design for browsing/editing species DNA profiles.
  */
 import { MAX_SPECIES, DNA_META, DNA_RANGES, DNA_INDEXES, DNA_COUNT } from '../constants.js';
-import { getSpeciesDNA, setSpeciesDNA, setDNAFloat, getDNAFloat } from '../dna/dnaBuffer.js';
+import { getSpeciesDNA, setSpeciesDNA, getDNAFloat } from '../dna/dnaBuffer.js';
 import { createSliderRow } from './sliderControl.js';
 
 const SPECIES_COLORS = ['#ff5050', '#ffc832', '#50ff78', '#78a0ff', '#643c8c'];
@@ -235,10 +235,7 @@ function renderAccordion(container, dnaBuffer, bus) {
       key: String(idx),
       title: `${name} (DNA ${idx})`,
       onChange: (value) => {
-        if (dnaBuffer) {
-          setDNAFloat(dnaBuffer, selectedSpecies, idx, value, range.min, range.max);
-          if (bus) bus.emit('dna:changed', { species: selectedSpecies, param: idx, value });
-        }
+        if (bus) bus.emit('dna:editRequested', { species: selectedSpecies, param: idx, value });
       },
     });
     slot.replaceWith(row.el);

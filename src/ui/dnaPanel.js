@@ -1,10 +1,10 @@
 /**
  * VEPA v3 — DNA Parameter Panel
  * Species selector + 64 DNA sliders grouped by category.
- * Live-updates the shared DNA buffer on slider change.
+ * Slider edits are session-only proposals adopted by the next confirmed restart.
  */
 import { DNA_META, DNA_RANGES, DNA_INDEXES, DNA_COUNT, MAX_SPECIES } from '../constants.js';
-import { setDNAFloat, getDNAFloat } from '../dna/dnaBuffer.js';
+import { getDNAFloat } from '../dna/dnaBuffer.js';
 import { createSliderRow } from './sliderControl.js';
 
 /**
@@ -68,13 +68,15 @@ const DEFAULT_SPECIES_COLORS = [
 let selectedSpecies = 0;
 let speciesColors = [...DEFAULT_SPECIES_COLORS];
 let sliders = [];
+let pendingValues = new Map();
 
 /**
  * Rebuild all slider values to reflect the current DNA buffer state.
  */
 function refreshSliders(dnaBuffer, rangeInfo) {
   for (const s of sliders) {
-    const val = getDNAFloat(dnaBuffer, selectedSpecies, s.index, rangeInfo[s.index].min, rangeInfo[s.index].max);
+    const val = pendingValues.get(`${selectedSpecies}:${s.index}`)
+      ?? getDNAFloat(dnaBuffer, selectedSpecies, s.index, rangeInfo[s.index].min, rangeInfo[s.index].max);
     s.row.setValue(val, { emit: false, snap: false });
   }
 }
@@ -115,6 +117,7 @@ export function createDNAPanel(bus, dnaBuffer) {
 
   // ── Build enhanced slider rows ──
   sliders = [];
+  pendingValues = new Map();
   DNA_GROUPS.forEach((group, gi) => {
     const rowsEl = panel.querySelector(`.dna-rows[data-group-idx="${gi}"]`);
     if (!rowsEl) return;
@@ -131,8 +134,7 @@ export function createDNAPanel(bus, dnaBuffer) {
         key: `DNA_${idx}`,
         title: `${name} (DNA ${idx})`,
         onChange: (val) => {
-          setDNAFloat(dnaBuffer, selectedSpecies, idx, val, range.min, range.max);
-          bus.emit('dna:changed', {
+          bus.emit('dna:editRequested', {
             species: selectedSpecies,
             param: idx,
             value: val,
@@ -163,7 +165,11 @@ export function createDNAPanel(bus, dnaBuffer) {
     });
   }
 
-  // ── Listen for external DNA changes (e.g., preset load, reset) ──
+  // ── Listen for staged DNA proposals and committed external changes ──
+  bus.on('dna:pending', ({ changes = [] } = {}) => {
+    pendingValues = new Map(changes.map(({ species, param, value }) => [`${species}:${param}`, value]));
+    refreshSliders(dnaBuffer, DNA_RANGES);
+  });
   bus.on('dna:sync', ({ species } = {}) => {
     const targetSpecies = species !== undefined ? species : selectedSpecies;
     if (targetSpecies === selectedSpecies) {

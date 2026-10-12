@@ -16,8 +16,8 @@
 
 ### Partial implementation (do not mark complete)
 
-- [ ] WORLD parameter edits stage to restart; law-grid edits stage to restart; default Chaos includes laws, WORLD and active-species DNA. Ordinary DNA edits, full preset loads, selective Chaos, autonomous actions, and some compute/configuration paths still bypass global staging. Proposals are session-only and do not provide full provenance/replay transaction semantics.
-- [ ] Contact, structures and solver coverage improved in working-tree v9.3.3; this does not establish dense-packing, continuous-collision, fidelity, frame-rate, or browser acceptance.
+- [ ] WORLD parameter, law-grid, and ordinary DNA slider edits stage to restart; default Chaos includes laws, WORLD and active-species DNA. Chaos-only sampling bounds are WORLD_SIZE 50–240 in 10-unit increments (the WORLD slider step remains 100) and PARTICLE_COUNT/MAX_POP ≤300, INITIAL_POP ≤120; WORLD/DNA slider ranges are unchanged. Full preset loads, selective Chaos, autonomous actions, species-roster operations, and some compute/configuration paths still bypass global staging. Proposals are session-only and do not provide full provenance/replay transaction semantics.
+- [ ] Contact, structures and solver coverage improved in v9.3.3; uniform full-height initial/background Z spawn and DNA-slider restart staging are added in v9.3.4. This does not establish dense-packing, continuous-collision, fidelity, frame-rate, or browser acceptance.
 - [ ] UI overhaul, technical-spec generation and source inventory provide groundwork only; the orchestrator and several UI/solver modules remain concentrated/monolithic.
 
 ## RB sections 00–11 — completion gates
@@ -42,7 +42,8 @@ A section is checked only when its listed outcome and relevant verification evid
 ### P0 — Finish global configuration safety
 
 - [ ] Inventory every UI, preset, chaos, narrative/goal, worker/backend and autonomous write path that can change physics outcomes.
-- [ ] Route ordinary DNA edits, preset loads, selective Chaos and autonomous/configuration edits through the same candidate configuration/restart boundary.
+- [x] Route ordinary DNA slider edits from the DNA and species panels through a session-only candidate batch; display per-species proposal details and support discard/confirmed restart. Restart commits after compute stops and before population spawn/worker init. Targeted controller tests cover validation, clamping, reversion, pause isolation, discard/restore and ordering. This does not stage presets, roster edits, selective Chaos, autonomous paths or other direct writers.
+- [ ] Route preset loads, selective Chaos, and autonomous/configuration edits through the same candidate configuration/restart boundary; extend DNA staging to genome operations and define cross-source merge semantics.
 - [ ] Decide and implement save/provenance/undo/replay semantics for proposed versus committed configuration; preserve launch input and derived seed.
 - [ ] Add integration tests for pause, restart, worker stop ordering, undo/restore, save/load, and each configuration source.
 
@@ -75,7 +76,7 @@ A section is checked only when its listed outcome and relevant verification evid
 The product roadmap has explicit acceptance targets that are not all equivalent to RB sections. Current evidence supports these limited check-offs:
 
 - [x] **Starter setup foundation:** five named starter scenarios and deterministic text-to-seed retention are implemented and covered by `tests/unit/roadmapLaunchFoundation.test.js`; preset preview/custom-save behavior still needs evidence.
-- [ ] **Global restart-only configuration:** law edits and selected WORLD edits stage, but ordinary DNA, full preset loads, selective Chaos, autonomous actions and some compute settings are still live paths; proposed configuration provenance/replay is incomplete.
+- [ ] **Global restart-only configuration:** law edits, selected WORLD edits, and ordinary DNA slider edits stage, but full preset loads, selective Chaos, autonomous actions, species-roster operations and some compute settings remain live paths; proposed configuration provenance/replay is incomplete.
 - [ ] **Physics sandbox / emergence ladder acceptance:** unit/audit coverage is broad, but end-to-end reproducible rung transitions and real-browser evidence have not been established.
 - [ ] **Save, migration, recovery and replay acceptance:** current save/undo surfaces exist, but the roadmap's full configuration/event provenance, migration, corruption recovery and replay-compatibility guarantees remain unverified.
 - [ ] **Mobile-first tutorial and spoiler-safe progression:** no verified sub-two-minute tutorial or progression-spoiler gate is present in the evidence reviewed.
@@ -84,7 +85,7 @@ The product roadmap has explicit acceptance targets that are not all equivalent 
 
 ## Verification record
 
-- Source baseline inspected: working tree v9.3.3, 2026-10-12; no real-browser result is available in the current handoff (prior run was blocked by missing `libglib-2.0.so.0`).
-- Current production deployment before this task: `https://v5.freebuff.app/` (Freebuff status active; not evidence that v9.3.3 is deployed).
-- Commit candidate: `2e6027a` (local `main`, tag `v9.3.3`); push/rebase integration and deployment remain pending verification.
-- Record actual commands, counts, browser result, commit and deployment identity here only after rerunning them for this delivery.
+- Source baseline: v9.3.4 candidate on `main`, based on HEAD `34d5592` (`chore(roadmap): preserve roadmap baseline and track evidence-gated progress`); pre-release branch `backup/pre-v934-release-20261012`. This continuation adds uniform full-height spawn Z, removes GROUND_HEIGHT, clarifies Chaos granularity, and stages ordinary DNA slider edits.
+- Verification: focused spawn/Chaos/DNA tests pass (5 files, 29 tests); full Vitest passes (144 files, 1,571 tests); `npm run syntax-check` passes; `npm run repository:check` passes (spec 180 files, 136 laws, ontology/provenance/signoff and UI report); `npm run build` passes with existing >500 kB chunk warning; `git diff --check` passes.
+- Real-browser status: not verified; Chromium cannot load host library `libglib-2.0.so.0`.
+- Current production before this candidate: `https://v5.freebuff.app/`; candidate commit/tag/push/deploy status pending.

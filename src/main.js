@@ -11,9 +11,10 @@ import { createLawState, set as lawSet, clear as lawClear, serialize as serializ
 import { runtimeConfig } from './state/runtimeConfig.js';
 import { wirePendingWorldParams } from './state/pendingWorldParams.js';
 import { wirePendingLaws } from './state/pendingLaws.js';
+import { wirePendingDNA } from './state/pendingDNA.js';
 import { randomizeChaosSettings } from './state/chaosSettings.js';
 import { createWorldParams, applyWorldParam, spawnCaps, syncWrapLaw, syncToroidalParam } from './state/worldParams.js';
-import { sampleSpawnPosition, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from './spawn/distribution.js';
+import { sampleSpawnPosition, sampleSpawnHeight, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from './spawn/distribution.js';
 import { createDNABuffer, loadDefaults, getDNAFloat } from './dna/dnaBuffer.js';
 import { quantizeDNA } from './dna/codec.js';
 import { createRendererAsync, resize as resizeRenderer, paintBackground } from './render/renderer.js';
@@ -679,7 +680,6 @@ function spawnDefaultPopulation(preserveDNA = false, keepSpecies = false) {
     const caps = spawnCaps(worldParams);
     const totalTarget = initialPopulationTarget(worldParams, caps);
     const perSpecies = perSpeciesAllocation(totalTarget, speciesCount);
-    const groundH = Math.max(0, Math.min(1, worldParams.GROUND_HEIGHT));
 
     for (let s = 0; s < speciesCount; s++) {
         const p = profiles[s] || null;
@@ -702,19 +702,16 @@ function spawnDefaultPopulation(preserveDNA = false, keepSpecies = false) {
             const gz = Math.floor(i / (gridDim * gridDim));
             let px = 5 + gx * cellSize + cellSize * 0.5 + (prng.nextFloat(0, 1) - 0.5) * cellSize * 0.4;
             let py = 5 + gy * cellSize + cellSize * 0.5 + (prng.nextFloat(0, 1) - 0.5) * cellSize * 0.4;
-            let pz = 5 + gz * cellSize + cellSize * 0.5 + (prng.nextFloat(0, 1) - 0.5) * cellSize * 0.4;
+            const pz = sampleSpawnHeight(worldSize, prng);
             if (worldParams.SHAPE > 0) {
                 px = px + (prng.nextFloat(0, worldSize) - px) * worldParams.SHAPE;
                 py = py + (prng.nextFloat(0, worldSize) - py) * worldParams.SHAPE;
-                pz = pz + (prng.nextFloat(0, worldSize) - pz) * worldParams.SHAPE;
             }
             if (worldParams.SPAWN_CENTRE_BIAS > 0 && centres.length > 0) {
                 const c = centres[Math.floor(prng.nextFloat(0, centres.length))];
                 px = px + (c.x - px) * worldParams.SPAWN_CENTRE_BIAS;
                 py = py + (c.y - py) * worldParams.SPAWN_CENTRE_BIAS;
-                pz = pz + (c.z - pz) * worldParams.SPAWN_CENTRE_BIAS;
             }
-            if (groundH < 1) pz = Math.min(pz, Math.max(0, worldSize * groundH));
             setX(particleBuffer, idx, PARTICLE_STRIDE, px);
             setY(particleBuffer, idx, PARTICLE_STRIDE, py);
             particleView[ptr + STRIDE_INDEXES.POS_Z] = pz;
@@ -986,6 +983,7 @@ function setDNAFromProfile(species, profile) {
         getLive: () => worldParams,
         apply: applyWorldParameter,
     });
+    const pendingDNA = wirePendingDNA(bus, { getLive: () => dnaBuffer });
     bus.on('sim:hardReset', () => {
         if (particleCount <= 0) return;
         const d = new Date();
@@ -1088,7 +1086,14 @@ function setDNAFromProfile(species, profile) {
         syncPhysicsWorker(payload);
     });
     bus.on('dna:sync', syncPhysicsWorker);
-    bus.on('dna:changed', syncPhysicsWorker);
+    bus.on('dna:editApplied', syncPhysicsWorker);
+    bus.on('dna:changed', (payload = {}) => {
+        // Existing genome operations (roster clone/remove, preset restore,
+        // evolutionary writes) still mutate synchronously. Rebase any slider
+        // candidate for the same param onto that committed value.
+        bus.emit('dna:pendingRequested');
+        syncPhysicsWorker(payload);
+    });
     bus.on('world:paramApplied', syncPhysicsWorker);
     bus.on('compute:changed', syncPhysicsWorker);
     bus.on('sim:pause', () => { paused = true; });
@@ -1104,11 +1109,16 @@ function setDNAFromProfile(species, profile) {
         }
         const appliedLaws = pendingLaws.commit();
         const applied = pendingWorldParams.commit();
+        const appliedDNA = pendingDNA.commit();
+        if (appliedDNA.length) bus.emit('dna:editApplied', { changes: appliedDNA });
         if (appliedLaws.length) bus.emit('narrative:system', {
             text: `Restart applied ${appliedLaws.length} staged law changes.`,
         });
         if (applied.length) bus.emit('narrative:system', {
             text: `Restart applied ${applied.length} staged world parameter${applied.length === 1 ? '' : 's'}.`,
+        });
+        if (appliedDNA.length) bus.emit('narrative:system', {
+            text: `Restart applied ${appliedDNA.length} staged DNA edit${appliedDNA.length === 1 ? '' : 's'}.`,
         });
         spawnAccumulator = 0;
         prng = new PRNG(launchSettings?.launchSeed ?? Date.now());
@@ -1144,6 +1154,7 @@ function setDNAFromProfile(species, profile) {
         pendingChaosDNA = randomized.dna;
         bus.emit('world:discardPending');
         bus.emit('law:discardPending');
+        bus.emit('dna:discardPending');
         for (const [key, value] of Object.entries(randomized.worldParams)) {
             if (value !== worldParams[key]) bus.emit('world:paramChanged', { key, value });
         }

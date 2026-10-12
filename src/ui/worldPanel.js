@@ -217,26 +217,47 @@ export function createWorldPanel(bus, lawStateObj) {
     const notice = document.createElement('section');
     notice.className = 'world-pending-notice';
     notice.setAttribute('aria-label', 'World parameter restart changes');
-    notice.innerHTML = '<p>WORLD and law edits are staged until restart. Pausing does not apply them. DNA still uses the legacy live-edit path.</p><p data-pending-status role="status" aria-live="polite">No staged world changes.</p><ul data-pending-details></ul><div class="world-pending-actions"><button type="button" data-pending-restart disabled>APPLY & RESTART</button><button type="button" data-pending-discard disabled>DISCARD</button></div>';
+    notice.innerHTML = '<p>WORLD and law edits are staged until restart. Pausing does not apply proposals. DNA sliders below are staged here too.</p><p data-pending-status role="status" aria-live="polite">No staged world changes.</p><ul data-pending-details></ul><div class="world-pending-actions"><button type="button" data-pending-restart disabled>APPLY & RESTART</button><button type="button" data-pending-discard disabled>DISCARD WORLD</button></div>';
     params.insertAdjacentElement('beforebegin', notice);
     notice.querySelector('[data-pending-restart]').addEventListener('click', () => {
-      if (window.confirm('Apply ALL staged WORLD and law changes and restart? This replaces the current population.')) bus.emit('sim:restart');
+      if (window.confirm('Apply all staged configuration changes and restart? This replaces the current population.')) bus.emit('sim:restart');
     });
     notice.querySelector('[data-pending-discard]').addEventListener('click', () => bus.emit('world:discardPending'));
     bus.on('world:paramsPending', ({ changes }) => {
       pendingValues.clear();
       for (const change of changes) pendingValues.set(change.key, change.value);
-      notice.querySelector('[data-pending-status]').textContent = changes.length
-        ? `${changes.length} world change${changes.length === 1 ? '' : 's'} pending — restart required.`
-        : 'No staged world changes.';
       notice.querySelector('[data-pending-details]').innerHTML = changes.map(({ key, label, liveValue, value }) =>
         `<li>${escapeHtml(label)} (${escapeHtml(key)}): ${liveValue} → ${value}</li>`).join('');
+      notice.querySelector('[data-pending-status]').textContent = changes.length
+        ? `${changes.length} world change${changes.length === 1 ? '' : 's'} pending — restart required. Staged law and DNA changes are listed in their own notices.`
+        : 'No staged world changes. Law and DNA proposals have separate notices.';
       notice.querySelector('[data-pending-restart]').disabled = !changes.length;
       notice.querySelector('[data-pending-discard]').disabled = !changes.length;
     });
     renderWorldSliders(params, bus, pendingValues);
     bus.emit('world:pendingRequested');
   }
+
+  const dnaNotice = document.createElement('section');
+  dnaNotice.className = 'world-pending-notice';
+  dnaNotice.setAttribute('aria-label', 'DNA restart changes');
+  dnaNotice.innerHTML = '<p>Species DNA slider edits are proposals until restart. The current run keeps its live genome.</p><p data-dna-pending-status role="status" aria-live="polite">No staged DNA changes.</p><ul data-dna-pending-details></ul><div class="world-pending-actions"><button type="button" data-dna-pending-restart disabled>APPLY & RESTART</button><button type="button" data-dna-pending-discard disabled>DISCARD DNA</button></div>';
+  if (params) params.insertAdjacentElement('afterend', dnaNotice);
+  else grid.insertAdjacentElement('afterend', dnaNotice);
+  dnaNotice.querySelector('[data-dna-pending-restart]').addEventListener('click', () => {
+    if (window.confirm('Apply all staged configuration changes and restart? This replaces the current population.')) bus.emit('sim:restart');
+  });
+  dnaNotice.querySelector('[data-dna-pending-discard]').addEventListener('click', () => bus.emit('dna:discardPending'));
+  bus.on('dna:pending', ({ changes = [] }) => {
+    dnaNotice.querySelector('[data-dna-pending-status]').textContent = changes.length
+      ? `${changes.length} DNA edit${changes.length === 1 ? '' : 's'} pending — restart required.`
+      : 'No staged DNA changes.';
+    dnaNotice.querySelector('[data-dna-pending-details]').innerHTML = changes.map(({ species, label, liveValue, value }) =>
+      `<li>Species ${species + 1} · ${escapeHtml(label)}: ${liveValue.toPrecision(4)} → ${value.toPrecision(4)}</li>`).join('');
+    dnaNotice.querySelector('[data-dna-pending-restart]').disabled = !changes.length;
+    dnaNotice.querySelector('[data-dna-pending-discard]').disabled = !changes.length;
+  });
+  bus.emit('dna:pendingRequested');
 
   // ── Listen for law sync ──
   bus.on('law:sync', () => renderLawGrid(grid, lawStateObj, bus));

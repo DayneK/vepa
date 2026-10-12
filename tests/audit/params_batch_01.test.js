@@ -1,13 +1,14 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { WORLD, lcg } from './paramsHelpers.js';
-import { createWorldParams, spawnCaps, applyWorldParam } from '../../src/state/worldParams.js';
+import { WORLD_PARAM_DEFS, createWorldParams, spawnCaps, applyWorldParam } from '../../src/state/worldParams.js';
 import { sampleSpawnPosition, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from '../../src/spawn/distribution.js';
 import { MAX_PARTICLES } from '../../src/constants.js';
 
 const cfg = (over) => ({ ...createWorldParams(), ...over });
 const rng = lcg(42);
 
-describe('Batch 01 — WORLD_SIZE / GROUND_HEIGHT / PARTICLE_COUNT / INITIAL_POP', () => {
+describe('Batch 01 — WORLD_SIZE / PARTICLE_COUNT / INITIAL_POP', () => {
   it('WORLD_SIZE: spawn samples stay inside the world bounds', () => {
     for (const ws of [2000, 500, 10000]) {
       for (let i = 0; i < 50; i++) {
@@ -29,21 +30,29 @@ describe('Batch 01 — WORLD_SIZE / GROUND_HEIGHT / PARTICLE_COUNT / INITIAL_POP
     expect(s.WORLD_SIZE).toBe(20000);
   });
 
-  it('GROUND_HEIGHT: spawn z is confined to the ground band', () => {
+  it('spawn Z is uniform across the full world height and independent of XY distribution controls', () => {
     const ws = 2000;
-    const p = sampleSpawnPosition(cfg({ GROUND_HEIGHT: 0.3 }), ws, rng);
-    expect(p.z).toBeLessThanOrEqual(ws * 0.3 + 1e-9);
+    expect(createWorldParams()).not.toHaveProperty('GROUND_HEIGHT');
+    const variants = [
+      { SHAPE: 0, SPAWN_CENTRE_BIAS: 0 },
+      { SHAPE: 1, SPAWN_CENTRE_BIAS: 0 },
+      { SHAPE: 0, SPAWN_CENTRE_BIAS: 1 },
+      { SHAPE: 1, SPAWN_CENTRE_BIAS: 1 },
+    ];
+    const distributions = variants.map((controls) => {
+      const spawnRng = lcg(42);
+      return Array.from({ length: 2000 }, () => sampleSpawnPosition(cfg(controls), ws, spawnRng).z);
+    });
+    for (const zValues of distributions) {
+      expect(Math.min(...zValues)).toBeLessThan(ws * 0.01);
+      expect(Math.max(...zValues)).toBeGreaterThan(ws * 0.99);
+      const bins = Array(10).fill(0);
+      for (const z of zValues) bins[Math.min(9, Math.floor(z / (ws / bins.length)))]++;
+      for (const count of bins) expect(count).toBeGreaterThan(150);
+      for (const count of bins) expect(count).toBeLessThan(250);
+    }
   });
 
-  it('GROUND_HEIGHT: full band (1.0) allows spawns above a low band', () => {
-    const ws = 2000;
-    let maxZ = 0;
-    for (let i = 0; i < 200; i++) {
-      const p = sampleSpawnPosition(cfg({ GROUND_HEIGHT: 1 }), ws, rng);
-      maxZ = Math.max(maxZ, p.z);
-    }
-    expect(maxZ).toBeGreaterThan(ws * 0.5);
-  });
 
   it('PARTICLE_COUNT: hard cap = min(PARTICLE_COUNT, MAX_PARTICLES)', () => {
     expect(spawnCaps(cfg({ PARTICLE_COUNT: 500 })).hardCap).toBe(500);
@@ -73,5 +82,12 @@ describe('Batch 01 — WORLD_SIZE / GROUND_HEIGHT / PARTICLE_COUNT / INITIAL_POP
     expect(centres[0].x).toBeCloseTo(1000, 3);
     expect(centres[0].y).toBeCloseTo(1000, 3);
     expect(centres[0].z).toBeCloseTo(1000, 3);
+  });
+
+  it('initial population samples full-height Z with no ground clamp or XY influence', () => {
+    const main = readFileSync(new URL('../../src/main.js', import.meta.url), 'utf8');
+    const spawn = main.slice(main.indexOf('function spawnDefaultPopulation'), main.indexOf('/** Repaint the atmospheric backdrop'));
+    expect(spawn).toContain('const pz = sampleSpawnHeight(worldSize, prng)');
+    expect(spawn).not.toMatch(/GROUND_HEIGHT|pz\s*=.*SHAPE|pz\s*=.*centreBias/i);
   });
 });

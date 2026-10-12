@@ -5,7 +5,7 @@
 ## Versioning & Commits
 
 - **Product:** **VEPA4**; versions use **`major.minor.build`** (npm-semver-native) —
-  current version: **9.3.3** (legacy label `4.9.36`; release/deployment state is in `CHANGELOG.md`). Retroactive mapping of the v4 line:
+  current version: **9.3.4** (legacy label `4.9.37`; release/deployment state is in `CHANGELOG.md`). Retroactive mapping of the v4 line:
   old `4.M.N` → `M.N.0`; see `CHANGELOG.md` and `AGENTS.md` §10.4.
 - **Commits:** [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
   — `<type>(<scope>): <description>`, release commits `chore(release): v7.0.0`,
@@ -18,11 +18,13 @@ Lineage, Goal, Timeline) are now wired into the simulation loop, the
 communication DNA group drives real physics, and predation is restored as an
 explicit law.
 
-## Surface contact and full Chaos (working tree v9.3.3)
+## Surface contact, full Chaos, and uniform spawn height (v9.3.4)
 
 Hard matter/structural laws now run a radius-aware contact pass after motion and growth. Polymer springs are consumed, adhesion closes surface gaps rather than pulling through bodies, and ACCR retains separate edge-to-edge grains. Bounded iterations can retain residual penetration under extreme packing; projected 3D spheres and visual scaling can still overlap on screen. Turning off all hard-contact/structural laws retains ghost behavior.
 
-Tap **Chaos** to randomize laws, physical WORLD settings and all 64 traits of each active species, then restart with the batch. Performance budgets are preserved; population/space/time sampling is bounded. Hold opens the existing selective/multiplex menu. This is not completion of the full restart-only/replay roadmap.
+All initial particles and later background spawns sample Z uniformly across the full world height, independent of the XY distribution and centre-bias settings; there is no ground-height clamp or persistent floor.
+
+Tap **Chaos** to randomize laws, physical WORLD settings and all 64 traits of each active species, then restart with the batch. Chaos samples WORLD_SIZE from 50–240 units in 10-unit increments and PARTICLE_COUNT/MAX_POP up to 300 (INITIAL_POP up to 120); these Chaos-only bounds do not change the full WORLD slider or DNA parameter ranges. The 10-unit increment is only the granularity of Chaos WORLD_SIZE draws, not a spawn setting. Performance budgets are preserved. Hold opens the existing selective/multiplex menu. This is not completion of the full restart-only/replay roadmap.
 
 ## Systems implementation substrate
 
@@ -30,7 +32,7 @@ The 48 roadmap variants (A–D across twelve systems) now share `src/state/syste
 
 The launch designer includes five named roadmap starter worlds (primordial soup, head start, harsh world, peaceful, chaos) and accepts free-form text as a deterministic seed, retaining the original text alongside its derived number. This is a limited launch-foundation increment, not completion of the RB roadmap; GPU-rendered 3D, complete law/DNA/configuration staging, save migration and replay verification remain roadmap work.
 
-WORLD sliders now stage session-only proposals: inspect the live → proposed list, DISCARD to keep the current world, or APPLY & RESTART to adopt them while replacing the population. Pause/resume does not apply edits; restore/undo clears proposals. Current-world saves exclude proposals. Law-grid toggles, category bulk commands and law-set loads now also stage with pending tiles/details and independent discard. DNA edits, full preset loads, selective chaos, narrative/goal actions and compute settings remain legacy live paths, so global restart-only physics is not complete. Preview readiness passed; real-browser verification is blocked by a missing Chromium host library.
+WORLD sliders, law-grid toggles/category bulk/law-set loads, and ordinary DNA sliders in both DNA and species panels stage session-only proposals for restart. WORLD lists world, law and DNA proposals with dedicated discard controls; an explicit confirmed restart adopts the batch after compute stops and before the new population and worker initialize. Pause/resume does not apply edits, restore clears proposals, and proposed DNA remains absent from live-genome reads until commit. Full preset loads, selective Chaos, autonomous/narrative actions, species-roster operations and some compute settings remain separate legacy paths; global restart-only configuration and provenance/replay semantics are not complete. Preview readiness passed before this release candidate; real-browser verification is blocked by a missing Chromium host library.
 
 ## Quick Start
 
@@ -57,7 +59,7 @@ npm run systems:bundle # Regenerate the hierarchical concatenated systems atlas
 
 Deployment URLs are snapshots, not separate product versions, and may not be built from the same commit:
 
-- **Canonical source:** this repository root; check `CHANGELOG.md` for the current release commit, tag and deploy record. v9.3.3 is locally committed/tagged; concurrent remote roadmap commits are being integrated before branch push and deployment.
+- **Canonical source:** this repository root; check `CHANGELOG.md` for the current release commit, tag and deploy record. v9.3.4 commit, tag, push and deployment records are in `CHANGELOG.md`.
 - **Current production target:** `https://v5.freebuff.app/`.
 - **`vepa-seven.vercel.app`:** a later, feature-rich historical deployment
   associated with the v8.16-era line. It is useful for comparison and recovery,

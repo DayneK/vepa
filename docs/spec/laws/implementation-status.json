@@ -86,6 +86,7 @@
       ],
       "testFiles": [
         "tests/audit/batch_01.test.js",
+        "tests/audit/params_batch_01.test.js",
         "tests/audit/params_batch_02.test.js",
         "tests/audit/params_batch_03.test.js",
         "tests/audit/params_batch_04.test.js",

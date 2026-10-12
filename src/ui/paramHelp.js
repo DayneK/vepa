@@ -25,12 +25,6 @@ export const EXACT_KEY_HELP = {
     tuning: 'WORLD_SIZE 2000 with ~1000 particles is a sparse dish where structure forms slowly. Shrink to 800–1200 for denser, faster-moving dynamics.',
     units: 'world units (1 unit ≈ 1 renderer pixel at 1× zoom).',
   },
-  GROUND_HEIGHT: {
-    what: 'Upper Z limit for initial spawn positions, expressed as a fraction of WORLD_SIZE.',
-    effect: 'During initialization, spawn Z is clamped to WORLD_SIZE × GROUND_HEIGHT when the fraction is below 1. This does not create a persistent collision floor or a terrain surface.',
-    tuning: '0.9 confines initial spawns to the lower 90% of the Z range. Set 1 to disable this clamp; a physical ground plane would need separate boundary/force behavior.',
-    units: 'fraction of WORLD_SIZE (0–1).',
-  },
   PARTICLE_COUNT: {
     what: 'Hard allocation cap for the particle pool.',
     effect: 'The SharedArrayBuffer is sized from this; also the hard ceiling used by spawning.',

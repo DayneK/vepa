@@ -2,7 +2,7 @@
  * VEPA4 — Spawn distribution sampling (pure, testable)
  *
  * The WORLD panel distribution sliders (SHAPE / SPAWN_CENTRES /
- * SPAWN_CENTRE_RANDOM / SPAWN_CENTRE_BIAS / GROUND_HEIGHT) drive these
+ * SPAWN_CENTRE_RANDOM / SPAWN_CENTRE_BIAS) drive these
  * functions. Kept free of DOM/main-thread state so the audit suite can
  * validate each slider deterministically.
  */
@@ -44,10 +44,15 @@ export function buildSpawnCentres(count, random, worldSize, prng) {
 /**
  * Sample a random spawn point from the configured distribution.
  * cfg: world params object (SHAPE, SPAWN_CENTRES, SPAWN_CENTRE_RANDOM,
- *      SPAWN_CENTRE_BIAS, GROUND_HEIGHT).
+ *      SPAWN_CENTRE_BIAS).
  * shape 0 = even grid, 1 = fully random; centreBias 0 = uniform,
- * 1 = pinned to centres; GROUND_HEIGHT keeps z inside the ground band.
+ * 1 = pinned to centres. The Z coordinate is always sampled uniformly
+ * from the full world height, independently of the XY distribution.
  */
+export function sampleSpawnHeight(worldSize, prng) {
+  return rand01(prng) * worldSize;
+}
+
 export function sampleSpawnPosition(cfg, worldSize, prng) {
   const perSpecies = DEFAULT_PARTICLES_PER_SPECIES;
   const gridDim = Math.max(2, Math.ceil(Math.cbrt(perSpecies)));
@@ -59,12 +64,11 @@ export function sampleSpawnPosition(cfg, worldSize, prng) {
   const jit = () => (rand01(prng) - 0.5) * cellSize * 0.4;
   let px = 5 + gx * cellSize + cellSize * 0.5 + jit();
   let py = 5 + gy * cellSize + cellSize * 0.5 + jit();
-  let pz = 5 + gz * cellSize + cellSize * 0.5 + jit();
+  const pz = sampleSpawnHeight(worldSize, prng);
   const shape = Number.isFinite(cfg.SHAPE) ? cfg.SHAPE : 0;
   if (shape > 0) {
     px = px + (rand01(prng) * worldSize - px) * shape;
     py = py + (rand01(prng) * worldSize - py) * shape;
-    pz = pz + (rand01(prng) * worldSize - pz) * shape;
   }
   const centreBias = Number.isFinite(cfg.SPAWN_CENTRE_BIAS) ? cfg.SPAWN_CENTRE_BIAS : 0;
   if (centreBias > 0) {
@@ -78,12 +82,8 @@ export function sampleSpawnPosition(cfg, worldSize, prng) {
       const c = centres[Math.floor(rand01(prng) * centres.length)];
       px = px + (c.x - px) * centreBias;
       py = py + (c.y - py) * centreBias;
-      pz = pz + (c.z - pz) * centreBias;
     }
   }
-  // GROUND_HEIGHT: keep spawns inside the ground band (z ∈ [0, worldSize * h]).
-  const groundH = Math.max(0, Math.min(1, Number.isFinite(cfg.GROUND_HEIGHT) ? cfg.GROUND_HEIGHT : 0.9));
-  if (groundH < 1) pz = Math.min(pz, Math.max(0, worldSize * groundH));
   return { x: px, y: py, z: pz };
 }
 

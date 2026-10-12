@@ -8,10 +8,10 @@ import { solve } from '../../src/physics/solver.js';
 const cfg = (over) => ({ ...createWorldParams(), ...over });
 
 describe('Batch 03 — SPAWN_CENTRE_BIAS / GLOBAL_G / WIND / DAMPING', () => {
-  it('SPAWN_CENTRE_BIAS: bias 1 pins spawns to a cluster centre', () => {
+  it('SPAWN_CENTRE_BIAS: bias 1 pins XY spawns to a cluster centre but leaves Z uniform', () => {
     const ws = 2000;
     const centres = buildSpawnCentres(4, 0, ws, lcg(3));
-    // Force the same centre selection by seeding a constant rng: bias 1 => pos == centre.
+    // The single-centre XY location is central; a separate height draw stays uniform.
     const p = sampleSpawnPosition(cfg({ SPAWN_CENTRES: 1, SPAWN_CENTRE_BIAS: 1 }), ws, () => 0.5);
     expect(p.x).toBeCloseTo(1000, 3);
     expect(p.y).toBeCloseTo(1000, 3);

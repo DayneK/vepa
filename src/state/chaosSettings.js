@@ -7,15 +7,23 @@ import { writeDNAParam } from '../dna/codec.js';
  */
 export function randomizeChaosSettings(world, dna, speciesCount, rng) {
   const bounds = {
-    WORLD_SIZE: [400, 2400], PARTICLE_COUNT: [500, 3000], MAX_POP: [500, 3000], INITIAL_POP: [300, 1200],
+    // Chaos-only sampling intervals; DNA_RANGES and WORLD_PARAM_DEFS stay unchanged.
+    // The upper bounds for space/population are each reduced by 10×.
+    WORLD_SIZE: [50, 240], PARTICLE_COUNT: [100, 300], MAX_POP: [100, 300], INITIAL_POP: [30, 120],
     TIME_SPEED: [0.2, 1.5], SPAWN_RATE: [0, 20],
   };
+  // A 100-unit WORLD_SIZE slider step would collapse this narrow interval to
+  // only three outcomes. Chaos keeps its own finer size granularity.
+  const samplingSteps = { WORLD_SIZE: 10 };
   const worldParams = { ...world };
   for (const def of WORLD_PARAM_DEFS) {
     if (def.group === 'PERFORMANCE') continue;
     const [min, max] = bounds[def.key] || [def.min, def.max];
     const sampled = min + rng.next() * (max - min);
-    worldParams[def.key] = clampWorldParam(def.key, def.min + Math.round((sampled - def.min) / def.step) * def.step);
+    const step = samplingSteps[def.key] || def.step;
+    const stepped = (samplingSteps[def.key] ? min : def.min)
+      + Math.round((sampled - (samplingSteps[def.key] ? min : def.min)) / step) * step;
+    worldParams[def.key] = clampWorldParam(def.key, Math.min(max, Math.max(min, stepped)));
   }
   worldParams.MAX_POP = Math.min(MAX_PARTICLES, worldParams.PARTICLE_COUNT, worldParams.MAX_POP);
   worldParams.INITIAL_POP = Math.min(worldParams.INITIAL_POP, worldParams.MAX_POP);

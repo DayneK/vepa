@@ -14,9 +14,9 @@ describe('Batch 02 — MAX_POP / SHAPE / SPAWN_CENTRES / SPAWN_CENTRE_RANDOM', (
     expect(spawnCaps(cfg({ MAX_POP: 50 })).softCap).toBe(100);
   });
 
-  it('SHAPE: shape 1 pulls each spawn to its uniform random draw', () => {
-    // With a constant rng of 0.5 the uniform draw is (1000,1000,1000), so a
-    // fully-random shape must collapse every anchor onto that point.
+  it('SHAPE: shape 1 pulls each XY spawn to its uniform random draw without altering Z', () => {
+    // With a constant rng of 0.5 the XY uniform draw is (1000,1000), while
+    // height uses its separate draw (also 1000 in this deterministic fixture).
     const p = sampleSpawnPosition(cfg({ SHAPE: 1 }), 2000, () => 0.5);
     expect(p.x).toBeCloseTo(1000, 3);
     expect(p.y).toBeCloseTo(1000, 3);
@@ -39,7 +39,7 @@ describe('Batch 02 — MAX_POP / SHAPE / SPAWN_CENTRES / SPAWN_CENTRE_RANDOM', (
     expect(first.x).toBeLessThan(ws);
   });
 
-  it('SHAPE: shape 1 samples cover the full volume (mean near centre)', () => {
+  it('SHAPE: shape 1 XY samples cover the full area; independent Z remains uniform', () => {
     const pts = [];
     for (let i = 0; i < 400; i++) pts.push(sampleSpawnPosition(cfg({ SHAPE: 1 }), 2000, rng));
     const mean = (k) => pts.reduce((a, p) => a + p[k], 0) / pts.length;
