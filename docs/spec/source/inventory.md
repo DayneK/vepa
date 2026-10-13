@@ -94,7 +94,7 @@ The generator scanned `294` files from active repository inputs. Individual modu
 | [src/render/zeroCopy.js](src/render/zeroCopy.js) | application | 26 | 1 | 0 | 1 |
 | [src/spawn/distribution.js](src/spawn/distribution.js) | simulation | 108 | 5 | 1 | 1 |
 | [src/state/artifacts.js](src/state/artifacts.js) | state | 152 | 2 | 3 | 1 |
-| [src/state/chaosSettings.js](src/state/chaosSettings.js) | state | 41 | 1 | 3 | 2 |
+| [src/state/chaosSettings.js](src/state/chaosSettings.js) | state | 50 | 1 | 3 | 2 |
 | [src/state/civilization.js](src/state/civilization.js) | state | 654 | 33 | 2 | 2 |
 | [src/state/codex.js](src/state/codex.js) | state | 324 | 16 | 3 | 15 |
 | [src/state/construction.js](src/state/construction.js) | state | 139 | 2 | 2 | 0 |
@@ -223,7 +223,7 @@ The generator scanned `294` files from active repository inputs. Individual modu
 | [tests/unit/batch4Reports.test.js](tests/unit/batch4Reports.test.js) | testing | 34 | 0 | 3 | 0 |
 | [tests/unit/batch5Reports.test.js](tests/unit/batch5Reports.test.js) | testing | 34 | 0 | 2 | 0 |
 | [tests/unit/buffer.test.js](tests/unit/buffer.test.js) | testing | 55 | 0 | 3 | 0 |
-| [tests/unit/chaosSettings.test.js](tests/unit/chaosSettings.test.js) | testing | 70 | 0 | 8 | 1 |
+| [tests/unit/chaosSettings.test.js](tests/unit/chaosSettings.test.js) | testing | 83 | 0 | 8 | 1 |
 | [tests/unit/civilization.test.js](tests/unit/civilization.test.js) | testing | 257 | 0 | 2 | 1 |
 | [tests/unit/civilizationPanel.test.js](tests/unit/civilizationPanel.test.js) | testing | 262 | 0 | 7 | 0 |
 | [tests/unit/civilizationSequelWiring.test.js](tests/unit/civilizationSequelWiring.test.js) | testing | 290 | 0 | 10 | 1 |

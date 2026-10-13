@@ -24,7 +24,7 @@ Hard matter/structural laws now run a radius-aware contact pass after motion and
 
 All initial particles and later background spawns sample Z uniformly across the full world height, independent of the XY distribution and centre-bias settings; there is no ground-height clamp or persistent floor.
 
-Tap **Chaos** to randomize laws, physical WORLD settings and all 64 traits of each active species, then restart with the batch. Chaos samples WORLD_SIZE from 50–240 units in 10-unit increments and PARTICLE_COUNT/MAX_POP up to 300 (INITIAL_POP up to 120); these Chaos-only bounds do not change the full WORLD slider or DNA parameter ranges. The 10-unit increment is only the granularity of Chaos WORLD_SIZE draws, not a spawn setting. Performance budgets are preserved. Hold opens the existing selective/multiplex menu. This is not completion of the full restart-only/replay roadmap.
+Tap **Chaos** to randomize laws, physical WORLD settings and all 64 traits of each active species, then restart with the batch. Every non-performance WORLD setting samples the full range and increment shown by its slider, including WORLD_SIZE and population/space/time; the full ranges permit very large worlds and populations, so outcomes may be demanding on memory or performance. Population consistency is still enforced (`INITIAL_POP ≤ MAX_POP ≤ PARTICLE_COUNT`). Performance budgets are preserved. Hold opens the existing selective/multiplex menu. This is not completion of the full restart-only/replay roadmap.
 
 ## Systems implementation substrate
 

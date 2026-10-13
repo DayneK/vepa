@@ -1,5 +1,15 @@
 # Changelog: VEPA4 (formerly styled "VEPA v4")
 
+## [4.9.38] - 2026-10-13 → 9.3.5
+
+**Release scope:** make default Chaos sample the full legal range of every non-performance WORLD setting.
+
+- `fix(chaos)`: sample the discrete values exposed by each WORLD slider, including endpoints that do not align with the regular step. Keep performance controls unchanged and preserve dependent-threshold and population constraints.
+- `test(chaos)`: verify deterministic full-range endpoint sampling, slider-step alignment, performance-budget preservation and `INITIAL_POP ≤ MAX_POP ≤ PARTICLE_COUNT`.
+- `docs`: clarify the expanded ranges and the potential resource cost of large Chaos worlds.
+- Verification: full Vitest suite passes (144 files / 1,571 tests); syntax, generated-spec/repository/signoff/UI-report checks, production build, and Freebuff deploy preflight pass. Real-browser acceptance is not verified; Chromium cannot launch here because `libglib-2.0.so.0` is unavailable.
+- Deployment: Freebuff `https://v5.freebuff.app/` (state to be recorded after the requested deployment).
+
 ## [4.9.37] - 2026-10-12 → 9.3.4
 
 **Release scope:** uniform full-height initial/background spawn placement, Chaos sampling clarification, and ordinary DNA slider restart staging.

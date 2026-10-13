@@ -25,7 +25,7 @@ Every significant code modification, law implementation, or UI refactor MUST be 
 Documentation is not an afterthought; it is a feature. All new laws must be accompanied by `HELP_DB` entries in `src/constants.js` covering all four tiers (HINT, EXPLANATION, SYSTEM, ADVANCED).
 
 ### 1.3 Versioning & Commit Standards (adopted 2026-08-10)
-- The product is **VEPA4**; every version uses the **`major.minor.build`** schema (working-tree candidate `9.3.4`; verify changelog, manifests, commit/tag and deployment independently), with legacy labels retained in `CHANGELOG.md` headers (old `4.M.N` → `M.N.0`).
+- The product is **VEPA4**; every version uses the **`major.minor.build`** schema (working-tree candidate `9.3.5`; verify changelog, manifests, commit/tag and deployment independently), with legacy labels retained in `CHANGELOG.md` headers (old `4.M.N` → `M.N.0`).
 - Every commit MUST follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) (`<type>(<scope>): <description>`); release commits use `chore(release): vX.Y.Z — <summary>` and tags are `vX.Y.Z`.
 - The full release protocol (backup branches, changelog-first, manifest sync, tagging) is `AGENTS.md` §10.4 — no release without it.
 - Roadmap progress is evidence-gated: maintain `docs/spec/rb/ROADMAP_PROGRESS.md`; distinguish verified completed groundwork from partial implementation and proposed RB sections. Keep sections 00–11 unchecked until acceptance evidence is met; DOM stubs and generated docs alone do not establish runtime/browser completion. Keep the P0–P4 actionable todos current and preserve open decisions.

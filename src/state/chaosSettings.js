@@ -2,28 +2,37 @@ import { DNA_COUNT, DNA_RANGES, DEFAULT_DNA_STRIDE, MAX_PARTICLES } from '../con
 import { WORLD_PARAM_DEFS, clampWorldParam } from './worldParams.js';
 import { writeDNAParam } from '../dna/codec.js';
 
-/** Full Chaos samples physical settings, not renderer/compute budgets.
- * Population/space/time have explicit playable bounds, not full-range spikes.
+/** Sample the slider's legal values uniformly, including a non-step-aligned
+ * maximum (which the slider can reach at its endpoint).
  */
+function sampleWorldParam(def, rng, min = def.min, max = def.max) {
+  const precision = Math.max(0, (String(def.step).split('.')[1] || '').length);
+  const round = (value) => Number(value.toFixed(precision));
+  const firstIndex = Math.ceil((min - def.min) / def.step - 1e-9);
+  const first = round(Math.max(min, def.min + firstIndex * def.step));
+  const regularCount = Math.floor((max - first) / def.step + 1e-9) + 1;
+  const last = round(first + (regularCount - 1) * def.step);
+  const hasEndpoint = max === def.max && Math.abs(last - max) > 1e-9;
+  const outcomeCount = regularCount + (hasEndpoint ? 1 : 0);
+  const randomValue = Math.min(1 - Number.EPSILON, Math.max(0, rng.next()));
+  const selected = Math.floor(randomValue * outcomeCount);
+  return selected === regularCount ? max : round(first + selected * def.step);
+}
+
+/** Full Chaos samples physical settings, not renderer/compute budgets. */
 export function randomizeChaosSettings(world, dna, speciesCount, rng) {
-  const bounds = {
-    // Chaos-only sampling intervals; DNA_RANGES and WORLD_PARAM_DEFS stay unchanged.
-    // The upper bounds for space/population are each reduced by 10×.
-    WORLD_SIZE: [50, 240], PARTICLE_COUNT: [100, 300], MAX_POP: [100, 300], INITIAL_POP: [30, 120],
-    TIME_SPEED: [0.2, 1.5], SPAWN_RATE: [0, 20],
-  };
-  // A 100-unit WORLD_SIZE slider step would collapse this narrow interval to
-  // only three outcomes. Chaos keeps its own finer size granularity.
-  const samplingSteps = { WORLD_SIZE: 10 };
   const worldParams = { ...world };
   for (const def of WORLD_PARAM_DEFS) {
     if (def.group === 'PERFORMANCE') continue;
-    const [min, max] = bounds[def.key] || [def.min, def.max];
-    const sampled = min + rng.next() * (max - min);
-    const step = samplingSteps[def.key] || def.step;
-    const stepped = (samplingSteps[def.key] ? min : def.min)
-      + Math.round((sampled - (samplingSteps[def.key] ? min : def.min)) / step) * step;
-    worldParams[def.key] = clampWorldParam(def.key, Math.min(max, Math.max(min, stepped)));
+    const min = def.key === 'RECOVERY_THRESHOLD'
+      ? Math.max(def.min, worldParams.EXTINCTION_THRESHOLD)
+      : def.key === 'BOIL_TEMP_POINT'
+        ? Math.max(def.min, worldParams.MELT_TEMP_POINT)
+        : def.min;
+    const max = def.key === 'MAX_POP'
+      ? Math.min(def.max, worldParams.PARTICLE_COUNT)
+      : def.max;
+    worldParams[def.key] = clampWorldParam(def.key, sampleWorldParam(def, rng, min, max));
   }
   worldParams.MAX_POP = Math.min(MAX_PARTICLES, worldParams.PARTICLE_COUNT, worldParams.MAX_POP);
   worldParams.INITIAL_POP = Math.min(worldParams.INITIAL_POP, worldParams.MAX_POP);

@@ -8,7 +8,7 @@ import { readDNAParam } from '../../src/dna/codec.js';
 import { randomizeChaosSettings } from '../../src/state/chaosSettings.js';
 
 describe('default full Chaos settings', () => {
-  it('reproducibly samples physical world settings and all 64 traits per active species, without mutating inputs', () => {
+  it('reproducibly samples full WORLD ranges and slider steps plus active DNA without mutating inputs', () => {
     const world = createWorldParams();
     const dna = createDNABuffer();
     loadDefaults(dna, DNA_RANGES);
@@ -18,34 +18,46 @@ describe('default full Chaos settings', () => {
     expect(first).not.toEqual(randomizeChaosSettings(world, dna, 5, new SplitMix32(43)));
     expect(dna).toEqual(before);
     expect(world).toEqual(createWorldParams());
+
     for (const def of WORLD_PARAM_DEFS) {
-      expect(first.worldParams[def.key]).toBeGreaterThanOrEqual(def.min);
-      expect(first.worldParams[def.key]).toBeLessThanOrEqual(def.max);
-      if (def.group === 'PERFORMANCE') expect(first.worldParams[def.key]).toBe(world[def.key]);
+      const value = first.worldParams[def.key];
+      expect(value).toBeGreaterThanOrEqual(def.min);
+      expect(value).toBeLessThanOrEqual(def.max);
+      if (def.group === 'PERFORMANCE') {
+        expect(value).toBe(world[def.key]);
+      } else {
+        const stepPosition = (value - def.min) / def.step;
+        expect(value === def.max || Math.abs(stepPosition - Math.round(stepPosition)) < 1e-8).toBe(true);
+      }
     }
-    expect(first.worldParams.WORLD_SIZE).toBeGreaterThanOrEqual(50);
-    expect(first.worldParams.WORLD_SIZE).toBeLessThanOrEqual(240);
-    const worldSizeStep = WORLD_PARAM_DEFS.find(({ key }) => key === 'WORLD_SIZE').step;
-    expect(worldSizeStep).toBe(100);
-    for (let seed = 1; seed <= 32; seed++) {
-      const size = randomizeChaosSettings(world, dna, 0, new SplitMix32(seed)).worldParams.WORLD_SIZE;
-      expect(size).toBeGreaterThanOrEqual(50);
-      expect(size).toBeLessThanOrEqual(240);
-      expect((size - 50) % 10).toBe(0);
-    }
-    expect(first.worldParams.PARTICLE_COUNT).toBeGreaterThanOrEqual(100);
-    expect(first.worldParams.PARTICLE_COUNT).toBeLessThanOrEqual(300);
-    expect(first.worldParams.MAX_POP).toBeLessThanOrEqual(300);
-    expect(first.worldParams.INITIAL_POP).toBeLessThanOrEqual(120);
-    expect(WORLD_PARAM_DEFS.find(({ key }) => key === 'WORLD_SIZE').max).toBe(20000);
-    expect(WORLD_PARAM_DEFS.find(({ key }) => key === 'PARTICLE_COUNT').max).toBe(10000);
+
     expect(first.worldParams.INITIAL_POP).toBeLessThanOrEqual(first.worldParams.MAX_POP);
     expect(first.worldParams.MAX_POP).toBeLessThanOrEqual(first.worldParams.PARTICLE_COUNT);
-    const upperBoundSample = randomizeChaosSettings(world, dna, 0, { next: () => 0.999 });
-    expect(upperBoundSample.worldParams.WORLD_SIZE).toBe(240);
-    expect(upperBoundSample.worldParams.PARTICLE_COUNT).toBe(300);
-    expect(upperBoundSample.worldParams.MAX_POP).toBe(300);
-    expect(upperBoundSample.worldParams.INITIAL_POP).toBeLessThanOrEqual(120);
+    const upper = randomizeChaosSettings(world, dna, 0, { next: () => 0.999999999999 }).worldParams;
+    expect(upper.WORLD_SIZE).toBe(20000);
+    expect(upper.PARTICLE_COUNT).toBe(10000);
+    expect(upper.MAX_POP).toBe(10000);
+    expect(upper.INITIAL_POP).toBe(10000);
+    expect(upper.TIME_SPEED).toBe(10);
+    expect(upper.SPAWN_RATE).toBe(100);
+    const lower = randomizeChaosSettings(world, dna, 0, { next: () => 0 }).worldParams;
+    expect(lower.WORLD_SIZE).toBe(50);
+    expect(lower.PARTICLE_COUNT).toBe(100);
+    expect(lower.MAX_POP).toBe(100);
+    expect(lower.INITIAL_POP).toBe(0);
+    expect(lower.TIME_SPEED).toBe(0.1);
+    expect(lower.SPAWN_RATE).toBe(0);
+    for (let seed = 1; seed <= 32; seed++) {
+      const generated = randomizeChaosSettings(world, dna, 0, new SplitMix32(seed)).worldParams;
+      expect(generated.INITIAL_POP).toBeLessThanOrEqual(generated.MAX_POP);
+      expect(generated.MAX_POP).toBeLessThanOrEqual(generated.PARTICLE_COUNT);
+      for (const key of ['WORLD_SIZE', 'PARTICLE_COUNT', 'MAX_POP', 'INITIAL_POP']) {
+        const def = WORLD_PARAM_DEFS.find((item) => item.key === key);
+        expect(generated[key]).toBeGreaterThanOrEqual(def.min);
+        expect(generated[key]).toBeLessThanOrEqual(def.max);
+      }
+    }
+
     for (let s = 0; s < 5; s++) for (let p = 0; p < DNA_COUNT; p++) {
       const value = readDNAParam(first.dna, s, p);
       expect(value).toBeGreaterThanOrEqual(DNA_RANGES[p].min);
@@ -54,6 +66,7 @@ describe('default full Chaos settings', () => {
     }
     expect(first.dna.slice(5 * DEFAULT_DNA_STRIDE)).toEqual(before.slice(5 * DEFAULT_DNA_STRIDE));
   });
+
   it('default tap stages all settings then restarts, with genome adoption after worker stop', () => {
     const ui = readFileSync(new URL('../../src/ui/ui.js', import.meta.url), 'utf8');
     expect(ui).toMatch(/bus.emit\('sim:chaos'\);\s*bus.emit\('sim:restart'/);
