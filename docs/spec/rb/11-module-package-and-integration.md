@@ -1,5 +1,7 @@
 # 11 — Module packages, development and integration
 
+**Browser stage:** `RB-11` in `tests/e2e/rb-browser-stages.spec.js` exercises shell/worker assets and delivered cross-origin headers. The test is defined but not browser-verified until the Chromium host dependency is available; module manifests/contracts, migration and rollback remain future acceptance.
+
 **Current evidence:** one npm package (`vepa-v4`), ESM, Vite, Vitest, Playwright and generated technical specs. `package.json` build produces one static browser package and generates reports/atlas. `scripts/generate-spec.mjs` owns generated outputs under `docs/spec/`; these RB files are human-authored and must not overwrite generated records. Existing project runs in a single repo and browser package; this is a future module-development design, not current workspaces.
 
 ## Isolated development model

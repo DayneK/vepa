@@ -1,5 +1,9 @@
 # 00 — Current program baseline
 
+**Roadmap traceability:** `ROADMAP_CROSSWALK.md` maps accepted root-roadmap requirements to this and the other RB specifications; `ROADMAP_PROGRESS.md` records current evidence. Product decisions and release gates remain authoritative in the root `VEPA_Roadmap_v4-5.md`.
+
+**Browser stage:** `RB-00` in `tests/e2e/rb-browser-stages.spec.js` exercises the live shell/HUD baseline. The test is defined but not browser-verified until the Chromium host dependency is available; mobile screenshots, starter-world parity and seeded-save baselines remain future acceptance.
+
 **Status:** historical observed baseline, not a target architecture. Evidence snapshot: `main` at `2f8ca03` (v9.3.0); it was clean at that inspection. It predates the v9.3.1 commit and later changes; runtime truth remains the current source tree.
 
 ## Product and visual language

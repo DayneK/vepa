@@ -165,6 +165,7 @@ export async function createPixiRenderer(canvas, maxParticles, opts = {}) {
         // unavailable (type 1=WEBGL, 2=WEBGPU, 4=CANVAS). Expose the concrete
         // type so benchmarks and tests can distinguish GPU from fallback.
         rendererType: app.renderer.type,
+        isGpuBacked: app.renderer.type === 1 || app.renderer.type === 2,
         canvas,
         ctx: null,
         app,
@@ -204,6 +205,25 @@ export async function createPixiRenderer(canvas, maxParticles, opts = {}) {
         renderer.halos.boundsArea = app.screen;
     }
 
+    if (!renderer.isGpuBacked) {
+        destroyPixiRenderer(renderer);
+        throw new Error(`PixiJS did not acquire a GPU renderer (renderer type ${renderer.rendererType})`);
+    }
+    const onContextLost = (event) => {
+        event.preventDefault?.();
+        renderer.contextLost = true;
+        renderer.onContextLost?.(event);
+    };
+    const onContextRestored = (event) => {
+        renderer.contextLost = false;
+        renderer.onContextRestored?.(event);
+    };
+    renderer.canvas.addEventListener('webglcontextlost', onContextLost);
+    renderer.canvas.addEventListener('webglcontextrestored', onContextRestored);
+    renderer.removeContextListeners = () => {
+        renderer.canvas.removeEventListener('webglcontextlost', onContextLost);
+        renderer.canvas.removeEventListener('webglcontextrestored', onContextRestored);
+    };
     return renderer;
 }
 
@@ -229,6 +249,7 @@ export function resizePixiRenderer(renderer) {
 /** Release Pixi resources while keeping the host canvas element in the DOM. */
 export function destroyPixiRenderer(renderer) {
     if (!renderer || renderer.mode !== 'pixi') return;
+    renderer.removeContextListeners?.();
     if (renderer.app) renderer.app.destroy(false, { children: true, texture: true, textureSource: true });
     renderer.app = null;
     renderer.stage = null;
@@ -244,7 +265,7 @@ export function destroyPixiRenderer(renderer) {
  * The `eco` option intentionally matches Canvas2D's flat comparison mode.
  */
 export function syncPixiRenderer(renderer, particleBuffer, particleCount, stride, worldSize, opts = {}) {
-    if (!renderer || renderer.mode !== 'pixi' || !renderer.app) return;
+    if (!renderer || renderer.mode !== 'pixi' || !renderer.app || renderer.contextLost) return;
 
     const view = asView(particleBuffer);
     const count = Math.max(0, Math.min(particleCount || 0, renderer.maxParticles));

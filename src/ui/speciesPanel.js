@@ -63,20 +63,30 @@ export function createSpeciesPanel(bus, dnaBuffer) {
   renderSpeciesList(list, dnaBuffer);
   renderAccordion(accordion, dnaBuffer, bus);
 
+  const rosterNotice = document.createElement('section');
+  rosterNotice.className = 'world-pending-notice species-pending-notice';
+  rosterNotice.setAttribute('aria-label', 'Species roster restart changes');
+  rosterNotice.innerHTML = '<p>Species roster edits and genome changes are proposals until restart.</p><p data-roster-status role="status" aria-live="polite">No staged roster changes.</p><div class="world-pending-actions"><button type="button" data-roster-restart disabled>APPLY & RESTART</button><button type="button" data-roster-discard disabled>DISCARD ROSTER</button></div>';
+  if (accordion) accordion.insertAdjacentElement('beforebegin', rosterNotice);
+  rosterNotice.querySelector('[data-roster-restart]').addEventListener('click', () => {
+    if (window.confirm('Apply all staged configuration changes and restart? This replaces the current population.')) bus.emit('sim:restart');
+  });
+  rosterNotice.querySelector('[data-roster-discard]').addEventListener('click', () => bus.emit('world:discardPending'));
+
   const removeBtn = document.getElementById('remove-species-btn');
 
   if (addBtn) {
     addBtn.addEventListener('click', () => {
-      addSpecies(dnaBuffer, bus, list, accordion);
+      requestRosterEdit(bus, { operation: 'add' });
     });
   }
   if (removeBtn) {
     removeBtn.addEventListener('click', () => {
-      removeLastSpecies(dnaBuffer, bus, list, accordion);
+      requestRosterEdit(bus, { operation: 'remove', species: speciesCount - 1 });
     });
   }
 
-  // Stay in sync with restarts (roster resets to the default 5)
+  // Stay in sync with restarts and staged roster proposals.
   bus.on('species:sync', ({ count }) => {
     speciesCount = Math.max(1, Math.min(count || 5, MAX_SPECIES));
     selectedSpecies = Math.min(selectedSpecies, speciesCount - 1);
@@ -91,6 +101,34 @@ export function createSpeciesPanel(bus, dnaBuffer) {
   bus.on('dna:changed', () => {
     renderSpeciesList(list, dnaBuffer);
   });
+  let pendingDNAChanges = false;
+  let rosterChanges = 0;
+  const updateRosterNotice = (liveCount = speciesCount) => {
+    const hasChanges = rosterChanges !== 0 || pendingDNAChanges;
+    rosterNotice.querySelector('[data-roster-status]').textContent = rosterChanges
+      ? `Roster proposal: ${liveCount} → ${speciesCount} species — restart required.`
+      : hasChanges ? 'Roster/genome changes pending — restart required.' : 'No staged roster changes.';
+    rosterNotice.querySelector('[data-roster-restart]').disabled = !hasChanges;
+    rosterNotice.querySelector('[data-roster-discard]').disabled = !hasChanges;
+    if (addBtn) addBtn.disabled = speciesCount >= MAX_SPECIES;
+    if (removeBtn) removeBtn.disabled = speciesCount <= 1;
+  };
+  bus.on('species:pending', ({ liveCount, proposedCount, changes = 0 }) => {
+    speciesCount = Number.isInteger(proposedCount) ? proposedCount : liveCount;
+    rosterChanges = changes;
+    selectedSpecies = Math.min(selectedSpecies, speciesCount - 1);
+    renderSpeciesList(list, dnaBuffer);
+    renderAccordion(accordion, dnaBuffer, bus);
+    updateRosterNotice(liveCount);
+  });
+  bus.on('dna:pending', ({ changes = [] } = {}) => {
+    pendingDNAChanges = changes.length > 0;
+    updateRosterNotice();
+  });
+  bus.on('species:rosterEditRejected', ({ reason } = {}) => {
+    if (bus) bus.emit('narrative:system', { text: reason || 'Species roster proposal rejected.' });
+  });
+  bus.emit('species:pendingRequested');
   bus.on('physics:tick', ({ speciesCount: sc } = {}) => {
     // Could add live population counts per species here
   });
@@ -103,6 +141,10 @@ function speciesColor(s) {
 
 function speciesName(s) {
   return SPECIES_NAMES[s] || `Species ${s}`;
+}
+
+function requestRosterEdit(bus, operation) {
+  if (bus) bus.emit('species:rosterEditRequested', operation);
 }
 
 function renderSpeciesList(container, dnaBuffer) {
@@ -139,66 +181,19 @@ function renderSpeciesList(container, dnaBuffer) {
   container.querySelectorAll('.species-remove:not(.disabled)').forEach((btn) => {
     btn.addEventListener('click', (ev) => {
       ev.stopPropagation();
-      removeSpeciesAt(parseInt(btn.dataset.remove, 10), dnaBuffer, window.__bus || null);
-      const accordion = document.getElementById('dna-accordion');
-      const buf = window.__dnaBuffer;
-      renderSpeciesList(container, buf);
-      if (accordion && buf) renderAccordion(accordion, buf, null);
+      requestRosterEdit(window.__bus || null, {
+        operation: 'remove',
+        species: parseInt(btn.dataset.remove, 10),
+      });
     });
   });
 }
 
-/** Add a new species by cloning species 0's DNA into the next free slot. */
-function addSpecies(dnaBuffer, bus, list, accordion) {
-  // Let the world-save undo ring capture the pre-change roster.
-  if (bus) bus.emit('species:aboutToChange');
-  if (speciesCount >= MAX_SPECIES) {
-    if (bus) bus.emit('narrative:system', { text: 'Species roster full (64 max).' });
-    return;
-  }
-  const template = getSpeciesDNA(dnaBuffer, 0);
-  setSpeciesDNA(dnaBuffer, speciesCount, template);
-  speciesCount++;
-  selectedSpecies = speciesCount - 1;
-  renderSpeciesList(list, dnaBuffer);
-  renderAccordion(accordion, dnaBuffer, bus);
-  if (bus) {
-    bus.emit('dna:sync');
-    bus.emit('species:changed', { count: speciesCount });
-    bus.emit('narrative:system', { text: `Species added: ${speciesName(selectedSpecies)} (${speciesCount} total).` });
-  }
-}
 
-/** Remove the species at index `idx`, compacting the roster. */
-function removeSpeciesAt(idx, dnaBuffer, bus) {
-  // Let the world-save undo ring capture the pre-change roster.
-  if (bus) bus.emit('species:aboutToChange');
-  if (speciesCount <= 1) return;
-  if (idx < 0 || idx >= speciesCount) return;
-  for (let s = idx; s < speciesCount - 1; s++) {
-    const from = getSpeciesDNA(dnaBuffer, s + 1);
-    setSpeciesDNA(dnaBuffer, s, from);
-  }
-  setSpeciesDNA(dnaBuffer, speciesCount - 1, new Float32Array(64));
-  speciesCount--;
-  if (selectedSpecies >= speciesCount) selectedSpecies = speciesCount - 1;
-  if (bus) {
-    bus.emit('dna:sync');
-    bus.emit('species:changed', { count: speciesCount });
-    bus.emit('narrative:system', { text: `Species removed: ${speciesName(idx)} (${speciesCount} remain).` });
-  }
-}
-
-/** Remove the last species (header − button). */
-function removeLastSpecies(dnaBuffer, bus, list, accordion) {
-  removeSpeciesAt(speciesCount - 1, dnaBuffer, bus);
-  const buf = window.__dnaBuffer;
-  renderSpeciesList(list, buf);
-  renderAccordion(accordion, buf, bus);
-}
 
 function renderAccordion(container, dnaBuffer, bus) {
   if (!container) return;
+  bus = bus || window.__bus || null;
   let html = '';
   ACCORDION_GROUPS.forEach((group, gi) => {
     html += `<div class="accordion-section${group.name === 'BASIC' ? ' open' : ''}">`;
@@ -225,7 +220,10 @@ function renderAccordion(container, dnaBuffer, bus) {
     if (!Number.isFinite(idx) || idx >= DNA_COUNT) return;
     const range = DNA_RANGES[idx];
     const name = DNA_META[idx] || `DNA_${idx}`;
-    const val = dnaBuffer ? getDNAFloat(dnaBuffer, selectedSpecies, idx, range.min, range.max) : range.default;
+    const liveValue = dnaBuffer ? getDNAFloat(dnaBuffer, selectedSpecies, idx, range.min, range.max) : range.default;
+    const proposal = { species: selectedSpecies, param: idx };
+    bus?.emit('dna:readProposed', proposal);
+    const val = proposal.value ?? liveValue;
     const row = createSliderRow({
       label: name,
       min: range.min,

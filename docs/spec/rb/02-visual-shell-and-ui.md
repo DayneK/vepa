@@ -1,5 +1,7 @@
 # 02 — Visual shell and UI modules
 
+**Browser stage:** `RB-02` in `tests/e2e/rb-browser-stages.spec.js` exercises drawer tabs, nested navigation and keyboard movement. The test is defined but not browser-verified until the Chromium host dependency is available; full responsive/visual parity remains future acceptance.
+
 **Current evidence:** `index.html`, `style.css`, `src/ui/ui.js` plus `worldPanel.js`, `speciesPanel.js`, `lawPanel.js`, `settingsPanel.js`, `launchModal.js`, `sliderControl.js`, data panels, tooltip/help, and `src/ui/camera.js`. The program is DOM-driven; panels mount into named hosts and communicate by EventBus. `ui.js` owns tab behavior and shared selection wiring. Existing rows are compact and slider-rich; do not confuse dense controls with beginner-friendly hierarchy.
 
 ## Target module model

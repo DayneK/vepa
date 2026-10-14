@@ -1,5 +1,7 @@
 # 05 — Law ontology and fidelity
 
+**Browser stage:** `RB-05` in `tests/e2e/rb-browser-stages.spec.js` exercises the 136 declared law tiles and a staged CONTACT edit/discard. The test is defined but not browser-verified until the Chromium host dependency is available; complete entry-point coverage and fidelity evidence remain future acceptance.
+
 **Current evidence:** `src/constants/laws.js` (facade via `src/constants.js`) defines live `LAW_INDEXES`, `LAW_CATEGORIES`, help and dependencies: 136 laws, indices 0–135, five `Uint32Array` words; law state serializes `{low, high, ext, quad, penta}`. `src/state/lawState.js` owns bit operations. `src/physics/solver.js`, shared `src/physics/laws.js` and `src/physics/lawgroups/*` contain dispatch/behavior. `src/ui/worldPanel.js`/`lawPanel.js` render and toggle; audits/specs test law claims. Historical docs may be stale. A reviewed UI finding identified a dead INERTIA toggle and mechanics/index conflicts; the live audit must establish actual current law contracts before migration.
 
 ## Target component boundary

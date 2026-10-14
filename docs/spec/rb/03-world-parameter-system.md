@@ -1,5 +1,7 @@
 # 03 — World parameter system
 
+**Browser stage:** `RB-03` in `tests/e2e/rb-browser-stages.spec.js` exercises a WORLD proposal and discard. The test is defined but not browser-verified until the Chromium host dependency is available; complete parameter staging, recipe transactions and persistence remain future acceptance.
+
 **Current evidence:** `src/state/worldParams.js` declares `WORLD_PARAM_DEFS` (currently 149 records), defaults, ranges, groups and clamp/update helpers. `src/ui/worldPanel.js` renders generated controls; `src/main.js` applies changed values, updates `runtimeConfig.worldParams`, special-cases WORLD_SIZE/SPAWN_RATE/TIME_SPEED/epoch thresholds, emits applied events and synchronizes TOROIDAL/WRAP. Solver/performance and emergent passes consume the same parameter object. `src/state/worldSave.js` captures/restores world parameters.
 
 ## Target contract

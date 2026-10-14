@@ -20,9 +20,9 @@ const CAMERA_FIELDS = [
 
 const META_FIELDS = [
   { key: 'visualScale', label: 'BASE SIZE',     min: 0.1, max: 5, step: 0.1,  value: 1.0,  set: (v) => runtimeConfig.visualScale = v },
-  { key: 'globalAlpha', label: 'PARTICLE ALPHA', min: 0.1, max: 1, step: 0.05, value: 1.0, set: (v) => runtimeConfig.globalAlpha = v },
-  { key: 'starMass',    label: 'STAR MASS',      min: 4,   max: 100, step: 1,  value: 12,   set: (v) => runtimeConfig.starMass = v },
-  { key: 'simSpeed',    label: 'SIM SPEED',      min: 0.1, max: 10, step: 0.1, value: 1.0,  set: (v) => runtimeConfig.simSpeed = v },
+  { key: 'globalAlpha', label: 'PARTICLE ALPHA', min: 0.1, max: 1, step: 0.05, value: 1.0,  set: (v) => runtimeConfig.globalAlpha = v },
+  { key: 'starMass',    label: 'STAR MASS',      min: 4,   max: 100, step: 1,  value: 12,   set: (v) => bus.emit('compute:proposal', { parameter: 'starMass', value: v }) },
+  { key: 'simSpeed',    label: 'SIM SPEED',      min: 0.1, max: 10, step: 0.1, value: 1.0,  set: (v) => bus.emit('compute:proposal', { parameter: 'simSpeed', value: v }) },
 ];
 
 /**
@@ -48,14 +48,11 @@ export function createSettingsPanel(bus, lawStateObj) {
   html += '</div>';
 
   // ── Compute backend section ──
-  // The launch modal asks the same two questions this section does. The
-  // precedence, which was previously unstated and therefore unresolvable, is:
-  // the modal sets the *initial* value; this panel is the live authority; and
-  // "use as launch default" writes the live value back to the modal.
+  // Physics backend changes are staged through the restart coordinator;
+  // renderer selection remains an explicit launch preference.
   html += '<div class="panel-section">';
   html += '<h3 class="law-category-header" style="color:#7cf">COMPUTE</h3>';
-  html += '<div class="setting-note">The launch modal sets the starting value; this panel is the live value. '
-    + 'Changes that need a reload say so.</div>';
+  html += '<div class="setting-note">Compute backend changes are staged until a confirmed world restart. Renderer selection is a launch preference applied on reload.</div>';
   html += '<div class="setting-row">';
   html += '<label class="setting-label" for="compute-engine">PHYSICS BACKEND</label>';
   html += '<select id="compute-engine" class="setting-select" title="Choose the physics compute backend">';
@@ -75,7 +72,7 @@ export function createSettingsPanel(bus, lawStateObj) {
   html += '</div>';
   html += '<div id="render-backend-status" class="setting-status" role="status">Canvas2D is the reference renderer. PixiJS uses a pooled GPU particle path when the browser supports WebGL.</div>';
   html += '<div class="setting-row">';
-  html += '<button id="compute-reload" class="btn tiny-btn" type="button" hidden>↻ RELOAD TO APPLY</button>';
+  html += '<button id="compute-reload" class="btn tiny-btn" type="button" hidden>↻ RESTART TO APPLY</button>';
   html += '<button id="compute-use-launch" class="btn tiny-btn" type="button" title="Make this the value the launch modal starts from">USE AS LAUNCH DEFAULT</button>';
   html += '<button id="compute-reset" class="btn tiny-btn" type="button" title="Return both to what the launch modal chose">RESET TO LAUNCH</button>';
   html += '</div>';
@@ -84,6 +81,9 @@ export function createSettingsPanel(bus, lawStateObj) {
   // ── Meta / render section ──
   html += '<div class="panel-section">';
   html += '<h3 class="law-category-header" style="color:#f8c">META</h3>';
+  html += '<div class="setting-note">Simulation-affecting runtime controls are staged until restart. Visual controls remain immediate.</div>';
+  html += '<div data-compute-pending-status role="status" aria-live="polite">No staged runtime changes.</div>';
+  html += '<div class="world-pending-actions"><button type="button" data-compute-pending-restart disabled>APPLY & RESTART</button><button type="button" data-compute-pending-discard disabled>DISCARD RUNTIME</button></div>';
   for (const f of META_FIELDS) {
     html += `<div data-slider-slot="meta-${f.key}"></div>`;
   }
@@ -109,19 +109,19 @@ export function createSettingsPanel(bus, lawStateObj) {
   const renderBadge = document.getElementById('render-backend-badge');
   const reloadBtn = document.getElementById('compute-reload');
 
-  // What is actually running right now. A change to either is not live until a
-  // reload, and the badge says so rather than letting the select imply the
-  // world already switched.
-  const activeCompute = runtimeConfig.computeEngine;
-  const activeRender = runtimeConfig.renderBackend;
+  // The compute backend is a restart-staged proposal. The renderer choice is
+  // retained as a launch preference and initializes on the next page load.
+  let activeCompute = runtimeConfig.computeEngine;
+  let activeRender = runtimeConfig.renderBackend;
 
-  const pending = () => runtimeConfig.computeEngine !== activeCompute || runtimeConfig.renderBackend !== activeRender;
+  let proposedCompute = activeCompute;
+  const pending = () => proposedCompute !== activeCompute || runtimeConfig.renderBackend !== activeRender;
 
   function syncBadges() {
     const waiting = pending();
-    if (computeBadge) computeBadge.textContent = runtimeConfig.computeEngine === activeCompute ? 'ACTIVE' : 'PENDING';
+    if (computeBadge) computeBadge.textContent = proposedCompute === activeCompute ? 'ACTIVE' : 'PENDING';
     if (renderBadge) renderBadge.textContent = runtimeConfig.renderBackend === activeRender ? 'ACTIVE' : 'PENDING';
-    if (computeBadge) computeBadge.classList.toggle('pending', runtimeConfig.computeEngine !== activeCompute);
+    if (computeBadge) computeBadge.classList.toggle('pending', proposedCompute !== activeCompute);
     if (renderBadge) renderBadge.classList.toggle('pending', runtimeConfig.renderBackend !== activeRender);
     if (reloadBtn) reloadBtn.hidden = !waiting;
   }
@@ -129,14 +129,15 @@ export function createSettingsPanel(bus, lawStateObj) {
   if (computeSelect) {
     computeSelect.value = activeCompute;
     computeSelect.addEventListener('change', () => {
-      runtimeConfig.computeEngine = computeSelect.value === 'cpu' ? 'cpu' : 'gpu';
+      const selected = computeSelect.value === 'cpu' ? 'cpu' : 'gpu';
+      proposedCompute = selected;
+      bus.emit('compute:proposal', { parameter: 'computeEngine', value: selected });
       if (computeStatus) {
-        computeStatus.textContent = runtimeConfig.computeEngine === 'gpu'
-          ? 'GPU selected. The worker will use WebGPU when available and report CPU fallback otherwise.'
-          : 'CPU selected. Physics stays on the validated synchronous CPU path.';
+        computeStatus.textContent = selected === 'gpu'
+          ? 'GPU proposed. Restart to select WebGPU when available; CPU fallback remains automatic.'
+          : 'CPU proposed. Restart to select the validated synchronous CPU path.';
       }
       syncBadges();
-      bus.emit('compute:changed', { engine: runtimeConfig.computeEngine });
     });
   }
 
@@ -147,8 +148,8 @@ export function createSettingsPanel(bus, lawStateObj) {
       try { localStorage.setItem('vepa-render-backend', runtimeConfig.renderBackend); } catch { /* storage optional */ }
       if (renderStatus) {
         renderStatus.textContent = runtimeConfig.renderBackend === 'pixi'
-          ? 'PixiJS selected. Reload to initialize the GPU renderer; Canvas2D remains the automatic fallback.'
-          : 'Canvas2D selected as the reference renderer.';
+          ? 'PixiJS launch preference selected. Reload to initialize the GPU renderer; Canvas2D remains the automatic fallback.'
+          : 'Canvas2D launch preference selected as the reference renderer.';
       }
       syncBadges();
     });
@@ -162,7 +163,7 @@ export function createSettingsPanel(bus, lawStateObj) {
       const next = normaliseLaunchSettings({
         ...readLaunchSettings(),
         renderBackend: runtimeConfig.renderBackend,
-        computeEngine: runtimeConfig.computeEngine,
+        computeEngine: proposedCompute,
       });
       writeLaunchSettings(next);
       if (computeStatus) {
@@ -177,21 +178,27 @@ export function createSettingsPanel(bus, lawStateObj) {
   if (computeResetBtn) {
     computeResetBtn.addEventListener('click', () => {
       const launch = readLaunchSettings();
-      runtimeConfig.computeEngine = launch.computeEngine;
+      proposedCompute = launch.computeEngine;
+      bus.emit('compute:proposal', { parameter: 'computeEngine', value: launch.computeEngine });
       runtimeConfig.renderBackend = launch.renderBackend;
-      if (computeSelect) computeSelect.value = runtimeConfig.computeEngine;
+      if (computeSelect) computeSelect.value = proposedCompute;
       if (renderSelect) renderSelect.value = runtimeConfig.renderBackend;
       try { localStorage.setItem('vepa-render-backend', runtimeConfig.renderBackend); } catch { /* storage optional */ }
       syncBadges();
-      bus.emit('compute:changed', { engine: runtimeConfig.computeEngine });
       if (computeStatus) {
-        computeStatus.textContent = `Reset to the launch choice: ${runtimeConfig.renderBackend} / ${runtimeConfig.computeEngine}.`;
+        computeStatus.textContent = `Launch choice staged: ${runtimeConfig.renderBackend} / ${proposedCompute}; restart to apply compute.`;
       }
     });
   }
 
   if (reloadBtn) {
-    reloadBtn.addEventListener('click', () => { window.location.reload(); });
+    reloadBtn.addEventListener('click', () => {
+      if (proposedCompute !== activeCompute) {
+        if (window.confirm('Apply the staged compute backend and restart the world?')) bus.emit('sim:restart');
+      } else {
+        window.location.reload();
+      }
+    });
   }
   syncBadges();
 
@@ -228,6 +235,40 @@ export function createSettingsPanel(bus, lawStateObj) {
     });
     camRows[key] = row;
     slot.replaceWith(row.el);
+  });
+
+  const computePendingStatus = panel.querySelector('[data-compute-pending-status]');
+  const computePendingRestart = panel.querySelector('[data-compute-pending-restart]');
+  const computePendingDiscard = panel.querySelector('[data-compute-pending-discard]');
+  bus.on('compute:applied', () => {
+    activeCompute = runtimeConfig.computeEngine;
+    activeRender = runtimeConfig.renderBackend;
+    proposedCompute = activeCompute;
+    if (computeSelect) computeSelect.value = activeCompute;
+    syncBadges();
+  });
+  bus.on('compute:pending', ({ changes = {} } = {}) => {
+    proposedCompute = changes.computeEngine ?? activeCompute;
+    if (computeSelect) computeSelect.value = proposedCompute;
+    const count = Object.keys(changes).length;
+    if (computePendingStatus) computePendingStatus.textContent = count
+      ? `${count} runtime value${count === 1 ? '' : 's'} pending — restart required.`
+      : 'No staged runtime changes.';
+    if (computePendingRestart) computePendingRestart.disabled = !count;
+    if (computePendingDiscard) computePendingDiscard.disabled = !count;
+    syncBadges();
+  });
+  computePendingRestart?.addEventListener('click', () => {
+    if (window.confirm('Apply staged runtime changes and restart? This replaces the current population.')) bus.emit('sim:restart');
+  });
+  computePendingDiscard?.addEventListener('click', () => {
+    bus.emit('compute:discardPending');
+    if (runtimeConfig.renderBackend !== activeRender) {
+      runtimeConfig.renderBackend = activeRender;
+      try { localStorage.setItem('vepa-render-backend', activeRender); } catch { /* storage optional */ }
+      if (renderSelect) renderSelect.value = activeRender;
+      syncBadges();
+    }
   });
 
   const metaRows = {};

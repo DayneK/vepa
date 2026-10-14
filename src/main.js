@@ -4,20 +4,25 @@
  */
 import { initDebug, logDebug, isDebugVisible, updateLiveStats } from './debug.js';
 import { EventBus } from './core/eventBus.js';
+import { createApplicationRuntime } from './application/applicationRuntime.js';
 import { SplitMix32 as PRNG } from './core/prng.js';
-import { WORLD_SIZE, PARTICLE_STRIDE, MAX_PARTICLES, MAX_SPECIES, DEFAULT_PARTICLES_PER_SPECIES, STRIDE_INDEXES, DNA_INDEXES, DNA_RANGES, LAW_INDEXES, LAW_COUNT, LAW_CATEGORIES } from './constants.js';
+import { WORLD_SIZE, PARTICLE_STRIDE, MAX_PARTICLES, MAX_SPECIES, DEFAULT_PARTICLES_PER_SPECIES, DEFAULT_DNA_STRIDE, STRIDE_INDEXES, DNA_INDEXES, DNA_COUNT, DNA_RANGES, LAW_INDEXES, LAW_COUNT, LAW_CATEGORIES } from './constants.js';
 import { createParticleBuffer, setX, setY, setVelocity, setMass, setSpeciesId, setEnergy } from './state/particleBuffer.js';
 import { createLawState, set as lawSet, clear as lawClear, serialize as serializeLawState, getActiveCount as getLawCount } from './state/lawState.js';
-import { runtimeConfig } from './state/runtimeConfig.js';
+import { deserialize as deserializeLawState, isSet as lawIsSet } from './state/lawState.js';
+import { runtimeConfig, stageRuntimeOverride, commitRuntimeOverrides, clearRuntimeOverrides } from './state/runtimeConfig.js';
 import { wirePendingWorldParams } from './state/pendingWorldParams.js';
 import { wirePendingLaws } from './state/pendingLaws.js';
 import { wirePendingDNA } from './state/pendingDNA.js';
-import { randomizeChaosSettings } from './state/chaosSettings.js';
-import { createWorldParams, applyWorldParam, spawnCaps, syncWrapLaw, syncToroidalParam } from './state/worldParams.js';
+import { wirePendingSpeciesRoster } from './state/pendingSpeciesRoster.js';
+import { runRestartTransaction } from './state/restartTransaction.js';
+import { preparePresetCandidate } from './state/presetCandidate.js';
+import { randomizeChaosSettings, randomizeSelectiveChaos } from './state/chaosSettings.js';
+import { createWorldParams, applyWorldParam, spawnCaps, syncWrapLaw, syncToroidalParam, WORLD_PARAM_DEFS } from './state/worldParams.js';
 import { sampleSpawnPosition, sampleSpawnHeight, buildSpawnCentres, initialPopulationTarget, perSpeciesAllocation } from './spawn/distribution.js';
 import { createDNABuffer, loadDefaults, getDNAFloat } from './dna/dnaBuffer.js';
 import { quantizeDNA } from './dna/codec.js';
-import { createRendererAsync, resize as resizeRenderer, paintBackground } from './render/renderer.js';
+import { createRendererAsync, resize as resizeRenderer, destroy as destroyRenderer, paintBackground } from './render/renderer.js';
 import { syncSprites } from './render/spriteSync.js';
 import { initUI } from './ui/ui.js';
 import { initCamera, resetCamera, setWorldSize } from './ui/camera.js';
@@ -111,6 +116,15 @@ let WORKER_SEED = 0x51f15e;
 let launchSettings = null;
 
 let bus, prng, particleBuffer, particleView, lawState, dnaBuffer, renderer;
+let frameRequestId = null;
+let resizeObserver = null;
+let resizeHandler = null;
+let pageHideHandler = null;
+const applicationRuntime = createApplicationRuntime({
+    onPause: () => { paused = true; bus?.emit('sim:paused', { paused: true }); },
+    onResume: () => { paused = false; bus?.emit('sim:paused', { paused: false }); },
+    onError: (error) => logDebug('application lifecycle error: ' + (error?.message || error), 'error'),
+});
 let insightEngine, narrativeEngine, lineageEngine, goalEngine, timelineEngine;
 let groupRegistry = null; // Set F.1 — social groups (declared + detected)
 let speciationEngine = null, ecoEngine = null, worldEventEngine = null; // Set A.1/A.2/A.3
@@ -450,12 +464,23 @@ function startPhysicsWorker() {
     }
 }
 
-async function boot() {
+async function boot({ signal } = {}) {
+    const assertBootActive = () => {
+        if (signal?.aborted) {
+            const error = new Error('Application boot was aborted');
+            error.name = 'AbortError';
+            throw error;
+        }
+    };
     console.log('[VEPA v3] Booting...');
     logDebug('boot: starting');
     const t0 = performance.now();
 
     bus = new EventBus();
+    applicationRuntime.addDisposer(() => {
+        if (bus) bus.reset();
+        bus = null;
+    });
     prng = new PRNG(Date.now());
 
     const buf = createParticleBuffer(MAX_PARTICLES, PARTICLE_STRIDE);
@@ -473,6 +498,7 @@ async function boot() {
     // decides all three, and re-deciding any of them afterwards means tearing
     // the world down first.
     await resolveLaunchConfiguration();
+    assertBootActive();
 
     for (const name of DEFAULT_LAWS) {
         if (LAW_INDEXES[name] !== undefined) lawSet(lawState, LAW_INDEXES[name]);
@@ -491,9 +517,15 @@ async function boot() {
     const canvas = document.getElementById('sim-canvas');
     // Renderer selection is async only for PixiJS; the Canvas2D reference
     // path remains the immediate fallback if GPU initialization fails.
-    renderer = await createRendererAsync(canvas, MAX_PARTICLES, {
+    const createdRenderer = await createRendererAsync(canvas, MAX_PARTICLES, {
         backend: runtimeConfig.renderBackend,
     });
+    renderer = createdRenderer;
+    applicationRuntime.addDisposer(() => {
+        if (renderer) destroyRenderer(renderer);
+        renderer = null;
+    });
+    assertBootActive();
     resizeRenderer(renderer);
     if (renderer.requestedBackend === 'pixi' && renderer.mode !== 'pixi') {
         logDebug('PixiJS renderer unavailable; using Canvas2D fallback: ' + renderer.backendError, 'warn');
@@ -504,16 +536,35 @@ async function boot() {
     // inspect which presentation backend actually engaged.
     window.__VEPA_RENDERER__ = renderer;
     refreshBackground();
-    window.addEventListener('resize', () => {
+    const handleResize = () => {
         if (renderer) resizeRenderer(renderer);
         refreshBackground();
+    };
+    resizeHandler = handleResize;
+    window.addEventListener('resize', handleResize);
+    applicationRuntime.addDisposer(() => {
+        if (resizeHandler) window.removeEventListener('resize', resizeHandler);
+        resizeHandler = null;
     });
     if (window.ResizeObserver) {
-        const ro = new ResizeObserver(() => {
+        resizeObserver = new ResizeObserver(() => {
             if (renderer) resizeRenderer(renderer);
         });
-        ro.observe(canvas);
+        resizeObserver.observe(canvas);
+        applicationRuntime.addDisposer(() => {
+            resizeObserver?.disconnect();
+            resizeObserver = null;
+        });
     }
+    applicationRuntime.addDisposer(() => {
+        if (pageHideHandler) window.removeEventListener('pagehide', pageHideHandler);
+        pageHideHandler = null;
+    });
+    applicationRuntime.addDisposer(stopPhysicsWorker);
+    applicationRuntime.addDisposer(() => {
+        if (frameRequestId !== null) cancelAnimationFrame(frameRequestId);
+        frameRequestId = null;
+    });
     initCamera(canvas, worldSize);
 
     initUI(bus, lawState, dnaBuffer);
@@ -539,12 +590,10 @@ async function boot() {
     });
     window.openChaosMultiplex = () => { if (multiplexController) multiplexController.openModal(); };
     bus.on('multiplex:started', () => {
-        paused = true;
-        bus.emit('sim:paused', { paused: true });
+        applicationRuntime.pause();
     });
     bus.on('multiplex:exited', () => {
-        paused = false;
-        bus.emit('sim:paused', { paused: false });
+        applicationRuntime.resume();
     });
 
         insightEngine = createInsightEngine(bus, { scanInterval: 90, clusterRadius: 60, minClusterSize: 5 });
@@ -581,13 +630,16 @@ async function boot() {
     // Keep UI work on the main thread, but move the deterministic solver and
     // its spatial-grid/pairwise hot path off-thread whenever SAB is available.
     // The worker is intentionally started after all initial writes are done.
+    assertBootActive();
     startPhysicsWorker();
-    requestAnimationFrame(renderLoop);
+    frameRequestId = requestAnimationFrame(renderLoop);
 
     const dt = (performance.now() - t0).toFixed(1);
     console.log(`[VEPA v3] Booted in ${dt}ms — ${particleCount} particles, ${speciesCount} species`);
     logDebug(`booted in ${dt}ms — ${particleCount} particles, ${speciesCount} species`);
-    bus.emit('boot:complete', { particleCount, speciesCount, dt });
+    const bootResult = { particleCount, speciesCount, dt, rendererMode: renderer?.mode || 'unavailable' };
+    bus.emit('boot:complete', bootResult);
+    return bootResult;
 }
 
 // Fallback colours for user-added species beyond the built-in profiles
@@ -902,6 +954,7 @@ function setDNAFromProfile(species, profile) {
         undoRing.commit(currentWorldState());
         emitUndoState();
     };
+    bus.on('world:commitAutoSnapshot', commitAutoSnapshot);
     const applyWorldRestore = (state) => {
         const restoreWorker = !!physicsWorker;
         stopPhysicsWorker();
@@ -937,7 +990,6 @@ function setDNAFromProfile(species, profile) {
     };
     bus.on('sim:chaos', () => commitAutoSnapshot());
     bus.on('sim:restart', () => commitAutoSnapshot());
-    bus.on('preset:load', () => commitAutoSnapshot());
     // ── Presets (WORLD sub-tab) ──
     // The preset panel asks the world for its current state rather than reading
     // the buffer itself: it has no access to the particle view, the law state
@@ -955,35 +1007,51 @@ function setDNAFromProfile(species, profile) {
             worldParams: { ...worldParams },
         });
     });
-    bus.on('preset:load', ({ name, preset }) => {
-        if (!preset) return;
+    bus.on('preset:load', ({ name, preset } = {}) => {
+        const candidate = preparePresetCandidate(preset);
+        if (!candidate) {
+            bus.emit('preset:loadRejected', { name: String(name || ''), reason: 'Preset configuration is malformed or outside supported ranges.' });
+            return;
+        }
         commitAutoSnapshot();
-        // Restores laws, DNA and world parameters, and deliberately leaves the
-        // particles alone: a preset is a configuration, not a world snapshot.
-        // `particles` is absent, so restoreWorldState skips the buffer fill.
-        applyWorldRestore({
-            format: WORLD_SAVE_FORMAT,
-            version: WORLD_SAVE_VERSION,
-            particleCount,
-            speciesCount: preset.speciesCount || speciesCount,
-            worldSize,
-            dna: preset.dna || null,
-            laws: preset.law || null,
-            worldParams: preset.worldParams || null,
-        });
-        bus.emit('preset:loaded', { name: String(name || '') });
+        // Presets replace the complete proposed configuration, never the
+        // current world. Validation completed before any proposal is replaced.
+        bus.emit('law:replacePending', { changes: candidate.lawChanges });
+        bus.emit('world:replacePending', { changes: candidate.worldChanges });
+        bus.emit('species:replacePending', { speciesCount: candidate.speciesCount, dna: candidate.dna });
+        bus.emit('narrative:system', { text: `Preset “${String(name || '')}” staged; restart to apply its configuration.` });
+        bus.emit('preset:loaded', { name: String(name || ''), staged: true });
     });
-    bus.on('species:aboutToChange', () => commitAutoSnapshot());
     // Proposed slider edits do not consume world undo entries. Restart already
     // captures one pre-restart snapshot for the entire batch.
-    let pendingChaosDNA = null;
-    bus.on('world:restored', () => { pendingChaosDNA = null; });
     const pendingLaws = wirePendingLaws(bus, { getLive: () => lawState });
     const pendingWorldParams = wirePendingWorldParams(bus, {
         getLive: () => worldParams,
         apply: applyWorldParameter,
     });
     const pendingDNA = wirePendingDNA(bus, { getLive: () => dnaBuffer });
+    const pendingSpeciesRoster = wirePendingSpeciesRoster(bus, {
+        getCount: () => speciesCount,
+        pendingDNA,
+    });
+    bus.on('species:aboutToChange', () => commitAutoSnapshot());
+    bus.on('world:restored', () => {
+        pendingDNA.clear();
+        pendingSpeciesRoster.discard();
+        pendingLaws.clear();
+        pendingWorldParams.clear();
+        clearRuntimeOverrides();
+    });
+    bus.on('world:discardPending', () => {
+        pendingSpeciesRoster.discard();
+        clearRuntimeOverrides();
+        bus.emit('compute:pending', { changes: {} });
+    });
+    bus.on('compute:proposal', ({ parameter, value } = {}) => {
+        const key = ({ maxForce: 'maxForce', drag: 'dragMultiplier', birthRate: 'birthRate', deathRate: 'deathRate', starMass: 'starMass', simSpeed: 'simSpeed', computeEngine: 'computeEngine' })[parameter];
+        if (key && stageRuntimeOverride(key, value)) bus.emit('compute:pending', { changes: { ...restartRuntimeOverrides } });
+    });
+    bus.on('compute:discardPending', () => { clearRuntimeOverrides(); bus.emit('compute:pending', { changes: {} }); });
     bus.on('sim:hardReset', () => {
         if (particleCount <= 0) return;
         const d = new Date();
@@ -1096,21 +1164,42 @@ function setDNAFromProfile(species, profile) {
     });
     bus.on('world:paramApplied', syncPhysicsWorker);
     bus.on('compute:changed', syncPhysicsWorker);
-    bus.on('sim:pause', () => { paused = true; });
-    bus.on('sim:resume', () => { paused = false; });
+    bus.on('sim:pause', () => { applicationRuntime.pause(); });
+    bus.on('sim:resume', () => { applicationRuntime.resume(); });
     bus.on('sim:restart', (opts = {}) => {
+        const wasPaused = paused;
+        const previousSpeciesCount = speciesCount;
         const restartWorker = !!physicsWorker;
-        stopPhysicsWorker();
-        // No CONFIG or tick can observe half of the staged batch: the worker
-        // is stopped and will be initialized only after all values are adopted.
-        if (pendingChaosDNA) {
-            dnaBuffer.set(pendingChaosDNA);
-            pendingChaosDNA = null;
-        }
-        const appliedLaws = pendingLaws.commit();
-        const applied = pendingWorldParams.commit();
-        const appliedDNA = pendingDNA.commit();
+        let appliedLaws = [];
+        let applied = [];
+        let appliedDNA = [];
+        let appliedSpeciesCount = previousSpeciesCount;
+        let appliedRuntime = {};
+        runRestartTransaction({
+            stopCompute: stopPhysicsWorker,
+            commitConfiguration: () => {
+                appliedLaws = pendingLaws.commit();
+                applied = pendingWorldParams.commit();
+                appliedDNA = pendingDNA.commit();
+                appliedSpeciesCount = pendingSpeciesRoster.commit();
+                appliedRuntime = commitRuntimeOverrides();
+                return { appliedLaws, applied, appliedDNA, appliedSpeciesCount, appliedRuntime };
+            },
+            resetWorld: () => {
+                speciesCount = appliedSpeciesCount;
+                spawnAccumulator = 0;
+                prng = new PRNG(launchSettings?.launchSeed ?? Date.now());
+                WORKER_SEED = launchSettings?.launchSeed ?? (Date.now() | 0);
+                particleView.fill(0);
+                resetOffspringRing();
+            },
+            spawn: () => spawnDefaultPopulation(true, true),
+            startCompute: () => { if (restartWorker) startPhysicsWorker(); },
+        });
+
         if (appliedDNA.length) bus.emit('dna:editApplied', { changes: appliedDNA });
+        if (appliedSpeciesCount !== previousSpeciesCount) bus.emit('species:changed', { count: speciesCount });
+        bus.emit('species:pendingRequested');
         if (appliedLaws.length) bus.emit('narrative:system', {
             text: `Restart applied ${appliedLaws.length} staged law changes.`,
         });
@@ -1120,14 +1209,12 @@ function setDNAFromProfile(species, profile) {
         if (appliedDNA.length) bus.emit('narrative:system', {
             text: `Restart applied ${appliedDNA.length} staged DNA edit${appliedDNA.length === 1 ? '' : 's'}.`,
         });
-        spawnAccumulator = 0;
-        prng = new PRNG(launchSettings?.launchSeed ?? Date.now());
-        WORKER_SEED = launchSettings?.launchSeed ?? (Date.now() | 0);
-        particleView.fill(0);
-        resetOffspringRing();
-        spawnDefaultPopulation(true, true);
-        if (restartWorker) startPhysicsWorker();
+        if (Object.keys(appliedRuntime).length) {
+            bus.emit('compute:pending', { changes: {} });
+            bus.emit('compute:applied', { changes: appliedRuntime });
+        }
         tick = 0;
+        if (wasPaused) applicationRuntime.resume({ notify: false });
         paused = false;
         resetIntelligence();
         bus.emit('species:sync', { count: speciesCount });
@@ -1140,9 +1227,13 @@ function setDNAFromProfile(species, profile) {
     });
     bus.on('species:changed', ({ count }) => {
         speciesCount = Math.max(1, Math.min(count || 1, MAX_SPECIES));
+        bus.emit('species:sync', { count: speciesCount });
     });
 
-    bus.on('sim:togglePause', () => { paused = !paused; bus.emit('sim:paused', { paused }); });
+    bus.on('sim:togglePause', () => {
+        if (applicationRuntime.paused) applicationRuntime.resume();
+        else applicationRuntime.pause();
+    });
     bus.on('sim:hardReset', () => {
         console.log('[VEPA v3] Hard reset requested');
         logDebug('hard reset requested', 'warn');
@@ -1150,20 +1241,13 @@ function setDNAFromProfile(species, profile) {
     });
 
     bus.on('sim:chaos', () => {
-        const randomized = randomizeChaosSettings(worldParams, dnaBuffer, speciesCount, prng);
-        pendingChaosDNA = randomized.dna;
-        bus.emit('world:discardPending');
-        bus.emit('law:discardPending');
-        bus.emit('dna:discardPending');
-        for (const [key, value] of Object.entries(randomized.worldParams)) {
-            if (value !== worldParams[key]) bus.emit('world:paramChanged', { key, value });
-        }
-        const changes = [];
-        for (let lawIndex = 0; lawIndex < LAW_COUNT; lawIndex++) {
-            if (lawIndex === LAW_INDEXES.WRAP) continue;
-            changes.push({ lawIndex, active: lawIndex === LAW_INDEXES.CONTACT || prng.next() < 0.5 });
-        }
-        bus.emit('law:editRequested', { changes });
+        commitAutoSnapshot();
+        const randomized = randomizeChaosSettings(worldParams, dnaBuffer, pendingSpeciesRoster.count, prng);
+        clearRuntimeOverrides();
+        bus.emit('compute:pending', { changes: {} });
+        bus.emit('species:replacePending', { speciesCount: pendingSpeciesRoster.count, dna: randomized.dna });
+        bus.emit('world:replacePending', { changes: Object.entries(randomized.worldParams).map(([key, value]) => ({ key, value })) });
+        bus.emit('law:replacePending', { changes: randomized.laws });
         logDebug('chaos: randomized laws, world settings and all species DNA for restart', 'warn');
         bus.emit('narrative:system', {
             text: 'Chaos randomized laws, physical WORLD parameters and all 64 traits of each species. Performance budgets are preserved. Restart adopts the batch.',
@@ -1171,32 +1255,16 @@ function setDNAFromProfile(species, profile) {
     });
 
     bus.on('sim:chaosClear', () => {
-        for (let i = 0; i < LAW_COUNT; i++) {
-            lawClear(lawState, i);
-        }
-        logDebug('all laws cleared', 'warn');
-        bus.emit('law:sync');
-        bus.emit('narrative:system', { text: 'All laws cleared.' });
+        const changes = Array.from({ length: LAW_COUNT }, (_, lawIndex) => ({ lawIndex, active: false }))
+            .filter(({ lawIndex }) => lawIndex !== LAW_INDEXES.WRAP);
+        bus.emit('law:replacePending', { changes });
+        bus.emit('narrative:system', { text: 'All laws staged off; restart to apply.' });
     });
 
-    bus.on('sim:chaosSelective', ({ categories }) => {
-        const catMap = { physics: true, biology: true, chemistry: true, thermodynamics: true, metaphysics: true };
-        const activeCats = {};
-        for (const c of categories) { activeCats[c] = true; }
-        for (const [catName, cat] of Object.entries(LAW_CATEGORIES)) {
-            if (!activeCats[catName]) continue;
-            for (const idx of cat.laws) {
-                if (Math.random() > 0.3) {
-                    if (Math.random() > 0.5) {
-                        lawSet(lawState, idx);
-                    } else {
-                        lawClear(lawState, idx);
-                    }
-                }
-            }
-        }
-        bus.emit('law:sync');
-        bus.emit('narrative:system', { text: 'Selective chaos applied.' });
+    bus.on('sim:chaosSelective', ({ categories } = {}) => {
+        const changes = randomizeSelectiveChaos(categories, LAW_CATEGORIES, (lawIndex) => pendingLaws.get(lawIndex), prng);
+        bus.emit('law:mergePending', { changes });
+        bus.emit('narrative:system', { text: 'Selective Chaos staged for restart.' });
     });
 
     bus.on('group:declare', ({ name, speciesIds }) => {
@@ -1236,8 +1304,9 @@ function setDNAFromProfile(species, profile) {
             text = 'Collapse confirmed — emergency spawn + mutation rescue.';
         }
         runtimeConfig.worldParams = worldParams;
-        bus.emit('narrative:system', { text: text || `${type} event.` });
         bus.emit('world:paramApplied', { key: 'SPAWN_RATE', value: worldParams.SPAWN_RATE });
+        bus.emit('world:mergePending', { changes: Object.entries(worldParams).map(([key, value]) => ({ key, value })) });
+        bus.emit('narrative:system', { text: text || `${type} event.` });
     });
 
     bus.on('epoch:extinction', () => {
@@ -1291,11 +1360,13 @@ function setDNAFromProfile(species, profile) {
         undoRing.commit(currentWorldState());
         let text = '';
         if (action.kind === 'param') {
-            worldParams = applyWorldParam(worldParams, action.key, action.value);
-            runtimeConfig.worldParams = worldParams;
-            if (action.key === 'SPAWN_RATE') spawnRate = worldParams.SPAWN_RATE;
-            text = `The narrative acts: ${action.key} → ${worldParams[action.key]} (${action.reason}).`;
-            bus.emit('world:paramApplied', { key: action.key, value: worldParams[action.key] });
+            const definition = WORLD_PARAM_DEFS.find(({ key }) => key === action.key);
+            if (definition) {
+                bus.emit('world:mergePending', { changes: [{ key: action.key, value: action.value }] });
+                text = `The narrative proposes: ${action.key} → ${action.value} (${action.reason}); restart to apply.`;
+            } else {
+                text = `The narrative action was not applied: unknown parameter ${action.key}.`;
+            }
         } else if (action.kind === 'field') {
             const fs = getFields();
             if (fs) writeField(fs, action.name, action.x, action.y, action.z, action.delta);
@@ -1351,10 +1422,12 @@ function wireGoalEvents() {
         switch (adj.parameter) {
             case 'scanInterval': if (insightEngine) insightEngine.cfg.scanInterval = adj.newValue; break;
             case 'clusterRadius': if (insightEngine) insightEngine.cfg.clusterRadius = adj.newValue; break;
-            case 'maxForce': runtimeConfig.maxForce = adj.newValue; break;
-            case 'drag': runtimeConfig.dragMultiplier = adj.newValue; break;
-            case 'birthRate': runtimeConfig.birthRate = adj.newValue; break;
-            case 'deathRate': runtimeConfig.deathRate = adj.newValue; break;
+            case 'maxForce':
+            case 'drag':
+            case 'birthRate':
+            case 'deathRate':
+                bus.emit('compute:proposal', { parameter: adj.parameter, value: adj.newValue });
+                break;
         }
         bus.emit('goal:applied', adj);
     });
@@ -1809,8 +1882,9 @@ function resetIntelligence() {
 }
 
 function renderLoop(now) {
+    if (applicationRuntime.state !== 'running') return;
     const loopStart = performance.now();
-    requestAnimationFrame(renderLoop);
+    frameRequestId = requestAnimationFrame(renderLoop);
     frameCount++;
     if (now - lastFrameTime >= 1000) {
         fps = frameCount;
@@ -1929,7 +2003,9 @@ function renderLoop(now) {
 
 // Global errors and unhandled rejections are captured by src/debug.js into
 // the debug overlay (single message log for the whole page session).
-boot().catch(e => {
-    console.error('BOOT ERROR:', e);
-    logDebug('BOOT ERROR: ' + (e.stack || e.message || e), 'error');
+pageHideHandler = () => applicationRuntime.dispose();
+window.addEventListener('pagehide', pageHideHandler, { once: true });
+applicationRuntime.start(boot).catch((error) => {
+    console.error('BOOT ERROR:', error);
+    logDebug('BOOT ERROR: ' + (error.stack || error.message || error), 'error');
 });

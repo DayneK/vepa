@@ -1,5 +1,7 @@
 # 07 — Execution backends and cloud processing
 
+**Browser stage:** `RB-07` in `tests/e2e/rb-browser-stages.spec.js` records actual local isolation, renderer and WebGPU capability. The test is defined but not browser-verified until the Chromium host dependency is available; remote transport/security/recovery acceptance remains future work.
+
 **Current evidence:** `src/main.js` sends INIT/CONFIG/TICK to `src/worker/physics.worker.js`; SharedArrayBuffer lets worker mutate local memory, ArrayBuffer fallback exists. Worker calls exact CPU `solve`, optionally after WebGPU pre-pass. `src/render/*` reads local particle view; browser COOP/COEP headers enable SAB. There is no present cloud simulation transport, service contract, identity model, or provider choice.
 
 ## Provider-neutral target

@@ -125,7 +125,7 @@ describe('restart-staged law controls', () => {
   it('commits laws after compute stops and before WORLD adoption, spawning and worker init', () => {
     const main = readFileSync(new URL('../../src/main.js', import.meta.url), 'utf8');
     const restart = main.slice(main.indexOf("bus.on('sim:restart', (opts"), main.indexOf("bus.on('species:changed'"));
-    const ordered = ['stopPhysicsWorker()', 'pendingLaws.commit()', 'pendingWorldParams.commit()', 'spawnDefaultPopulation', 'startPhysicsWorker()'];
+    const ordered = ['stopCompute: stopPhysicsWorker', 'commitConfiguration: () => {', 'pendingLaws.commit()', 'pendingWorldParams.commit()', 'pendingDNA.commit()', 'pendingSpeciesRoster.commit()', 'resetWorld: () => {', 'spawn: () => spawnDefaultPopulation', 'startCompute: () => { if (restartWorker) startPhysicsWorker()'];
     for (let i = 1; i < ordered.length; i++) {
       expect(restart.indexOf(ordered[i - 1])).toBeGreaterThanOrEqual(0);
       expect(restart.indexOf(ordered[i - 1])).toBeLessThan(restart.indexOf(ordered[i]));

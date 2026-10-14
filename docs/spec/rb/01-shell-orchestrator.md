@@ -1,5 +1,7 @@
 # 01 — App shell and orchestrator
 
+**Browser stage:** `RB-01` in `tests/e2e/rb-browser-stages.spec.js` exercises boot, pause/resume and restart. The test is defined but not browser-verified until the Chromium host dependency is available; composition ownership and full teardown parity remain future acceptance.
+
 **Current evidence:** `index.html`, `src/main.js`, `src/ui/ui.js`, `src/core/eventBus.js`, `src/state/runtimeConfig.js`. The 1,931-line `main.js` currently performs boot, creates shared state, resolves launch settings/presets, spawns population, mounts render/UI, wires worker and buses, and advances many subsystems. The shell is literal DOM/canvas, not a React application despite React dependencies and a hidden root node.
 
 ## Target responsibility

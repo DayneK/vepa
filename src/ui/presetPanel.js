@@ -172,7 +172,8 @@ export function createPresetPanel(bus) {
     bus.emit('preset:deleted', { name });
   });
 
-  bus.on('preset:loaded', ({ name }) => flash(`Loaded “${name}”`));
+  bus.on('preset:loaded', ({ name }) => flash(`Preset “${name}” staged; restart to apply.`));
+  bus.on('preset:loadRejected', ({ reason }) => flash(reason || 'Preset is invalid.', true));
 
   // ── Listen for external refresh requests ──
   bus.on('preset:refresh', () => refreshDropdown(select));

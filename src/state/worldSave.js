@@ -34,6 +34,10 @@ export const SAVE_LIST_CAP = 24;
 /** runtimeConfig knobs captured/restored with every world state. */
 export const RUNTIME_KNOBS = [
   'starMass',
+  'maxForce',
+  'dragMultiplier',
+  'birthRate',
+  'deathRate',
   'forceScale',
   'maxForce',
   'dragMultiplier',
@@ -560,8 +564,9 @@ export function createUndoRing(cap = UNDO_RING_CAP) {
     past: [],
     future: [],
     cap: Math.max(1, cap),
-    /** Record a checkpoint of the current world. Skips duplicates. */
-    commit(state) {
+    /** Record a checkpoint of the committed world only. */
+    commit(state, { pendingChanges = 0 } = {}) {
+      if (pendingChanges > 0) return false;
       const top = this.past[this.past.length - 1];
       if (top && sameWorldFingerprint(top, state)) return false;
       this.past.push(state);
