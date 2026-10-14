@@ -2,11 +2,11 @@
 
 # Source: Inventory
 
-The generator scanned `303` files from active repository inputs. Individual module records are under [source/modules/](modules/).
+The generator scanned `304` files from active repository inputs. Individual module records are under [source/modules/](modules/).
 
 | Area | Files | Exports | Law references |
 | --- | --- | --- | --- |
-| Application | 37 | 158 | 457 |
+| Application | 38 | 158 | 461 |
 | Benchmark | 4 | 5 | 10 |
 | Repository | 7 | 2 | 3 |
 | Simulation | 30 | 216 | 367 |
@@ -29,6 +29,7 @@ The generator scanned `303` files from active repository inputs. Individual modu
 | [public/bench-report/data.js](public/bench-report/data.js) | application | 20740 | 0 | 0 | 124 |
 | [public/bench-report/index.html](public/bench-report/index.html) | application | 928 | 0 | 0 | 11 |
 | [public/src/react-entry.js](public/src/react-entry.js) | application | 35 | 0 | 0 | 0 |
+| [public/ui-refresh-comparison.html](public/ui-refresh-comparison.html) | application | 76 | 0 | 0 | 4 |
 | [src/application/applicationRuntime.js](src/application/applicationRuntime.js) | application | 114 | 1 | 0 | 0 |
 | [src/constants.js](src/constants.js) | application | 7 | 0 | 0 | 0 |
 | [src/constants/dna.js](src/constants/dna.js) | application | 155 | 6 | 0 | 9 |
