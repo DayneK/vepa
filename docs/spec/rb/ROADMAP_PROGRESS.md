@@ -7,7 +7,8 @@
 ## Navigation
 
 - [Accepted product roadmap](../../../VEPA_Roadmap_v4-5.md) · [Phased delivery roadmap](../../../VEPA_Roadmap_v4-5.md#13-phased-delivery-roadmap) · [Final acceptance checklist](../../../VEPA_Roadmap_v4-5.md#15-final-acceptance-checklist)
-- [Product-to-RB requirements and phases crosswalk](ROADMAP_CROSSWALK.md)
+- [Product-to-RB requirements and phases crosswalk](ROADMAP_CROSSWALK.md), including §15 checklist traceability
+- Proposed design plans: [Phases 0–3](PHASES_0_3_DESIGN_PLAN.md) and [Phases 4–7](PHASES_4_7_DESIGN_PLAN.md) — design and acceptance gates only; no phase completion is claimed.
 - [RB target architecture](MASTER_SPEC.md) · [RB specifications 00–11](00-current-program-baseline.md)
 - [Current evidence and actionable work queues](ROADMAP_PROGRESS.md#next-actionable-todo-lists)
 

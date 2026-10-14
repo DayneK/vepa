@@ -818,9 +818,15 @@ export function createMultiplexController(bus, getSource, applyShard) {
     bus.on('multiplex:reverted', updateDrawer);
   }
 
+  function beginDefault() {
+    ensureDom();
+    begin(lastConfig || MULTIPLEX_DEFAULTS);
+  }
+
   return {
     mx,
     openModal,
+    beginDefault,
     closeModal,
     exit,
     iterate,

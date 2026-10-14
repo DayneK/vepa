@@ -14,10 +14,10 @@ describe('particle population capacity', () => {
   it('keeps world population controls and spawn caps within the engine capacity', () => {
     for (const key of ['PARTICLE_COUNT', 'INITIAL_POP', 'MAX_POP']) {
       const definition = WORLD_PARAM_DEFS.find((param) => param.key === key);
-      expect(definition.max).toBe(MAX_PARTICLES);
-      expect(definition.default).toBeLessThanOrEqual(MAX_PARTICLES);
+      expect(definition.max).toBe(key === 'PARTICLE_COUNT' ? 1000 : MAX_PARTICLES);
+      expect(definition.default).toBeLessThanOrEqual(definition.max);
     }
-    expect(spawnCaps({ ...createWorldParams(), PARTICLE_COUNT: MAX_PARTICLES, MAX_POP: MAX_PARTICLES }))
-      .toEqual({ hardCap: MAX_PARTICLES, softCap: MAX_PARTICLES });
+    expect(spawnCaps({ ...createWorldParams(), PARTICLE_COUNT: 1000, MAX_POP: MAX_PARTICLES }))
+      .toEqual({ hardCap: 1000, softCap: 1000 });
   });
 });

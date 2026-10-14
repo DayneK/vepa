@@ -2005,7 +2005,9 @@ function renderLoop(now) {
 // the debug overlay (single message log for the whole page session).
 pageHideHandler = () => applicationRuntime.dispose();
 window.addEventListener('pagehide', pageHideHandler, { once: true });
-applicationRuntime.start(boot).catch((error) => {
+applicationRuntime.start(boot).then(() => {
+    if (launchSettings?.launchMode === 'multiplex') multiplexController?.beginDefault();
+}).catch((error) => {
     console.error('BOOT ERROR:', error);
     logDebug('BOOT ERROR: ' + (error.stack || error.message || error), 'error');
 });

@@ -261,7 +261,7 @@ function updateComparisonButtons(overlay, presets, comparedIds) {
 
 function renderAdvanced(overlay, entry, settings) {
   const body = overlay.querySelector('.launch-advanced-body');
-  const activePanel = [...overlay.querySelectorAll('.launch-tab-panel')].find((panel) => !panel.hidden)?.dataset.panel || 'laws';
+  const activePanel = [...overlay.querySelectorAll('.launch-tab')].find((tab) => tab.classList.contains('current'))?.dataset.tab || 'laws';
   if (body) body.innerHTML = advancedPanelsHtml(entry, settings);
   for (const panel of overlay.querySelectorAll('.launch-tab-panel')) panel.hidden = panel.dataset.panel !== activePanel;
   for (const tab of overlay.querySelectorAll('.launch-tab')) {
@@ -296,33 +296,48 @@ export function showLaunchModal(options = {}) {
       <section class="launch-panel" role="dialog" aria-modal="true" aria-labelledby="launch-title">
         <header class="launch-header">
           <div><span class="launch-kicker">VEPA4 · WORLD INITIALIZER</span><h1 id="launch-title">${TITLE}</h1>
-            <p class="launch-intro">Choose the conditions your next living world begins with.</p></div>
+            <p class="launch-intro">Choose a world or launch directly into a comparative multiplex.</p>
+            <div class="launch-mode-choices" role="group" aria-label="Launch destination">
+              <button type="button" class="launch-mode-choice${settings.launchMode === 'world' ? ' current' : ''}" data-launch-mode="world" aria-pressed="${settings.launchMode === 'world' ? 'true' : 'false'}">SINGLE WORLD</button>
+              <button type="button" class="launch-mode-choice${settings.launchMode === 'multiplex' ? ' current' : ''}" data-launch-mode="multiplex" aria-pressed="${settings.launchMode === 'multiplex' ? 'true' : 'false'}">MULTIPLEX</button>
+            </div></div>
           <button type="button" class="launch-close" data-act="cancel" aria-label="Skip and use defaults">×</button>
         </header>
+        <nav class="launch-main-tabs" role="tablist" aria-label="Launch settings">
+          <button type="button" role="tab" class="launch-main-tab current" data-launch-tab="world" aria-selected="true">WORLD</button>
+          <button type="button" role="tab" class="launch-main-tab" data-launch-tab="conditions" aria-selected="false">CONDITIONS</button>
+          <button type="button" role="tab" class="launch-main-tab" data-launch-tab="design" aria-selected="false">DESIGN</button>
+        </nav>
         <div class="launch-body">
-          <h2 class="launch-section-title">CHOOSE A WORLD</h2>
-          <div class="launch-preset-filters" aria-label="Filter presets">
-            ${['All', ...new Set(presets.map((preset) => preset.category || 'Ecologies'))].map((category) => `<button type="button" class="launch-filter-chip${category === 'All' ? ' current' : ''}" data-preset-filter="${esc(category)}">${esc(category)}</button>`).join('')}
-          </div>
-          <div class="launch-presets" role="list" aria-label="Launch presets">
-            ${presetCardsHtml(presets, settings.presetId, comparedIds)}
-          </div>
-          <div class="launch-comparison" aria-live="polite">${comparisonHtml(presets, comparedIds)}</div>
-          <div class="launch-custom-save">
-            <label class="launch-sr-only" for="launch-custom-name">Name this launch preset</label>
-            <input id="launch-custom-name" class="launch-custom-name" type="text" maxlength="36" placeholder="Name your setup…" autocomplete="off">
-            <button type="button" class="launch-save-preset" data-act="save-custom">SAVE SETUP</button>
-            <span class="launch-custom-status" role="status" aria-live="polite"></span>
-          </div>
-          <h2 class="launch-section-title">TUNE THE STARTING CONDITIONS</h2>
-          <p class="launch-note launch-log-note">Logarithmic scales give fine control at low values; tap ABOUT for a description. Tick marks show useful reference values.</p>
-          ${LAUNCH_FIELDS.filter((field) => field.key !== 'launchSeed' && field.key !== 'founderEra').map((field) => fieldHtml(field, settings[field.key], selectedEntry, settings)).join('')}
-          ${advancedContentHtml(selectedEntry, settings)}
+          <section class="launch-main-panel" data-launch-panel="world">
+            <h2 class="launch-section-title">CHOOSE A WORLD</h2>
+            <div class="launch-preset-filters" aria-label="Filter presets">
+              ${['All', ...new Set(presets.map((preset) => preset.category || 'Ecologies'))].map((category) => `<button type="button" class="launch-filter-chip${category === 'All' ? ' current' : ''}" data-preset-filter="${esc(category)}">${esc(category)}</button>`).join('')}
+            </div>
+            <div class="launch-presets" role="list" aria-label="Launch presets">
+              ${presetCardsHtml(presets, settings.presetId, comparedIds)}
+            </div>
+            <div class="launch-comparison" aria-live="polite">${comparisonHtml(presets, comparedIds)}</div>
+            <div class="launch-custom-save">
+              <label class="launch-sr-only" for="launch-custom-name">Name this launch preset</label>
+              <input id="launch-custom-name" class="launch-custom-name" type="text" maxlength="36" placeholder="Name your setup…" autocomplete="off">
+              <button type="button" class="launch-save-preset" data-act="save-custom">SAVE SETUP</button>
+              <span class="launch-custom-status" role="status" aria-live="polite"></span>
+            </div>
+          </section>
+          <section class="launch-main-panel" data-launch-panel="conditions" hidden>
+            <h2 class="launch-section-title">TUNE THE STARTING CONDITIONS</h2>
+            <p class="launch-note launch-log-note">Logarithmic scales give fine control at low values; tap ABOUT for a description. Tick marks show useful reference values.</p>
+            ${LAUNCH_FIELDS.filter((field) => field.key !== 'launchSeed' && field.key !== 'founderEra').map((field) => fieldHtml(field, settings[field.key], selectedEntry, settings)).join('')}
+          </section>
+          <section class="launch-main-panel" data-launch-panel="design" hidden>
+            ${advancedContentHtml(selectedEntry, settings)}
+          </section>
           <p class="launch-note launch-note-remember">Your choice is remembered. Fine-tune the world later from SETUP.</p>
         </div>
         <footer class="launch-footer">
           <button type="button" class="launch-secondary" data-act="cancel">Use defaults</button>
-          <button type="button" class="launch-primary" data-act="launch">${options.isFirstRun ? 'Launch' : 'Launch with these settings'}</button>
+          <button type="button" class="launch-primary" data-act="launch">${settings.launchMode === 'multiplex' ? 'Launch Multiplex' : (options.isFirstRun ? 'Launch' : 'Launch with these settings')}</button>
         </footer>
       </section>`;
     document.body.appendChild(overlay);
@@ -410,6 +425,38 @@ export function showLaunchModal(options = {}) {
         for (const card of overlay.querySelectorAll('.launch-preset-wrap')) card.hidden = category !== 'All' && card.dataset.category !== category;
         return;
       }
+      const mainTab = event.target.closest('.launch-main-tab');
+      if (mainTab) {
+        for (const panelNode of overlay.querySelectorAll('.launch-main-panel')) panelNode.hidden = panelNode.dataset.launchPanel !== mainTab.dataset.launchTab;
+        const designToggle = overlay.querySelector('[data-act="toggle-advanced"]');
+        const designBody = overlay.querySelector('#launch-advanced-body');
+        if (mainTab.dataset.launchTab === 'design' && designBody?.hidden) {
+          designBody.hidden = false;
+          designToggle?.setAttribute('aria-expanded', 'true');
+          const icon = designToggle?.querySelector('span');
+          if (icon) icon.textContent = '−';
+        }
+        for (const tab of overlay.querySelectorAll('.launch-main-tab')) {
+          const active = tab.dataset.launchTab === mainTab.dataset.launchTab;
+          tab.classList.toggle('current', active);
+          tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        }
+        return;
+      }
+      const modeChoice = event.target.closest('[data-launch-mode]');
+      if (modeChoice) {
+        settings = { ...settings, launchMode: modeChoice.dataset.launchMode === 'multiplex' ? 'multiplex' : 'world' };
+        for (const button of overlay.querySelectorAll('[data-launch-mode]')) {
+          const active = button.dataset.launchMode === settings.launchMode;
+          button.classList.toggle('current', active);
+          button.setAttribute('aria-pressed', active ? 'true' : 'false');
+        }
+        const launchButton = overlay.querySelector('.launch-primary');
+        if (launchButton) launchButton.textContent = settings.launchMode === 'multiplex'
+          ? 'Launch Multiplex'
+          : (options.isFirstRun ? 'Launch' : 'Launch with these settings');
+        return;
+      }
       const tabButton = event.target.closest('.launch-tab');
       if (tabButton) {
         const panels = overlay.querySelectorAll('.launch-tab-panel');
@@ -428,6 +475,16 @@ export function showLaunchModal(options = {}) {
         advancedToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
         advancedToggle.querySelector('span').textContent = expanded ? '−' : '＋';
         if (body) body.hidden = !expanded;
+        if (expanded) {
+          const designTab = overlay.querySelector('.launch-main-tab[data-launch-tab="design"]');
+          const activePanel = overlay.querySelector('.launch-tab-panel:not([hidden])')?.dataset.panel || 'laws';
+          for (const tab of overlay.querySelectorAll('.launch-tab')) {
+            const active = tab.dataset.tab === activePanel;
+            tab.classList.toggle('current', active);
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+          }
+          designTab?.click();
+        }
         return;
       }
       const paramReset = event.target.closest('[data-param-reset]');

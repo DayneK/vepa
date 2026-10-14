@@ -2,7 +2,7 @@
 
 **Browser stage:** `RB-03` in `tests/e2e/rb-browser-stages.spec.js` exercises a WORLD proposal and discard. The test is defined but not browser-verified until the Chromium host dependency is available; complete parameter staging, recipe transactions and persistence remain future acceptance.
 
-**Current evidence:** `src/state/worldParams.js` declares `WORLD_PARAM_DEFS` (currently 149 records), defaults, ranges, groups and clamp/update helpers. `src/ui/worldPanel.js` renders generated controls; `src/main.js` applies changed values, updates `runtimeConfig.worldParams`, special-cases WORLD_SIZE/SPAWN_RATE/TIME_SPEED/epoch thresholds, emits applied events and synchronizes TOROIDAL/WRAP. Solver/performance and emergent passes consume the same parameter object. `src/state/worldSave.js` captures/restores world parameters.
+**Current evidence:** `src/state/worldParams.js` declares `WORLD_PARAM_DEFS` (currently 149 records), defaults, ranges, groups and clamp/update helpers. `WORLD_SIZE` uses range 1–1,000 with default 500; `PARTICLE_COUNT` uses range 100–1,000 with default 500; `INITIAL_POP` remains 0–10,000 with default 0. `src/ui/worldPanel.js` renders generated controls; `src/main.js` applies changed values, updates `runtimeConfig.worldParams`, special-cases WORLD_SIZE/SPAWN_RATE/TIME_SPEED/epoch thresholds, emits applied events and synchronizes TOROIDAL/WRAP. Solver/performance and emergent passes consume the same parameter object. `src/state/worldSave.js` captures/restores world parameter values.
 
 ## Target contract
 
@@ -11,6 +11,8 @@ Split immutable `WorldParameterSchema` from per-world `WorldParameterState`. Eac
 Every definition must have a consumer and effect test, or be explicitly marked UI-only/reserved with rationale. Search, category filters and parameter help use schema metadata. Preset baselines, custom profiles, defaults, and live state remain distinct. Save payload records canonical values and schema version; unknown future keys are retained where safe or rejected with a useful compatibility message, never silently discarded.
 
 ## Easy and Advanced modes
+
+**Launcher behavior:** launch preferences persist in local storage, including the destination (`world` or `multiplex`). The launch dialog separates world selection, starting conditions, and advanced design into tabs; its action footer remains visible while the active tab content scrolls. A direct multiplex launch still constructs the chosen world first, then starts the multiplex controller from that world as its source.
 
 World Easy Mode is the default presentation, not a smaller parameter model. It supplies designed controls and presets over the canonical full vector. The profile schema must declare mapping formula, affected keys, expected behavior, constraints, restart requirements, source attribution, display summary, and reverse projection. Physics-affecting profile edits stage for a new world or explicit restart; they do not mutate an active simulation. Advanced displays each current individual parameter in its true unit/range, including performance, TIME, MATTER and SOCIETY groups. Editing Advanced marks the affected Easy group as customized; Easy interaction must make clear which full settings it will change and never hide a destructive/reseed consequence.
 

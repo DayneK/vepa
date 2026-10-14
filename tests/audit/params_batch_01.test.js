@@ -23,11 +23,11 @@ describe('Batch 01 — WORLD_SIZE / PARTICLE_COUNT / INITIAL_POP', () => {
     }
   });
 
-  it('WORLD_SIZE: applyWorldParam clamps to [50, 20000]', () => {
-    let s = applyWorldParam(createWorldParams(), 'WORLD_SIZE', 10);
-    expect(s.WORLD_SIZE).toBe(50);
+  it('WORLD_SIZE: applyWorldParam clamps to [1, 1000]', () => {
+    let s = applyWorldParam(createWorldParams(), 'WORLD_SIZE', 0);
+    expect(s.WORLD_SIZE).toBe(1);
     s = applyWorldParam(s, 'WORLD_SIZE', 99999);
-    expect(s.WORLD_SIZE).toBe(20000);
+    expect(s.WORLD_SIZE).toBe(1000);
   });
 
   it('spawn Z is uniform across the full world height and independent of XY distribution controls', () => {
@@ -54,16 +54,16 @@ describe('Batch 01 — WORLD_SIZE / PARTICLE_COUNT / INITIAL_POP', () => {
   });
 
 
-  it('PARTICLE_COUNT: hard cap = min(PARTICLE_COUNT, MAX_PARTICLES)', () => {
+  it('PARTICLE_COUNT: hard cap = min(PARTICLE_COUNT, 1,000)', () => {
     expect(spawnCaps(cfg({ PARTICLE_COUNT: 500 })).hardCap).toBe(500);
-    expect(spawnCaps(cfg({ PARTICLE_COUNT: MAX_PARTICLES })).hardCap).toBe(MAX_PARTICLES);
+    expect(spawnCaps(cfg({ PARTICLE_COUNT: MAX_PARTICLES })).hardCap).toBe(1000);
     expect(spawnCaps(cfg({ PARTICLE_COUNT: 50 })).hardCap).toBe(100); // min clamp
   });
 
   it('INITIAL_POP: target = min(INITIAL_POP, hardCap), split across species', () => {
-    const caps = spawnCaps(cfg({ PARTICLE_COUNT: 2000, INITIAL_POP: 1200 }));
-    expect(initialPopulationTarget(cfg({ INITIAL_POP: 1200 }), caps)).toBe(1200);
-    expect(perSpeciesAllocation(1200, 5)).toBe(240);
+    const caps = spawnCaps(cfg({ PARTICLE_COUNT: 2000, INITIAL_POP: 800 }));
+    expect(initialPopulationTarget(cfg({ INITIAL_POP: 800 }), caps)).toBe(800);
+    expect(perSpeciesAllocation(800, 5)).toBe(160);
     expect(perSpeciesAllocation(10, 5)).toBe(2);
     const small = spawnCaps(cfg({ PARTICLE_COUNT: 100, INITIAL_POP: 5000 }));
     expect(initialPopulationTarget(cfg({ INITIAL_POP: 5000 }), small)).toBe(100);

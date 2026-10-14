@@ -79,9 +79,18 @@ describe('launch settings state', () => {
     expect(good.renderBackend).toBe('pixi');
   });
 
+  it('persists the selected launch destination with launch settings', () => {
+    const settings = normaliseLaunchSettings({ launchMode: 'multiplex' });
+    expect(settings.launchMode).toBe('multiplex');
+    expect(normaliseLaunchSettings({ launchMode: 'unknown' }).launchMode).toBe('world');
+    expect(writeLaunchSettings(settings)).toBe(true);
+    expect(readLaunchSettings().launchMode).toBe('multiplex');
+  });
+
   it('clamps and snaps range fields to their own step', () => {
     const simSpeed = LAUNCH_FIELDS.find((f) => f.key === 'simSpeed');
     const initialPop = LAUNCH_FIELDS.find((f) => f.key === 'initialPop');
+    expect(initialPop.min).toBe(0);
     expect(initialPop.max).toBe(10000);
     expect(initialPop.step).toBe(100);
     expect(normaliseLaunchSettings({ initialPop: 10000 }).initialPop).toBe(10000);
@@ -207,6 +216,21 @@ describe('launch settings state', () => {
 describe('launch modal', () => {
   const load = async () => import('../../src/ui/launchModal.js');
 
+  it('exposes destination mode, main settings tabs, and a persistent launch action', async () => {
+    const { showLaunchModal } = await load();
+    const promise = showLaunchModal({});
+    expect(doc.querySelectorAll('.launch-main-tab')).toHaveLength(3);
+    expect(doc.querySelector('[data-launch-panel="conditions"]').hidden).toBe(true);
+    expect(doc.querySelector('.launch-primary').textContent).toContain('Launch');
+    doc.querySelector('[data-launch-tab="conditions"]').dispatch('click');
+    expect(doc.querySelector('[data-launch-panel="conditions"]').hidden).toBe(false);
+    expect(doc.querySelector('[data-launch-panel="world"]').hidden).toBe(true);
+    doc.querySelector('[data-launch-mode="multiplex"]').dispatch('click');
+    expect(doc.querySelector('.launch-primary').textContent).toBe('Launch Multiplex');
+    doc.querySelector('[data-act="launch"]').dispatch('click');
+    expect((await promise).launchMode).toBe('multiplex');
+  });
+
   it('renders a card per built-in preset, with the current one marked and categories available', async () => {
     const { showLaunchModal } = await load();
     const promise = showLaunchModal({ settings: normaliseLaunchSettings({ presetId: 'PRIME_DEFAULT' }) });
@@ -311,9 +335,10 @@ describe('launch modal', () => {
     doc.querySelector('[data-act="toggle-advanced"]').dispatch('click');
     doc.querySelector('.launch-tab[data-tab="parameters"]').dispatch('click');
     const range = doc.querySelector('.launch-range[data-key="initialPop"]');
+    expect(LAUNCH_FIELDS.find((field) => field.key === 'initialPop').min).toBe(0);
     expect(LAUNCH_FIELDS.find((field) => field.key === 'initialPop').max).toBe(10000);
     expect(LAUNCH_FIELDS.find((field) => field.key === 'maxPopulation').max).toBe(10000);
-    expect(doc.querySelector('[data-param="PARTICLE_COUNT"]').getAttribute('max')).toBe('10000');
+    expect(doc.querySelector('[data-param="PARTICLE_COUNT"]').getAttribute('max')).toBe('1000');
     expect(doc.querySelector('[data-param="MAX_POP"]').getAttribute('max')).toBe('10000');
     expect(doc.querySelector('[data-value-for="initialPop"]').textContent).toBe('from preset');
     range.value = String(launchValueToPosition(LAUNCH_FIELDS.find((field) => field.key === 'initialPop'), 10000));

@@ -8,6 +8,7 @@ export function createPendingWorldParams(getLive) {
   const pending = new Map();
   const candidate = () => {
     const values = { ...getLive(), ...Object.fromEntries(pending) };
+    if (![...POPULATION_KEYS].some((key) => pending.has(key))) return values;
     const { hardCap, softCap } = spawnCaps(values);
     values.PARTICLE_COUNT = hardCap;
     values.MAX_POP = Math.min(softCap, hardCap);

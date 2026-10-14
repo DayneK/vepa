@@ -12,8 +12,8 @@ import * as lawState from './lawState.js';
 
 export const WORLD_PARAM_DEFS = [
   // ── SPACE ──
-  { key: 'WORLD_SIZE', label: 'WORLD SIZE', min: 50, max: 20000, default: WORLD_SIZE, step: 100, group: 'SPACE', subgroup: 'WORLD' },
-  { key: 'PARTICLE_COUNT', label: 'PARTICLE COUNT', min: 100, max: MAX_PARTICLES, default: MAX_PARTICLES, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
+  { key: 'WORLD_SIZE', label: 'WORLD SIZE', min: 1, max: 1000, default: 500, step: 1, group: 'SPACE', subgroup: 'WORLD' },
+  { key: 'PARTICLE_COUNT', label: 'PARTICLE COUNT', min: 100, max: 1000, default: 500, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
   { key: 'INITIAL_POP', label: 'INITIAL POPULATION', min: 0, max: MAX_PARTICLES, default: 0, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
   { key: 'MAX_POP', label: 'MAX POPULATION', min: 100, max: MAX_PARTICLES, default: MAX_PARTICLES, step: 100, group: 'SPACE', subgroup: 'POPULATION' },
   { key: 'SHAPE', label: 'DISTRIBUTION', min: 0, max: 1, default: 0, step: 0.05, group: 'SPACE', subgroup: 'DISTRIBUTION' },
@@ -245,9 +245,10 @@ export function applyWorldParam(state, key, value) {
 
 /** Caps enforced when spawning: PARTICLE_COUNT / MAX_POP bound the buffer. */
 export function spawnCaps(state) {
+  const hardCap = Math.min(Math.round(clampWorldParam('PARTICLE_COUNT', state.PARTICLE_COUNT)), MAX_PARTICLES);
   return {
-    hardCap: Math.min(Math.round(clampWorldParam('PARTICLE_COUNT', state.PARTICLE_COUNT)), MAX_PARTICLES),
-    softCap: Math.min(Math.round(clampWorldParam('MAX_POP', state.MAX_POP)), MAX_PARTICLES),
+    hardCap,
+    softCap: Math.min(Math.round(clampWorldParam('MAX_POP', state.MAX_POP)), hardCap, MAX_PARTICLES),
   };
 }
 

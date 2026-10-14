@@ -115,14 +115,17 @@ export function getLaunchPresets() {
 
 /** Logarithmic slider mapping with a 1000-step native range for fine control. */
 export function launchValueToPosition(field, value) {
-  const ratio = Math.log(Math.max(field.min, Number(value)) / field.min)
-    / Math.log(field.max / field.min);
+  const ratio = field.min === 0
+    ? Number(value) / field.max
+    : Math.log(Math.max(field.min, Number(value)) / field.min) / Math.log(field.max / field.min);
   return Math.max(0, Math.min(1000, Math.round(ratio * 1000)));
 }
 
 export function launchPositionToValue(field, position) {
   const ratio = Math.max(0, Math.min(1000, Number(position))) / 1000;
-  const raw = field.min * ((field.max / field.min) ** ratio);
+  const raw = field.min === 0
+    ? field.max * ratio
+    : field.min * ((field.max / field.min) ** ratio);
   const snapped = field.min + Math.round((raw - field.min) / field.step) * field.step;
   return Number(Math.min(field.max, Math.max(field.min, snapped)).toFixed(6));
 }
@@ -282,22 +285,22 @@ export const LAUNCH_FIELDS = Object.freeze([
     key: 'worldSize',
     label: 'WORLD SIZE',
     kind: 'range',
-    min: 400,
-    max: 3000,
-    step: 50,
+    min: 1,
+    max: 1000,
+    step: 1,
     worldParamKey: 'WORLD_SIZE',
-    marks: [400, 600, 900, 1200, 1800, 2400, 3000],
+    marks: [1, 100, 250, 500, 750, 1000],
     help: 'Edge length of the cubic toroidal world. Density is particle count ÷ volume, so a bigger world with the same population is a sparser, slower dish.',
   },
   {
     key: 'initialPop',
     label: 'INITIAL POPULATION',
     kind: 'range',
-    min: 100,
+    min: 0,
     max: MAX_PARTICLES,
     step: 100,
     worldParamKey: 'INITIAL_POP',
-    marks: [100, 250, 500, 1000, 2500, 5000, 7500, MAX_PARTICLES],
+    marks: [0, 100, 250, 500, 1000, 2500, 5000, 7500, MAX_PARTICLES],
     help: 'How many particles exist at t=0. The engine hard cap is 10,000; starts near that ceiling may run slowly depending on device, active laws, and world settings.',
   },
   {
@@ -331,6 +334,7 @@ export const LAUNCH_FIELDS = Object.freeze([
 export function defaultLaunchSettings() {
   return {
     presetId: DEFAULT_LAUNCH_PRESET_ID,
+    launchMode: 'world',
     laws: null,
     speciesNames: null,
     parameterOverrides: {},
@@ -375,6 +379,7 @@ export function normaliseLaunchSettings(raw) {
   if (!raw || typeof raw !== 'object') return base;
   const out = { ...base };
   if (typeof raw.presetId === 'string') out.presetId = raw.presetId;
+  if (raw.launchMode === 'multiplex') out.launchMode = 'multiplex';
   for (const field of LAUNCH_FIELDS) {
     if (field.key in raw) out[field.key] = raw[field.key] === null && field.kind === 'range' && field.worldParamKey
       ? null : coerceField(field, raw[field.key], base[field.key]);

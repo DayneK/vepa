@@ -8,9 +8,9 @@ const cfg = (over) => ({ ...createWorldParams(), ...over });
 const rng = lcg(7);
 
 describe('Batch 02 — MAX_POP / SHAPE / SPAWN_CENTRES / SPAWN_CENTRE_RANDOM', () => {
-  it('MAX_POP: soft cap = min(MAX_POP, MAX_PARTICLES)', () => {
-    expect(spawnCaps(cfg({ MAX_POP: 1000 })).softCap).toBe(1000);
-    expect(spawnCaps(cfg({ MAX_POP: MAX_PARTICLES })).softCap).toBe(MAX_PARTICLES);
+  it('MAX_POP: soft cap = min(MAX_POP, PARTICLE_COUNT, MAX_PARTICLES)', () => {
+    expect(spawnCaps(cfg({ MAX_POP: 1000, PARTICLE_COUNT: 1500 })).softCap).toBe(1000);
+    expect(spawnCaps(cfg({ MAX_POP: MAX_PARTICLES, PARTICLE_COUNT: MAX_PARTICLES })).softCap).toBe(1000);
     expect(spawnCaps(cfg({ MAX_POP: 50 })).softCap).toBe(100);
   });
 

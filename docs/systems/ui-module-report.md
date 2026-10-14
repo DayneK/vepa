@@ -427,8 +427,8 @@ point of listing them: a panel-to-panel edge is often also a command.
 | `world:imported` | `main.js:1112` | `savePanel.js` |
 | `world:listResponse` | `main.js:1093` | `savePanel.js` |
 | `world:loaded` | `main.js:1076` | `savePanel.js` |
-| `world:paramsPending` | `state/pendingWorldParams.js:51` | `worldPanel.js` |
-| `world:paramsRestored` | `main.js:988`<br>`state/pendingWorldParams.js:80` | `worldPanel.js` |
+| `world:paramsPending` | `state/pendingWorldParams.js:52` | `worldPanel.js` |
+| `world:paramsRestored` | `main.js:988`<br>`state/pendingWorldParams.js:81` | `worldPanel.js` |
 | `world:saved` | `main.js:1069` | `savePanel.js` |
 | `world:undoState` | `main.js:943`<br>`savePanel.js:340` | `savePanel.js` |
 
@@ -499,7 +499,7 @@ every entry is one behaviour that would otherwise be a second implementation.
 | `ui/tooltipDismiss.js`<br><sub>106 lines</sub> | Tooltip dismissal bus | `helpOverlay.js`, `paramHelp.js` | shared |
 | `ui/helpOverlay.js`<br><sub>410 lines</sub> | Long-press help overlay for tabs, graphs and analytics cells | `ui.js` | wired at init |
 | `ui/helpRegistry.js`<br><sub>494 lines</sub> | Help registry for tabs, sub-tabs, graphs and analytics cells | `helpOverlay.js` | single owner |
-| `ui/launchModal.js`<br><sub>674 lines</sub> | Launch modal | `main.js` | single owner |
+| `ui/launchModal.js`<br><sub>731 lines</sub> | Launch modal | `main.js` | single owner |
 | `ui/lawPanel.js`<br><sub>47 lines</sub> | — | `settingsPanel.js` | single owner |
 | `ui/dnaPanel.js`<br><sub>191 lines</sub> | DNA Parameter Panel | **nothing** | **not imported** |
 
