@@ -33,6 +33,16 @@ describe('restart-staged WORLD parameters', () => {
     expect(pending.snapshot()).toEqual([]);
   });
 
+  it('normalizes coupled population caps without retaining unchanged live fields', () => {
+    const live = createWorldParams();
+    const pending = createPendingWorldParams(() => live);
+    pending.stage('PARTICLE_COUNT', 5000);
+    expect(pending.snapshot().map(({ key }) => key)).toEqual(['PARTICLE_COUNT', 'MAX_POP']);
+
+    pending.stage('PARTICLE_COUNT', live.PARTICLE_COUNT);
+    expect(pending.snapshot()).toEqual([]);
+  });
+
   function fixture() {
     const bus = new EventBus();
     let live = createWorldParams();

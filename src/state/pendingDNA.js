@@ -17,7 +17,6 @@ export function wirePendingDNA(bus, { getLive }) {
     pending.clear();
     publish();
   };
-
   bus.on('dna:editRequested', ({ species, param, value } = {}) => {
     if (!Number.isInteger(species) || species < 0 || species >= MAX_SPECIES
       || !Number.isInteger(param) || param < 0 || param >= DNA_COUNT
@@ -32,7 +31,39 @@ export function wirePendingDNA(bus, { getLive }) {
     else pending.set(key, { species, param, value: accepted });
     publish();
   });
+  const stage = (changes, { replace = false } = {}) => {
+    if (!Array.isArray(changes) || !changes.every(({ species, param, value } = {}) =>
+      Number.isInteger(species) && species >= 0 && species < MAX_SPECIES
+      && Number.isInteger(param) && param >= 0 && param < DNA_COUNT
+      && typeof value === 'number' && Number.isFinite(value))) return false;
+    if (replace) pending.clear();
+    for (const { species, param, value } of changes) {
+      const range = DNA_RANGES[param];
+      const accepted = Math.max(range.min, Math.min(range.max, value));
+      const key = keyFor(species, param);
+      if (accepted === readDNAParam(getLive(), species, param)) pending.delete(key);
+      else pending.set(key, { species, param, value: accepted });
+    }
+    publish();
+    return true;
+  };
+  bus.on('dna:replacePending', ({ changes = [] } = {}) => {
+    if (!stage(changes, { replace: true })) {
+      bus.emit('dna:editRejected', { reason: 'Expected finite values for known species and DNA parameters.' });
+    }
+  });
+  bus.on('dna:mergePending', ({ changes = [] } = {}) => {
+    if (!stage(changes)) {
+      bus.emit('dna:editRejected', { reason: 'Expected finite values for known species and DNA parameters.' });
+    }
+  });
   bus.on('dna:pendingRequested', publish);
+  bus.on('dna:readProposed', (request = {}) => {
+    if (Number.isInteger(request.species) && Number.isInteger(request.param)) {
+      request.value = pending.get(keyFor(request.species, request.param))?.value
+        ?? readDNAParam(getLive(), request.species, request.param);
+    }
+  });
   // Other existing configuration paths still write the genome directly; when
   // they announce a committed DNA change, discard candidates that now match it.
   bus.on('dna:changed', () => {
@@ -42,10 +73,24 @@ export function wirePendingDNA(bus, { getLive }) {
     publish();
   });
   bus.on('dna:discardPending', reset);
+  bus.on('world:discardPending', reset);
   bus.on('world:restored', reset);
   publish();
 
   return {
+    stage,
+    snapshot,
+    read(species, param) {
+      return pending.get(keyFor(species, param))?.value ?? readDNAParam(getLive(), species, param);
+    },
+    discardSpecies(species) {
+      for (const [key, change] of pending) {
+        if (change.species === species) pending.delete(key);
+      }
+      publish();
+    },
+    hasChanges() { return pending.size > 0; },
+    clear: reset,
     commit() {
       const changes = snapshot();
       const buffer = getLive();

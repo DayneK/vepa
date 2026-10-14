@@ -1,5 +1,7 @@
 # 10 — Emergent systems and observability
 
+**Browser stage:** `RB-10` in `tests/e2e/rb-browser-stages.spec.js` exercises live HUD, ecology and log projections. The test is defined but not browser-verified until the Chromium host dependency is available; subsystem determinism, isolation and save/restore remain future acceptance.
+
 **Current evidence:** `src/engines/` contains insight, speciation, ecology, world events, epochs, narrative, lineage, goals, agency and behaviors. Persistent subsystems live across `src/state/` (groups, economy, memory, construction, artifacts, governance, infrastructure, civilization, structures, continuity, codex, exotic matter, relativity, quantum, stellar, synthetic). `main.js` schedules and wires many of these around solver ticks; metrics scans and social/lineage/analytics run at configured cadences. UI includes HUD, intelligence, DNA analytics, logs, groups, ecology and civilization panels.
 
 ## Target boundary

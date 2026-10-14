@@ -1,5 +1,7 @@
 # 08 — Local renderer and visualization
 
+**Browser stage:** `RB-08` in `tests/e2e/rb-browser-stages.spec.js` exercises the active Canvas2D/Pixi renderer and resize path. The test is defined but not browser-verified until the Chromium host dependency is available; selected GPU 3D and visual acceptance remain future work.
+
 **Current evidence:** `src/render/renderer.js` provides Canvas2D; `createRendererAsync` optionally loads `pixiRenderer.js` and falls back to Canvas2D. `src/render/spriteSync.js` dispatches by backend. Rendering reads a particle buffer, uses `dna/expression.js` for color/radius/alpha, camera projection from `src/ui/camera.js`, phenotype caching and off-screen culling. There are two canvas layers for background and simulation. This describes the current implementation, not the selected product direction. The accepted roadmap selects GPU-rendered 3D; the transition is not implemented or browser-verified.
 
 ## Target boundary

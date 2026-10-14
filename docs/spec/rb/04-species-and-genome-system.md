@@ -1,5 +1,7 @@
 # 04 — Species and genome system
 
+**Browser stage:** `RB-04` in `tests/e2e/rb-browser-stages.spec.js` exercises the current species roster, all 64 DNA controls and a staged DNA edit/discard. The test is defined but not browser-verified until the Chromium host dependency is available; staged roster/genome workflows and migration remain future acceptance.
+
 **Current evidence:** `src/constants/dna.js` defines 64 stable DNA indices, metadata and ranges. `src/dna/dnaBuffer.js` stores up to 64 species × 64 `Uint16` values. Particle stride caches traits 0–41 only; traits 42–63 remain species-genome-only and are consumed by lifecycle/genetics paths. `src/ui/speciesPanel.js` owns roster add/remove/select and an accordion, currently grouping all 64 indices in eight groups. `src/dna/expression.js` projects selected traits and runtime state to color/radius/alpha. `src/main.js` spawns profiles and synchronizes changes to worker. Presets and world saves carry DNA.
 
 ## Target responsibilities and invariants

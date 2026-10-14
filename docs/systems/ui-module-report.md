@@ -22,8 +22,8 @@ because none of the body below is written by hand.
 | --- | --- | --- | --- |
 | ⚖️ LAWS | `src/ui/lawPanel.js`<br>47 lines | The law switchboard: 136 physics, biology, chemistry, thermodynamic, metaphysical, electromagnetic, information and quantum laws across nine categories. | `button` |
 | 🌍 WORLD | `src/ui/worldPanel.js`<br>753 lines | World parameters, presets and the network panel: size, physics tuning, epoch length and thresholds. | `button`, `input`, 3 slider controls |
-| 🦠 SPECIES | `src/ui/speciesPanel.js`<br>248 lines | Per-species genome: the 64 DNA parameters that drive morphology, behaviour and reproduction. | `button`, 3 slider controls |
-| 🎛️ SETTINGS | `src/ui/settingsPanel.js`<br>273 lines | Runtime and renderer options: backend selection, performance knobs and display preferences. | `button`, `select`, 4 slider controls |
+| 🦠 SPECIES | `src/ui/speciesPanel.js`<br>246 lines | Per-species genome: the 64 DNA parameters that drive morphology, behaviour and reproduction. | `button`, 3 slider controls |
+| 🎛️ SETTINGS | `src/ui/settingsPanel.js`<br>314 lines | Runtime and renderer options: backend selection, performance knobs and display preferences. | `button`, `select`, 4 slider controls |
 
 ### ⚖️ LAWS
 
@@ -354,85 +354,94 @@ what runs when a panel constructor returns early.
 | 9 | `createHUD` | `ui/hud.js` | `#hud-particles`<br>`#hud-species`<br>`#hud-tick` | `physics:tick`, `stats:update` | — |
 | 10 | `createWorldPanel` | `ui/worldPanel.js` | `#world-params` | `dna:pending`, `law:pending`, `law:sync`, `world:paramsPending`, `world:paramsRestored` | `dna:discardPending`, `dna:pendingRequested`, `law:discardPending`, `law:editRequested`, `law:pendingRequested`, `narrative:system`, `sim:restart`, `world:discardPending`, `world:paramChanged`, `world:pendingRequested` |
 | 11 | `createIntelPanel` | `ui/intelPanel.js` | `#intel-dashboard` | `cluster:detected`, `goal:applied`, `lineage:branch`, `lineage:death`, `timeline:cleared`, `timeline:restored`, `timeline:snapshot` | `timeline:clear`, `timeline:record`, `timeline:scrubTo` |
-| 12 | `createSpeciesPanel` | `ui/speciesPanel.js` | `#species-list` | `dna:changed`, `dna:sync`, `physics:tick`, `species:sync` | `dna:editRequested`, `dna:sync`, `narrative:system`, `species:aboutToChange`, `species:changed` |
+| 12 | `createSpeciesPanel` | `ui/speciesPanel.js` | `#species-list` | `dna:changed`, `dna:pending`, `dna:sync`, `physics:tick`, `species:pending`, `species:rosterEditRejected`, `species:sync` | `dna:editRequested`, `dna:readProposed`, `narrative:system`, `sim:restart`, `species:pendingRequested`, `species:rosterEditRequested`, `world:discardPending` |
 | 13 | `createDNAAnalytics` | `ui/dnaAnalytics.js` | `#dna-analytics` | `physics:tick` | — |
 | 14 | `createNarrativePanel` | `ui/narrativePanel.js` | `#narrative-panel` | `narrative:batch` | — |
 | 15 | `createGroupAnalytics` | `ui/groupAnalytics.js` | `#groups-dashboard` | `groups:analytics` | — |
 | 16 | `createEcoPanel` | `ui/ecoPanel.js` | `#eco-dashboard` | `eco:analytics` | — |
 | 17 | `createCivilizationPanel` | `ui/civilizationPanel.js` | `#civilization-dashboard` | `civilization:analytics` | — |
-| 18 | `createPresetPanel` | `ui/presetPanel.js` | `#world-presets` | `preset:loaded`, `preset:refresh`, `preset:stateResponse` | `preset:deleted`, `preset:load`, `preset:requestState`, `preset:saved` |
+| 18 | `createPresetPanel` | `ui/presetPanel.js` | `#world-presets` | `preset:loadRejected`, `preset:loaded`, `preset:refresh`, `preset:stateResponse` | `preset:deleted`, `preset:load`, `preset:requestState`, `preset:saved` |
 | 19 | `createSavePanel` | `ui/savePanel.js` | `#io-panel` | `world:compareResponse`, `world:exported`, `world:imported`, `world:listResponse`, `world:loaded`, `world:saved`, `world:undoState` | `world:compare`, `world:export`, `world:import`, `world:list`, `world:load`, `world:redo`, `world:remove`, `world:save`, `world:toggleAutoUndo`, `world:undo`, `world:undoState` |
-| 20 | `createSettingsPanel` | `ui/settingsPanel.js` | `#laws-panel` | — | `compute:changed` |
+| 20 | `createSettingsPanel` | `ui/settingsPanel.js` | `#laws-panel` | `compute:applied`, `compute:pending` | `compute:discardPending`, `compute:proposal`, `sim:restart` |
 | 21–22 | `initTooltip`<br>`initParamHelpDismiss` | `ui/tooltip.js`<br>`ui/paramHelp.js` | overlay, on demand | `law:toggled` | `law:toggled` |
 
 ### Two channels to the orchestrator
 
-The UI layer and `src/main.js` speak over 71 named events, which separate by
+The UI layer and `src/main.js` speak over 78 named events, which separate by
 direction. An event can appear in more than one list, which is exactly the
 point of listing them: a panel-to-panel edge is often also a command.
 
-- **29 push in** — produced outside `src/ui/`, consumed by a panel. These are the numbers a panel
+- **34 push in** — produced outside `src/ui/`, consumed by a panel. These are the numbers a panel
   displays, and they arrive without the panel asking.
-- **36 commands out** — sent by a panel, answered outside `src/ui/`. 25 of the 36 are
+- **37 commands out** — sent by a panel, answered outside `src/ui/`. 23 of the 37 are
   answered by `src/main.js` and nothing else, so a panel never reaches an engine,
   a state module or the worker by name.
-- 11 commands also reach something else:
+- 14 commands also reach something else:
   `dna:discardPending` → `state/pendingDNA.js`.
   `dna:editRequested` → `state/pendingDNA.js`.
   `dna:pendingRequested` → `state/pendingDNA.js`.
+  `dna:readProposed` → `state/pendingDNA.js`.
   `law:discardPending` → `state/pendingLaws.js`.
   `law:editRequested` → `state/pendingLaws.js`.
   `law:pendingRequested` → `state/pendingLaws.js`.
   `law:toggled` → `engines/narrativeEngine.js`.
   `narrative:system` → `core/logQueue.js`.
-  `world:discardPending` → `state/pendingWorldParams.js`.
+  `species:pendingRequested` → `state/pendingSpeciesRoster.js`.
+  `species:rosterEditRequested` → `state/pendingSpeciesRoster.js`.
+  `world:discardPending` → `state/pendingDNA.js`, `state/pendingLaws.js`, `state/pendingSpeciesRoster.js`, `state/pendingWorldParams.js`.
   `world:paramChanged` → `state/pendingWorldParams.js`.
   `world:pendingRequested` → `state/pendingWorldParams.js`.
-- **3 exchanged panel to panel**, with the orchestrator out of the path.
+- **2 exchanged panel to panel**, with the orchestrator out of the path.
 
 #### Push: simulation → panel
 
 | Event | Produced by | Panel |
 | --- | --- | --- |
-| `civilization:analytics` | `main.js:1765` | `civilizationPanel.js` |
+| `civilization:analytics` | `main.js:1838` | `civilizationPanel.js` |
 | `cluster:detected` | `engines/insightEngine.js:76` | `intelPanel.js` |
-| `dna:pending` | `state/pendingDNA.js:15` | `dnaPanel.js`, `worldPanel.js` |
-| `dna:sync` | `main.js:536`<br>`speciesPanel.js:166` | `dnaPanel.js`, `speciesPanel.js` |
-| `eco:analytics` | `main.js:1754` | `ecoPanel.js` |
-| `goal:applied` | `main.js:1359` | `intelPanel.js` |
-| `groups:analytics` | `main.js:1751` | `groupAnalytics.js` |
+| `compute:applied` | `main.js:1214` | `settingsPanel.js` |
+| `compute:pending` | `main.js:1048` | `settingsPanel.js` |
+| `dna:pending` | `state/pendingDNA.js:15` | `dnaPanel.js`, `speciesPanel.js`, `worldPanel.js` |
+| `dna:sync` | `main.js:587` | `dnaPanel.js`, `speciesPanel.js` |
+| `eco:analytics` | `main.js:1827` | `ecoPanel.js` |
+| `goal:applied` | `main.js:1432` | `intelPanel.js` |
+| `groups:analytics` | `main.js:1824` | `groupAnalytics.js` |
 | `law:pending` | `state/pendingLaws.js:12` | `lawPanel.js`, `worldPanel.js` |
-| `law:sync` | `main.js:537` | `lawPanel.js`, `worldPanel.js` |
+| `law:sync` | `main.js:588` | `lawPanel.js`, `worldPanel.js` |
 | `lineage:branch` | `engines/lineageTracker.js:91` | `intelPanel.js` |
 | `lineage:death` | `engines/lineageTracker.js:126` | `intelPanel.js` |
 | `narrative:batch` | `core/logQueue.js:48` | `narrativePanel.js` |
-| `physics:tick` | `main.js:351` | `dnaAnalytics.js`, `hud.js`, `speciesPanel.js` |
-| `preset:loaded` | `main.js:974` | `presetPanel.js` |
-| `preset:stateResponse` | `main.js:949` | `presetPanel.js` |
-| `sim:paused` | `main.js:543` | `ui.js` |
-| `species:sync` | `main.js:535` | `speciesPanel.js` |
-| `timeline:cleared` | `main.js:1376` | `intelPanel.js` |
-| `timeline:restored` | `main.js:1368` | `intelPanel.js` |
-| `timeline:snapshot` | `engines/timelineEngine.js:77`<br>`main.js:1507` | `intelPanel.js` |
-| `world:compareResponse` | `main.js:1057` | `savePanel.js` |
-| `world:exported` | `main.js:1037` | `savePanel.js` |
-| `world:imported` | `main.js:1044` | `savePanel.js` |
-| `world:listResponse` | `main.js:1025` | `savePanel.js` |
-| `world:loaded` | `main.js:1008` | `savePanel.js` |
-| `world:paramsPending` | `state/pendingWorldParams.js:28` | `worldPanel.js` |
-| `world:paramsRestored` | `main.js:935`<br>`state/pendingWorldParams.js:39` | `worldPanel.js` |
-| `world:saved` | `main.js:1001` | `savePanel.js` |
-| `world:undoState` | `main.js:891`<br>`savePanel.js:340` | `savePanel.js` |
+| `physics:tick` | `main.js:365` | `dnaAnalytics.js`, `hud.js`, `speciesPanel.js` |
+| `preset:loadRejected` | `main.js:1013` | `presetPanel.js` |
+| `preset:loaded` | `main.js:1023` | `presetPanel.js` |
+| `preset:stateResponse` | `main.js:1001` | `presetPanel.js` |
+| `sim:paused` | `main.js:124` | `ui.js` |
+| `species:pending` | `state/pendingSpeciesRoster.js:7` | `speciesPanel.js` |
+| `species:rosterEditRejected` | `state/pendingSpeciesRoster.js:47` | `speciesPanel.js` |
+| `species:sync` | `main.js:586` | `speciesPanel.js` |
+| `timeline:cleared` | `main.js:1449` | `intelPanel.js` |
+| `timeline:restored` | `main.js:1441` | `intelPanel.js` |
+| `timeline:snapshot` | `engines/timelineEngine.js:77`<br>`main.js:1580` | `intelPanel.js` |
+| `world:compareResponse` | `main.js:1125` | `savePanel.js` |
+| `world:exported` | `main.js:1105` | `savePanel.js` |
+| `world:imported` | `main.js:1112` | `savePanel.js` |
+| `world:listResponse` | `main.js:1093` | `savePanel.js` |
+| `world:loaded` | `main.js:1076` | `savePanel.js` |
+| `world:paramsPending` | `state/pendingWorldParams.js:51` | `worldPanel.js` |
+| `world:paramsRestored` | `main.js:988`<br>`state/pendingWorldParams.js:80` | `worldPanel.js` |
+| `world:saved` | `main.js:1069` | `savePanel.js` |
+| `world:undoState` | `main.js:943`<br>`savePanel.js:340` | `savePanel.js` |
 
 #### Command: panel → orchestrator
 
 | Event | Sent by | Answered by |
 | --- | --- | --- |
-| `compute:changed` | `settingsPanel.js` | `main.js` |
+| `compute:discardPending` | `settingsPanel.js` | `main.js` |
+| `compute:proposal` | `settingsPanel.js` | `main.js` |
 | `dna:discardPending` | `worldPanel.js` | `state/pendingDNA.js` |
 | `dna:editRequested` | `dnaPanel.js`, `speciesPanel.js` | `state/pendingDNA.js` |
 | `dna:pendingRequested` | `worldPanel.js` | `state/pendingDNA.js` |
-| `dna:sync` | `speciesPanel.js` | `main.js` |
+| `dna:readProposed` | `speciesPanel.js` | `state/pendingDNA.js` |
 | `law:discardPending` | `worldPanel.js` | `state/pendingLaws.js` |
 | `law:editRequested` | `lawPanel.js`, `worldPanel.js` | `state/pendingLaws.js` |
 | `law:pendingRequested` | `lawPanel.js`, `worldPanel.js` | `state/pendingLaws.js` |
@@ -444,15 +453,15 @@ point of listing them: a panel-to-panel edge is often also a command.
 | `sim:chaosClear` | `ui.js` | `main.js` |
 | `sim:chaosSelective` | `ui.js` | `main.js` |
 | `sim:hardReset` | `ui.js` | `main.js` |
-| `sim:restart` | `ui.js`, `worldPanel.js` | `main.js` |
+| `sim:restart` | `settingsPanel.js`, `speciesPanel.js`, `ui.js`, `worldPanel.js` | `main.js` |
 | `sim:togglePause` | `ui.js` | `main.js` |
-| `species:aboutToChange` | `speciesPanel.js` | `main.js` |
-| `species:changed` | `speciesPanel.js` | `main.js` |
+| `species:pendingRequested` | `speciesPanel.js` | `state/pendingSpeciesRoster.js` |
+| `species:rosterEditRequested` | `speciesPanel.js` | `state/pendingSpeciesRoster.js` |
 | `timeline:clear` | `intelPanel.js` | `main.js` |
 | `timeline:record` | `intelPanel.js` | `main.js` |
 | `timeline:scrubTo` | `intelPanel.js` | `main.js` |
 | `world:compare` | `savePanel.js` | `main.js` |
-| `world:discardPending` | `worldPanel.js` | `state/pendingWorldParams.js` |
+| `world:discardPending` | `speciesPanel.js`, `worldPanel.js` | `main.js`, `state/pendingDNA.js`, `state/pendingLaws.js`, `state/pendingSpeciesRoster.js`, `state/pendingWorldParams.js` |
 | `world:export` | `savePanel.js` | `main.js` |
 | `world:import` | `savePanel.js` | `main.js` |
 | `world:list` | `savePanel.js` | `main.js` |
@@ -467,10 +476,9 @@ point of listing them: a panel-to-panel edge is often also a command.
 
 #### Inside the layer
 
-3 events are delivered straight from one module to
+2 events are delivered straight from one module to
 another inside `src/ui/`, with no orchestrator hop on that edge:
 
-- `dna:sync` — speciesPanel.js → dnaPanel.js, speciesPanel.js.
 - `law:toggled` — tooltip.js → tooltip.js.
 - `world:undoState` — savePanel.js → savePanel.js.
 
@@ -503,26 +511,31 @@ recommendation — a wire with nothing on the end of it may be a dormant feature
 a seam for something not built yet, or a genuine omission, and the code does not
 say which.
 
-**9 subscriptions with no producer.** A listener whose event is
+**14 subscriptions with no producer.** A listener whose event is
 never sent, on either dispatch channel.
 
 | Event | Subscribed at |
 | --- | --- |
-| `dna:changed`<br><sub>orchestrator</sub> | `main.js:1090`<br>`state/pendingDNA.js:38`<br>`speciesPanel.js:91` |
-| `epoch:list`<br><sub>orchestrator</sub> | `main.js:1279` |
-| `epoch:restore`<br><sub>orchestrator</sub> | `main.js:1282` |
-| `group:declare`<br><sub>orchestrator</sub> | `main.js:1202` |
-| `preset:refresh`<br><sub>panel</sub> | `presetPanel.js:178` |
-| `sim:pause`<br><sub>orchestrator</sub> | `main.js:1099` |
-| `sim:resume`<br><sub>orchestrator</sub> | `main.js:1100` |
+| `compute:changed`<br><sub>orchestrator</sub> | `main.js:1166` |
+| `dna:changed`<br><sub>orchestrator</sub> | `main.js:1158`<br>`state/pendingDNA.js:69`<br>`speciesPanel.js:101` |
+| `dna:mergePending`<br><sub>orchestrator</sub> | `state/pendingDNA.js:55` |
+| `dna:replacePending`<br><sub>orchestrator</sub> | `state/pendingDNA.js:50` |
+| `epoch:list`<br><sub>orchestrator</sub> | `main.js:1348` |
+| `epoch:restore`<br><sub>orchestrator</sub> | `main.js:1351` |
+| `group:declare`<br><sub>orchestrator</sub> | `main.js:1270` |
+| `preset:refresh`<br><sub>panel</sub> | `presetPanel.js:179` |
+| `sim:pause`<br><sub>orchestrator</sub> | `main.js:1167` |
+| `sim:resume`<br><sub>orchestrator</sub> | `main.js:1168` |
+| `species:discardPending`<br><sub>orchestrator</sub> | `state/pendingSpeciesRoster.js:107` |
 | `species:info`<br><sub>panel</sub> | `dnaPanel.js:181` |
 | `stats:update`<br><sub>panel</sub> | `hud.js:113` |
+| `world:commitAutoSnapshot`<br><sub>orchestrator</sub> | `main.js:957` |
 
-**22 events sent to an empty room.** Emitted, with no subscriber
+**23 events sent to an empty room.** Emitted, with no subscriber
 anywhere in `src/`.
 
 - **From the UI:** `dna:speciesChanged` (dnaPanel.js); `preset:deleted` (presetPanel.js); `preset:saved` (presetPanel.js).
-- **From the orchestrator:** `artifacts:pass` (main.js); `boot:complete` (main.js); `codex:uncertain` (main.js); `culture:transmitted` (main.js); `dna:editRejected` (state/pendingDNA.js); `economy:trade` (main.js); `epoch:listResponse` (main.js); `exotic:pass` (main.js); `law:editRejected` (state/pendingLaws.js); `multiplex:imported` (multiplex/multiplexUI.js); `physics:backend` (main.js); `quantum:pass` (main.js); `relativity:pass` (main.js); `selection:changed` (state/selection.js); `stellar:pass` (main.js); `structures:pass` (main.js); `synthetic:pass` (main.js); `timeline:recording` (main.js); `timeline:scrubbed` (engines/timelineEngine.js).
+- **From the orchestrator:** `artifacts:pass` (main.js); `boot:complete` (main.js); `codex:uncertain` (main.js); `culture:transmitted` (main.js); `dna:editRejected` (state/pendingDNA.js); `economy:trade` (main.js); `epoch:listResponse` (main.js); `exotic:pass` (main.js); `law:editRejected` (state/pendingLaws.js); `multiplex:imported` (multiplex/multiplexUI.js); `physics:backend` (main.js); `quantum:pass` (main.js); `relativity:pass` (main.js); `selection:changed` (state/selection.js); `stellar:pass` (main.js); `structures:pass` (main.js); `synthetic:pass` (main.js); `timeline:recording` (main.js); `timeline:scrubbed` (engines/timelineEngine.js); `world:paramEditRejected` (state/pendingWorldParams.js).
 
 **9 modules nothing reachable loads.** Walking imports from the entry
 script named in `index.html` (`react-entry.js`) reaches every other file in `src/`

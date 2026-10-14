@@ -1,5 +1,7 @@
 # 06 — Physics solver and performance
 
+**Browser stage:** `RB-06` in `tests/e2e/rb-browser-stages.spec.js` exercises live tick/HUD telemetry. The test is defined but not browser-verified until the Chromium host dependency is available; reproducible load and accuracy benchmarks remain future acceptance.
+
 **Current evidence:** `src/physics/solver.js` builds/reuses a spatial grid, caches law/synergy masks, computes local time, executes pairwise laws/integration/lifecycle, and has scratch buffers/cadences. It imports stateless law groups plus fields, merge physics and relationship compatibility. `src/physics/spatialGrid.js` supplies neighbors; `src/physics/octree.js` and `fmm.js` provide optional approximate long-range gravity; `src/physics/gpuCompute.js` is an optional limited WebGPU gravity pre-pass. `runtimeConfig.gravEngine='exact'` keeps exact gravity as default; Barnes–Hut/FMM omit some per-pair DNA modifiers at far range. WORLD performance parameters already include adaptive grid/interaction budgets. `bench/` has backend/solver measurement paths.
 
 ## Proposed solver decomposition

@@ -1,5 +1,7 @@
-import { DNA_COUNT, DNA_RANGES, DEFAULT_DNA_STRIDE, MAX_PARTICLES } from '../constants.js';
+import { DNA_COUNT, DNA_RANGES, DEFAULT_DNA_STRIDE, MAX_PARTICLES, LAW_COUNT, LAW_INDEXES } from '../constants.js';
+import { SplitMix32 } from '../core/prng.js';
 import { WORLD_PARAM_DEFS, clampWorldParam } from './worldParams.js';
+import { isSet } from './lawState.js';
 import { writeDNAParam } from '../dna/codec.js';
 
 /** Sample the slider's legal values uniformly, including a non-step-aligned
@@ -45,5 +47,25 @@ export function randomizeChaosSettings(world, dna, speciesCount, rng) {
       writeDNAParam(genome, s, p, range.min + rng.next() * (range.max - range.min));
     }
   }
-  return { worldParams, dna: genome };
+  const laws = [];
+  for (let lawIndex = 0; lawIndex < LAW_COUNT; lawIndex += 1) {
+    if (lawIndex === LAW_INDEXES.WRAP) continue;
+    laws.push({ lawIndex, active: lawIndex === LAW_INDEXES.CONTACT || rng.next() < 0.5 });
+  }
+  return { worldParams, dna: genome, laws };
+}
+
+/** Deterministic selective-Chaos overrides for the chosen legal law bands. */
+export function randomizeSelectiveChaos(categories, lawCategories, lawState, rng = new SplitMix32(0x51f15e)) {
+  const selected = new Set(Array.isArray(categories) ? categories : []);
+  const changes = [];
+  for (const [categoryName, category] of Object.entries(lawCategories || {})) {
+    if (!selected.has(categoryName)) continue;
+    for (const lawIndex of category.laws || []) {
+      if (lawIndex === LAW_INDEXES.WRAP || rng.next() < 0.3) continue;
+      const active = typeof lawState === 'function' ? lawState(lawIndex) : isSet(lawState, lawIndex);
+      changes.push({ lawIndex, active: !active });
+    }
+  }
+  return changes;
 }

@@ -1,5 +1,7 @@
 # 09 — State, presets and persistence
 
+**Browser stage:** `RB-09` in `tests/e2e/rb-browser-stages.spec.js` exercises save/list and the undo surface. The test is defined but not browser-verified until the Chromium host dependency is available; full migration, replay and staged-state guarantees remain future acceptance.
+
 **Current evidence:** world values in `src/state/worldParams.js`; laws in five-word `lawState`; DNA in `Uint16Array`; particle buffer 100 floats/particle; runtime knobs in `runtimeConfig`; presets/launch profiles in `defaultPresets.js`, `presetManager.js`, `launchSettings.js`; snapshots, JSON import/export, storage and undo in `worldSave.js`; epoch snapshots in `engines/epochEngine.js`. `main.js` coordinates these and currently captures particle/DNA/law/world/runtime plus civilization/CODEX payloads. State schemas are versioned separately only in part.
 
 ## Target state model
