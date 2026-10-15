@@ -1,13 +1,20 @@
 # Feature Specification: VEPA4 — Integrated Intelligence
 
-**Version**: 9.3.3 | **Date**: 2026-10-11 | **Base**: VEPA4 integrated intelligence
+**Version context**: v9.3.5 release (`VERSION`, `package.json`, changelog) | **Last refreshed**: 2026-10-15 | **Base**: VEPA4 integrated intelligence
+**Current source baseline**: `625c82e` (`main`, after merged P0–P3 restart-staging and UI concept/brief-builder changes). This specification combines dated implementation notes with current verified contract facts; historical notes remain labeled by release/date.
 **Audit input**: `docs/DEEP_AUDIT_CLARIFICATIONS.md` and `docs/audit/laws/a3/`
+
+## Current contract and merged follow-up (2026-10-15)
+
+Live source reports 136 laws across nine categories, serialized in five law-state words; `WORLD_PARAM_DEFS` currently contains 148 entries. The merged restart-staging work includes session-only pending batches for WORLD parameters, laws, DNA traits, and species roster; restart coordination stops compute before committing and resets/spawns before compute resumes. This is not a complete global transaction boundary: direct writes, presets and autonomous configuration paths still require review. Current `PLAN.md` and `docs/spec/rb/ROADMAP_PROGRESS.md` distinguish implementation evidence from roadmap acceptance.
+
+The merged UI concept/brief-builder commit adds proposal artifacts (`public/ui-refresh-comparison.html` and `docs/ui-refresh-comparison.html`); these are design/brief deliverables, not a claim that the proposed UI is implemented in the runtime. Current browser acceptance remains unverified; see the RB progress tracker for the recorded host dependency blocker. Do not infer real-browser behavior from unit or DOM-stub tests.
 
 ## Working-tree Update (v9.3.3 — 2026-10-11)
 
 The solver performs mass-weighted, deterministic discrete contact projection after all radius/motion updates using a radius-aware broadphase independent of force budgets. CONTACT/COLL/ACCR/BOND/POLYMER/ADHESION enable this exclusion; dead absorbed endpoints are skipped. Eight bounded iterations are not a full dense-packing or continuous-collision guarantee. POLYMER output feeds integration with radius-safe rest spacing; ADHESION restores surface gaps; ACCR seams use final radii. Ordinary bonds remain distinct from absorption.
 
-Default Chaos samples physical world values and 64 species genome traits through canonical schemas/codec, preserves performance budgets, and adopts them after compute stops on restart. Law UI requests stage validated boolean overrides outside the live five-word mask. WRAP belongs to WORLD TOROIDAL; pending law details/discard and all-stage restart are explicit. Saves still capture live configuration, not proposals. Full preset loads, direct DNA edits, selective chaos and autonomous actions remain outside global staging.
+Default Chaos samples physical world values and 64 species genome traits through canonical schemas/codec, preserves performance budgets, and adopts them after compute stops on restart. Law UI requests stage validated boolean overrides outside the live five-word mask. WRAP belongs to WORLD TOROIDAL; pending law details/discard and all-stage restart are explicit. Saves still capture live configuration, not proposals. At the 9.3.3 snapshot, full preset loads, direct DNA edits, selective chaos and autonomous actions remained outside global staging; the later merged P0–P3 work adds staged ordinary DNA edits and species roster operations, but broader direct-write and provenance/save semantics still require separate evidence.
 
 ## Working-tree Update (v9.3.2 — 2026-10-11)
 
@@ -25,7 +32,7 @@ WORLD `world:paramChanged` requests now stage in `pendingWorldParams.js` without
 
 ## RB Roadmap Tracking
 
-`docs/spec/rb/ROADMAP_PROGRESS.md` is the evidence-based checklist for proposed RB sections 00–11 and the ordered P0–P4 work queues. No RB section is marked complete end-to-end as of the v9.3.3 working-tree candidate. The tracker separates implemented groundwork from partial restart staging and open target work; real-browser acceptance, full configuration staging, modular extraction and GPU-rendered 3D remain incomplete. Update its checks only when the stated evidence gate passes.
+`docs/spec/rb/ROADMAP_PROGRESS.md` is the evidence-based checklist for proposed RB sections 00–11 and the ordered P0–P4 work queues. No RB section is marked complete end-to-end on the current recorded evidence. The tracker separates implemented groundwork from partial restart staging and open target work; real-browser acceptance, complete configuration staging, modular extraction and GPU-rendered 3D remain incomplete. Update its checks only when the stated evidence gate passes.
 
 ## Problem Statement
 
@@ -38,7 +45,7 @@ The repository includes a deterministic, dependency-free specification generator
 ## Development Standards (2026-08-10)
 
 - **Product & versioning:** the product is **VEPA4**; versions use
-  **`major.minor.build`** (npm-semver-native, current `9.3.0`). The v4 line is
+  **`major.minor.build`** (npm-semver-native, current release `9.3.5` (current HEAD is a later merge commit; version describes the last release, not every merge)). The v4 line is
   retroactively mapped old `4.M.N` → `M.N.0` (generation `4` moved into the
   product name). Changelog headers carry both labels
   (`## [4.6.28] - date → 6.28.0`); the full rule lives in `AGENTS.md` §10.4.
@@ -100,7 +107,16 @@ the worker mutates the shared particle view and returns offspring/timing data,
 while population growth, intelligence engines, and HUD updates run once on
 completion. Law, DNA, and world-parameter events send a serialized `CONFIG`
 update before the next tick. Hosts without cross-origin isolation use the
-synchronous main-thread solver fallback.
+synchronous main-thread solver fallback. The worker's optional WebGPU path adds
+a gravity pre-pass and then continues through the CPU solver; CONTACT/COLL retain
+the CPU implementation for their correction and impulse semantics.
+
+Configuration proposals for WORLD parameters, law changes, ordinary DNA edits,
+and species roster changes are held in session-only pending state and applied at
+the restart boundary after compute stops (current source: `src/state/pending*.js`
+and `src/state/restartTransaction.js`). Scope remains partial: do not infer that
+every physics-affecting path, persistence/provenance contract, or autonomous
+writer is routed through the same boundary.
 
 ### Signal system (laws.js + solver.js)
 
@@ -143,9 +159,11 @@ integration, and REPRO/LIFE synergy points. Insight consumes `scanInterval` /
 4. **Dashboard renders**: the WORLD tab shows the intelligence section with
    live counters, REC toggle, and scrub slider. *(DOM-driven, no unit test —
    manual verify in browser)*
-5. **No regressions**: `npm test` green — currently **951 tests across 109
-   files** (verified 2026-09-30), `npm run repository:check` green
-   (136 laws, provenance + signoff manifests valid), and `vite build` succeeds.
+5. **No regressions**: run the current project scripts (`npm test`,
+   `npm run repository:check`, and the production build when requested) and record
+   their actual results with date and environment. Historical totals elsewhere in
+   this file are not current verification evidence; do not report a pass without
+   executing the corresponding command on the worktree.
 
 ## Verification Gates
 
@@ -153,11 +171,11 @@ Run before declaring any change complete:
 
 | Gate | Command | Contract |
 |---|---|---|
-| Tests | `npm test` | Current serial verification: 88 unit files / 1,081 tests and 50 audit files / 458 tests pass separately; combined Vitest worker invocation currently ends with `ERR_IPC_CHANNEL_CLOSED` |
+| Tests | `npm test` | Run on the current worktree; no current pass total is asserted by this specification. If separate unit/audit invocations are needed, record each command and result explicitly. |
 | Syntax | `npm run syntax-check` | `node --check` over every `src/**/*.js` |
 | Spec drift | `npm run spec:check` | generated `docs/spec/` matches source byte-for-byte |
 | Repository | `npm run repository:check` | `spec:check` + law/provenance/signoff manifests |
-| Build | `npm run build` | `vite build` → `dist/` + system atlas publication |
+| Build | `npm run build` | `vite build` plus the configured UI-module report and system-atlas publication scripts; run only when appropriate for the requested task. |
 
 `npm run repository:check` runs in CI before deploy. Note that
 `scripts/generate-spec.mjs` reads the constants modules with regex over

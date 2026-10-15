@@ -1,31 +1,44 @@
 # Implementation Plan: VEPA4 — Integrated Intelligence
 
-**Date**: 2026-10-12 | **Status**: v9.3.3 local release commit/tag; concurrent roadmap merge and remote branch push pending | **Spec**: `SPEC.md`
+**Status refreshed**: 2026-10-15 | **Version**: v9.3.5 is the latest release (`VERSION`, `package.json`, changelog); current `main` HEAD `625c82e` is a later merge commit, not the release tag. **Spec**: `SPEC.md`
 
 > **Standards (2026-08-10):** product **VEPA4**, versions `major.minor.build`
-> (current release candidate `9.3.3`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
+> (current release `9.3.5`; legacy v4-line mapping old `4.M.N` → `M.N.0`), commits
 > Conventional Commits 1.0.0 — see `AGENTS.md` §10.4.
+>
+> This plan retains older dated task notes as milestone history. Current evidence is summarized first; do not interpret older “Current task” wording, test totals, or browser claims as fresh verification.
+
+## Current verified state (2026-10-15)
+
+- HEAD `625c82e` (`main`, tracks `origin/main`) includes the merged P0–P3 restart-staging work and the UI concept/proposal brief-builder commit. The v9.3.5 release tag still points to earlier release commit `d24301c`.
+- Restart-staged session candidates cover WORLD parameters, law controls, ordinary DNA edits, and species roster changes. Focused tests exist for pending batches, restart ordering, and application lifecycle. This is implemented groundwork, not proof every physics-affecting writer, preset, persistence/provenance rule, or autonomous action uses the same transaction.
+- Contact projection, structure/civilization registries, continuity, and codex have focused behavior and wiring tests. Mechanics remain a bounded simulation model, not scientific-fidelity or universal stability evidence.
+- Browser acceptance is unverified: the last recorded Playwright attempt could not start Chromium because the host lacks `libglib-2.0.so.0`. Do not report browser behavior as accepted.
+- RB sections 00–11 and roadmap phases remain unchecked in `docs/spec/rb/ROADMAP_PROGRESS.md`; retain its open gates and P0–P4 queue as the current work list.
+- No current full test count is claimed here. Run commands as needed and record results against the current worktree; historical totals below remain dated release records.
+
+## Historical task notes
 
 ## Roadmap progress
 
 Evidence-based RB sections 00–11 and actionable P0–P4 worklists are maintained in [`docs/spec/rb/ROADMAP_PROGRESS.md`](docs/spec/rb/ROADMAP_PROGRESS.md). No RB section is complete end-to-end: GPU-rendered 3D, complete restart-only configuration, modular extraction, and real-browser acceptance remain outstanding. Completed launch/catalog/schema/law-test groundwork is listed separately there and is not counted as completing an RB module.
 
-## Current task — contact, structures and full Chaos (2026-10-11)
+### Contact, structures and full Chaos (2026-10-11)
 
 - Final radius-aware contact projection resolves overlaps independently of force-neighbor budgets, including coincident centers, large radii and wrapped seams; bounded iterations are not an overpacking or continuous-collision guarantee.
 - POLYMER spring output is now integrated, surface-resting forces support structure, ACCR maintenance uses final radii, and ADHESION no longer attracts through contact.
 - Default Chaos stages random laws, physical world settings and all 64 species DNA traits, adopting them together during restart; performance controls are retained.
-- Law-grid/legacy-panel edits, category bulk commands and law-set loads are restart-staged with visible proposals and discard. Full presets, ordinary DNA edits, selective chaos and autonomous control paths remain unfinished.
-- 143 files / 1,567 tests pass. Browser acceptance is not claimed.
+- At this snapshot, law-grid/legacy-panel edits, category bulk commands and law-set loads were restart-staged with visible proposals and discard. Full presets, ordinary DNA edits, selective chaos and autonomous control paths remained unfinished; later merged work added ordinary DNA and species-roster staging, while other paths remain open.
+- At the time of the 2026-10-11 note, 143 files / 1,567 tests were reported passing. This is a historical report, not a current verification claim. Browser acceptance was not claimed.
 
-## Current task — bounded WORLD restart staging (2026-10-11)
+### Bounded WORLD restart staging (2026-10-11)
 
 - WORLD slider proposals are validated/clamped and coalesced separately from live parameters; live/proposed details, discard and confirmed restart are available.
 - The restart coordinator stops compute before adopting proposals and respawning. Existing restart undo captures one pre-restart world. Restore clears proposals; pending values are session-only and not saved.
-- Remaining: stage ordinary DNA edits, full preset loads and other physics-affecting control paths; define complete transaction/provenance/save contracts; preserve original launch/replay configuration. GPU 3D, tutorial/progression, save migrations, replay verification and no-silent-solver-adaptation requirements are not complete.
-- Build verified for the requested release delivery; real-browser verification remains blocked by missing `libglib-2.0.so.0`.
+- At that snapshot, remaining work included ordinary DNA, full preset loads and other physics-affecting control paths; later merged P0–P3 work staged ordinary DNA and species-roster changes, but full preset/autonomous paths, transaction/provenance/save contracts and launch/replay preservation remain open. GPU 3D, tutorial/progression, save migrations, replay verification and no-silent-solver-adaptation requirements are not complete.
+- The 2026-10-11 note reported a build for that release delivery; it is not current build evidence. Real-browser verification was blocked by missing `libglib-2.0.so.0`.
 
-## Current task — population ceiling and launch comparison controls (2026-10-07)
+### Population ceiling and launch comparison controls (2026-10-07)
 
 - Lowered the live application particle ceiling from 100,000 to 10,000, aligned WORLD and launch population controls, and retained benchmark reports as historical measurements.
 - Replaced each preset card's COMPARE label with a compact accessible ⇄ toggle; the comparison still supports up to three worlds.
@@ -37,7 +50,7 @@ Evidence-based RB sections 00–11 and actionable P0–P4 worklists are maintain
 - Added expanded launch design controls and raised the declared initial population maximum to 10,000; this is a selectable start target, not a performance promise.
 - Added a source-grounded parameter/law atlas and corrected spawn-only GROUND_HEIGHT help.
 - Delivered the current partial second-pass UI work with regression coverage, while documenting remaining plan gaps and lack of real-browser verification in `docs/systems/ui-overhaul-plan.md`.
-- Verification: syntax, build, UI report check, 88 unit files / 1,081 tests, and 50 audit files / 458 tests pass; combined Vitest run ends in a Tinypool IPC channel error, and `spec:check` detects generated-spec drift. See the top of `CHANGELOG.md` for full details.
+- Historical verification record for v9.3.0: syntax, build, UI report check, 88 unit files / 1,081 tests and 50 audit files / 458 tests were reported passing separately; the combined Vitest run ended in a Tinypool IPC channel error, and `spec:check` detected generated-spec drift. These results do not verify the present worktree; see `CHANGELOG.md` for release context.
 
 ## Milestone note (v9.2.0 — 2026-10-01)
 
