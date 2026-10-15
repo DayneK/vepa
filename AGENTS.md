@@ -1,15 +1,15 @@
 # AGENTS.md — VEPA Workspace Initialization & Codebase Audit
 
 > **Project:** VEPA — Vector Emergent Physics Automata
-> **Active Target:** **VEPA4 v9.3.5** (legacy label `4.9.38`); HEAD `d24301c` on `main`, exact local tag `v9.3.5`, tracks `origin/main`. Backup: `backup/pre-v935-release-20261013`. P0–P3 configuration/architecture/rendering work is in progress in the dirty worktree; browser acceptance is now requested and remains unverified. Historical context: v9.1.22 closes the audit-remediation program — executable audit-signoff gate in `repository:check`, documented backend error envelopes, FMM retain-experimental decision, risk-prioritized law-ontology expansion 24→35, PixiJS-vs-Canvas2D renderer benchmark report, and the proposed-only `docs/DECOMPOSITION_PLAN.md` awaiting confirmation; mechanics consolidation separates geometric CONTACT correction from COLL impact impulse; v9.1.2 delivered deterministic hierarchical technical-spec generation; v9.0.2 delivered selectable GPU backend and parity harness; Set P "Synthetic Life" (O·P·Q build 2): non-DNA synthetic organisms born from advanced HUBs (8 archetype programs), species intelligence-threshold uploaded consciousness, machine groups in the F.1 registry; stride offsets 98–99 claimed; plus per-law solver profiling (persistent content-addressed law caches, saved neighbour list, bench-mode timing) and main-thread cadence throttles that fix UI lag at high population; v8.15.1 = perf overhaul (density-scaled AUTO_TUNE grid + allocation-free pairwise hot path, ~9× at 100k); v8.15.0 = Set O "Stellar Physics" (O·P·Q build 1): stars fuse accreted mass into radiant output, collapse to black holes past the horizon (Hawking re-emission), detonate as supernovae past the mass cap (shockwave + exotic element seeding); plus the rich PRIME_DEFAULT substrate (COMMS/LEARN/CULTURE/AFFINITY/STIGMERGY + thermal/info fields + gravity wells + clustered spawn) and `MAX_PARTICLES` 2500→100000 with a renderer off-screen cull; **RRP trilogies** (E·F·A: E.1 v8.2.0 @ `eae1f58` · F v8.3.0 @ `d70ad1b` · A v8.4.0 @ `1e5eead`; D·G·H: D v8.6.0 · G v8.7.0 · H v8.8.0; I·J·K: I v8.9.0 · J v8.10.0 · K v8.11.0 — **complete**; L·M·N: L v8.12.0 · M v8.13.0 · N v8.14.0 — **complete** — O·P·Q: O v8.15.0 · P v8.16.0 **complete** — Q v8.17.0 next); designs in `docs/dev/rrp-trilogy/` + `docs/dev/rrp-trilogy-2/` + `docs/dev/rrp-trilogy-3/` + `docs/dev/rrp-trilogy-4/5/6/` (O·P·Q + R·S·T designs locked — the full 18-set lifecycle))
+> **Active Target:** **VEPA4 v9.3.5** (legacy label `4.9.38`); current HEAD `625c82e` on `main`, tracks `origin/main`; release tag `v9.3.5` identifies the earlier release commit, not current HEAD. Current tree includes the merged UI concept/brief-builder changes and the P0–P3 restart-staging work; see the dated status records below. Browser acceptance remains unverified. Historical context: v9.1.22 closes the audit-remediation program — executable audit-signoff gate in `repository:check`, documented backend error envelopes, FMM retain-experimental decision, risk-prioritized law-ontology expansion 24→35, PixiJS-vs-Canvas2D renderer benchmark report, and the proposed-only `docs/DECOMPOSITION_PLAN.md` awaiting confirmation; mechanics consolidation separates geometric CONTACT correction from COLL impact impulse; v9.1.2 delivered deterministic hierarchical technical-spec generation; v9.0.2 delivered selectable GPU backend and parity harness; Set P "Synthetic Life" (O·P·Q build 2): non-DNA synthetic organisms born from advanced HUBs (8 archetype programs), species intelligence-threshold uploaded consciousness, machine groups in the F.1 registry; stride offsets 98–99 claimed; plus per-law solver profiling (persistent content-addressed law caches, saved neighbour list, bench-mode timing) and main-thread cadence throttles that fix UI lag at high population; v8.15.1 = perf overhaul (density-scaled AUTO_TUNE grid + allocation-free pairwise hot path, ~9× at 100k); v8.15.0 = Set O "Stellar Physics" (O·P·Q build 1): stars fuse accreted mass into radiant output, collapse to black holes past the horizon (Hawking re-emission), detonate as supernovae past the mass cap (shockwave + exotic element seeding); plus the rich PRIME_DEFAULT substrate (COMMS/LEARN/CULTURE/AFFINITY/STIGMERGY + thermal/info fields + gravity wells + clustered spawn) and `MAX_PARTICLES` 2500→100000 with a renderer off-screen cull; **RRP trilogies** (E·F·A: E.1 v8.2.0 @ `eae1f58` · F v8.3.0 @ `d70ad1b` · A v8.4.0 @ `1e5eead`; D·G·H: D v8.6.0 · G v8.7.0 · H v8.8.0; I·J·K: I v8.9.0 · J v8.10.0 · K v8.11.0 — **complete**; L·M·N: L v8.12.0 · M v8.13.0 · N v8.14.0 — **complete** — O·P·Q: O v8.15.0 · P v8.16.0 **complete** — Q v8.17.0 next); designs in `docs/dev/rrp-trilogy/` + `docs/dev/rrp-trilogy-2/` + `docs/dev/rrp-trilogy-3/` + `docs/dev/rrp-trilogy-4/5/6/` (O·P·Q + R·S·T designs locked — the full 18-set lifecycle))
 > **Layout:** the `` tree was promoted to the repo root on 2026-08-10 (legacy trees
 > archived into `gemquota/vepa-archive`); ALL paths below are root-relative.
 > **Working Branch:** `main`
-> **Audit Hash:** `AGENTS_SYNC_v9.3.5_2026-10-14`
+> **Audit Hash:** `AGENTS_SYNC_v9.3.5_2026-10-15`
 >
 > This file is the canonical initialization prompt for any agent entering this workspace. It contains the codebase audit, architectural SSOT, conventions, and operational workflows. All agents **must** read this file first before any code modification. Version control is **strict** — read §10.4 (Version History Control Protocol) before any changelog edit or deploy.
 >
-> ⚠️ **Live workspace:** concurrent agent sessions commit releases frequently (4.6.11 → 4.6.18 all landed on 2026-08-06; the 4.6.19+ DNA-64 / law-RRP / multiplex WIP is uncommitted). This file is a **snapshot** — re-run the §10.4 sync check and `git log --oneline -3` before every task. **The code is the truth; this file is the map.**
+> ⚠️ **Live workspace:** this file is a dated snapshot. Re-run the §10.4 sync check and `git log --oneline -3` before every task. **The code is the truth; this file is the map.** Historical release cadence and work-in-progress records below are retained as dated context, not current state.
 >
 > **Keep the map current (mandatory):** if the live git state differs from what this file records — HEAD hash, current branch, working-tree contents, or any version/date token — **update this file to match before doing any other work**. Concretely: refresh the **Active Target** / **Working Branch** lines in this header, the **§1 Branches** row, and the **§2.3 Git State** table (Current Branch, HEAD, Working tree, Backup branches); bump the **Audit Hash** above to `AGENTS_SYNC_<version>_<YYYY-MM-DD>` to record the re-sync; and correct any other stale references you touch. Never proceed on a stale map — the file must describe the commit you are actually working from. If you cannot verify the live state, say so rather than guessing.
 
@@ -22,7 +22,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 | Attribute | Value |
 |-----------|-------|
 | **Repository** | `github.com/DayneK/vepa.git` (Freebuff Cloud connected repository) |
-| **Active version** | **VEPA4 v9.3.5** (legacy label `4.9.38`) — release HEAD `d24301c`, exact local tag `v9.3.5`; P0–P3 follow-up is uncommitted and browser acceptance is requested but unverified |
+| **Active version** | **VEPA4 v9.3.5** (legacy label `4.9.38`) — release tag `v9.3.5` points to release commit `d24301c`; current HEAD is `625c82e` after merged P0–P3 staging and UI concept/brief-builder commits; browser acceptance is unverified |
 | **Active tree** | repo root (VEPA v4 — "Integrated Intelligence"; `v4/` promoted to root 2026-08-10) |
 | **Legacy trees** | archived 2026-08-10 → `gemquota/vepa-archive` (root `src/` v2.5.0-era · `v3/`, `v3-backup/`, `v3-persistence-design/` · `vaa/`) |
 | **Branches** | `main` (**current**, tracks `origin/main`; `origin/HEAD` → `main`) · local `backup/pre-p0-p3-20261014` · `backup/pre-chaos-uniform-z-20261012` · `backup/pre-v935-release-20261013` · `backup/pre-v934-release-20261012` · `backup/pre-v933-release-20261012` · `backup/pre-10k-cap-20261007` · `backup/pre-atlas-launch-20261007` · `backup/pre-920-20261001`; other historical branches not present in this workspace |
@@ -68,7 +68,7 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
 │   │                          LAW_SUBGROUPS, LAW_DEPENDENCIES, DNA_RANGES
 │   ├── debug.js            ← on-canvas debug overlay
 │   ├── core/               ← eventBus.js, prng.js (SplitMix32)
-│   ├── state/              ← lawState.js (128-bit bitmask), particleBuffer.js,
+│   ├── state/              ← lawState.js (136 laws / five-word mask), particleBuffer.js,
 │   │                          worldParams.js, runtimeConfig.js, worldSave.js
 │   │                          (save/load/compare/undo), defaultPresets.js,
 │   │                          presetManager.js, groupRegistry.js (F.1 groups),
@@ -126,16 +126,17 @@ VEPA is a **GPU-accelerated (Web Workers + PixiJS/Canvas2D) emergent physics sim
   docs (`docs/fullaudit.md`, `docs/lawaudit.md`, `docs/LAW_AUDIT.md`, `docs/arch/`, …)
   were re-archived individually — the v4 law audit lives in `audit-suite/`.
 
-### 2.3 Git State
+### 2.3 Git State — checked 2026-10-15
 
 | Property | Value |
 |----------|-------|
 | **Current Branch** | `main` (tracks `origin/main`) |
-| **Task base HEAD** | `d24301c` — `chore(release): v9.3.5 — sample full WORLD ranges in Chaos` (`v9.3.5` exact local tag); working branch `main`, tracks `origin/main` |
-| **Working tree** | Dirty at task entry. Existing modified paths: `AGENTS.md`, `docs/spec/README.md`, generated spec outputs (`docs/spec/architecture/*`, `docs/spec/manifest.json`, `docs/spec/source/inventory.md`), all RB subsystem specs and tracker (`docs/spec/rb/00–11`, `MASTER_SPEC.md`, `ROADMAP_PROGRESS.md`), `docs/systems/ui-module-report.md`, `package.json`, `playwright.config.js`, `src/main.js`, `src/render/pixiRenderer.js`, `src/state/{chaosSettings,pendingDNA,pendingLaws,pendingWorldParams,runtimeConfig,worldSave}.js`; existing untracked files: `docs/spec/rb/ROADMAP_CROSSWALK.md`, `src/application/`, `src/state/{pendingSpeciesRoster,restartTransaction}.js`, `tests/e2e/rb-browser-stages.spec.js`, `tests/unit/applicationRuntime.test.js`. Preserve all pre-existing changes. `stash@{0}` contains an earlier Phase 0/1 WIP snapshot. |
+| **Current HEAD** | `625c82e` — merge commit `Merge pull request #17 from DayneK/ui-refresh-brief-builder`; parent history includes `e22d53d` (merge of P0–P3 restart-staging work) and `96d2680` (UI concepts and proposal brief builder). |
+| **Release context** | `VERSION`, `package.json`, and the changelog top identify v9.3.5; tag `v9.3.5` is the earlier release commit `d24301c`, not current HEAD. |
+| **Working tree** | Clean at review start; `docs/review/` was the only untracked path when this re-sync began. Recheck live status before every task and preserve unrelated edits. |
 
 | **Previous releases** | `daae7c0` — `chore(release): v9.3.0 — launch design and second-pass UI slice` · `7159336` — `chore(release): v9.2.0 — UI overhaul: audit gates, INERTIA→WRAP, SAVES split, LAWS search` · `436afd2` — v9.1.27 deploy-ledger commit · Historical snapshot: `218dc82` — `Update 19 files` · `43a99a4` — `fix(physics-ui): preserve particle connections and simplify telemetry` · `7e937ec` — `docs(agents): sync map to v8.15.1` · `7f5b2fa` — `chore(release): v8.15.1 — performance overhaul (auto-tuned grid + allocation-free pairwise hot path)` (v8.15.1) · `1ea3201` — `chore(release): v8.15.0 — Set O "Stellar Physics" (stars/black holes/supernovae) + rich prime substrate + MAX_PARTICLES 2500→100000` (v8.15.0) · `e7d9a50` — `chore(release): v8.14.1 — blank-canvas hotfix (Set J/K arity + guarded updateIntelligence)` (v8.14.1) · `499cbc0` — `chore(release): v8.14.0 — Set N "Quantum Macroscale"` (v8.14.0) · `d64be99` — `chore(release): v8.13.0 — Set M "Relativity"` (v8.13.0) · `69a2b71` — `chore(release): v8.12.0 — Set L "Exotic Matter"` (v8.12.0) · `5cbea88` — `chore(release): v8.11.1 — boot with PRIME_DEFAULT starter laws` (v8.11.1 hotfix) · `8a39ce9` — `chore(release): v8.11.0 — Set K "Infrastructure & Energy"` (v8.11.0) · `ce691cb` — `chore(release): v8.10.0 — Set J "Society & Governance"` (v8.10.0) · `2472bac` — `chore(release): v8.9.0 — Set I` (v8.9.0) · `81d19c7` — `feat(ui): full-screen multiplex controls` (v8.1.0) |
-| **Release tags** | `v9.3.5` is the exact local tag at HEAD; `v9.3.4` was the previous completed release tag and was pushed to `origin`. `v9.3.0` published at `daae7c0`; `v9.2.0` was local-only as of the 2026-10-01 check. Historical snapshot: `v8.16.2`, `v8.16.0`, `v8.15.1`, `v8.15.0`, `v8.14.1`, `v8.14.0`, `v8.13.0`, `v8.12.0`, `v8.11.1`, `v8.11.0`, `v8.10.0`, `v8.9.0`, `v8.8.0`, `v8.7.0`, `v8.6.0`, `v8.5.0`, `v8.4.0`, `v8.3.0`, `v8.2.0`, `v8.1.1`, `v8.1.0`, `v8.0.0` (repo tagging adopted at v8.0.0, 2026-08-18) |
+| **Release tags** | The local `v9.3.5` tag points to release commit `d24301c`, not current HEAD `625c82e`; verify remote tag and deployment state independently. `v9.3.4` was the previous completed release tag and was pushed to `origin`. `v9.3.0` published at `daae7c0`; `v9.2.0` was local-only as of the 2026-10-01 check. Historical snapshot: `v8.16.2`, `v8.16.0`, `v8.15.1`, `v8.15.0`, `v8.14.1`, `v8.14.0`, `v8.13.0`, `v8.12.0`, `v8.11.1`, `v8.11.0`, `v8.10.0`, `v8.9.0`, `v8.8.0`, `v8.7.0`, `v8.6.0`, `v8.5.0`, `v8.4.0`, `v8.3.0`, `v8.2.0`, `v8.1.1`, `v8.1.0`, `v8.0.0` (repo tagging adopted at v8.0.0, 2026-08-18) |
 | **Backup branches** | Verified local: `backup/pre-p0-p3-20261014` (pre-P0–P3 worktree baseline at release HEAD) · `backup/pre-chaos-uniform-z-20261012` · `backup/pre-v935-release-20261013` (pre-v9.3.5 release HEAD) · `backup/pre-v934-release-20261012` (pre-v9.3.4 release HEAD) · `backup/pre-v933-release-20261012` (prior pre-release HEAD) · `backup/pre-10k-cap-20261007` · `backup/pre-atlas-launch-20261007` · `backup/pre-920-20261001`. Historical snapshot (not present in this workspace): `backup/pre-particle-connection-20260919` (cut before particle connection/HUD delivery) · `backup/pre-8160-20260820` (cut before v8.16.0 Set P) · `backup/pre-8151-20260819` (cut before v8.15.1 perf overhaul) · `backup/pre-8150-20260819` (cut before v8.15.0 Set O) · `backup/pre-8141-20260819` (cut before v8.14.1 hotfix) · `backup/pre-8140-20260819` (cut before v8.14.0 Set N) · `backup/pre-8130-20260819` (cut before v8.13.0 Set M) · `backup/pre-8120-20260819` (cut before v8.12.0 Set L) · `backup/pre-8111-20260819` (cut before v8.11.1 hotfix) · `backup/pre-master-switch-20260811` (cut before the master-switch attempt) · `backup/pre-archive-restructure-20260810` (cut before the 2026-08-10 restructure) · `backup/pre-multiplex-20260807` · `backup/pre-metrics-20260807` · `backup/pre-perf-20260807` · `backup/pre-cleanup-20260726` · `backup/pre-lpsbs-20260728` · `backup/pre-vepa4-20260801` · `backup/v47-multiplex-f6900f0` (pre-force-push v4.7 multiplex evolution, preserved for reference) |
 | **Remote** | `origin` → `https://github.com/DayneK/vepa.git` (`origin/HEAD` → `main`); Freebuff-managed repository-scoped credentials |
 
@@ -211,9 +212,9 @@ Source of truth: `STRIDE_INDEXES` in `src/constants.js` and `src/physics/lawgrou
 
 ### 3.5 Law State (Bitmask) System — VERIFIED v4 ARCHITECTURE
 
-Laws are bit flags in a **128-bit state: four `Uint32Array(1)` words — `lowFlags` (0-31), `highFlags` (32-63), `extFlags` (64-95), `quadFlags` (96-127)** (`src/state/lawState.js`). This covers `LAW_COUNT = 128`. Never hardcode law indices — always use `LAW_INDEXES` from `src/constants.js` (128 keys).
+Laws are bit flags across **five `Uint32Array(1)` words**: `lowFlags` (0–31), `highFlags` (32–63), `extFlags` (64–95), `quadFlags` (96–127), and `pentaFlags` (128–159). The live registry has `LAW_COUNT = 136` (indices 0–135), so eight bits in the final word are used. Never hardcode law indices — always use `LAW_INDEXES` from `src/constants.js` (136 keys).
 
-- **Helpers:** `createLawState()`, `set()`, `clear()`, `toggle()`, `isSet()`, `getActiveCount()` (popcount), `getStateVector()`, `fromVector()`, `serialize()` (`{low,high,ext,quad}`), `deserialize()` (accepts legacy 3-word objects, quad defaults 0).
+- **Helpers:** `createLawState()`, `set()`, `clear()`, `toggle()`, `isSet()`, `getActiveCount()` (popcount), `getStateVector()`, `fromVector()`, `serialize()` (`{low,high,ext,quad,penta}`), `deserialize()` (missing newer words default to 0).
 - **Worker consumption:** `src/worker/physics.worker.js` imports the lawState helpers, keeps its own `lawState`, and passes it to `solve(particleView, particleCount, stride, lawState, dnaBuffer, worldSize, dt, rng)`.
 - **Dispatch:** `src/physics/solver.js` gates every law with `isSet(lawState, LAW_INDEXES.X)` and calls the stateless lawgroup functions (`applyTide`, `applySuperposition`, … imported from `lawgroups/*.js`); per-law forces live in `src/physics/laws.js`.
 - **Synergy:** multipliers come from `computeSynergy()` in `src/physics/synergy.js` (returns [0.0, 2.0], e.g. GRAV+PLANETARY ×1.5). The v2-era fixed-penalty synergy table is gone.
@@ -226,7 +227,7 @@ Messages use the `{type, ...}` envelope. The worker owns the physics loop and re
 | Direction | Type | Payload / purpose |
 |-----------|------|-------------------|
 | → worker | `INIT` | `{buffer, count, config, dnaBuffer}` — `SharedArrayBuffer` (or `ArrayBuffer` fallback) + species genome; replies `INIT_COMPLETE` |
-| → worker | `CONFIG` | `{config, buffer?, dnaBuffer?}` — config may set `particleCount`/`worldSize`/`dt`/`stride`, restore lawState from serialized `{low,high,ext,quad}` or a 128-boolean `laws` array; replies `CONFIG_COMPLETE` |
+| → worker | `CONFIG` | `{config, buffer?, dnaBuffer?}` — config may set `particleCount`/`worldSize`/`dt`/`stride`, restore lawState from serialized `{low,high,ext,quad,penta}` or a boolean `laws` array read up to LAW_COUNT; replies `CONFIG_COMPLETE` |
 | → worker | `TOGGLE_LAW` | `{lawIndex, forceOn?, forceOff?}` — `forceOn`=set, `forceOff`=clear, else toggle; replies `LAW_TOGGLED {lawIndex, active, lawState}` |
 | → worker | `TICK` | `{dt?, particleCount?}` — runs `solve(...)`; replies `TICK_COMPLETE` with `tickCount`, `tickDuration`, optional `offspring` |
 | → worker | `GET_STATE` | replies `STATE` with `particleCount`, `worldSize`, … |
@@ -266,23 +267,23 @@ All indices are defined in `DNA_INDEXES` (`src/constants.js`); ranges live in `D
 
 ---
 
-## 5. LAW SYSTEM (128 GLOBAL LAWS — 8 RAINBOW CATEGORIES × 16 + SLATE MECHANICS)
+## 5. LAW SYSTEM (136 MAPPED LAWS ACROSS 9 CATEGORIES)
 
-Laws are multi-state toggles in the 128-bit `lawState` bitmask (§3.5), each with a 4-tier `LAW_HELP_DB` entry (hint, explanation, system, advanced) in `src/constants.js` (export name is **`LAW_HELP_DB`**). Categories are implemented as **stateless functions** in `src/physics/lawgroups/*.js` (see `lawgroups/SPEC.md`).
+Laws are toggles in the five-word `lawState` mask (§3.5), each with a 4-tier `LAW_HELP_DB` entry (hint, explanation, system, advanced) in `src/constants.js` (export name is **`LAW_HELP_DB`**). The eight rainbow categories contain 16 laws each; the separate SLATE Mechanics category contains eight laws at indices 128–135. Categories are implemented as **stateless functions** in `src/physics/lawgroups/*.js` (see `lawgroups/SPEC.md`).
 
-| Category | Spectrum color | Lawgroup file |
-|----------|---------------|---------------|
-| Physics | RED | `physicsLaws.js` (GRAV, DRAG, ENTR, COLL, ACCR, PLANETARY, VOID, BOND, SINGULARITY, FRICTION, BUOYANCY, TIDE) |
-| Biology | ORANGE | `biologyLaws.js` |
-| Chemistry | YELLOW | `chemistryLaws.js` |
-| Thermodynamics | GREEN | `thermoLaws.js` |
-| Metaphysics | TEAL | `metaLaws.js` |
-| Electromagnetism | BLUE | `emLaws.js` |
-| Information | VIOLET | `infoLaws.js` |
-| Quantum | PURPLE | `quantumLaws.js` |
-| Mechanics | SLATE | `physicsLaws.js` (ELASTICITY, TURBULENCE, CENTRIPETAL, ROTATION) |
+| Category | Spectrum color | Registry size | Implementation boundary |
+|----------|---------------|---------------|--------------------------|
+| Physics | RED | 16 | Core physics dispatch spans `src/physics/laws.js`, `src/physics/solver.js`, and `src/physics/lawgroups/physicsLaws.js`; the registry category is not a one-file mapping. |
+| Biology | ORANGE | 16 | `src/physics/lawgroups/biologyLaws.js` plus core lifecycle/predation dispatch. |
+| Chemistry | YELLOW | 16 | `src/physics/lawgroups/chemistryLaws.js` plus core chemistry dispatch. |
+| Thermodynamics | GREEN | 16 | `src/physics/lawgroups/thermoLaws.js` plus core heat/phase dispatch. |
+| Metaphysics | TEAL | 16 | `src/physics/lawgroups/metaLaws.js` plus core dispatch. |
+| Electromagnetism | BLUE | 16 | `src/physics/lawgroups/emLaws.js` plus core field/charge dispatch. |
+| Information | VIOLET | 16 | `src/physics/lawgroups/infoLaws.js` plus core information-law dispatch. |
+| Quantum | PURPLE | 16 | `src/physics/lawgroups/quantumLaws.js` plus core dispatch. |
+| Mechanics | SLATE | 8 | `src/physics/lawgroups/mechanicsLaws.js` (CONTACT, MOMENTUM, WRAP, TORQUE, CONSTRAINT, FRAGMENTATION, TOPOLOGY, ADHESION). |
 
-The law grid renders the eight rainbow categories in the established order, with Mechanics as a visually separated slate-grey category. The current 128-bit map contains 12 Physics laws, 4 implemented Mechanics laws, and six remaining category slots reserved for future implemented Mechanics laws; it does not fabricate inert toggles. `LAW_CATEGORIES` (category → color + 16 indices) and `LAW_SPECTRUM` + `LAW_HUE_BY_INDEX` (128 hues, hue = spectrum position × 3.6) hold the mapping. Since v4.6.14 each category band is **4 spectrum points wide** (center ± 2; RED wraps 98%→102% through 0 — was 10 points before); all 128 laws keep distinct hues. An earlier EM-spectrum draft mapping (physics=BLUE, etc.) was superseded — the verified current mapping is the table above.
+The law grid renders eight rainbow categories and the visually separate slate-grey Mechanics category. `LAW_CATEGORIES` maps each category to its color and members; each rainbow category has 16 mapped laws and Mechanics has eight. `LAW_SPECTRUM`, `LAW_HUE_BY_INDEX`, and `LAW_SAT_BY_INDEX` provide the color mapping. Historical 128-law and four-mechanics descriptions elsewhere in this file are stale; do not treat registry coverage as proof of behavior or fidelity.
 
 ---
 
@@ -331,8 +332,8 @@ The **B-4RK principle** stands: documentation is not an afterthought; it is a fe
 
 ## 8. TESTING & QUALITY ASSURANCE
 
-- **Unit/audit:** `vepa4 test` (vitest 3.2.7, `tests/`). **86 files / 860 tests** (verified 2026-08-20 — 854 green; the 6 failures are the pre-existing law-category/audit baseline: 4× `lawCategories.test.js` + `batch_08` TIME_DILATION + `batch_30` TELEPORT — untouched by v8.2.0–v8.16.0). Config: `vitest.config.js` includes `tests/**/*.test.js`, node environment, 15 s timeout. Suite layout: `tests/unit/` (30 files incl. `exoticMatter.test.js`, `relativity.test.js`, `quantumMacro.test.js`, `stellar.test.js`, `synthetic.test.js`, `drawer.test.js`, `fields.test.js`, `groupRegistry.test.js`, `constructionEconomy.test.js`, `livingWorld.test.js`, `perfKnobs.test.js`), `tests/audit/` (`batch_01-32.test.js` + `params_batch_01-18.test.js` + `paramsHelpers.js`).
-- **E2E:** `npm run test:e2e` (Playwright) — ⚠️ **no `playwright.config.*` or `*.spec.js` files are committed yet**, so the script is currently unconfigured; treat e2e as aspirational until specs land.
+- **Unit/audit:** `npm test` (Vitest, `tests/`). Historical counts from 2026-08-20 (86 files / 860 tests, with six then-known failures) are archival only and are not a current pass claim. Current coverage includes focused pending WORLD/DNA/law/species and restart-transaction tests, application lifecycle tests, mechanics/contact tests, and civilization/structures/continuity/codex tests. Run the relevant tests for the task and record actual outcomes; do not reuse stale totals.
+- **E2E:** `npm run test:e2e` (Playwright); configuration and E2E specs are now present. Browser tests still require the host browser dependencies and an available device/runtime; see the latest attempt in `docs/spec/rb/ROADMAP_PROGRESS.md` before claiming browser acceptance.
 - **Syntax:** `vepa4 syntax` (`node --check` on `src` + `tests`).
 - **Audit docs:** `audit-suite/` — `fidelity-audit-v4.6.29.md` (updated duplicate for the 8 rewritten laws) + `historical/2026-08-10-v4.6.28/` (frozen pre-rewrite audit incl. `laws-rrp/batch_*.md`).
 - **Build smoke:** `vepa4 build`.
@@ -347,7 +348,7 @@ The **B-4RK principle** stands: documentation is not an afterthought; it is a fe
 - **Vite config** (`vite.config.js`): base `'/'` when `VERCEL=1`; `VITE_BASE` (Pages workflow sets `/vepa/`) when provided; else `'/vepa/vepar/'` (local launcher); dev server sets COOP/COEP headers (`host: true`); worker format `es`.
 - **Build:** `vepa4 build` → `.dist` (gitignored). PixiJS tree-shaken; COOP/COEP headers required for `SharedArrayBuffer`.
 - **Deploys:** Vercel production (`vercel.json` — static build, COOP/COEP) → `https://vepa-seven.vercel.app/`; GitHub Pages → `https://gemquota.github.io/vepa/` via the restored root-layout `.github/workflows/deploy.yml` (`VITE_BASE=/vepa/`, gh-pages branch, peaceiris/actions-gh-pages@v4) — both auto-deploy on every push to `master`.
-- **World parameters:** 23 definitions in `src/state/worldParams.js` (`WORLD_PARAM_DEFS`); live values live in `runtimeConfig.worldParams` and are passed to the worker.
+- **World parameters:** 148 definitions in `src/state/worldParams.js` (`WORLD_PARAM_DEFS`); live values live in `runtimeConfig.worldParams` and are passed to the worker. Verify the count from the schema rather than treating it as a permanent constant.
 - Every deploy must follow §10.4.
 
 ---
@@ -404,8 +405,7 @@ headers carry both labels: `## [4.6.28] - date → 6.28.0`. v2/v3-era entries ke
 their historical labels.
 
 **Authority:** `CHANGELOG.md` is the single source of truth for release history.
-`VERSION`, the changelog top section's arrow token, and `package.json#version` MUST all equal the newest working-tree version (`9.3.5`). From here on, drift is a release
-blocker.
+`VERSION`, the changelog top section's arrow token, and `package.json#version` MUST all equal the latest released version (`9.3.5` at the 2026-10-15 check). The current HEAD may be a non-release merge after that tag; verify release/tag/deployment state independently. Drift between the version markers remains a release blocker.
 
 **Commit standard (Conventional Commits 1.0.0 — mandatory for all commits from
 2026-08-10):** `<type>(<scope>): <description>` with types
@@ -468,7 +468,7 @@ git tag | tail -1                  # current release tag
 
 ### 10.6 Adding a New Law (v4)
 1. Add index to `LAW_INDEXES` + `LAW_HELP_DB` (all 4 tiers) in `src/constants.js`
-2. Add to `LAW_CATEGORIES` (16-per-category cap; `LAW_COUNT` ≤ 128) and confirm `LAW_SPECTRUM`/`LAW_HUE_BY_INDEX` coverage
+2. Add to `LAW_CATEGORIES` (16-per-rainbow-category cap; Mechanics has eight current entries at 128–135) and confirm `LAW_SPECTRUM`/`LAW_HUE_BY_INDEX` coverage
 3. Implement a stateless function in `src/physics/lawgroups/<category>Laws.js` per `lawgroups/SPEC.md`
 4. Wire dispatch with `isSet(LAW_INDEXES.X)` in `src/physics/solver.js` (worker consumes via `solve()`)
 5. Add the toggle in `src/ui/lawPanel.js`
@@ -512,7 +512,7 @@ grep '"version"' package.json      # must match changelog
 cat VERSION                           # root marker — must match too
 
 # Trust-but-verify (workspace moves fast — code is truth)
-node -e "const c=require('./src/constants.js'); console.log(c.PARTICLE_STRIDE, c.DNA_COUNT, c.LAW_COUNT)"  # → 100 64 128
+node --input-type=module -e "import { PARTICLE_STRIDE, DNA_COUNT, LAW_COUNT } from './src/constants.js'; console.log(PARTICLE_STRIDE, DNA_COUNT, LAW_COUNT)"  # → 100 64 136
 grep -c '^export const' src/constants.js
 ls src/physics/lawgroups/*.js | wc -l    # lawgroup file count; Mechanics is currently grouped in physicsLaws.js
 git log --oneline -3 -- CHANGELOG.md     # confirm HEAD = changelog top
@@ -532,11 +532,11 @@ git tag v<version>
 
 # Key constants
 grep 'PARTICLE_STRIDE' src/constants.js   # → 100
-grep 'LAW_COUNT'       src/constants.js   # → 128
+grep 'LAW_COUNT'       src/constants/laws.js   # → 136
 grep 'MAX_SPECIES'     src/constants.js   # → 64
 grep 'DNA_COUNT'       src/constants.js   # → 64
 ```
 
 ---
 
-*Re-synced 2026-10-14 | v9.3.5 release HEAD `d24301c` on `main` tracks `origin/main`, exact local tag `v9.3.5`. Pre-P0–P3 snapshot branch: `backup/pre-p0-p3-20261014`; pre-v9.3.5 release branch: `backup/pre-v935-release-20261013`. At task entry the worktree contains pre-existing application lifecycle, partial configuration staging, renderer, generated specs/reports, and RB tracker edits listed in §2.3; preserve them. P0–P3 completion is now requested; browser acceptance is required for P1 and remains unverified until run. See `docs/spec/rb/ROADMAP_PROGRESS.md` for evidence-based gates/status and actionable P0–P4 todos. `docs/DECOMPOSITION_PLAN.md` is proposed historical guidance, not approval to perform its broad solver/law extraction; P2 work here must stay within authorized incremental RB boundaries and preserve the facade/parity constraints.*
+*Re-synced 2026-10-15 | v9.3.5 release tag points to `d24301c`; current `main`/`origin/main` HEAD is `625c82e` (UI concept/brief-builder merge, after P0–P3 restart-staging merge). The working tree was clean at review start apart from the new `docs/review/` checklist; recheck status for each task. The 2026-10-14 dirty-worktree path list and P0–P3 work-in-progress language above are historical, not current. Current law contract: 136 laws in five words; `WORLD_PARAM_DEFS` has 148 entries. Relevant focused tests cover restart-staged controls and lifecycle, mechanics/contact, and social registries; browser behavior remains unverified due to the missing host Chromium `libglib-2.0.so.0` library recorded in `docs/spec/rb/ROADMAP_PROGRESS.md`. `docs/DECOMPOSITION_PLAN.md` remains proposed historical guidance, not blanket approval for broad extraction.*

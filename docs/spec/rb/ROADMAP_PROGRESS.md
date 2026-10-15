@@ -1,8 +1,8 @@
-# RB Roadmap Progress — 2026-10-14
+# RB Roadmap Progress — 2026-10-15
 
 **Product authority:** [`VEPA_Roadmap_v4-5.md`](../../../VEPA_Roadmap_v4-5.md) at the repository root contains the accepted product decisions, numbered requirements 1–15, phased exit criteria, exclusions, and final release checklist. **RB technical translation:** [`MASTER_SPEC.md`](MASTER_SPEC.md) and RB subsystem specs 00–11 are proposed technical targets subordinate to the product roadmap. **Traceability:** [`ROADMAP_CROSSWALK.md`](ROADMAP_CROSSWALK.md) maps product sections and phases into the RB contracts. This file alone tracks implementation and evidence status. `docs/ROADMAP_V4.md` is a companion target, not a replacement authority.
 
-**Source baseline:** release HEAD `d24301c` (`v9.3.5`) on `main`; P0–P3 lifecycle/configuration work is in the uncommitted worktree. Browser acceptance was attempted during this continuation, but Chromium could not start because the host lacks `libglib-2.0.so.0`; no browser behavior is claimed verified.
+**Source baseline:** current HEAD `625c82e` on `main` (tracks `origin/main`), after the P0–P3 restart-staging merge and UI concept/brief-builder merge. The v9.3.5 release tag remains at earlier commit `d24301c`. At review start the working tree was clean apart from the new `docs/review/` checklist. The merged restart-staging paths now include pending WORLD, law, DNA and species-roster batches; their presence/tests are implementation evidence, not completion of global configuration safety. Browser acceptance was attempted, but Chromium could not start because the host lacks `libglib-2.0.so.0`; no browser behavior is claimed verified.
 
 ## Navigation
 
@@ -51,15 +51,15 @@ A section is checked only when its full target and appropriate evidence pass. Th
 
 ### P0 — Finish global configuration safety
 
-- [ ] Inventory every UI, preset, Chaos, narrative/goal, worker/backend and autonomous write path that can change physics outcomes.
+- [x] Inventory every UI, preset, Chaos, narrative/goal, worker/backend and autonomous write path that can change physics outcomes. The merged initial inventory is recorded in `docs/spec/rb/PHASES_0_3_DESIGN_PLAN.md`; verify and extend it as paths evolve.
 - [x] Ordinary DNA slider edits in DNA and species panels stage in a session-only candidate batch; per-species proposal details, discard and confirmed restart are covered by targeted controller tests. Restart commits after compute stops and before population spawn/worker initialization. This does not cover presets, roster edits, selective Chaos, autonomous paths or other direct writers.
-- [ ] Route preset loads, selective Chaos, autonomous/configuration edits and species/genome operations through the common restart boundary; define cross-source merge semantics.
+- [ ] Route full preset loads, selective Chaos, remaining autonomous/direct configuration writes through the common restart boundary; define cross-source merge semantics. Species roster and ordinary DNA candidate batches are now staged/covered by focused tests, but that does not prove every writer uses the boundary.
 - [ ] Define and implement proposed-versus-committed save, provenance, undo and replay semantics; preserve launch input and derived seed.
 - [ ] Add integration coverage for pause, restart/worker ordering, undo/restore, save/load and each configuration source.
 
 ### P1 — Browser baseline and acceptance
 
-- [ ] Run `npm run test:e2e:rb` against the managed preview when the runtime is available; this attempt failed before page startup because Chromium could not load host library `libglib-2.0.so.0`.
+- [ ] Run `npm run test:e2e:rb` against the managed preview when the runtime is available; the latest recorded attempt failed before page startup because Chromium could not load host library `libglib-2.0.so.0`. The merge and unit/DOM-stub coverage do not establish browser acceptance.
 - [ ] Capture mobile-first screenshots/interactions and verify renderer/fallback, keyboard/touch and responsive drawer states.
 - [ ] Verify the integrated launch → simulation → edit → discard/restart → save/restore flows in a real browser.
 - [ ] Add app-level coverage for new restart-staged flows; DOM stubs are not a substitute for browser evidence.
@@ -85,5 +85,6 @@ A section is checked only when its full target and appropriate evidence pass. Th
 ## Evidence notes
 
 - Historical v9.3.4 verification record: the previous tracker recorded focused and full Vitest, syntax, repository/spec and build checks as passing for that release, plus a Playwright attempt that stopped before page startup due to the host Chromium dependency `libglib-2.0.so.0`. These historical results do not verify the present worktree or browser behavior.
+- Current source baseline checked 2026-10-15: HEAD `625c82e`; merged P0–P3 transaction changes and UI concept/brief-builder assets are in the tree. The browser blocker above remains the latest recorded attempt. Do not check phases or RB sections from merged code alone.
 - Current browser status: unverified. `npm run test:e2e:rb` attempted all 12 cases, but each failed before page startup because Chromium could not load `libglib-2.0.so.0`; this is an environment blocker, not a passing browser check.
 - Do not mark any checkbox above or in the root roadmap based solely on this documentation integration.

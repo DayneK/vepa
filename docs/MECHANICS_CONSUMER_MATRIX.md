@@ -1,6 +1,6 @@
 # Mechanics Consumer Matrix
 
-**Snapshot:** VEPA4 9.1.29
+**Snapshot refreshed:** 2026-10-15 against source at `625c82e` (VEPA4 v9.3.5 release context).
 
 This document records where the Mechanics laws are declared, consumed, inspected, and verified. It is an architecture inventory, not a claim that each law is a complete physical model.
 
@@ -8,9 +8,9 @@ This document records where the Mechanics laws are declared, consumed, inspected
 
 | Capability | Canonical implementation | Runtime consumer | Diagnostic/inspection consumer | Test evidence | Status |
 |---|---|---|---|---|---|
-| Shared pair geometry | `src/physics/pairGeometry.js` → `getPairGeometry` | `src/physics/solver.js` computes pair scalars in the hot loop | `src/physics/mechanicsDiagnostics.js` | `tests/unit/mechanicsArchitecture.test.js` | Shared boundary established |
-| CONTACT correction | `src/physics/lawgroups/mechanicsLaws.js` → `applyContactCorrection` | Solver contact pass; separate from impact impulse | `inspectMechanicsPair` uses the legacy convenience wrapper for isolated inspection | `tests/unit/mechanics.test.js`, `tests/unit/mechanicsArchitecture.test.js` | Runtime-wired and gated |
-| COLL impact response | `src/physics/lawgroups/mechanicsLaws.js` → `applyCollisionImpulse` | Solver collision pass | No diagnostic impulse field yet | Mechanics/audit solver tests | Runtime-wired and gated |
+| Shared pair geometry | `src/physics/pairGeometry.js` → `getPairGeometry` | `src/physics/solver.js` retains equivalent local scalars in the allocation-free hot loop; not a direct helper call | `src/physics/mechanicsDiagnostics.js` | `tests/unit/mechanicsArchitecture.test.js` | Diagnostic boundary established; hot-path parity is fixture-tested |
+| CONTACT correction | `src/physics/lawgroups/mechanicsLaws.js` → `applyContactCorrection`; final projection in `src/physics/contactConstraints.js` → `resolveParticleContacts` | Solver pair pass plus bounded post-integration hard-sphere projection, independently broadphased from force-neighbor budgets | `inspectMechanicsPair` uses the convenience wrapper for isolated inspection | `tests/unit/contactStructures.test.js`, `tests/unit/mechanics.test.js`, `tests/unit/mechanicsArchitecture.test.js` | Runtime-wired and gated; final projection has eight discrete iterations by default |
+| COLL impact response | `src/physics/lawgroups/mechanicsLaws.js` → `applyCollisionImpulse` | Solver applies a mass-weighted normal impulse for approaching bodies; positional anti-tunnelling guard is used only when CONTACT is off | No diagnostic impulse field yet | `tests/unit/contactStructures.test.js`, mechanics/audit solver tests | Runtime-wired and gated; discrete proxy, not a fidelity guarantee |
 | MOMENTUM | `mechanicsLaws.js` → `applyMomentum` | Solver mechanics pass | `inspectMechanicsPair` | Mechanics architecture tests | Runtime-wired and gated |
 | WRAP | `mechanicsLaws.js` → `applyWrapBoundary` | Solver boundary pass, gated on `active[LAW_INDEXES.WRAP]` | `diagnoseWrapBoundary` (non-mutating) | `tests/unit/mechanics.test.js` | Runtime-wired and gated; the TOROIDAL EDGES world param seeds the bit |
 | TORQUE | `mechanicsLaws.js` → `applyTorque` | Solver mechanics pass | `inspectMechanicsPair` | Mechanics architecture tests | Runtime-wired and gated |
@@ -32,7 +32,7 @@ This document records where the Mechanics laws are declared, consumed, inspected
 
 ## Verification boundary
 
-The unit suite verifies isolated geometry, separation-versus-impact semantics, tangential torque, non-merging adhesion, diagnostic immutability, and solver wiring. Browser verification exercises the actual worker shell separately. No claim of conservation, stability under every parameter combination, or physical completeness follows from these contract tests alone.
+Focused tests verify selected wrapped geometry, CONTACT-versus-COLL semantics, bounded post-integration projection (including coincident centers and toroidal seams), tangential torque, non-merging adhesion, diagnostic immutability, and solver wiring. The final projection uses a radius-aware broadphase independent of force budgets and skips dead/absorbed particles; eight iterations may leave residual penetration when the world is overpacked. Browser verification exercises the actual worker shell separately and remains unverified in the current recorded environment. These tests do not establish conservation, stability for every parameter combination, continuous collision detection, or physical completeness.
 
 ## Removed capabilities
 

@@ -1,7 +1,7 @@
 # VEPA4 Feature Completion and Implementation Status Matrix
 
-**Release context:** VEPA4 9.1.22 / legacy label 4.9.25
-**Assessment phase:** Phase 3 architecture and feature-status hardening  
+**Release context:** VEPA4 v9.3.5 is the latest release; current source baseline `625c82e` (`main`) includes later merged work.
+**Assessment refreshed:** 2026-10-15, source and focused-test references checked for this initial batch. This is not a full repository or browser audit.
 **Assessment rule:** a feature is not considered complete merely because a file, export, registry entry, or unit test exists.
 
 ## 1. Status vocabulary
@@ -24,13 +24,13 @@
 | Flat particle memory | `src/state/particleBuffer.js`, `src/constants.js` | `PARTICLE_STRIDE = 100` | Buffer and physics tests | **Operational** | Reserved stride fields remain future expansion space. |
 | Species DNA system | `src/dna/dnaBuffer.js`, `src/dna/expression.js` | Genome buffer plus 42-value particle cache | DNA, expression, lifecycle, and parameter tests | **Operational** | Genome-only regulatory traits require continued wiring audits. |
 | Law registry | `src/constants.js` | 136 indexes across 9 categories | Category and law metadata tests | **Operational as registry** | Registry presence does not prove equal behavioral depth for every law. |
-| Law-state bitmask | `src/state/lawState.js` | Four-word law mask and dependency gates | Law-state and gating tests | **Operational** | Documentation must continue to distinguish bit capacity from implemented semantics. |
+| Law-state bitmask | `src/state/lawState.js` | Five-word law mask for 136 laws (indices 0–135) and dependency gates | Law-state and gating tests | **Operational** | The final word has eight live law bits; distinguish storage capacity from implemented semantics. |
 | Law relationship graph | `src/state/lawOntology.js`, `src/physics/lawGraph.js` | Metadata graph and validation tooling | Graph unit tests and generated relationship records | **Implemented, opt-in** | Relationship metadata coverage is not uniform across all 136 laws. |
 | Exact spatial-grid solver | `src/physics/spatialGrid.js`, `src/physics/solver.js` | Default neighbor discovery and pairwise dispatch | Physics, law-gating, and stress-oriented tests | **Operational** | Performance remains sensitive to population and active-law count. |
-| Mechanics pair geometry | `src/physics/pairGeometry.js` | Shared diagnostic/orchestration geometry helper | `mechanicsArchitecture.test.js` | **Implemented, opt-in** | The entire hot solver path has not yet been migrated to one geometry object. |
-| CONTACT separation | `src/physics/lawgroups/mechanicsLaws.js` | Geometric overlap correction | Mechanics architecture tests | **Operational** | Must remain distinct from impact impulse during future refactors. |
-| COLL impact response | `src/physics/laws.js`, solver dispatch | Collision response in the core physics path | Physics and mechanics tests | **Operational proxy** | Conventional impulse semantics should continue to be audited against legacy behavior. |
-| Mechanics diagnostics | `src/physics/mechanicsDiagnostics.js` | Explicit inspection utility, no default mutation | Non-mutation diagnostics test | **Implemented, opt-in** | Diagnostic output is not itself a physics execution pass. |
+| Mechanics pair geometry | `src/physics/pairGeometry.js` | Shared diagnostic boundary; solver also computes equivalent scalar geometry in the hot loop | `mechanicsArchitecture.test.js` | **Implemented, opt-in** | The allocated geometry object is not the solver hot-path abstraction; parity is tested for selected fixtures. |
+| CONTACT separation | `src/physics/lawgroups/mechanicsLaws.js`, `src/physics/contactConstraints.js` | Pairwise correction plus a final eight-iteration hard-sphere projection after integration/radius changes, independent of force-neighbor budgets | `contactStructures.test.js`, mechanics tests | **Operational, bounded** | Discrete bounded projection can leave residual overlap in overpacked worlds; not continuous collision detection. |
+| COLL impact response | `src/physics/lawgroups/mechanicsLaws.js`, solver dispatch | Mass-weighted normal impulse for approaching bodies; optional anti-tunnelling positional guard applies only when CONTACT is disabled | `contactStructures.test.js`, mechanics and solver tests | **Operational proxy** | Bounded discrete collision response; conventional impulse semantics and all parameter combinations are not asserted as fidelity. |
+| Mechanics diagnostics | `src/physics/mechanicsDiagnostics.js` | Explicit inspection utility; uses `pairGeometry.js` and isolated mechanics helpers, restores buffer defensively | `mechanicsArchitecture.test.js` | **Implemented, opt-in** | Diagnostic output is not itself a physics execution pass or evidence of full solver parity. |
 | Merge/attach/adjoin taxonomy | `src/physics/mergePhysics.js` | ACCR/ALLOY/BOND-related lifecycle paths | Merge and construction tests | **Operational proxy** | Composite structures remain particle-level approximations rather than rigid bodies. |
 | Persistence and world states | `src/state/worldSave.js`, save UI | Capture, restore, compare, undo/redo | World-save tests | **Operational** | Compatibility policy for future schema changes should be formalized. |
 | Intelligence engines | `src/engines/` | Cadence-driven event and metrics consumers | Engine, agency, narrative, timeline tests | **Operational proxy** | Emergent narrative meaning is bounded by available simulation telemetry. |
@@ -61,6 +61,8 @@ The registry contains 136 mapped laws. Current evidence falls into three distinc
 The generated specification and law compendium should therefore use qualified language such as **implemented**, **gated**, **proxy**, **opt-in**, and **partial**, rather than treating all registry entries as equally complete.
 
 ## 5. Mechanics consolidation assessment
+
+**Current source baseline:** `625c82e`, checked 2026-10-15. `getPairGeometry()` is used by diagnostics; the solver retains allocation-free local scalars in its hot loop and applies `resolveParticleContacts()` after integration/radius changes. Do not describe the geometry helper as universally adopted by the solver.
 
 | Boundary | Current conclusion | Evidence |
 |---|---|---|
